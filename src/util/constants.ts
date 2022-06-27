@@ -1,19 +1,4 @@
-
-export type Dj = {
-    name: string;
-    twitch_url: string;
-}
-
-export type Slot = {
-    dj: Dj;
-    duration: (0.5 | 1 | 1.5 | 2 | 2.5 | 3 | 3.5 | 4),
-}
-
-export type Event = {
-    name: string;
-    start_datetime: Date;
-    slots: Slot[];
-}
+import { Dj, Event } from "./types"
 
 export const RESIDENT_DJS: {[key: string]: Dj} = {
     "StrawberryProtato": {
@@ -37,3 +22,21 @@ export const RESIDENT_DJS: {[key: string]: Dj} = {
         twitch_url: "https://www.twitch.com/schlick",
     }
 }
+
+export const default_event: Event = {
+    name: "bleatr's test extraviganza",
+    start_datetime: new Date(),
+    slots: [{
+        dj: RESIDENT_DJS.kittz,
+        duration: 1,
+    },{
+        dj: RESIDENT_DJS.bleatr,
+        duration: 1,
+    },{
+        dj: RESIDENT_DJS.whitty,
+        duration: 1,
+    },{
+        dj: RESIDENT_DJS.StrawberryProtato,
+        duration: 1,
+    }]
+  }

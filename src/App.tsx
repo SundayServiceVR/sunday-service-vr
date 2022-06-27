@@ -1,35 +1,35 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Box, Columns, Container, Content } from 'react-bulma-components';
 import './App.css';
 import EventDetails from './components/EventDetails';
-import { Event, RESIDENT_DJS } from './types/types';
-
-const test_event: Event = {
-  name: "bleatr's test extraviganza",
-  start_datetime: new Date(),
-  slots: [{
-      dj: RESIDENT_DJS.kittz,
-      duration: 1,
-  },{
-      dj: RESIDENT_DJS.bleatr,
-      duration: 1,
-  },{
-      dj: RESIDENT_DJS.whitty,
-      duration: 1,
-  },{
-      dj: RESIDENT_DJS.StrawberryProtato,
-      duration: 1,
-  }]
-}
+import EventForm from './components/EventForm';
+import { default_event } from './util/constants';
 
 function App() {
+
+  const [state, setState] = useState({
+    event: default_event
+  });
+
   return (
     <div className="App">
       <header className="App-header">
         Sunday Service
       </header>
-      <div>
-        <EventDetails event={test_event}/>
-      </div>
+      <Content>
+        <Container breakpoint={"fullhd"}>
+          <Box>
+            <Columns>
+              <Columns.Column>
+                <EventForm event={state.event} setEvent={(event) => { setState({ ...state, event }) }} />
+              </Columns.Column>
+              <Columns.Column>
+                <EventDetails event={state.event} setEvent={(event) => { setState({ ...state, event }) }} />
+              </Columns.Column>
+            </Columns>
+          </Box>
+        </Container>
+      </Content>
     </div>
   );
 }
