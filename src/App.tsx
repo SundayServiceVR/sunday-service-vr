@@ -1,15 +1,42 @@
-import React, { useState } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import { Box, Columns, Container, Content } from 'react-bulma-components';
 import './App.css';
 import EventDetails from './components/EventDetails';
 import EventForm from './components/EventForm';
 import { default_event } from './util/constants';
+import { calcSlotTimes, Event } from './util/types';
 
 function App() {
+  
+  enum EventActionType {
+    SetEvent = "SETEVENT",
+    Reset = "RESET",
+  }
 
-  const [state, setState] = useState({
-    event: default_event
-  });
+  type EventAction = {
+    type: EventActionType,
+    payload: Event
+  }
+
+  // https://devtrium.com/posts/how-to-use-react-usereducer-hook
+  function eventStateReducer(state: Event, action: EventAction): Event {
+    switch (action.type) {
+      case EventActionType.SetEvent:
+        const event = { ...action.payload };
+        calcSlotTimes(event);
+        return event;
+      case EventActionType.Reset:
+        return default_event;
+      default:
+        throw new Error();
+    }
+  }
+
+  const [eventState, eventStateDispatch] = useReducer(eventStateReducer, default_event);
+  
+  useEffect(()=>{
+    eventStateDispatch({type: EventActionType.SetEvent, payload: eventState});
+  }, []);
 
   return (
     <div className="App">
@@ -21,10 +48,10 @@ function App() {
           <Box>
             <Columns>
               <Columns.Column>
-                <EventForm event={state.event} setEvent={(event) => { setState({ ...state, event }) }} />
+                <EventForm djEvent={eventState} setEvent={(event) => { eventStateDispatch({type: EventActionType.SetEvent, payload: event}); }} />
               </Columns.Column>
               <Columns.Column>
-                <EventDetails event={state.event} setEvent={(event) => { setState({ ...state, event }) }} />
+                <EventDetails event={eventState} />
               </Columns.Column>
             </Columns>
           </Box>
