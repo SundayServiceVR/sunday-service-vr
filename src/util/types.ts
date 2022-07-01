@@ -20,12 +20,21 @@ export type Event = {
 }
 
 export const getDiscordMessage = (event: Event): string => {
+
+    const getSlotText = (slot: Slot) => {
+        let slotText = `${slot.startTime ? dateToDiscordTime(slot.startTime) : ""} : ${slot.dj.name}`;
+        if(slot.dj.twitch_url) {
+            slotText = `${slotText} - ${slot.dj.twitch_url}`
+        }
+        return slotText;
+    }
+
     return `${event.name}
 ${event.message}
 ${dateToDiscordTime(event.start_datetime)}
 
 DJs:
-${event.slots.map((slot: Slot) => `${slot.startTime ? dateToDiscordTime(slot.startTime) : ""}: ${slot.dj.name}`).join("\n")}`;
+${event.slots.map(getSlotText).join("\n")}`;
 }
 
 export const calcSlotTimes = (event: Event): Event => {
