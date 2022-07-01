@@ -62,16 +62,17 @@ const EventForm = ({djEvent, setEvent}: Props) => {
             {event.start_datetime.toLocaleTimeString()} ({event.start_datetime.getTimezoneOffset()}) ({Intl.DateTimeFormat().resolvedOptions().timeZone})
         </h2> */}
 
+        < hr />
+
         <Block>
-            <h2>Slots</h2>
-        <EventFormSlotList
-            slots={djEvent.slots}
-            onSlotsChange={(slots: Slot[]) => {
-                setEvent({
-                    ...djEvent,
-                    slots
-                })
-        }}/>
+            <EventFormSlotList
+                slots={djEvent.slots}
+                onSlotsChange={(slots: Slot[]) => {
+                    setEvent({
+                        ...djEvent,
+                        slots
+                    })
+            }}/>
         </Block>
         
     </Section>

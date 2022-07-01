@@ -47,6 +47,7 @@ const EventFormSlotList = ({slots, onSlotsChange }: Props) => {
             </Columns.Column>
         </Columns>
     </Block>
+    < hr />
     <Block>
         {slots.map(
             (slot: Slot, index: number) => <SortableDj

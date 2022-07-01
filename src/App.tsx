@@ -41,8 +41,7 @@ function App() {
   return (
     <div className="App">
       <Content>
-        <Container breakpoint={"fullhd"}>
-          <Box>
+        <Container>
             <Columns>
               <Columns.Column size={"two-thirds"}>
                 <EventSetup djEvent={eventState} setEvent={(event) => { eventStateDispatch({type: EventActionType.SetEvent, payload: event}); }} />
@@ -51,7 +50,6 @@ function App() {
                 <EventDetails event={eventState} />
               </Columns.Column>
             </Columns>
-          </Box>
         </Container>
       </Content>
     </div>
