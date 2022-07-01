@@ -38,6 +38,7 @@ const EventFormSlotList = ({slots, onSlotsChange }: Props) => {
 
     return <>
     <Block>
+        <h3 className="display-3">Add DJs</h3>
         <Columns>
             <Columns.Column>
                 <ResidentDjs onAddSlot={(slot: Slot) => {addSlot(slot);}} currentSlots={slots}/>
@@ -49,6 +50,7 @@ const EventFormSlotList = ({slots, onSlotsChange }: Props) => {
     </Block>
     < hr />
     <Block>
+        <h3 className="display-3">Schedule</h3>
         {slots.map(
             (slot: Slot, index: number) => <SortableDj
                 key={`slot-${slot.dj.name}`}
@@ -86,10 +88,10 @@ const ResidentDjs = ({onAddSlot, currentSlots}: ReseidentDjsProps)=>{
     );
 
     return <Block>
-        <Block><span className="is-size-5">Add Resident DJ</span></Block>
+        <Block><span className="is-size-5">Resident</span></Block>
         {
             Object.entries(freeDjs).map(([dj_name, dj], i) => {
-                return <Button key={`add-${dj_name}-button`} onClick={()=>{onAddSlot(newDjTimeSlot(dj))}}>{dj.name}</Button>
+                return <Button key={`add-${dj_name}-button`} className="m-1" color="primary" onClick={()=>{onAddSlot(newDjTimeSlot(dj))}}>{dj.name}</Button>
             })
         }
         
@@ -118,7 +120,7 @@ const CustomDjSlotInserter = ({onAddSlot}: CustomDjSlotInserterProps)=>{
 
     return <Block>
         <form>
-        <span className="is-size-5">Add Guest DJ</span>
+        <span className="is-size-5">Guest</span>
         <Form.Field>
         <Form.Control>
             <Form.Label>Name</Form.Label>
@@ -131,7 +133,7 @@ const CustomDjSlotInserter = ({onAddSlot}: CustomDjSlotInserterProps)=>{
             <Form.Input value={guestDj.twitch_url} onChange={event => setGuestDj({...guestDj, twitch_url: event.target.value})} />
         </Form.Control>
         </Form.Field>
-        <Button onClick={() => { addGuestDj(guestDj)}} color={"primary"}>Add</Button>
+        <Button onClick={(event: any) => { event.preventDefault(); addGuestDj(guestDj)}} color={"primary"}>Add</Button>
         </form>
     </Block>;
 }
