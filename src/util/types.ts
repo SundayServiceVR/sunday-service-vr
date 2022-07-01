@@ -1,14 +1,16 @@
 
 export type Dj = {
     name: string;
-    twitch_url: string;
+    twitch_url?: string;
 }
 
 export type Slot = {
     dj: Dj;
     startTime?: Date | undefined;
-    duration: (0.5 | 1 | 1.5 | 2 | 2.5 | 3 | 3.5 | 4),
+    duration: SlotDuration,
 }
+
+export type SlotDuration = (0.5 | 1 | 1.5 | 2 | 2.5 | 3 | 3.5 | 4);
 
 export type Event = {
     name: string;
