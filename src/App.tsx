@@ -1,9 +1,8 @@
 import React, { useEffect, useReducer } from 'react';
-import { Box, Columns, Container, Content } from 'react-bulma-components';
+import { Box, Columns, Container, Content, Heading } from 'react-bulma-components';
 import './App.css';
 import EventDetails from './components/EventDetails';
 import EventSetup from './components/EventSetup';
-import EventForm from './components/EventSetup';
 import { default_event } from './util/constants';
 import { calcSlotTimes, Event } from './util/types';
 
@@ -41,9 +40,6 @@ function App() {
 
   return (
     <div className="App">
-      <header className="App-header">
-        Sunday Service Message Generator
-      </header>
       <Content>
         <Container breakpoint={"fullhd"}>
           <Box>
