@@ -11,9 +11,13 @@ export const RESIDENT_DJS: { [key: string]: Dj } = {
         name: "StrawberryProtato",
         twitch_url: "https://www.twitch.com/StrawberryProtato",
     },
-    "kittz": {
-        name: "kittz",
-        twitch_url: "https://www.twitch.com/kittz",
+    "kazzdoggo": {
+        name: "kazzdoggo",
+        twitch_url: "https://www.twitch.com/kazzdoggo",
+    },
+    "icedog": {
+        name: "icedog26",
+        twitch_url: "https://www.twitch.com/icedog26",
     },
     "whitty": {
         name: "whitty",
@@ -55,17 +59,5 @@ export const default_event: Event = {
     name: "Sunday Service",
     start_datetime: nextSundayServiceDefaultDateTime(),
     message: "Come by to chill and wiggle to some Sunday Service tunes!",
-    slots: [{
-        dj: RESIDENT_DJS.kittz,
-        duration: 1,
-    }, {
-        dj: RESIDENT_DJS.bleatr,
-        duration: 1,
-    }, {
-        dj: RESIDENT_DJS.whitty,
-        duration: 1,
-    }, {
-        dj: RESIDENT_DJS.StrawberryProtato,
-        duration: 1,
-    }]
+    slots: [],
 }

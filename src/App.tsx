@@ -1,5 +1,5 @@
 import React, { useEffect, useReducer } from 'react';
-import { Box, Columns, Container, Content, Heading } from 'react-bulma-components';
+import { Columns, Container, Content } from 'react-bulma-components';
 import './App.css';
 import EventDetails from './components/EventDetails';
 import EventSetup from './components/EventSetup';
