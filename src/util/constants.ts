@@ -30,6 +30,10 @@ export const RESIDENT_DJS: { [key: string]: Dj } = {
     "schlick": {
         name: "schlick",
         twitch_url: "https://www.twitch.com/schlick",
+    },
+    "kittz": {
+        name: "kittz",
+        twitch_url: "https://www.twitch.com/kittzbeatz",
     }
 }
 
