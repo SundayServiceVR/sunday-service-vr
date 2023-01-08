@@ -21,7 +21,7 @@ export const RESIDENT_DJS: { [key: string]: Dj } = {
     },
     "whitty": {
         name: "whitty",
-        twitch_url: "https://www.twitch.com/whittycat",
+        twitch_url: "https://www.twitch.com/WhittyCat",
     },
     "bleatr": {
         name: "bleatr",
@@ -37,7 +37,7 @@ export const RESIDENT_DJS: { [key: string]: Dj } = {
     },
     "forresthusky": {
         name: "Forrest Husky",
-        twitch_url: "https://www.twitch.com/forresthusky,
+        twitch_url: "https://www.twitch.com/forresthusky",
     },
     "warned1": {
         name: "WarneD1",
@@ -45,7 +45,7 @@ export const RESIDENT_DJS: { [key: string]: Dj } = {
     },
     "gogogaj3tt": {
         name: "GoGoGaj3tt"
-    }
+    },
 }
 
 // God forgive these sins
