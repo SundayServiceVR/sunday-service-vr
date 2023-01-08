@@ -2,6 +2,7 @@
 export type Dj = {
     name: string;
     twitch_url?: string;
+    vrcdn_url?: string;
 }
 
 export type Slot = {
