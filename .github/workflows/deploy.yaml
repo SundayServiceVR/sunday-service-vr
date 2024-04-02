@@ -32,17 +32,9 @@ jobs:
     - name: Build
       working-directory: "./webapp"
       run: npm run build
-
-    - name: Deploy
+   
+    - name: Deploy to GitHub Pages
       id: deployment
-      working-directory: "./webapp"
-      env:
-        user_name: 'github-actions[bot]'
-        user_email: 'github-actions[bot]@users.noreply.github.com'
-        github_token: ${{ secrets.GITHUB_TOKEN  }}
-        repository: ${{ github.repository }}
-      run: |
-        git config --global user.name $user_name
-        git config --global user.email $user_email
-        git remote set-url origin https://${github_token}@github.com/${repository}
-        npm run deploy
+      uses: actions/deploy-pages@v4
+      with:
+        path: "./build"
