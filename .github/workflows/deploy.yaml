@@ -37,8 +37,8 @@ jobs:
 
 
    
-    - name: Deploy to GitHub Pages
+    - name: Deploy to GitHub 
       id: deployment
       uses: JamesIves/github-pages-deploy-action@v4
       with:
-        folder: "build"
+        folder: "./webapp/build"
