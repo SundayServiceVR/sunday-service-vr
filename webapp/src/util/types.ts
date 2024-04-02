@@ -20,16 +20,29 @@ export type Event = {
     slots: Slot[];
 }
 
-export const getDiscordMessage = (event: Event): string => {
+export const saveEvent = (event: Event) => {
+    localStorage.setItem("event", JSON.stringify(event));
+}
 
-    const getSlotText = (slot: Slot) => {
-        let slotText = `${slot.startTime ? dateToDiscordTime(slot.startTime) : ""} : ${slot.dj.name}`;
-        if(slot.dj.twitch_url) {
-            slotText = `${slotText} - ${slot.dj.twitch_url}`
-        }
-        return slotText;
+export const loadEvent = () => {
+    const jsonBlob = localStorage.getItem("event");
+    if(jsonBlob === null) {
+        return null;
     }
+    const value = JSON.parse(jsonBlob);
+    value.start_datetime = new Date(value.start_datetime);
+    return value as Event;
+}
 
+const getSlotText = (slot: Slot) => {
+    let slotText = `${slot.startTime ? dateToDiscordTime(slot.startTime) : ""} : ${slot.dj.name}`;
+    if(slot.dj.twitch_url) {
+        slotText = `${slotText} - ${slot.dj.twitch_url}`
+    }
+    return slotText;
+}
+
+export const getDiscordMessage = (event: Event): string => {
     return `${event.name}
 ${event.message}
 ${dateToDiscordTime(event.start_datetime)}
