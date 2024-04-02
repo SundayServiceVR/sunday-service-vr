@@ -1,7 +1,6 @@
 import { nextSundayServiceDefaultDateTime } from '../util/util';
 import { Event } from '../util/types';
  
-
 export const saveEvent = (event: Event) => {
     localStorage.setItem("event", JSON.stringify(event));
 }
@@ -15,7 +14,6 @@ export const loadEvent = () => {
     value.start_datetime = new Date(value.start_datetime);
     return value as Event;
 }
-  
 
 export const default_event: Event = {
     name: "Sunday Service",
@@ -33,7 +31,6 @@ export type EventAction = {
     type: EventActionType,
     payload?: Event
 }
-
 
  // https://devtrium.com/posts/how-to-use-react-usereducer-hook
  export function eventStateReducer(state: Event, action: EventAction): Event {
@@ -69,10 +66,3 @@ export type EventAction = {
 
     return newEvent;
 }
-
-
-// function eventStateDispatch(arg0: { type: any; payload: any; }) {
-//     throw new Error('Function not implemented.');
-//   }
-  
-  

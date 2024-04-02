@@ -1,5 +1,4 @@
 import React from "react";
-import "../../node_modules/bulma/css/bulma.min.css";
 import { Block, Section, Form, Heading, Button, Level } from "react-bulma-components";
 import { Event, Slot } from "../util/types";
 import EventFormSlotList from "./EventFormSlotList";
@@ -73,15 +72,7 @@ const EventForm = ({ djEvent, setEvent, resetEvent }: Props) => {
                 </Form.Control>
             </Form.Field>
         </Block>
-
-        {/* <h2>
-            {event.start_datetime.toLocaleDateString()}
-            -
-            {event.start_datetime.toLocaleTimeString()} ({event.start_datetime.getTimezoneOffset()}) ({Intl.DateTimeFormat().resolvedOptions().timeZone})
-        </h2> */}
-
         < hr />
-
         <Block>
             <EventFormSlotList
                 slots={djEvent.slots}
@@ -92,7 +83,6 @@ const EventForm = ({ djEvent, setEvent, resetEvent }: Props) => {
                     })
                 }} />
         </Block>
-
     </Section>
 };
 

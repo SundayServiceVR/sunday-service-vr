@@ -1,9 +1,9 @@
 import React, { useEffect, useReducer } from 'react';
 import { Columns, Container, Content } from 'react-bulma-components';
-import './App.css';
 import EventDetails from './components/EventDetails';
 import EventSetup from './components/EventSetup';
 import { EventActionType, default_event, eventStateReducer, loadEvent } from './store/events';
+import './App.css';
 
 function App() {
 

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Block, Button, Columns, Form} from "react-bulma-components";
-import { RESIDENT_DJS } from "../util/constants";
+import { RESIDENT_DJS } from "../store/resident_djs";
 import { Dj, Slot, SlotDuration } from "../util/types";
 
 type Props = {

@@ -1,7 +1,7 @@
 import React from "react";
-import "../../node_modules/bulma/css/bulma.min.css";
 import { Block, Box, Button, Form, Heading, Message, Section } from "react-bulma-components";
 import { Event, Slot } from "../util/types";
+
 
 type Props = {
     event: Event

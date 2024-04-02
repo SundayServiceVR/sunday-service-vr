@@ -1,5 +1,5 @@
 
-import { Dj } from "./types"
+import { Dj } from "../util/types"
 
 
 export const RESIDENT_DJS: { [key: string]: Dj } = {
