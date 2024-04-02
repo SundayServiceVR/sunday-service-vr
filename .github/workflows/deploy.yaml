@@ -26,7 +26,7 @@ jobs:
 
     - name: Install dependencies
       working-directory: "./webapp"
-      run: npm install
+      run: npm ci
 
     # - name: Run the tests and generate coverage report
     #   run: npm test -- --coverage
@@ -34,9 +34,11 @@ jobs:
     - name: Build
       working-directory: "./webapp"
       run: npm run build
+
+
    
     - name: Deploy to GitHub Pages
       id: deployment
-      uses: actions/deploy-pages@v4
+      uses: JamesIves/github-pages-deploy-action@v4
       with:
-        path: "./build"
+        folder: "build"
