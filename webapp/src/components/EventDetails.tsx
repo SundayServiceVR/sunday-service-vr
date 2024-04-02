@@ -7,13 +7,18 @@ type Props = {
     event: Event
 };
 
-const getDiscordMessage = (event: Event): string => {
-    return `${event.name}
+const getDiscordMessage = (event: Event): string => 
+`${event.name}
 ${event.message}
 ${dateToDiscordTime(event.start_datetime)}
 
 DJs:
-${event.slots.map(getSlotText).join("\n")}`;
+${event.slots.map(getSlotText).join("\n")}
+`;
+
+const dateToDiscordTime = (date: Date): string => {
+    // Example: <t:1656270000:R>
+    return `<t:${Math.floor(date.getTime() / 1000)}>`;
 }
 
 const getSlotText = (slot: Slot) => {
@@ -24,12 +29,6 @@ const getSlotText = (slot: Slot) => {
     return slotText;
 }
 
-
-
-const dateToDiscordTime = (date: Date): string => {
-    // Example: <t:1656270000:R>
-    return `<t:${Math.floor(date.getTime() / 1000)}>`;
-}
 
 const EventDetails = ({ event }: Props) => {
 
