@@ -1,0 +1,34 @@
+{
+  "kind": "collectionType",
+  "collectionName": "djs",
+  "info": {
+    "singularName": "dj",
+    "pluralName": "djs",
+    "displayName": "DJ"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "Name": {
+      "type": "string"
+    },
+    "URL": {
+      "type": "enumeration",
+      "enum": [
+        "VRCDN",
+        "Twitch",
+        "Video",
+        "Audio"
+      ]
+    },
+    "Type": {
+      "type": "string"
+    },
+    "TimingPreference": {
+      "type": "string",
+      "required": true
+    }
+  }
+}
