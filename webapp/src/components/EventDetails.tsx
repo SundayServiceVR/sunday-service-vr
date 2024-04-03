@@ -14,6 +14,8 @@ ${dateToDiscordTime(event.start_datetime)}
 
 DJs:
 ${event.slots.map(getSlotText).join("\n")}
+
+${event.footer}
 `;
 
 const dateToDiscordTime = (date: Date): string => {

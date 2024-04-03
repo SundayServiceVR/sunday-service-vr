@@ -71,6 +71,18 @@ const EventForm = ({ djEvent, setEvent, resetEvent }: Props) => {
                         }} />
                 </Form.Control>
             </Form.Field>
+            <Form.Field>
+                <Form.Label>
+                    Footer
+                </Form.Label>
+                <Form.Control>
+                    <Form.Textarea
+                        value={djEvent.footer}
+                        onChange={(event) => {
+                            setEvent({ ...djEvent, footer: event.target.value })
+                        }} />
+                </Form.Control>
+            </Form.Field>
         </Block>
         < hr />
         <Block>
