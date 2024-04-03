@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Block, Button, Columns, Form} from "react-bulma-components";
+import { Button, Col, Container, Form, Row} from "react-bootstrap";
 import { RESIDENT_DJS } from "../store/resident_djs";
 import { Dj, Slot, SlotDuration } from "../util/types";
 
@@ -37,20 +37,23 @@ const EventFormSlotList = ({slots, onSlotsChange }: Props) => {
     }
 
     return <>
-    <Block>
-        <h3 className="display-3">Add DJs</h3>
-        <Columns>
-            <Columns.Column>
-                <ResidentDjs onAddSlot={(slot: Slot) => {addSlot(slot);}} currentSlots={slots}/>
-            </Columns.Column>
-            <Columns.Column>
-                <CustomDjSlotInserter onAddSlot={(slot: Slot) => {addSlot(slot);}}/>
-            </Columns.Column>
-        </Columns>
-    </Block>
+
+        <h3 className="display-7">Add DJs</h3>
+        <Container>
+            <Row>
+                <Col>
+                    <ResidentDjs onAddSlot={(slot: Slot) => {addSlot(slot);}} currentSlots={slots}/>
+                </Col>
+                <Col>
+                    <CustomDjSlotInserter onAddSlot={(slot: Slot) => {addSlot(slot);}}/>
+                </Col>
+            </Row>
+
+        </Container>
+
     < hr />
-    <Block>
-        <h3 className="display-3">Schedule</h3>
+    <div>
+        <h3 className="display-7">Schedule</h3>
         {slots.map(
             (slot: Slot, index: number) => <SortableDj
                 key={`slot-${slot.dj.name}`}
@@ -63,7 +66,7 @@ const EventFormSlotList = ({slots, onSlotsChange }: Props) => {
                 onRemoveSlot = { ()=>{removeSlot(index);} }
             />
         )}
-    </Block>
+    </div>
     
 </>;
 };
@@ -87,15 +90,15 @@ const ResidentDjs = ({onAddSlot, currentSlots}: ReseidentDjsProps)=>{
         (dj) => !currentSlots.map(slot => slot.dj).includes(dj)
     );
 
-    return <Block>
-        <Block><span className="is-size-5">Resident</span></Block>
+    return <div>
+        <div><span className="is-size-5">Resident</span></div>
         {
             Object.entries(freeDjs).map(([dj_name, dj], i) => {
                 return <Button key={`add-${dj_name}-button`} className="m-1" color="primary" onClick={()=>{onAddSlot(newDjTimeSlot(dj))}}>{dj.name}</Button>
             })
         }
         
-    </Block>
+    </div>
 }
 
 type CustomDjSlotInserterProps = {
@@ -118,24 +121,20 @@ const CustomDjSlotInserter = ({onAddSlot}: CustomDjSlotInserterProps)=>{
         onAddSlot(newDjTimeSlot(guestDj));
     }
 
-    return <Block>
-        <form>
-        <span className="is-size-5">Guest</span>
-        <Form.Field>
-        <Form.Control>
-            <Form.Label>Name</Form.Label>
-            <Form.Input value={guestDj.name}  onChange={event => setGuestDj({...guestDj, name: event.target.value})} />
-        </Form.Control>
-        </Form.Field>
-        <Form.Field>
-        <Form.Control>
-            <Form.Label>Twitch URL</Form.Label>
-            <Form.Input value={guestDj.twitch_url} onChange={event => setGuestDj({...guestDj, twitch_url: event.target.value})} />
-        </Form.Control>
-        </Form.Field>
-        <Button onClick={(event: any) => { event.preventDefault(); addGuestDj(guestDj)}} color={"primary"}>Add</Button>
-        </form>
-    </Block>;
+    return <div>
+        <Form>
+            <span className="is-size-5">Guest</span>
+            <Form.Group>
+                <Form.Label>Name</Form.Label>
+                <Form.Control type="input" value={guestDj.name}  onChange={event => setGuestDj({...guestDj, name: event.target.value})} />
+            </Form.Group>
+            <Form.Group>
+                <Form.Label>Twitch URL</Form.Label>
+                <Form.Control type="input" value={guestDj.twitch_url} onChange={event => setGuestDj({...guestDj, twitch_url: event.target.value})} />
+            </Form.Group>
+            <Button onClick={(event: any) => { event.preventDefault(); addGuestDj(guestDj)}} color={"primary"}>Add</Button>
+        </Form>
+    </div>;
 }
 
 type SortableDjProps = {
@@ -157,10 +156,10 @@ const SortableDj = ({
         onRemoveSlot
     }: SortableDjProps) => <div className="is-flex is-flex-direction-row is-align-items-center">
         <span className="is-flex is-flex-direction-column my-1">
-            <Button className="is-flex-grow-1" color={"primary"} size={"small"} onClick={()=>onSlotMoveSooner()}>
+            <Button className="is-flex-grow-1" color={"primary"} size={"sm"} onClick={()=>onSlotMoveSooner()}>
                 <i><span className="is-size-5 is-bold">-</span></i>
             </Button>
-            <Button className="is-flex-grow-11" color={"primary"} size={"small"} onClick={()=>onSlotMoveLater()}>
+            <Button className="is-flex-grow-11" color={"primary"} size={"sm"} onClick={()=>onSlotMoveLater()}>
                 <i><span className="is-size-5 is-bold">+</span></i>
             </Button>
         </span>
@@ -171,7 +170,7 @@ const SortableDj = ({
             {dj.name}
         </span>
         <span className="mx-1">
-            <Form.Field horizontal>
+            {/* <Form.Field horizontal>
                 <Form.Control>
                 <Form.Input
                     type={"number"}
@@ -182,11 +181,11 @@ const SortableDj = ({
                     max={4}
                 />
                 </Form.Control>
-            </Form.Field>
+            </Form.Field> */}
             
             
         </span>
         <span className="mx-1">
-            <Button remove onClick={()=>{ onRemoveSlot(); }}/>
+            {/* <Button remove onClick={()=>{ onRemoveSlot(); }}/> */}
         </span>
     </div>;
