@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Card, CardBody, CardFooter, CardHeader, Form, } from "react-bootstrap";
+import { Button, Card, CardBody, CardFooter, CardHeader, Form, Tabs, Tab } from "react-bootstrap";
 import { Event, Slot } from "../util/types";
 
 
@@ -37,6 +37,20 @@ const EventDetails = ({ event }: Props) => {
     return <Card>
             <CardHeader>Discord Message</CardHeader>
             <CardBody>
+                <Tabs>
+                    <Tab eventKey="discord" title="Discord">
+                        Tab content for Discord
+                    </Tab>
+                    <Tab eventKey="twitter" title="Twitter">
+                        Tab content for Twitter
+                    </Tab>
+                    <Tab eventKey="uk" title="UK Paste">
+                        Tab content for UK
+                    </Tab>
+                    <Tab eventKey="au" title="AU Paste">
+                        Tab content for AU
+                    </Tab>
+                </Tabs>
                 <Form.Control as="textarea" value={eventMessage} rows={16} readOnly className="has-fixed-size" />
             </CardBody>
             <CardFooter className="d-grid gap-2">
