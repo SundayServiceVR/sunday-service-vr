@@ -12,11 +12,11 @@ export const RESIDENT_DJS: { [key: string]: Dj } = {
         twitch_url: "https://www.twitch.com/kazzdoggo",
     },
     "icedog": {
-        name: "icedog26",
+        name: "Icedog",
         twitch_url: "https://www.twitch.com/icedog26",
     },
     "whitty": {
-        name: "whitty",
+        name: "Whitty",
         twitch_url: "https://www.twitch.com/WhittyCat",
     },
     "bleatr": {
@@ -24,16 +24,12 @@ export const RESIDENT_DJS: { [key: string]: Dj } = {
         twitch_url: "https://www.twitch.com/bleatrbeats",
     },
     "schlick": {
-        name: "schlick",
+        name: "Schlick",
         twitch_url: "https://www.twitch.tv/schlick_wolf",
     },
     "kittz": {
-        name: "kittz",
+        name: "Kittz",
         twitch_url: "https://www.twitch.com/kittzbeatz",
-    },
-    "forresthusky": {
-        name: "Forrest Husky",
-        twitch_url: "https://www.twitch.com/forresthusky",
     },
     "warned1": {
         name: "WarneD1",
