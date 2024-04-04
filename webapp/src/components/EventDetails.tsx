@@ -1,11 +1,12 @@
 import React from "react";
-import { Button, Card, CardBody, CardFooter, CardHeader, Form, Tabs, Tab } from "react-bootstrap";
+import { Button, Card, CardBody, CardFooter, CardHeader, Form, Nav} from "react-bootstrap";
 import { Event, Slot } from "../util/types";
 
 
 type Props = {
     event: Event
 };
+
 
 const getDiscordMessage = (event: Event): string => 
 `${event.name}
@@ -16,10 +17,42 @@ DJs:
 ${event.slots.map(getSlotText).join("\n")}
 `;
 
+
+const getTwitterMessage = (event: Event): string =>
+`${event.name}
+${event.message}
+Twitter Test
+
+DJs:
+${event.slots.map(getSlotText).join("\n")}
+`;
+
+
+const getUkPasteMessage = (event: Event): string =>
+`${event.name}
+${event.message}
+UK Test
+
+DJs:
+${event.slots.map(getSlotText).join("\n")}
+`;
+
+
+const getAusPasteMessage = (event: Event): string =>
+`${event.name}
+${event.message}
+Australia Test
+
+DJs:
+${event.slots.map(getSlotText).join("\n")}
+`;
+
+
 const dateToDiscordTime = (date: Date): string => {
     // Example: <t:1656270000:R>
     return `<t:${Math.floor(date.getTime() / 1000)}>`;
 }
+
 
 const getSlotText = (slot: Slot) => {
     let slotText = `${slot.startTime ? dateToDiscordTime(slot.startTime) : ""} : ${slot.dj.name}`;
@@ -34,23 +67,32 @@ const EventDetails = ({ event }: Props) => {
 
     const eventMessage = getDiscordMessage(event);
 
+    // const setDiscordMessage = () => {eventMessage = getDiscordMessage(event); console.log("Discord")}
+    // const setTwitterMessage = () => {eventMessage = getTwitterMessage(event); console.log("Twitter")}
+
+    const handleSelect = (activeKey : any) => {
+        if (activeKey === "discord") console.log("Discord");
+        else if (activeKey === "twitter") console.log("Twitter");
+        else return ;
+    }
+
     return <Card>
             <CardHeader>Discord Message</CardHeader>
             <CardBody>
-                <Tabs>
-                    <Tab eventKey="discord" title="Discord">
-                        Tab content for Discord
-                    </Tab>
-                    <Tab eventKey="twitter" title="Twitter">
-                        Tab content for Twitter
-                    </Tab>
-                    <Tab eventKey="uk" title="UK Paste">
-                        Tab content for UK
-                    </Tab>
-                    <Tab eventKey="au" title="AU Paste">
-                        Tab content for AU
-                    </Tab>
-                </Tabs>
+                <Nav variant="tabs" defaultActiveKey="discord" onSelect={handleSelect}>
+                    <Nav.Item>
+                        <Nav.Link eventKey="discord">Discord</Nav.Link>
+                    </Nav.Item>
+                    <Nav.Item>
+                        <Nav.Link eventKey="twitter">Twitter</Nav.Link>
+                    </Nav.Item>
+                    <Nav.Item>
+                        <Nav.Link eventKey="uk">UK Paste</Nav.Link>
+                    </Nav.Item>
+                    <Nav.Item>
+                        <Nav.Link eventKey="au">AU Paste</Nav.Link>
+                    </Nav.Item>
+                </Nav>
                 <Form.Control as="textarea" value={eventMessage} rows={16} readOnly className="has-fixed-size" />
             </CardBody>
             <CardFooter className="d-grid gap-2">
