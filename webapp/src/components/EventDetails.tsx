@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button, Card, CardBody, CardFooter, CardHeader, Form, } from "react-bootstrap";
 import { Event, Slot } from "../util/types";
 
@@ -34,16 +34,22 @@ const EventDetails = ({ event }: Props) => {
 
     const eventMessage = getDiscordMessage(event);
 
+    const [ buttonText, setButtonText ] = useState<string>("Copy Text");
+
+    const onCopyButtonPress = () => {
+        navigator.clipboard.writeText(eventMessage); 
+        setButtonText("Copied");
+        setTimeout(() => {setButtonText("Copy Text")}, 5000);
+    }
+
     return <Card>
             <CardHeader>Discord Message</CardHeader>
             <CardBody>
                 <Form.Control as="textarea" value={eventMessage} rows={16} readOnly className="has-fixed-size" />
             </CardBody>
             <CardFooter className="d-grid gap-2">
-                <Button color={"primary"} onClick={() => { navigator.clipboard.writeText(eventMessage); }}>Copy Text</Button>
-
+                <Button color={"primary"} onClick={onCopyButtonPress}>{ buttonText }</Button>
             </CardFooter>
-            {/* <Message color="warning" size="small" className="p-3 m-2">Still need to implement a little toast message when ya copy, sorry, just trying to get this out the door :x</Message> */}
         </Card>
 };
 

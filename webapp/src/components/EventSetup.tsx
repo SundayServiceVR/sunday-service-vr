@@ -1,8 +1,7 @@
 import React from "react";
-import { Container, Form, Button, Stack } from "react-bootstrap";
+import { Form, Button, Stack } from "react-bootstrap";
 import { Event, Slot } from "../util/types";
 import EventFormSlotList from "./EventFormSlotList";
-import DatePicker from "react-datepicker";
 
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -15,7 +14,7 @@ type Props = {
 const EventForm = ({ djEvent, setEvent, resetEvent }: Props) => {
     return <div>
         <Stack direction="horizontal" gap={3}>
-            <h2 className="display-3">Event Setup</h2>
+            <h2 className="display-6">Event Setup</h2>
             <span className="ms-auto" />
             <Button
                 placeholder="Sunday Service"
@@ -45,9 +44,10 @@ const EventForm = ({ djEvent, setEvent, resetEvent }: Props) => {
            
                     <Form.Control
                         type="datetime-local"
-                        value={djEvent.start_datetime.toISOString().slice(0,16)}
+                        value={new Date(djEvent.start_datetime.getTime() - djEvent.start_datetime.getTimezoneOffset()*60*1000).toISOString().slice(0, 16)}
                         onChange={(event) => {
-                            // debugger;
+                            debugger;
+                            console.log(djEvent.start_datetime.toISOString().slice(0, 16))
                             setEvent({ ...djEvent, start_datetime: new Date(event.target.value)})
                         }}
                         className="input" />

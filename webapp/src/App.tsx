@@ -1,5 +1,5 @@
 import React, { useEffect, useReducer } from 'react';
-import { Container, Row, Col } from 'react-bootstrap';
+import { Container, Tabs, Tab, Navbar } from 'react-bootstrap';
 import EventDetails from './components/EventDetails';
 import EventSetup from './components/EventSetup';
 import { EventActionType, default_event, eventStateReducer, loadEvent } from './store/events';
@@ -16,19 +16,22 @@ function App() {
 
   return (
     <div className="App">
-      <Container>
-        <Row>
-          <Col md={8}>
+      <Navbar expand="lg" className="bg-body-secondary" data-bs-theme="dark">
+        <Navbar.Brand className="px-3">S4</Navbar.Brand>
+      </Navbar>
+      <Container className="mt-1">
+        <Tabs>
+          <Tab eventKey="event-setup" title="Event Setup">
             <EventSetup
               djEvent={eventState}
               setEvent={(event) => { eventStateDispatch({ type: EventActionType.SetEvent, payload: event }); }}
               resetEvent={() => { eventStateDispatch({ type: EventActionType.Reset }); }}
             />
-          </Col>
-          <Col>
+          </Tab>
+          <Tab eventKey="event-notifications" title="Notification Helper">
             <EventDetails event={eventState} />
-          </Col>
-        </Row>
+          </Tab>
+        </Tabs>
       </Container>
     </div>
   );
