@@ -41,7 +41,6 @@ const EventForm = ({ djEvent, setEvent, resetEvent }: Props) => {
                 <Form.Label>
                     Date/Time (Local)
                 </Form.Label>
-           
                     <Form.Control
                         type="datetime-local"
                         value={new Date(djEvent.start_datetime.getTime() - djEvent.start_datetime.getTimezoneOffset()*60*1000).toISOString().slice(0, 16)}
@@ -51,7 +50,6 @@ const EventForm = ({ djEvent, setEvent, resetEvent }: Props) => {
                             setEvent({ ...djEvent, start_datetime: new Date(event.target.value)})
                         }}
                         className="input" />
-        
             </Form.Group>
             <Form.Group>
                 <Form.Label>
@@ -63,6 +61,17 @@ const EventForm = ({ djEvent, setEvent, resetEvent }: Props) => {
                     value={djEvent.message}
                     onChange={(event) => {
                         setEvent({ ...djEvent, message: event.target.value })
+                    }} />
+            </Form.Group>
+            <Form.Group>
+                <Form.Label>
+                    Footer
+                </Form.Label>
+                <Form.Control
+                    type="textarea"
+                    value={djEvent.footer}
+                    onChange={(event) => {
+                        setEvent({ ...djEvent, footer: event.target.value })
                     }} />
             </Form.Group>
             </Form>

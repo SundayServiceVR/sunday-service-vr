@@ -18,5 +18,6 @@ export type Event = {
     message: string;
     start_datetime: Date;
     slots: Slot[];
+    footer: string;
 }
 
