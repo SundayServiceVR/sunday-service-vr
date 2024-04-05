@@ -2,6 +2,7 @@ import React from "react";
 import { Button, Card, CardBody, CardFooter, CardHeader, Form, Tabs, Tab} from "react-bootstrap";
 import { Event, Slot } from "../util/types";
 import EventPasteCard from "./EventPasteCard";
+import dayjs from "dayjs";
 
 
 type Props = {
@@ -23,43 +24,49 @@ ${event.slots.map(getDiscordSlotText).join("\n")}
 `;
 
 
-const getTwitterMessage = (event: Event): string =>
-`${event.name}
-${event.start_datetime.toISOString().split('T')[0]}
+const getTwitterMessage = (event: Event): string => {
+    const ukDayTz = dayjs.tz(event.start_datetime, "GB");
+return `${event.name}
+${ukDayTz.format("YYYY-MM-DD")}
 Host: ${event.host}
 
-Lineup: (times GMT)
-${event.slots.map(getPasteSlotText).join("\n")}
+Lineup: (times ${ukDayTz.format('z')
+                        .replace("GMT+1","BST")})
+${event.slots.map(getUkPasteSlotText).join("\n")}
 `;
+}
 
 
-const getUkPasteMessage = (event: Event): string =>
-`${event.name}
-${event.start_datetime.toISOString().split('T')[0]}
+const getUkPasteMessage = (event: Event): string => {
+    const ukDayTz = dayjs.tz(event.start_datetime, "GB");
+return `${event.name}
+${ukDayTz.format("YYYY-MM-DD")}
 Host: ${event.host}
 
-Lineup: (times GMT)
-${event.slots.map(getPasteSlotText).join("\n")}
+Lineup: (times ${ukDayTz.format('z')
+                        .replace("GMT+1","BST")})
+${event.slots.map(getUkPasteSlotText).join("\n")}
 `;
+}
 
 
-const getAusPasteMessage = (event: Event): string =>
-`${event.name}
-${event.start_datetime.toISOString().split('T')[0]}
+const getAusPasteMessage = (event: Event): string =>{
+    const ausDayTz = dayjs.tz(event.start_datetime, "Australia/Sydney");
+    return `${event.name}
+${ausDayTz.format("YYYY-MM-DD")}
 Host: ${event.host}
 
-Lineup: (times are NOT RIGHT!!!!!!!! [to-do])
-${event.slots.map(getPasteSlotText).join("\n")}
+Lineup: (times ${ausDayTz.format('z')
+                        .replace("GMT+11","AEDT")
+                        .replace("GMT+10","AEST")})
+${event.slots.map(getAusPasteSlotText).join("\n")}
 `;
+}
 
 
 const dateToDiscordTime = (date: Date): string => {
     // Example: <t:1656270000:R>
     return `<t:${Math.floor(date.getTime() / 1000)}>`;
-}
-
-const dateToPasteTime = (date : Date): string => {
-    return date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
 }
 
 
@@ -71,9 +78,26 @@ const getDiscordSlotText = (slot: Slot): string => {
     return slotText;
 }
 
-const getPasteSlotText = (slot : Slot): string => {
-    let slotText = `${slot.dj.name} - ${slot.startTime ? dateToPasteTime(slot.startTime) : ""}`;
+
+const getUkPasteSlotText = (slot : Slot): string => {
+    let slotText = `${slot.startTime ? dateToUkPasteTime(slot.startTime) : ""} ${slot.dj.name}`;
     return slotText;
+}
+
+
+const getAusPasteSlotText = (slot : Slot): string => {
+    let slotText = `${slot.startTime ? dateToAusPasteTime(slot.startTime) : ""} ${slot.dj.name}`;
+    return slotText;
+}
+
+
+const dateToUkPasteTime = (date : Date): string => {
+    return `${dayjs.tz(date, "Europe/London").format('h:mma').slice(0,-1)}`;
+}
+
+
+const dateToAusPasteTime = (date : Date): string => {
+    return `${dayjs.tz(date, "Australia/Sydney").format('h:mma').slice(0,-1)}`;
 }
 
 
