@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Card, CardBody, CardFooter, CardHeader, Form, Nav} from "react-bootstrap";
+import { Button, Card, CardBody, CardFooter, CardHeader, Form, Tabs, Tab} from "react-bootstrap";
 import { Event, Slot } from "../util/types";
 
 
@@ -65,41 +65,30 @@ const getSlotText = (slot: Slot) => {
 
 const EventDetails = ({ event }: Props) => {
 
-    const eventMessage = getDiscordMessage(event);
-
-    // const setDiscordMessage = () => {eventMessage = getDiscordMessage(event); console.log("Discord")}
-    // const setTwitterMessage = () => {eventMessage = getTwitterMessage(event); console.log("Twitter")}
-
-    const handleSelect = (activeKey : any) => {
-        if (activeKey === "discord") console.log("Discord");
-        else if (activeKey === "twitter") console.log("Twitter");
-        else return ;
-    }
+    const discordMessage = getDiscordMessage(event);
 
     return <Card>
-            <CardHeader>Discord Message</CardHeader>
-            <CardBody>
-                <Nav variant="tabs" defaultActiveKey="discord" onSelect={handleSelect}>
-                    <Nav.Item>
-                        <Nav.Link eventKey="discord">Discord</Nav.Link>
-                    </Nav.Item>
-                    <Nav.Item>
-                        <Nav.Link eventKey="twitter">Twitter</Nav.Link>
-                    </Nav.Item>
-                    <Nav.Item>
-                        <Nav.Link eventKey="uk">UK Paste</Nav.Link>
-                    </Nav.Item>
-                    <Nav.Item>
-                        <Nav.Link eventKey="au">AU Paste</Nav.Link>
-                    </Nav.Item>
-                </Nav>
-                <Form.Control as="textarea" value={eventMessage} rows={16} readOnly className="has-fixed-size" />
-            </CardBody>
-            <CardFooter className="d-grid gap-2">
-                <Button color={"primary"} onClick={() => { navigator.clipboard.writeText(eventMessage); }}>Copy Text</Button>
-
-            </CardFooter>
+            <Tabs className="">
+                <Tab eventKey="discord" title="Discord">
+                    <CardBody>
+                        <Form.Control as="textarea" value={discordMessage} rows={16} readOnly className="has-fixed-size" />
+                    </CardBody>
+                    <CardFooter className="d-grid gap-2">
+                        <Button color={"primary"} onClick={() => { navigator.clipboard.writeText(discordMessage); }}>Copy Text</Button>
+                    </CardFooter>
+                </Tab>
+                <Tab eventKey="twitter" title="Twitter">
+                    Tab content for Twitter
+                </Tab>
+                <Tab eventKey="uk" title="UK Paste">
+                    Tab content for UK
+                </Tab>
+                <Tab eventKey="au" title="AU Paste">
+                    Tab content for AU
+                </Tab>
+            </Tabs>
             {/* <Message color="warning" size="small" className="p-3 m-2">Still need to implement a little toast message when ya copy, sorry, just trying to get this out the door :x</Message> */}
+            
         </Card>
 };
 
