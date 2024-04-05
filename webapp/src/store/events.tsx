@@ -20,6 +20,7 @@ export const default_event: Event = {
     start_datetime: nextSundayServiceDefaultDateTime(),
     message: "Come by to chill and wiggle to some Sunday Service tunes!",
     slots: [],
+    footer: "https://discord.s4vr.net/\nhttps://twitch.s4vr.net/",
 }
 
 export enum EventActionType {
