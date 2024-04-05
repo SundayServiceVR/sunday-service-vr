@@ -18,6 +18,7 @@ export const loadEvent = () => {
 export const default_event: Event = {
     name: "Sunday Service",
     start_datetime: nextSundayServiceDefaultDateTime(),
+    host: "Strawbs",
     message: "Come by to chill and wiggle to some Sunday Service tunes!",
     slots: [],
 }

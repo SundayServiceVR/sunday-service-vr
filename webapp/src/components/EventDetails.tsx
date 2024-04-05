@@ -11,41 +11,45 @@ type Props = {
 
 const getDiscordMessage = (event: Event): string => 
 `${event.name}
+
 ${event.message}
-${dateToDiscordTime(event.start_datetime)}
+
+Event start: ${dateToDiscordTime(event.start_datetime)}
+
+Host: ${event.host}
 
 DJs:
-${event.slots.map(getSlotText).join("\n")}
+${event.slots.map(getDiscordSlotText).join("\n")}
 `;
 
 
 const getTwitterMessage = (event: Event): string =>
 `${event.name}
-${event.message}
-Twitter Test
+${event.start_datetime.toISOString().split('T')[0]}
+Host: ${event.host}
 
-DJs:
-${event.slots.map(getSlotText).join("\n")}
+Lineup: (times GMT)
+${event.slots.map(getPasteSlotText).join("\n")}
 `;
 
 
 const getUkPasteMessage = (event: Event): string =>
 `${event.name}
-${event.message}
-UK Test
+${event.start_datetime.toISOString().split('T')[0]}
+Host: ${event.host}
 
-DJs:
-${event.slots.map(getSlotText).join("\n")}
+Lineup: (times GMT)
+${event.slots.map(getPasteSlotText).join("\n")}
 `;
 
 
 const getAusPasteMessage = (event: Event): string =>
 `${event.name}
-${event.message}
-Australia Test
+${event.start_datetime.toISOString().split('T')[0]}
+Host: ${event.host}
 
-DJs:
-${event.slots.map(getSlotText).join("\n")}
+Lineup: (times are NOT RIGHT!!!!!!!! [to-do])
+${event.slots.map(getPasteSlotText).join("\n")}
 `;
 
 
@@ -54,12 +58,21 @@ const dateToDiscordTime = (date: Date): string => {
     return `<t:${Math.floor(date.getTime() / 1000)}>`;
 }
 
+const dateToPasteTime = (date : Date): string => {
+    return date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+}
 
-const getSlotText = (slot: Slot) => {
+
+const getDiscordSlotText = (slot: Slot): string => {
     let slotText = `${slot.startTime ? dateToDiscordTime(slot.startTime) : ""} : ${slot.dj.name}`;
     if(slot.dj.twitch_url) {
         slotText = `${slotText} - ${slot.dj.twitch_url}`
     }
+    return slotText;
+}
+
+const getPasteSlotText = (slot : Slot): string => {
+    let slotText = `${slot.dj.name} - ${slot.startTime ? dateToPasteTime(slot.startTime) : ""}`;
     return slotText;
 }
 
