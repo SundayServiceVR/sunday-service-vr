@@ -11,16 +11,19 @@ type Props = {
 
 
 const getDiscordMessage = (event: Event): string => 
-`${event.name}
+`**${event.name}**
 
 ${event.message}
 
-Event start: ${dateToDiscordTime(event.start_datetime)}
+Event start: ${dateToDiscordTime(event.start_datetime).replace(">",":F>")}
 
 Host: ${event.host}
 
 DJs:
 ${event.slots.map(getDiscordSlotText).join("\n")}
+
+https://discord.s4vr.net/
+https://twitch.s4vr.net/
 `;
 
 
@@ -32,7 +35,9 @@ Host: ${event.host}
 
 Lineup: (times ${ukDayTz.format('z')
                         .replace("GMT+1","BST")})
-${event.slots.map(getUkPasteSlotText).join("\n")}
+${event.slots.map(getTwitterSlotText).join("\n")}
+
+https://twitch.s4vr.net/
 `;
 }
 
@@ -45,7 +50,7 @@ Host: ${event.host}
 
 Lineup: (times ${ukDayTz.format('z')
                         .replace("GMT+1","BST")})
-${event.slots.map(getUkPasteSlotText).join("\n")}
+${event.slots.map(getUkSlotText).join("\n")}
 `;
 }
 
@@ -59,7 +64,7 @@ Host: ${event.host}
 Lineup: (times ${ausDayTz.format('z')
                         .replace("GMT+11","AEDT")
                         .replace("GMT+10","AEST")})
-${event.slots.map(getAusPasteSlotText).join("\n")}
+${event.slots.map(getAusSlotText).join("\n")}
 `;
 }
 
@@ -70,34 +75,34 @@ const dateToDiscordTime = (date: Date): string => {
 }
 
 
+const dateToLineupTime = (date: Date, timezone : string): string => {
+    return `${dayjs.tz(date, timezone).format('h:mma')
+                                      .slice(0,-1)
+                                      .replace(":00", "")}`;
+}
+
+
 const getDiscordSlotText = (slot: Slot): string => {
     let slotText = `${slot.startTime ? dateToDiscordTime(slot.startTime) : ""} : ${slot.dj.name}`;
-    if(slot.dj.twitch_url) {
-        slotText = `${slotText} - ${slot.dj.twitch_url}`
-    }
     return slotText;
 }
 
 
-const getUkPasteSlotText = (slot : Slot): string => {
-    let slotText = `${slot.startTime ? dateToUkPasteTime(slot.startTime) : ""} ${slot.dj.name}`;
+const getTwitterSlotText = (slot : Slot): string => {
+    let slotText = `${slot.startTime ? dateToLineupTime(slot.startTime, "Europe/London") : ""} - ${slot.dj.name}`;
     return slotText;
 }
 
 
-const getAusPasteSlotText = (slot : Slot): string => {
-    let slotText = `${slot.startTime ? dateToAusPasteTime(slot.startTime) : ""} ${slot.dj.name}`;
+const getUkSlotText = (slot : Slot): string => {
+    let slotText = `${slot.startTime ? dateToLineupTime(slot.startTime, "Europe/London") : ""} ${slot.dj.name}`;
     return slotText;
 }
 
 
-const dateToUkPasteTime = (date : Date): string => {
-    return `${dayjs.tz(date, "Europe/London").format('h:mma').slice(0,-1)}`;
-}
-
-
-const dateToAusPasteTime = (date : Date): string => {
-    return `${dayjs.tz(date, "Australia/Sydney").format('h:mma').slice(0,-1)}`;
+const getAusSlotText = (slot : Slot): string => {
+    let slotText = `${slot.startTime ? dateToLineupTime(slot.startTime, "Australia/Sydney") : ""} ${slot.dj.name}`;
+    return slotText;
 }
 
 
