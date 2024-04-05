@@ -1,6 +1,7 @@
 import React from "react";
 import { Button, Card, CardBody, CardFooter, CardHeader, Form, Tabs, Tab} from "react-bootstrap";
 import { Event, Slot } from "../util/types";
+import EventPasteCard from "./EventPasteCard";
 
 
 type Props = {
@@ -66,30 +67,30 @@ const getSlotText = (slot: Slot) => {
 const EventDetails = ({ event }: Props) => {
 
     const discordMessage = getDiscordMessage(event);
+    const twitterMessage = getTwitterMessage(event);
+    const ukMessage = getUkPasteMessage(event);
+    const ausMessage = getAusPasteMessage(event);
 
-    return <Card>
-            <Tabs className="">
+    return <div>
+
+            <Tabs className="mt-4">
                 <Tab eventKey="discord" title="Discord">
-                    <CardBody>
-                        <Form.Control as="textarea" value={discordMessage} rows={16} readOnly className="has-fixed-size" />
-                    </CardBody>
-                    <CardFooter className="d-grid gap-2">
-                        <Button color={"primary"} onClick={() => { navigator.clipboard.writeText(discordMessage); }}>Copy Text</Button>
-                    </CardFooter>
+                    <EventPasteCard event={event} message={discordMessage}></EventPasteCard>
                 </Tab>
                 <Tab eventKey="twitter" title="Twitter">
-                    Tab content for Twitter
+                    <EventPasteCard event={event} message={twitterMessage}></EventPasteCard>
                 </Tab>
                 <Tab eventKey="uk" title="UK Paste">
-                    Tab content for UK
+                    <EventPasteCard event={event} message={ukMessage}></EventPasteCard>
                 </Tab>
                 <Tab eventKey="au" title="AU Paste">
-                    Tab content for AU
+                    <EventPasteCard event={event} message={ausMessage}></EventPasteCard>
+
                 </Tab>
             </Tabs>
             {/* <Message color="warning" size="small" className="p-3 m-2">Still need to implement a little toast message when ya copy, sorry, just trying to get this out the door :x</Message> */}
             
-        </Card>
+        </div>
 };
 
 export default EventDetails;
