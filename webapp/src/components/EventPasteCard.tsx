@@ -1,5 +1,5 @@
-import { Button, Card, CardBody, CardFooter, CardHeader, Form, Tabs, Tab} from "react-bootstrap";
-import { Event, Slot } from "../util/types";
+import { Button, Card, CardBody, CardFooter, CardHeader, Form } from "react-bootstrap";
+import { Event } from "../util/types";
 
 type Props = {
     event: Event,
