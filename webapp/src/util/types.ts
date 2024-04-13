@@ -19,5 +19,6 @@ export type Event = {
     start_datetime: Date;
     host: string;
     slots: Slot[];
+    footer: string;
 }
 

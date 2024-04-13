@@ -1,14 +1,12 @@
 import React from "react";
-import { Button, Card, CardBody, CardFooter, CardHeader, Form, Tabs, Tab} from "react-bootstrap";
+import { Tabs, Tab} from "react-bootstrap";
 import { Event, Slot } from "../util/types";
 import EventPasteCard from "./EventPasteCard";
 import dayjs from "dayjs";
 
-
 type Props = {
     event: Event
 };
-
 
 const getDiscordMessage = (event: Event): string => 
 `**${event.name}**
