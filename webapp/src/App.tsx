@@ -13,10 +13,11 @@ function App() {
         <Routes>
           {/* <Route path="/login" element={<Login />} /> */}
           <Route path="/" element={
-            <FirebaseAuthProvider>
-              <Scheduler />
-            </FirebaseAuthProvider>
-          } />
+              <FirebaseAuthProvider>
+                <Scheduler />
+              </FirebaseAuthProvider>
+            } 
+          />
         </Routes>
       </BrowserRouter>
     </div>

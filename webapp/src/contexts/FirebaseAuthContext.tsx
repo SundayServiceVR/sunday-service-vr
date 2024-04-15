@@ -1,8 +1,8 @@
 // FirebaseAuthContext.tsx
 import * as React from "react";
-import firebase from "firebase/app";
-import { createUserWithEmailAndPassword, getAuth, GoogleAuthProvider, sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup, signInWithRedirect, signOut, User } from "firebase/auth";
-import { auth, sundayServiceAuthProvder } from "../firebase/config";
+import { getAuth, User } from "firebase/auth";
+import { signInWithDiscord } from "../firebase/auth";
+import LoginToDiscord from "../components/LoginToDiscord";
 
 type ContextState = { user: User | null };
 
@@ -18,17 +18,14 @@ const FirebaseAuthProvider = ({ children }: Props) => {
   const value: ContextState = { user };
 
   React.useEffect(() => {
-    const unsubscribe = getAuth().onAuthStateChanged((nextUser) => { setUser(nextUser) });
+    const unsubscribe = getAuth().onAuthStateChanged((nextUser) => { setUser(nextUser); console.log(`Auth State Change: ${nextUser?.displayName}`)});
     return unsubscribe;
   }, []);
 
-  if(!user) {
-    signInWithRedirect(auth, sundayServiceAuthProvder);
-  }
 
   return (
     <FirebaseAuthContext.Provider value={value}>
-      {children}
+      {user ? children : <LoginToDiscord />}
     </FirebaseAuthContext.Provider>
   );
 };
