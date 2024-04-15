@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button, Col, Container, Form, ListGroup, ListGroupItem, Row, Stack } from "react-bootstrap";
-import { RESIDENT_DJS } from "../store/resident_djs";
-import { Dj, Slot, SlotDuration } from "../util/types";
+import { RESIDENT_DJS } from "../../store/resident_djs";
+import { Dj, Slot, SlotDuration } from "../../util/types";
 
 type Props = {
     slots: Slot[],

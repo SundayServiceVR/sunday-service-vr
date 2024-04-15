@@ -1,6 +1,6 @@
 import React from "react";
 import { Form, Button, Stack } from "react-bootstrap";
-import { Event, Slot } from "../util/types";
+import { Event, Slot } from "../../util/types";
 import EventFormSlotList from "./EventFormSlotList";
 
 import "react-datepicker/dist/react-datepicker.css";

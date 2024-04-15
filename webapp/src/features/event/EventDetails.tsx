@@ -1,6 +1,6 @@
 import React from "react";
 import { Tabs, Tab} from "react-bootstrap";
-import { Event, Slot } from "../util/types";
+import { Event, Slot } from "../../util/types";
 import EventPasteCard from "./EventPasteCard";
 import dayjs from "dayjs";
 
