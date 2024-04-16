@@ -13,11 +13,12 @@ import AnonymousLayout from './features/layout/AnonymousLayout';
 import Scheduler from './features/event/Scheduler';
 import ResetPassword from './features/auth/ResetPassword';
 import Confirm from './features/auth/Confirm';
+import { config } from './config';
 
 function App() {
   return (
     <div className="App">
-      <BrowserRouter basename='/sunday-service-vr'>
+      <BrowserRouter basename={config.path_basename}>
         <Routes>
           <Route path="/" element={
               <FirebaseAuthProvider>
