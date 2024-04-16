@@ -2,13 +2,14 @@ import React, { FormEvent, useState } from 'react';
 import { signInWithEmailAndPassword  } from 'firebase/auth';
 import { Link, useNavigate } from 'react-router-dom'
 import { auth } from '../../firebase/config';
-import { Button, Card, Form, Stack } from 'react-bootstrap';
+import { Alert, Button, Card, Form, Stack } from 'react-bootstrap';
 
  
 const Login = () => {
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [error, setError] = useState<Error>();
        
     const onLogin = (event: FormEvent) => {
         event.preventDefault();
@@ -20,11 +21,15 @@ const Login = () => {
             console.log(user);
         })
         .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            console.log(errorCode, errorMessage)
+            setError(error);
         });
     }
+
+    const remapMessage = (message: string) => {
+        if(message === "Firebase: Error (auth/invalid-credential).") { return "Invalid Login Credentials."}
+        return message;
+    }
+
     return <Card>
         <Card.Body>
             <Card.Title>Organizer Login</Card.Title>
@@ -61,7 +66,11 @@ const Login = () => {
                         Login                                                                  
                     </Button>
                     <Link to="/resetPassword">Reset Password</Link>
-                </Stack>                               
+                </Stack>
+                { error && <Alert variant='danger' className="my-3">
+                    <Alert.Heading>Oops...</Alert.Heading>
+                    <p>{ remapMessage(error.message) }</p>
+                </Alert>}                              
             </Form>
         </Card.Body>
     </Card>
