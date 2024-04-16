@@ -2,7 +2,6 @@ import React, { FormEvent, useState } from 'react';
 import { ActionCodeSettings, sendSignInLinkToEmail } from 'firebase/auth';
 import { auth } from '../../firebase/config';
 import { Alert, Button, Card, Form, Spinner, Stack } from 'react-bootstrap';
-import { config } from '../../config';
 
 const Signup = () => {
 
@@ -12,7 +11,7 @@ const Signup = () => {
     const actionCodeSettings: ActionCodeSettings = {
         // URL you want to redirect back to. The domain (www.example.com) for this
         // URL must be in the authorized domains list in the Firebase Console.
-        url: `http://localhost:3000${config.path_basename}/confirm`,
+        url: `http://localhost:3000/confirm`,
         // This must be true.
         handleCodeInApp: true,
         // iOS: {
@@ -39,7 +38,6 @@ const Signup = () => {
             alert(`${errorCode}: ${errorMessage}`)
         }
 
-        
         setSuccess(true);
         window.localStorage.setItem('emailForSignIn', email);
     }

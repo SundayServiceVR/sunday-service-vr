@@ -2,7 +2,6 @@ import React from "react";
 import { Container, Nav, Navbar } from 'react-bootstrap';
 import { Outlet } from "react-router";
 import { auth } from "../../firebase/config";
-import { config } from "../../config";
 
 
 const Layout = () => {
@@ -11,13 +10,13 @@ const Layout = () => {
         <Navbar expand="lg" className="bg-body-secondary" data-bs-theme="dark">
             <Navbar.Brand className="px-3">Sunday Service</Navbar.Brand>
             <Nav className="me-auto">
-                <Nav.Link href={`${config.path_basename}`}>
+                <Nav.Link href="/">
                     Home
                 </Nav.Link>
-                <Nav.Link href={`${config.path_basename}/event`}>
+                <Nav.Link href="/event">
                     Event Setup
                 </Nav.Link>
-                <Nav.Link href={`${config.path_basename}/logout`}>
+                <Nav.Link href="/logout">
                     Logout
                 </Nav.Link>
             </Nav>
