@@ -1,5 +1,4 @@
 import React, { FormEvent, useState } from 'react';
-import { NavLink } from 'react-router-dom';
 import { ActionCodeSettings, sendSignInLinkToEmail } from 'firebase/auth';
 import { auth } from '../../firebase/config';
 import { Alert, Button, Card, Form, Spinner, Stack } from 'react-bootstrap';

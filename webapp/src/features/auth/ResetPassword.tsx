@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { sendPasswordResetEmail } from 'firebase/auth';
 import { auth } from '../../firebase/config';
 import { Form, Card, Button, Alert, Stack } from 'react-bootstrap';
 import Login from './Login';
 
 const ResetPassword = () => {
-    const navigate = useNavigate();
 
     const [email, setEmail] = useState('');
     const [success, setSuccess] = useState<boolean | null>(null);
