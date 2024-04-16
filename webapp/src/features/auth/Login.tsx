@@ -1,4 +1,4 @@
-import React, { MouseEventHandler, useState } from 'react';
+import React, { FormEvent, useState } from 'react';
 import { signInWithEmailAndPassword  } from 'firebase/auth';
 import { Link, useNavigate } from 'react-router-dom'
 import { auth } from '../../firebase/config';
@@ -10,7 +10,7 @@ const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
        
-    const onLogin: MouseEventHandler<HTMLButtonElement> = (event) => {
+    const onLogin = (event: FormEvent) => {
         event.preventDefault();
         signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
@@ -24,13 +24,11 @@ const Login = () => {
             const errorMessage = error.message;
             console.log(errorCode, errorMessage)
         });
-       
     }
- 
     return <Card>
         <Card.Body>
             <Card.Title>Organizer Login</Card.Title>
-            <Form>                                              
+            <Form onSubmit={onLogin}>                                              
                 <Form.Group>
                     <Form.Label htmlFor="email-address">
                         Email
@@ -59,7 +57,7 @@ const Login = () => {
                     />
                 </Form.Group>
                 <Stack className="mt-3 text-center" gap={2}>
-                    <Button onClick={onLogin}>      
+                    <Button type="submit">      
                         Login                                                                  
                     </Button>
                     <Link to="/resetPassword">Reset Password</Link>

@@ -1,5 +1,4 @@
 import React from 'react';
-import Scheduler from './features/event/Scheduler';
 import { Route, Routes } from 'react-router';
 import { BrowserRouter } from 'react-router-dom';
 
@@ -11,6 +10,9 @@ import { Home } from './features/home/Home';
 import Layout from './features/layout/Layout';
 import Logout from './features/auth/Logout';
 import AnonymousLayout from './features/layout/AnonymousLayout';
+import Scheduler from './features/event/Scheduler';
+import ResetPassword from './features/auth/ResetPassword';
+import Confirm from './features/auth/Confirm';
 
 function App() {
   return (
@@ -36,6 +38,8 @@ function App() {
           <Route path="/login" element={ <AnonymousLayout><Login /></AnonymousLayout>} /> 
           <Route path="/signup" element={ <AnonymousLayout><Signup /></AnonymousLayout>} />
           <Route path="/logout" element={ <AnonymousLayout><Logout /></AnonymousLayout>} />
+          <Route path="/confirm" element={ <AnonymousLayout><Confirm /></AnonymousLayout>} />
+          <Route path="/resetPassword" element={ <AnonymousLayout><ResetPassword /></AnonymousLayout>} />
         </Routes>
       </BrowserRouter>
     </div>
