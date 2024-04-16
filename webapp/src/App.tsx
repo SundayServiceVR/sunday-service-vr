@@ -8,7 +8,6 @@ import Login from './features/auth/Login';
 import Signup from './features/auth/Signup';
 import { Home } from './features/home/Home';
 import Layout from './features/layout/Layout';
-import Logout from './features/auth/Logout';
 import AnonymousLayout from './features/layout/AnonymousLayout';
 import Scheduler from './features/event/Scheduler';
 import ResetPassword from './features/auth/ResetPassword';
@@ -37,7 +36,6 @@ function App() {
           </Route>
           <Route path="/login" element={ <AnonymousLayout><Login /></AnonymousLayout>} /> 
           <Route path="/signup" element={ <AnonymousLayout><Signup /></AnonymousLayout>} />
-          <Route path="/logout" element={ <AnonymousLayout><Logout /></AnonymousLayout>} />
           <Route path="/confirm" element={ <AnonymousLayout><Confirm /></AnonymousLayout>} />
           <Route path="/resetPassword" element={ <AnonymousLayout><ResetPassword /></AnonymousLayout>} />
         </Routes>
