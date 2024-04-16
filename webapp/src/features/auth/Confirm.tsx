@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { isSignInWithEmailLink, sendPasswordResetEmail, signInWithEmailLink } from 'firebase/auth';
+import { isSignInWithEmailLink, signInWithEmailLink } from 'firebase/auth';
 import { auth } from '../../firebase/config';
-import { Form, Card, Button, Alert, Stack } from 'react-bootstrap';
-import { Navigate } from 'react-router';
-import { Home } from '../home/Home';
+import { Alert } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 const Confirm = () => {
