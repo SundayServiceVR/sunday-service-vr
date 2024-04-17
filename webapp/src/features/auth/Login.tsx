@@ -1,7 +1,7 @@
 import React, { FormEvent, useState } from 'react';
 import { signInWithEmailAndPassword  } from 'firebase/auth';
 import { Link, useNavigate } from 'react-router-dom'
-import { auth } from '../../firebase/config';
+import { auth } from '../../util/firebase';
 import { Alert, Button, Card, Form, Stack } from 'react-bootstrap';
 
  

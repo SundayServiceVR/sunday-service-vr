@@ -1,8 +1,7 @@
 import { signOut } from "firebase/auth";
-import React from "react";
 import { Container, Nav, Navbar } from 'react-bootstrap';
 import { Outlet } from "react-router";
-import { auth } from "../../firebase/config";
+import { auth } from "../../util/firebase";
 
 const Layout = () => {
     const onSignOutClicked = () => {
@@ -25,7 +24,7 @@ const Layout = () => {
             </Navbar.Collapse>
         </Navbar>
         <Container className="mt-1">
-           <Outlet />
+            <Outlet />
         </Container> 
     </>
 }

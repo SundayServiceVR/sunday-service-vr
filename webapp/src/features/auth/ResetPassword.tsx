@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { sendPasswordResetEmail } from 'firebase/auth';
-import { auth } from '../../firebase/config';
+import { auth } from '../../util/firebase';
 import { Form, Card, Button, Alert, Stack } from 'react-bootstrap';
 import Login from './Login';
 
