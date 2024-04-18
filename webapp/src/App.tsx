@@ -12,6 +12,7 @@ import ResetPassword from './features/auth/ResetPassword';
 import Whiteboard from './features/whiteboard/Whiteboard';
 
 import './App.css';
+import WhiteboardLayout from './features/whiteboard/WhiteboardLayout';
 
 function App() {
   return (
@@ -25,7 +26,9 @@ function App() {
             } 
           >
             <Route index element={<Scheduler />}/>
-            <Route path="/whiteboard" element={<Whiteboard />}/>
+            <Route path="/whiteboard" element={<WhiteboardLayout />}>
+              <Route index element={<Whiteboard />} />
+            </Route>
           </Route>
           <Route path="/login" element={ <AnonymousLayout><Login /></AnonymousLayout>} /> 
           <Route path="/resetPassword" element={ <AnonymousLayout><ResetPassword /></AnonymousLayout>} />

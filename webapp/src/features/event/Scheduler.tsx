@@ -1,8 +1,9 @@
 import React, { useEffect, useReducer } from "react";
 import { Tabs, Tab, } from 'react-bootstrap';
-import EventDetails from './EventDetails';
+import EventSocialMediaNotifications from './EventSocialMediaNotifications';
 import EventSetup from './EventSetup';
 import { default_event, EventActionType, eventStateReducer, loadEvent } from "../../store/events";
+import WhiteboardWriter from "../whiteboard/WhiteboardWriter";
 
 
 const Scheduler = () => {
@@ -22,8 +23,11 @@ const Scheduler = () => {
             resetEvent={() => { eventStateDispatch({ type: EventActionType.Reset }); }}
             />
         </Tab>
-        <Tab eventKey="event-notifications" title="Notification Helper">
-            <EventDetails event={eventState} />
+        <Tab eventKey="event-notifications" title="Social Media">
+            <EventSocialMediaNotifications event={eventState} />
+        </Tab>
+        <Tab eventKey="event-ingame" title="Ingame">
+            <WhiteboardWriter event={eventState} />
         </Tab>
     </Tabs>
 }

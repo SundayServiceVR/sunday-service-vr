@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../util/firebase";
-import { Alert, AlertHeading, Spinner } from "react-bootstrap";
+import { Alert, AlertHeading, FormControl, Spinner } from "react-bootstrap";
 
 const Whiteboard = () => {
-    const [result, setResult] = useState<string>();
+    const [result, setResult] = useState<any>();
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string>();
 
@@ -15,7 +15,7 @@ const Whiteboard = () => {
                 const docRef = doc(db, "whiteboards", "current");
                 const docSnap = await getDoc(docRef);
                 if(docSnap.exists()) {
-                    setResult(docSnap.data().au)
+                    setResult(docSnap.data())
                 }
             } catch(error: any){
                 setError(error.message ?? error.toString());
@@ -34,8 +34,10 @@ const Whiteboard = () => {
         return <Alert variant="warning"><AlertHeading>Error</AlertHeading>{error}</Alert>
     }
 
+    const formattedResult = JSON.stringify(result, null, " ");
+
     // https://www.youtube.com/watch?v=2u6Zb36OQjM
-    return <div>{ result ?? "No Results" }</div>
+    return <FormControl as="textarea" rows={8} value={formattedResult } disabled />
 }
 
 export default Whiteboard;

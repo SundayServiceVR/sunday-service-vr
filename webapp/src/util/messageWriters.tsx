@@ -1,14 +1,7 @@
-import React from "react";
-import { Tabs, Tab} from "react-bootstrap";
-import { Event, Slot } from "../../util/types";
-import EventPasteCard from "./EventPasteCard";
 import dayjs from "dayjs";
+import { Event, Slot } from "./types";
 
-type Props = {
-    event: Event
-};
-
-const getDiscordMessage = (event: Event): string => 
+export const getDiscordMessage = (event: Event): string => 
 `**${event.name}**
 
 ${event.message}
@@ -25,7 +18,7 @@ https://twitch.s4vr.net/
 `;
 
 
-const getTwitterMessage = (event: Event): string => {
+export const getTwitterMessage = (event: Event): string => {
     const ukDayTz = dayjs.tz(event.start_datetime, "GB");
 return `${event.name}
 ${ukDayTz.format("YYYY-MM-DD")}
@@ -40,7 +33,7 @@ https://twitch.s4vr.net/
 }
 
 
-const getUkPasteMessage = (event: Event): string => {
+export const getUkPasteMessage = (event: Event): string => {
     const ukDayTz = dayjs.tz(event.start_datetime, "GB");
 return `${event.name}
 ${ukDayTz.format("YYYY-MM-DD")}
@@ -52,8 +45,7 @@ ${event.slots.map(getUkSlotText).join("\n")}
 `;
 }
 
-
-const getAusPasteMessage = (event: Event): string =>{
+export const getAusPasteMessage = (event: Event): string =>{
     const ausDayTz = dayjs.tz(event.start_datetime, "Australia/Sydney");
     return `${event.name}
 ${ausDayTz.format("YYYY-MM-DD")}
@@ -102,35 +94,3 @@ const getAusSlotText = (slot : Slot): string => {
     let slotText = `${slot.startTime ? dateToLineupTime(slot.startTime, "Australia/Sydney") : ""} ${slot.dj.name}`;
     return slotText;
 }
-
-
-const EventDetails = ({ event }: Props) => {
-
-    const discordMessage = getDiscordMessage(event);
-    const twitterMessage = getTwitterMessage(event);
-    const ukMessage = getUkPasteMessage(event);
-    const ausMessage = getAusPasteMessage(event);
-
-    return <div>
-
-            <Tabs className="mt-4">
-                <Tab eventKey="discord" title="Discord">
-                    <EventPasteCard event={event} message={discordMessage}></EventPasteCard>
-                </Tab>
-                <Tab eventKey="twitter" title="Twitter">
-                    <EventPasteCard event={event} message={twitterMessage}></EventPasteCard>
-                </Tab>
-                <Tab eventKey="uk" title="UK Paste">
-                    <EventPasteCard event={event} message={ukMessage}></EventPasteCard>
-                </Tab>
-                <Tab eventKey="au" title="AU Paste">
-                    <EventPasteCard event={event} message={ausMessage}></EventPasteCard>
-
-                </Tab>
-            </Tabs>
-            {/* <Message color="warning" size="small" className="p-3 m-2">Still need to implement a little toast message when ya copy, sorry, just trying to get this out the door :x</Message> */}
-            
-        </div>
-};
-
-export default EventDetails;
