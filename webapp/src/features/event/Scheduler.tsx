@@ -3,7 +3,7 @@ import { Tabs, Tab, } from 'react-bootstrap';
 import EventSocialMediaNotifications from './EventSocialMediaNotifications';
 import EventSetup from './EventSetup';
 import { default_event, EventActionType, eventStateReducer, loadEvent } from "../../store/events";
-import WhiteboardWriter from "../whiteboard/WhiteboardWriter";
+import WhiteboardWriter from "./WhiteboardWriter";
 
 
 const Scheduler = () => {
