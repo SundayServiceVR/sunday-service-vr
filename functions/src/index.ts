@@ -35,7 +35,6 @@ export const whiteboard = onRequest(async (request, response) => {
     responseText = JSON.stringify(whiteboard);
   }
 
-
   logger.info("Request from ", { structuredData: true });
   response.send(responseText);
 });
