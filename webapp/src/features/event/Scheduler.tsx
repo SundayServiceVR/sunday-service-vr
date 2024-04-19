@@ -11,8 +11,10 @@ const Scheduler = () => {
     const [eventState, eventStateDispatch] = useReducer(eventStateReducer, default_event);
 
     useEffect(() => {
-      const localStorageEvent = loadEvent();
-      eventStateDispatch({ type: EventActionType.SetEvent, payload: localStorageEvent ?? default_event });
+        (async ()=>{
+            const event = await loadEvent();
+            eventStateDispatch({ type: EventActionType.SetEvent, payload: event ?? default_event });
+        })()
     }, []);
 
     return <Tabs>

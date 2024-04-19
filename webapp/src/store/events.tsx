@@ -1,21 +1,32 @@
 import { nextSundayServiceDefaultDateTime } from '../util/util';
 import { Event } from '../util/types';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { db } from '../util/firebase';
  
-export const saveEvent = (event: Event) => {
-    localStorage.setItem("event", JSON.stringify(event));
+export const saveEvent = async (event: Event) => {
+    event.id = "current";
+    // localStorage.setItem("event", JSON.stringify(event));
+    await setDoc(doc(db, "events", event.id), event);
+
 }
 
-export const loadEvent = () => {
-    const jsonBlob = localStorage.getItem("event");
-    if(jsonBlob === null) {
-        return null;
-    }
-    const value = JSON.parse(jsonBlob);
-    value.start_datetime = new Date(value.start_datetime);
-    return value as Event;
+export const loadEvent = async () => {
+    // const jsonBlob = localStorage.getItem("event");
+    // if(jsonBlob === null) {
+    //     return null;
+    // }
+    // const value = JSON.parse(jsonBlob);
+    // value.start_datetime = new Date(value.start_datetime);
+    // const event = value as Event;
+
+    const docRef = await getDoc(doc(db, "events", "current"));
+    const event = docRef.data() as Event;
+    debugger;
+    return event;
 }
 
 export const default_event: Event = {
+    id: "current",
     name: "Sunday Service",
     start_datetime: nextSundayServiceDefaultDateTime(),
     host: "Strawbs",
@@ -41,7 +52,6 @@ export type EventAction = {
         if (action.payload !== undefined) {
           const event = { ...action.payload };
           calcSlotTimes(event);
-          saveEvent(event);
           return event;
         } else {
           throw new Error("Expected an payload to be populated, but it was undefined");
