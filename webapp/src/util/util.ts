@@ -2,11 +2,14 @@
 import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
+import advancedFormat from "dayjs/plugin/advancedFormat"
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
+dayjs.extend(advancedFormat);
 
 // God forgive these sins
+// i forgive u bc i did worse -frosty
 export const nextSundayServiceDefaultDateTime = (): Date => {
     let today = new Date();
     let targetDay = new Date();

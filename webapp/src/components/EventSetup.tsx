@@ -50,30 +50,31 @@ const EventForm = ({ djEvent, setEvent, resetEvent }: Props) => {
                             setEvent({ ...djEvent, start_datetime: new Date(event.target.value)})
                         }}
                         className="input" />
-            </Form.Group>
-            <Form.Group>
-                <Form.Label>
-                    Message
-                </Form.Label>
-             
-                <Form.Control
-                    type="textarea"
-                    value={djEvent.message}
-                    onChange={(event) => {
-                        setEvent({ ...djEvent, message: event.target.value })
-                    }} />
-            </Form.Group>
-            <Form.Group>
-                <Form.Label>
-                    Footer
-                </Form.Label>
-                <Form.Control
-                    type="textarea"
-                    value={djEvent.footer}
-                    onChange={(event) => {
-                        setEvent({ ...djEvent, footer: event.target.value })
-                    }} />
-            </Form.Group>
+        
+                </Form.Group>
+                <Form.Group>
+                    <Form.Label>
+                        Discord Message
+                    </Form.Label>
+                
+                    <Form.Control
+                        type="textarea"
+                        value={djEvent.message}
+                        onChange={(event) => {
+                            setEvent({ ...djEvent, message: event.target.value })
+                        }} />
+                </Form.Group>
+                <Form.Group>
+                    <Form.Label>
+                        Host
+                    </Form.Label>
+                    <Form.Control
+                        placeholder="Strawbs"
+                        type="text"
+                        value={djEvent.host}
+                        onChange={(event) => { setEvent({ ...djEvent, host: event.target.value }); }}
+                    />
+                </Form.Group>
             </Form>
         </div>
         < hr />
