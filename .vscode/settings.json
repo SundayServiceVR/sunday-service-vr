@@ -1,0 +1,7 @@
+{
+    "eslint.codeActionsOnSave.rules": null,
+    "eslint.workingDirectories": [
+        "functions",
+        "webapp"
+    ]
+}
