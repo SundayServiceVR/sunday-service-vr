@@ -36,6 +36,9 @@ const EventFormSlotList = ({ slots, onSlotsChange }: Props) => {
         onSlotsChange(slots_copy);
     }
 
+    const toggleDebutt = (slot_index: number) => {
+    }
+
     return <>
 
         <h3 className="display-6">Add DJs</h3>
@@ -64,6 +67,7 @@ const EventFormSlotList = ({ slots, onSlotsChange }: Props) => {
                             onSlotMoveSooner={() => { swapSlots(index, index - 1); }}
                             onSetSlotLength={(duration: SlotDuration) => { setSlotLength(index, duration); }}
                             onRemoveSlot={() => { removeSlot(index); }}
+                            onToggleDebutt={() => {toggleDebutt(index)}}
                         />
                     </ListGroupItem>
                 )}
@@ -85,6 +89,7 @@ const ResidentDjs = ({ onAddSlot, currentSlots }: ReseidentDjsProps) => {
     const newDjTimeSlot = (dj: Dj): Slot => ({
         dj,
         duration: 1,
+        isDebutt: false
     });
 
     // TODO:  Duplicate dj's seems to break the list.  We can easilly reproduce that behavior here.
@@ -117,6 +122,7 @@ const CustomDjSlotInserter = ({ onAddSlot }: CustomDjSlotInserterProps) => {
     const newDjTimeSlot = (dj: Dj): Slot => ({
         dj,
         duration: 1,
+        isDebutt: false
     });
 
     const addGuestDj = (dj: Dj) => {
@@ -147,6 +153,7 @@ type SortableDjProps = {
     onSlotMoveLater: () => void,
     onSetSlotLength: (duration: SlotDuration) => void,
     onRemoveSlot: () => void,
+    onToggleDebutt: () => void,
 }
 
 const SortableDj = ({
@@ -155,7 +162,8 @@ const SortableDj = ({
     onSlotMoveSooner,
     onSlotMoveLater,
     onSetSlotLength,
-    onRemoveSlot
+    onRemoveSlot,
+    onToggleDebutt
 }: SortableDjProps) =>
     <Stack className="my-2" direction="horizontal">
         <span style={{ "width": "30px" }}>
