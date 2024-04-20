@@ -3,7 +3,7 @@ import { Tabs, Tab, } from 'react-bootstrap';
 import EventSocialMediaNotifications from './EventSocialMediaNotifications';
 import EventSetup from './EventSetup';
 import { default_event, EventActionType, eventStateReducer, loadEvent } from "../../store/events";
-import WhiteboardWriter from "./WhiteboardWriter";
+import WhiteboardWriter from "./EventWhiteboardWriter";
 
 
 const Scheduler = () => {
@@ -20,9 +20,9 @@ const Scheduler = () => {
     return <Tabs>
         <Tab eventKey="event-setup" title="Event Setup">
             <EventSetup
-            djEvent={eventState}
-            setEvent={(event) => { eventStateDispatch({ type: EventActionType.SetEvent, payload: event }); }}
-            resetEvent={() => { eventStateDispatch({ type: EventActionType.Reset }); }}
+                djEvent={eventState}
+                setEvent={(event) => { eventStateDispatch({ type: EventActionType.SetEvent, payload: event }); }}
+                resetEvent={() => { eventStateDispatch({ type: EventActionType.Reset }); }}
             />
         </Tab>
         <Tab eventKey="event-notifications" title="Social Media">

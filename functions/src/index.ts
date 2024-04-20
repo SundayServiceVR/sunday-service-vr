@@ -15,12 +15,14 @@ import { getFirestore } from "firebase-admin/firestore";
 initializeApp();
 
 export const whiteboard = onRequest(async (request, response) => {
-  const docRef = await getFirestore().collection("whiteboards").doc("current");
-  const document = await docRef.get();
-  const whiteboard = document.data();
+    const docRef = await getFirestore()
+        .collection("whiteboards")
+        .doc("current");
+    const document = await docRef.get();
+    const whiteboard = document.data();
 
-  const responseText = JSON.stringify(whiteboard);
+    const responseText = JSON.stringify(whiteboard);
 
-  logger.info("Request from ", { structuredData: true });
-  response.send(responseText);
+    logger.info("Request from ", { structuredData: true });
+    response.send(responseText);
 });

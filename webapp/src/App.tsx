@@ -7,7 +7,7 @@ import { FirebaseAuthProvider } from './contexts/FirebaseAuthContext';
 import Login from './features/auth/Login';
 import Layout from './features/layout/Layout';
 import AnonymousLayout from './features/layout/AnonymousLayout';
-import Scheduler from './features/event/Scheduler';
+import Scheduler from './features/event/Event';
 import ResetPassword from './features/auth/ResetPassword';
 
 import './App.css';

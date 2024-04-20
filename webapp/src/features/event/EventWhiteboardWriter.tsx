@@ -19,10 +19,8 @@ const WhiteboardWriter = ({ event }: Props) => {
     const message = getUkPasteMessage(event);
 
     const updateWhiteboards = () => {
-        const washingtonRef = doc(db, "whiteboards", "current");
         (async () => {
-            // Set the "capital" field of the city 'DC'
-            await updateDoc(washingtonRef, {
+            await updateDoc(doc(db, "whiteboards", "current"), {
                 au: getAusPasteMessage(event),
                 gmt: getUkPasteMessage(event),
             });

@@ -20,9 +20,15 @@ export const loadEvent = async () => {
     // const event = value as Event;
 
     const docRef = await getDoc(doc(db, "events", "current"));
-    const event = docRef.data() as Event;
-    debugger;
-    return event;
+    const data = docRef.data();
+    if(data) {
+      const event = {
+        ...data,
+        start_datetime: data.start_datetime.toDate()
+      } as Event;
+      return event;
+    }
+  return null;
 }
 
 export const default_event: Event = {
