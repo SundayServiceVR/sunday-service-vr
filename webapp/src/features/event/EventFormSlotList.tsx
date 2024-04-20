@@ -55,7 +55,7 @@ const EventFormSlotList = ({ slots, onSlotsChange }: Props) => {
             <h3 className="display-6">Schedule</h3>
             <ListGroup variant="flush" >
                 {slots.map(
-                    (slot: Slot, index: number) => <ListGroupItem key={`slot-${slot.dj.name}`} className="py-0">
+                    (slot: Slot, index: number) => <ListGroupItem key={`slot-${index}`} className="py-0">
                         <SortableDj
                             index={index}
                             dj={slot.dj}
