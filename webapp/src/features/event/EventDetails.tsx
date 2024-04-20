@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Form, Button, Stack } from "react-bootstrap";
 import { Event, Slot } from "../../util/types";
 import EventFormSlotList from "./EventFormSlotList";
@@ -8,14 +8,23 @@ import "react-datepicker/dist/react-datepicker.css";
 type Props = {
     djEvent: Event,
     setEvent: (event: Event) => void,
+    saveEvent: (event: Event) => void,
     resetEvent: () => void,
 };
 
-const EventForm = ({ djEvent, setEvent, resetEvent }: Props) => {
+const EventDetails = ({ djEvent, setEvent, resetEvent, saveEvent }: Props) => {
+
     return <div>
         <Stack direction="horizontal" gap={3}>
             <h2 className="display-6">Event Setup</h2>
             <span className="ms-auto" />
+            <Button
+                placeholder="Sunday Service"
+                value={djEvent.name}
+                // TODO: Make a confirmation dialog component
+                onClick={() => {saveEvent(djEvent);}}
+                color={"danger"}
+            >Save</Button>
             <Button
                 placeholder="Sunday Service"
                 value={djEvent.name}
@@ -45,8 +54,6 @@ const EventForm = ({ djEvent, setEvent, resetEvent }: Props) => {
                         type="datetime-local"
                         value={new Date(djEvent.start_datetime.getTime() - djEvent.start_datetime.getTimezoneOffset()*60*1000).toISOString().slice(0, 16)}
                         onChange={(event) => {
-                            debugger;
-                            console.log(djEvent.start_datetime.toISOString().slice(0, 16))
                             setEvent({ ...djEvent, start_datetime: new Date(event.target.value)})
                         }}
                         className="input" />
@@ -73,7 +80,7 @@ const EventForm = ({ djEvent, setEvent, resetEvent }: Props) => {
                         type="text"
                         value={djEvent.host}
                         onChange={(event) => { setEvent({ ...djEvent, host: event.target.value }); }}
-                    />
+                    />djEvent
                 </Form.Group>
             </Form>
         </div>
@@ -91,4 +98,4 @@ const EventForm = ({ djEvent, setEvent, resetEvent }: Props) => {
     </div>
 };
 
-export default EventForm;
+export default EventDetails;

@@ -7,18 +7,10 @@ export const saveEvent = async (event: Event) => {
     event.id = "current";
     // localStorage.setItem("event", JSON.stringify(event));
     await setDoc(doc(db, "events", event.id), event);
-
+    alert("Event Saved")
 }
 
 export const loadEvent = async () => {
-    // const jsonBlob = localStorage.getItem("event");
-    // if(jsonBlob === null) {
-    //     return null;
-    // }
-    // const value = JSON.parse(jsonBlob);
-    // value.start_datetime = new Date(value.start_datetime);
-    // const event = value as Event;
-
     const docRef = await getDoc(doc(db, "events", "current"));
     const data = docRef.data();
     if(data) {
@@ -35,7 +27,7 @@ export const default_event: Event = {
     id: "current",
     name: "Sunday Service",
     start_datetime: nextSundayServiceDefaultDateTime(),
-    host: "Strawbs",
+    host: "",
     message: "Come by to chill and wiggle to some Sunday Service tunes!",
     slots: [],
     footer: "https://discord.s4vr.net/\nhttps://twitch.s4vr.net/",
@@ -62,7 +54,6 @@ export type EventAction = {
         } else {
           throw new Error("Expected an payload to be populated, but it was undefined");
         }
-
       case EventActionType.Reset:
         saveEvent(default_event);
         return default_event;
