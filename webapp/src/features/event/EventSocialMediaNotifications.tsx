@@ -1,5 +1,4 @@
-import React from "react";
-import { Tabs, Tab} from "react-bootstrap";
+import { Tabs, Tab } from "react-bootstrap";
 import { Event } from "../../util/types";
 import EventPasteCard from "./EventPasteCard";
 import { getDiscordMessage, getTwitterMessage } from "../../util/messageWriters";
@@ -9,6 +8,7 @@ type Props = {
 };
 
 const EventSocialMediaNotifications = ({ event }: Props) => {
+
     const discordMessage = getDiscordMessage(event);
     const twitterMessage = getTwitterMessage(event);
     return <div>
