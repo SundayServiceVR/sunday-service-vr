@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Tabs, Tab, Alert, Button, Stack, } from 'react-bootstrap';
-import EventSocialMediaNotifications from './EventSocialMediaNotifications';
-import EventDetails from './EventDetails';
+import { Alert, Button, Stack, } from 'react-bootstrap';
 import { calcSlotTimes, default_event, docToEvent, saveEvent } from "../../store/events";
-import EventFrontboardPreview from "./EventFrontboardPreview";
 import { onSnapshot, doc } from "firebase/firestore";
 import { Event } from "../../util/types";
 import { db } from "../../util/firebase";
 import FloatingActionBar from "../../components/FloatingActionBar";
+import { Outlet, useOutletContext } from "react-router";
 
 
-const Scheduler = () => {
+const EventRoot = () => {
 
     const [event, setEvent] = useState<Event>(default_event);
     const [eventScratchpad, setEventScratchpad] = useState<Event>(event ?? default_event);
@@ -58,17 +56,8 @@ const Scheduler = () => {
     }
 
     return <>
-        <Tabs>
-            <Tab eventKey="event-setup" title="Event Setup">
-                <EventDetails eventScratchpad={eventScratchpad} proposeEventChange={proposeEventChange} />
-            </Tab>
-            <Tab eventKey="event-notifications" title="Social Media">
-                <EventSocialMediaNotifications event={event} />
-            </Tab>
-            <Tab eventKey="event-ingame" title="Ingame">
-                <EventFrontboardPreview event={event} />
-            </Tab>
-        </Tabs>
+
+        <Outlet context={[eventScratchpad, proposeEventChange]}/>
 
         <FloatingActionBar hidden={!hasChanges}>
             <Alert variant="primary">
@@ -86,4 +75,12 @@ const Scheduler = () => {
         </FloatingActionBar>
     </>
 }
-export default Scheduler;
+export default EventRoot;
+
+export type EventRouterOutletMemebers = [Event, (event: Event)=>void];
+
+export function useEventOperations() {
+    return useOutletContext<EventRouterOutletMemebers>();
+  }
+
+export { }

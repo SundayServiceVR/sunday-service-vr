@@ -1,18 +1,15 @@
 import React from "react";
 import { Form, Button, Stack } from "react-bootstrap";
-import { Event, Slot } from "../../util/types";
+import { Slot } from "../../util/types";
 import EventFormSlotList from "./EventFormSlotList";
 import { resetEvent } from "../../store/events";
-
+import { useEventOperations } from "./EventRoot";
 import "react-datepicker/dist/react-datepicker.css";
 
+const EventDetails = () => {
 
-type Props = {
-    eventScratchpad: Event,
-    proposeEventChange: (event: Event) => void;
-};
+    const [eventScratchpad, proposeEventChange] = useEventOperations();
 
-const EventDetails = ({ eventScratchpad, proposeEventChange }: Props) => {
     return <div>
         <Stack direction="horizontal" gap={3}>
             <h2 className="display-6">Event Setup</h2>
