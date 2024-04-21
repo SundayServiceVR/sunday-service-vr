@@ -2,42 +2,39 @@ import React, { useState } from "react";
 import { Button, Col, Container, Form, ListGroup, ListGroupItem, Row, Stack } from "react-bootstrap";
 import { RESIDENT_DJS } from "../../store/resident_djs";
 import { Dj, Slot, SlotDuration } from "../../util/types";
+import { useEventOperations } from "./EventRoot";
 
-type Props = {
-    slots: Slot[],
-    onSlotsChange: (slots: Slot[]) => void
-}
+const EventLineup = () => {
 
-const EventFormSlotList = ({ slots, onSlotsChange }: Props) => {
+    const [eventScratchpad, proposeEventChange] = useEventOperations();
 
     const swapSlots = (slot_a: number, slot_b: number) => {
-        if (slot_a < 0 || slot_a >= slots.length || slot_b < 0 || slot_b >= slots.length) {
+        if (slot_a < 0 || slot_a >= eventScratchpad.slots.length || slot_b < 0 || slot_b >= eventScratchpad.slots.length) {
             return;
         }
-        const slots_copy = [...slots];
+        const slots_copy = [...eventScratchpad.slots];
         [slots_copy[slot_a], slots_copy[slot_b]] = [slots_copy[slot_b], slots_copy[slot_a]];
-        onSlotsChange(slots_copy);
+        proposeEventChange({...eventScratchpad, slots: slots_copy});
     }
 
     const setSlotLength = (slot_index: number, duration: SlotDuration) => {
-        const slots_copy = [...slots];
+        const slots_copy = [...eventScratchpad.slots];
         slots_copy[slot_index].duration = duration;
-        onSlotsChange(slots_copy);
+        proposeEventChange({...eventScratchpad, slots: slots_copy});
     }
 
     const removeSlot = (slot_index: number) => {
-        const slots_copy = [...slots];
+        const slots_copy = [...eventScratchpad.slots];
         slots_copy.splice(slot_index, 1);  //delete slots_copy[slot_index];
-        onSlotsChange(slots_copy);
+        proposeEventChange({...eventScratchpad, slots: slots_copy});
     }
 
     const addSlot = (slot: Slot) => {
-        const slots_copy = [...slots, slot];
-        onSlotsChange(slots_copy);
+        const slots_copy = [...eventScratchpad.slots, slot];
+        proposeEventChange({...eventScratchpad, slots: slots_copy});
     }
 
     return <>
-
         <h3 className="display-6">Add DJs</h3>
         <Container>
             <Row>
@@ -45,7 +42,7 @@ const EventFormSlotList = ({ slots, onSlotsChange }: Props) => {
                     <CustomDjSlotInserter onAddSlot={(slot: Slot) => { addSlot(slot); }} />
                 </Col>
                 <Col>
-                    <ResidentDjs onAddSlot={(slot: Slot) => { addSlot(slot); }} currentSlots={slots} />
+                    <ResidentDjs onAddSlot={(slot: Slot) => { addSlot(slot); }} currentSlots={eventScratchpad.slots} />
                 </Col>
             </Row>
         </Container>
@@ -54,7 +51,7 @@ const EventFormSlotList = ({ slots, onSlotsChange }: Props) => {
         <div>
             <h3 className="display-6">Schedule</h3>
             <ListGroup variant="flush" >
-                {slots.map(
+                {eventScratchpad.slots.map(
                     (slot: Slot, index: number) => <ListGroupItem key={`slot-${index}`} className="py-0">
                         <SortableDj
                             index={index}
@@ -73,7 +70,7 @@ const EventFormSlotList = ({ slots, onSlotsChange }: Props) => {
     </>;
 };
 
-export default EventFormSlotList;
+export default EventLineup;
 
 type ReseidentDjsProps = {
     onAddSlot: (slot: Slot) => void,

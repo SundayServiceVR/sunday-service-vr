@@ -3,14 +3,15 @@ import EventPasteCard from "./EventPasteCard";
 import { getDiscordMessage, getTwitterMessage } from "../../util/messageWriters";
 import { useEventOperations } from "./EventRoot";
 
-const EventSocialMediaNotifications = () => {
+const EventAnnouncements = () => {
 
     const [eventScratchpad] = useEventOperations();
 
     const discordMessage = getDiscordMessage(eventScratchpad);
     const twitterMessage = getTwitterMessage(eventScratchpad);
 
-    return <div>
+    return <section>
+            <h1 className="display-5">Announcements</h1>
             <Tabs className="mt-4">
                 <Tab eventKey="discord" title="Discord">
                     <EventPasteCard event={eventScratchpad} message={discordMessage}></EventPasteCard>
@@ -19,7 +20,7 @@ const EventSocialMediaNotifications = () => {
                     <EventPasteCard event={eventScratchpad} message={twitterMessage}></EventPasteCard>
                 </Tab>
             </Tabs>
-        </div>
+        </section>
 };
 
-export default EventSocialMediaNotifications;
+export default EventAnnouncements;

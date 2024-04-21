@@ -11,10 +11,11 @@ import AnonymousLayout from './features/layout/AnonymousLayout';
 import ResetPassword from './features/auth/ResetPassword';
 
 import './App.css';
-import EventDetails from './features/event/EventDetails';
+import EventLineup from './features/event/EventLineup';
 import EventFrontboardPreview from './features/event/EventFrontboardPreview';
-import EventSocialMediaNotifications from './features/event/EventSocialMediaNotifications';
+import EventAnnouncements from './features/event/EventAnnouncements';
 import Home from './features/Home';
+import EventSetup from './features/event/EventSetup';
 
 function App() {
   return (
@@ -24,8 +25,9 @@ function App() {
           <Route path="/" element={<FirebaseAuthProvider><Layout /></FirebaseAuthProvider>}>
             <Route index element={<Home />} />
             <Route path="event" element={<EventRoot />}>
-              <Route path="setup" element={<EventDetails />} />
-              <Route path="socialMedia" element={<EventSocialMediaNotifications />} />
+              <Route path="setup" element={<EventSetup />} />
+              <Route path="lineup" element={<EventLineup />} />
+              <Route path="announcements" element={<EventAnnouncements />} />
               <Route path="whiteboardPreview" element={<EventFrontboardPreview />} />
             </Route>
           </Route>
