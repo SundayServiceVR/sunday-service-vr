@@ -1,5 +1,5 @@
 import { signOut } from "firebase/auth";
-import { Container, Nav, NavDropdown, Navbar } from 'react-bootstrap';
+import { Container, Nav, Navbar } from 'react-bootstrap';
 import { Outlet } from "react-router";
 import { auth } from "../../util/firebase";
 

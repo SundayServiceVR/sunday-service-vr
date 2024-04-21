@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Alert, Breadcrumb, Button, Nav, Stack, } from 'react-bootstrap';
+import { Alert, Breadcrumb, Button, Container, Nav, Stack, } from 'react-bootstrap';
 import { calcSlotTimes, default_event, docToEvent, saveEvent } from "../../store/events";
 import { onSnapshot, doc } from "firebase/firestore";
 import { Event } from "../../util/types";
@@ -26,7 +26,7 @@ const EventRoot = () => {
         }
 
         return onSnapshot(doc(db, "events", eventId), (doc) => {
-            const event = docToEvent(doc.data());
+            const event = docToEvent(doc);
             if (!event) {
                 console.error("Null event returned from current event snapshot listener");
                 return;
@@ -65,11 +65,13 @@ const EventRoot = () => {
     }
 
     return <>
-        <Breadcrumb>
+        <Breadcrumb className="px-2">
             <Breadcrumb.Item><Link to="/events">Events</Link></Breadcrumb.Item>
             <Breadcrumb.Item><Link to={`/events/${event.id}`}>{event.id}</Link></Breadcrumb.Item>
         </Breadcrumb>
-        <h1 className="display-5">{event.name}: {event.start_datetime.toLocaleDateString()}</h1>
+
+        <h1 className="display-5">Event: {event.name}, {event.start_datetime.toLocaleDateString()}</h1>
+
         <Nav defaultActiveKey="/events/setup" variant="tabs"  as="ul" activeKey={location.pathname}>
             <Nav.Item as="li">
                 <Link to={`/events/${event.id}/setup`}className="nav-link">Setup</Link>
@@ -80,9 +82,15 @@ const EventRoot = () => {
             <Nav.Item as="li">
                 <Link to={`/events/${event.id}/announcements`} className="nav-link">Announcements</Link>
             </Nav.Item>
+            <Nav.Item as="li">
+                <Link to={`/events/${event.id}/whiteboard`} className="nav-link">Whiteboard</Link>
+            </Nav.Item>
 
         </Nav>
-        <Outlet context={[eventScratchpad, proposeEventChange]} />
+        
+        <Container className="mt-3">
+            <Outlet context={[eventScratchpad, proposeEventChange]} />
+        </Container>
 
         <FloatingActionBar hidden={!hasChanges}>
             <Alert variant="primary">

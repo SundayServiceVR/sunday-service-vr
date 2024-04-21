@@ -1,7 +1,6 @@
 import React from 'react';
 
-import { Route, Routes } from 'react-router';
-import { BrowserRouter, Link, RouterProvider, createBrowserRouter } from 'react-router-dom';
+import { Link, RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { FirebaseAuthProvider } from './contexts/FirebaseAuthContext';
 
 import EventRoot from "./features/event/EventRoot";
@@ -12,11 +11,12 @@ import ResetPassword from './features/auth/ResetPassword';
 
 import './App.css';
 import EventLineup from './features/event/EventLineup';
-import EventFrontboardPreview from './features/event/EventFrontboardPreview';
 import EventAnnouncements from './features/event/EventAnnouncements';
 import Home from './features/Home';
 import EventSetup from './features/event/EventSetup';
 import EventList from './features/event/EventList';
+import EventCreate from './features/event/EventCreate';
+import EventWhiteboard from './features/event/EventWhiteboard';
 
 function App() {
 
@@ -38,10 +38,19 @@ function App() {
               element: <EventList />
             },
             {
+              path: "create",
+              element: <EventCreate />
+            },
+            {
               path: ":eventId",
               element: <EventRoot />,
               handle: { crumb: () => <Link to="../">Event</Link>},
               children: [
+                {
+                  index: true,
+                  element: <EventSetup />,
+                  handle: { crumb: () => <Link to="setup">Setup</Link>},
+                },
                 {
                   path: "setup",
                   element: <EventSetup />,
@@ -58,9 +67,9 @@ function App() {
                   handle: { crumb: () => <Link to="announcements">Announcements</Link>},
                 },
                 {
-                  path: "frontboardPreview",
-                  element: <EventFrontboardPreview />,
-                  handle: { crumb: () => <Link to="frontboardPreview">Frontboard Preview</Link>},
+                  path: "whiteboard",
+                  element: <EventWhiteboard />,
+                  handle: { crumb: () => <Link to="whiteboard">Frontboard Preview</Link>},
                 },
               ]
             }
