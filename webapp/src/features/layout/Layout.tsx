@@ -17,17 +17,9 @@ const Layout = () => {
                     <Nav.Link href="/">
                         Home
                     </Nav.Link>
-                    <NavDropdown title="Next Event">
-                        <NavDropdown.Item href="/event/setup">
-                            Setup
-                        </NavDropdown.Item>
-                        <NavDropdown.Item href="/event/lineup">
-                            Lineup
-                        </NavDropdown.Item>
-                        <NavDropdown.Item href="/event/announcements">
-                            Announcements
-                        </NavDropdown.Item>
-                    </NavDropdown>
+                    <Nav.Link href="/events">
+                        Events
+                    </Nav.Link>
                     <Nav.Link onClick={onSignOutClicked}>
                         Logout
                     </Nav.Link>
