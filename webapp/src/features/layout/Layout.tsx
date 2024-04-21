@@ -1,5 +1,5 @@
 import { signOut } from "firebase/auth";
-import { Container, Nav, Navbar } from 'react-bootstrap';
+import { Container, Nav, NavDropdown, Navbar } from 'react-bootstrap';
 import { Outlet } from "react-router";
 import { auth } from "../../util/firebase";
 
@@ -17,6 +17,17 @@ const Layout = () => {
                     <Nav.Link href="/">
                         Home
                     </Nav.Link>
+                    <NavDropdown title="Next Event">
+                        <NavDropdown.Item href="/event/setup">
+                            Setup
+                        </NavDropdown.Item>
+                        <NavDropdown.Item href="/event/lineup">
+                            Lineup
+                        </NavDropdown.Item>
+                        <NavDropdown.Item href="/event/announcements">
+                            Announcements
+                        </NavDropdown.Item>
+                    </NavDropdown>
                     <Nav.Link onClick={onSignOutClicked}>
                         Logout
                     </Nav.Link>
