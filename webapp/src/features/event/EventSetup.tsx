@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Button, Stack, Container, Row, Col, Card } from "react-bootstrap";
+import { Form, Button, Container, Row, Col, Card } from "react-bootstrap";
 import { resetEvent } from "../../store/events";
 import { useEventOperations } from "./EventRoot";
 import "react-datepicker/dist/react-datepicker.css";
@@ -15,12 +15,7 @@ const EventDetails = () => {
             </Col>
         </Row>
         <Row>
-
-
-
             <Col>
-
-
                 <Form>
                     <Form.Group>
                         <Form.Label>
@@ -46,7 +41,6 @@ const EventDetails = () => {
                             className="input" />
 
                     </Form.Group>
-
                     <Form.Group className="mt-2">
                         <Form.Label>
                             Host
