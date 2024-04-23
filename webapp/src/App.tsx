@@ -75,16 +75,16 @@ function App() {
             }
           ]
         },
-        {
-          path: "/login",
-          element: <AnonymousLayout><Login /></AnonymousLayout>
-        },
-        {
-          path: "/resetPassword",
-          element: <AnonymousLayout><ResetPassword /></AnonymousLayout>
-        }
       ],
     },
+    {
+      path: "/login",
+      element: <AnonymousLayout><Login /></AnonymousLayout>
+    },
+    {
+      path: "/resetPassword",
+      element: <AnonymousLayout><ResetPassword /></AnonymousLayout>
+    }
   ]);
 
   return <RouterProvider router={router} />;
