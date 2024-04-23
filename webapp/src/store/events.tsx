@@ -1,11 +1,10 @@
 import { nextSundayServiceDefaultDateTime } from '../util/util';
 import { Event, Slot } from '../util/types';
-import { DocumentData, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
+import { DocumentData, addDoc, collection, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../util/firebase';
 import { getAusPasteMessage, getUkPasteMessage } from '../util/messageWriters';
 
 export const default_event: Event = {
-  id: "current",
   name: "Sunday Service",
   start_datetime: nextSundayServiceDefaultDateTime(),
   host: "",
@@ -14,17 +13,26 @@ export const default_event: Event = {
   footer: "https://discord.s4vr.net/\nhttps://twitch.s4vr.net/",
 }
 
-export const saveEvent = async (event: Event) => {
-  event.id = "current";
-  calcSlotTimes(event);
-  await setDoc(doc(db, "events", event.id), event);
-  await updateBoards(event);
+export const createEvent = async (event: Event) => {
+  // TODO:  Verify that there are no preexisting events that collide with this time.
+  const result = await addDoc(collection(db, "events"), event);
+  return result;
 }
 
-export const docToEvent = (data: DocumentData | undefined) => {
+export const saveEvent = async (event: Event) => {
+  calcSlotTimes(event);
+  if (!event.id) {
+    throw (new Error("Attempted to save an event with no assigned id"));
+  }
+  await setDoc(doc(db, "events", event.id ?? undefined), event);
+}
+
+export const docToEvent = (doc: DocumentData) => {
+  const data = doc.data();
   if (data) {
     const event = {
       ...data,
+      id: doc.ref.id,
       start_datetime: data.start_datetime.toDate(),
       slots: data.slots.map((slot: any) => ({ ...slot, startTime: slot.startTime.toDate() }) as Slot)
     } as Event;
@@ -35,7 +43,7 @@ export const docToEvent = (data: DocumentData | undefined) => {
 
 export const loadEvent = async () => {
   const docRef = await getDoc(doc(db, "events", "current"));
-  return docToEvent(docRef.data());
+  return docToEvent(docRef);
 }
 
 export const resetEvent = async () => {
@@ -56,9 +64,9 @@ export const calcSlotTimes = (event: Event): Event => {
   return newEvent;
 }
 
-const updateBoards = async (event: Event) => {
+export const updateBoards = async (event: Event) => {
   await updateDoc(doc(db, "whiteboards", "current"), {
     au: getAusPasteMessage(event),
     gmt: getUkPasteMessage(event),
-});
+  });
 }
