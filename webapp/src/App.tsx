@@ -9,14 +9,15 @@ import Layout from './features/layout/Layout';
 import AnonymousLayout from './features/layout/AnonymousLayout';
 import ResetPassword from './features/auth/ResetPassword';
 
-import './App.css';
 import EventLineup from './features/event/EventLineup';
 import EventAnnouncements from './features/event/EventAnnouncements';
-import Home from './features/Home';
+import Home from './features/home/Home';
 import EventSetup from './features/event/EventSetup';
 import EventList from './features/event/EventList';
 import EventCreate from './features/event/EventCreate';
 import EventWhiteboard from './features/event/EventWhiteboard';
+
+import './App.css';
 
 function App() {
 
@@ -88,30 +89,6 @@ function App() {
   ]);
 
   return <RouterProvider router={router} />;
-
-  // return (
-  //   <div className="App">
-  //     <BrowserRouter>
-  //       <Routes>
-  //         <Route path="/" element={<FirebaseAuthProvider><Layout /></FirebaseAuthProvider>}>
-  //           <Route index element={<Home />} />
-  //           <Route path="events" handle={{ crumb: () => <Link to="/events">Events</Link>}}>
-  //             <Route index element={<EventList />} />
-  //             <Route path=":eventId" element={<EventRoot />}>
-  //               <Route index element={<EventSetup />} />
-  //               <Route path="setup" element={<EventSetup />} />
-  //               <Route path="lineup" element={<EventLineup />} />
-  //               <Route path="announcements" element={<EventAnnouncements />} />
-  //               <Route path="whiteboardPreview" element={<EventFrontboardPreview />} />
-  //             </Route>
-  //           </Route>
-  //         </Route>
-  //         <Route path="/login" element={<AnonymousLayout><Login /></AnonymousLayout>} />
-  //         <Route path="/resetPassword" element={<AnonymousLayout><ResetPassword /></AnonymousLayout>} />
-  //       </Routes>
-  //     </BrowserRouter>
-  //   </div>
-  // );
 }
 
 export default App;
