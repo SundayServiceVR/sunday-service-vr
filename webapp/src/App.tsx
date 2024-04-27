@@ -39,6 +39,10 @@ function App() {
               element: <EventList />
             },
             {
+              path: "past",
+              element: <EventList past={true} />
+            },
+            {
               path: "create",
               element: <EventCreate />
             },

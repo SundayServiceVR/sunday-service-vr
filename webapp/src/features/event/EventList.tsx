@@ -3,10 +3,14 @@ import { docToEvent } from "../../store/events";
 import { Timestamp, collection, getDocs, orderBy, query, where } from "firebase/firestore";
 import { Event } from "../../util/types";
 import { db } from "../../util/firebase";
-import { Alert, AlertHeading, Breadcrumb, Button, Spinner, Stack, Table } from "react-bootstrap";
+import { Alert, AlertHeading, Breadcrumb, Button, Nav, Spinner, Stack, Table } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 
-const EventList = () => {
+type Props = {
+    past?: boolean;
+}
+
+const EventList = ({ past = false}: Props) => {
     const [events, setEvents] = useState<Event[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
 
@@ -15,7 +19,7 @@ const EventList = () => {
     useEffect(() => {
         setLoading(true);
         (async () => {
-            const q = query(collection(db, "events"), where("start_datetime", ">=", Timestamp.now()), orderBy("start_datetime", "asc")); //
+            const q = query(collection(db, "events"), where("start_datetime", past ? "<" : ">=", Timestamp.now()), orderBy("start_datetime", "asc"));
             const querySnapshot = await getDocs(q);
 
             const events: Event[] = querySnapshot.docs
@@ -24,7 +28,7 @@ const EventList = () => {
             setEvents(events ?? []);
             setLoading(false);
         })()
-    }, []);
+    }, [past]);
 
     if (loading) {
         return <Spinner />
@@ -39,6 +43,16 @@ const EventList = () => {
         <Stack direction="horizontal" gap={3}>
             <span className="me-auto" />
             <Button variant="primary" onClick={()=>navigate("/events/create")}>Create Event</Button>
+        </Stack>
+        <Stack direction="horizontal" gap={3}>
+            <Nav variant="tabs" className="w-100">
+                <Nav.Item>
+                <Link to="/events"className={`nav-link ${past ? "" : "active"}`}>Upcoming Events</Link>
+                </Nav.Item>
+                <Nav.Item>
+                    <Link to="/events/past"className={`nav-link ${past ? "active" : ""}`}>Past Events</Link>
+                </Nav.Item>
+            </Nav>
         </Stack>
 
         { events.length <= 0 && <Alert variant="warning"><AlertHeading>No Events Found</AlertHeading>Should we add an event?</Alert> }
