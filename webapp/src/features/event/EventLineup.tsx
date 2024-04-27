@@ -34,6 +34,12 @@ const EventLineup = () => {
         proposeEventChange({...eventScratchpad, slots: slots_copy});
     }
 
+    const toggleDebutt = (slot_index: number) => {
+        const slots_copy = [...eventScratchpad.slots];
+        slots_copy[slot_index].isDebutt = !eventScratchpad.slots[slot_index].isDebutt;
+        proposeEventChange({...eventScratchpad, slots: slots_copy});
+    }
+
     return <>
         <h3 className="display-6">Add DJs</h3>
         <Container>
@@ -61,6 +67,7 @@ const EventLineup = () => {
                             onSlotMoveSooner={() => { swapSlots(index, index - 1); }}
                             onSetSlotLength={(duration: SlotDuration) => { setSlotLength(index, duration); }}
                             onRemoveSlot={() => { removeSlot(index); }}
+                            onToggleDebutt={() => {toggleDebutt(index)}}
                         />
                     </ListGroupItem>
                 )}
@@ -82,6 +89,7 @@ const ResidentDjs = ({ onAddSlot, currentSlots }: ReseidentDjsProps) => {
     const newDjTimeSlot = (dj: Dj): Slot => ({
         dj,
         duration: 1,
+        isDebutt: false
     });
 
     // TODO:  Duplicate dj's seems to break the list.  We can easilly reproduce that behavior here.
@@ -114,6 +122,7 @@ const CustomDjSlotInserter = ({ onAddSlot }: CustomDjSlotInserterProps) => {
     const newDjTimeSlot = (dj: Dj): Slot => ({
         dj,
         duration: 1,
+        isDebutt: false
     });
 
     const addGuestDj = (dj: Dj) => {
@@ -131,6 +140,7 @@ const CustomDjSlotInserter = ({ onAddSlot }: CustomDjSlotInserterProps) => {
                 <Form.Label>Twitch URL</Form.Label>
                 <Form.Control type="input" value={guestDj.twitch_url} onChange={event => setGuestDj({ ...guestDj, twitch_url: event.target.value })} />
             </Form.Group>
+            {/* <Form.Check className="mt-2" type="checkbox" label="Debutt?" checked={guestDj.}/> */}
             <Button className="mt-2" onClick={(event: any) => { event.preventDefault(); addGuestDj(guestDj) }} color={"primary"}>Add</Button>
         </Form>
     </div>;
@@ -144,6 +154,7 @@ type SortableDjProps = {
     onSlotMoveLater: () => void,
     onSetSlotLength: (duration: SlotDuration) => void,
     onRemoveSlot: () => void,
+    onToggleDebutt: () => void,
 }
 
 const SortableDj = ({
@@ -152,7 +163,8 @@ const SortableDj = ({
     onSlotMoveSooner,
     onSlotMoveLater,
     onSetSlotLength,
-    onRemoveSlot
+    onRemoveSlot,
+    onToggleDebutt
 }: SortableDjProps) =>
     <Stack className="my-2" direction="horizontal">
         <span style={{ "width": "30px" }}>
@@ -173,6 +185,15 @@ const SortableDj = ({
             {dj.name}
         </span>
         <span className="mx-auto" />
+        <span className="mx-2">
+            <Form.Check 
+                className="mt-2" 
+                type="checkbox" 
+                label="Debutt?" 
+                checked={slot.isDebutt} 
+                onChange={onToggleDebutt}
+            /> 
+        </span>
         <span className="mx-1">
             <Form.Group>
                 <Form.Control

@@ -8,7 +8,8 @@ export type Dj = {
 export type Slot = {
     dj: Dj;
     startTime?: Date | undefined;
-    duration: SlotDuration,
+    duration: SlotDuration;
+    isDebutt: boolean; 
 }
 
 export type SlotDuration = (0.5 | 1 | 1.5 | 2 | 2.5 | 3 | 3.5 | 4);
