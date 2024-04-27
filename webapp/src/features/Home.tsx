@@ -20,7 +20,7 @@ const helpfulLinks = [
     },
     {
         title: "Whiteboard Endpoint",
-        text: "Just some under-the-hood shit",
+        text: "Just some under-the-hood stuff",
         url: "https://whiteboard-diczrrhb6a-uc.a.run.app/",
     },
 ];
