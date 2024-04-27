@@ -37,6 +37,9 @@ const EventFormSlotList = ({ slots, onSlotsChange }: Props) => {
     }
 
     const toggleDebutt = (slot_index: number) => {
+        const slots_copy = [...slots];
+        slots_copy[slot_index].isDebutt = !slots[slot_index].isDebutt;
+        onSlotsChange(slots_copy);
     }
 
     return <>
@@ -140,6 +143,7 @@ const CustomDjSlotInserter = ({ onAddSlot }: CustomDjSlotInserterProps) => {
                 <Form.Label>Twitch URL</Form.Label>
                 <Form.Control type="input" value={guestDj.twitch_url} onChange={event => setGuestDj({ ...guestDj, twitch_url: event.target.value })} />
             </Form.Group>
+            {/* <Form.Check className="mt-2" type="checkbox" label="Debutt?" checked={guestDj.}/> */}
             <Button className="mt-2" onClick={(event: any) => { event.preventDefault(); addGuestDj(guestDj) }} color={"primary"}>Add</Button>
         </Form>
     </div>;
@@ -184,6 +188,15 @@ const SortableDj = ({
             {dj.name}
         </span>
         <span className="mx-auto" />
+        <span className="mx-2">
+            <Form.Check 
+                className="mt-2" 
+                type="checkbox" 
+                label="Debutt?" 
+                checked={slot.isDebutt} 
+                onChange={onToggleDebutt}
+            /> 
+        </span>
         <span className="mx-1">
             <Form.Group>
                 <Form.Control
