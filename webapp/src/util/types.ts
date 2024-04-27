@@ -15,6 +15,7 @@ export type Slot = {
 export type SlotDuration = (0.5 | 1 | 1.5 | 2 | 2.5 | 3 | 3.5 | 4);
 
 export type Event = {
+    id?: string;
     name: string;
     message: string;
     start_datetime: Date;
@@ -22,4 +23,3 @@ export type Event = {
     slots: Slot[];
     footer: string;
 }
-
