@@ -35,9 +35,9 @@ const EventLineup = () => {
     }
 
     const toggleDebutt = (slot_index: number) => {
-        const slots_copy = [...slots];
-        slots_copy[slot_index].isDebutt = !slots[slot_index].isDebutt;
-        onSlotsChange(slots_copy);
+        const slots_copy = [...eventScratchpad.slots];
+        slots_copy[slot_index].isDebutt = !eventScratchpad.slots[slot_index].isDebutt;
+        proposeEventChange({...eventScratchpad, slots: slots_copy});
     }
 
     return <>
