@@ -6,8 +6,10 @@ import { db } from "../../util/firebase";
 import { Dj } from "../../util/types";
 import DjForm from "./DjForm";
 import { Link } from "react-router-dom";
+import { docToRawType } from "../../store/util";
 
 const DjDetails = () => {
+
 
     const { djId } = useParams();
     const [ busy, setBusy ] = useState<boolean>(false);
@@ -25,7 +27,7 @@ const DjDetails = () => {
                 return;
             }
             const result = await getDoc(doc(db, "djs", djId));
-            setDj(result.data() as Dj);
+            setDj(docToRawType<Dj>(result));
             setBusy(false);
         })();
     }, [djId]);
@@ -37,7 +39,7 @@ const DjDetails = () => {
     return <div>
         <Breadcrumb className="px-2">
             <Breadcrumb.Item><Link to="/djs">Djs</Link></Breadcrumb.Item>
-            <Breadcrumb.Item><Link to={`/djs/${dj.dj_name}`}>{dj.dj_name}</Link></Breadcrumb.Item>
+            <Breadcrumb.Item><Link to={`/djs/${dj.id}`}>{dj.dj_name}</Link></Breadcrumb.Item>
         </Breadcrumb>
         <h2 className="display-6">Dj Details</h2>
         <DjForm dj={dj} onSubmitDj={()=>{}} busy={busy}/>

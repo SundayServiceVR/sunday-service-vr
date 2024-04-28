@@ -1,5 +1,6 @@
 
 export type Dj = {
+    id?: string;
     discord_username: string;
     dj_name?: string;
     twitch_url?: string;
