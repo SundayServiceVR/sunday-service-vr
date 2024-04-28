@@ -35,7 +35,7 @@ export const docToEvent = (doc: DocumentData) => {
       ...data,
       id: doc.ref.id,
       start_datetime: data.start_datetime.toDate(),
-      end_datetime: data.end_datetime.toDate(),
+      end_datetime: data.end_datetime?.toDate(),
       slots: data.slots.map((slot: any) => ({ ...slot, startTime: slot.startTime.toDate() }) as Slot)
     } as Event;
 
