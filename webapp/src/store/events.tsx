@@ -7,6 +7,7 @@ import { getAusPasteMessage, getUkPasteMessage } from '../util/messageWriters';
 export const default_event: Event = {
   name: "Sunday Service",
   start_datetime: nextSundayServiceDefaultDateTime(),
+  end_datetime: nextSundayServiceDefaultDateTime(),
   host: "",
   message: "Come by to chill and wiggle to some Sunday Service tunes!",
   slots: [],
@@ -34,8 +35,11 @@ export const docToEvent = (doc: DocumentData) => {
       ...data,
       id: doc.ref.id,
       start_datetime: data.start_datetime.toDate(),
+      end_datetime: data.end_datetime.toDate(),
       slots: data.slots.map((slot: any) => ({ ...slot, startTime: slot.startTime.toDate() }) as Slot)
     } as Event;
+    console.log(`docToEvent - Start: ${event.start_datetime}, End: ${event.end_datetime}`);
+
     return event;
   }
   return null;
@@ -60,6 +64,9 @@ export const calcSlotTimes = (event: Event): Event => {
     event.slots[i].startTime = new Date(time_counter);
     time_counter.setTime(time_counter.getTime() + ONE_HOUR * event.slots[i].duration);
   }
+
+  newEvent.end_datetime = new Date(time_counter);
+  console.log(`calcSlot - Start: ${newEvent.start_datetime}, End: ${newEvent.end_datetime}`);
 
   return newEvent;
 }
