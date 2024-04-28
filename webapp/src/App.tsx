@@ -16,10 +16,16 @@ import EventSetup from './features/event/EventSetup';
 import EventList from './features/event/EventList';
 import EventCreate from './features/event/EventCreate';
 import EventWhiteboard from './features/event/EventWhiteboard';
+import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 
 import './App.css';
 
 function App() {
+  // 
+  if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+    const db = getFirestore();
+    connectFirestoreEmulator(db, '127.0.0.1', 8080)
+  };
 
   const router = createBrowserRouter([
     {
