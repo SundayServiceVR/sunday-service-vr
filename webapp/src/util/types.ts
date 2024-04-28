@@ -1,8 +1,9 @@
 
 export type Dj = {
-    name: string;
+    discord_username: string;
+    dj_name?: string;
     twitch_url?: string;
-    vrcdn_url?: string;
+    stream_url?: string;
 }
 
 export type Slot = {

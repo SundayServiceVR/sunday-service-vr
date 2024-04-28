@@ -18,6 +18,8 @@ import EventCreate from './features/event/EventCreate';
 import EventWhiteboard from './features/event/EventWhiteboard';
 
 import './App.css';
+import CreateDj from './features/dj/CreateDj';
+import DjDetails from './features/dj/DjDetails';
 
 function App() {
 
@@ -29,6 +31,13 @@ function App() {
         {
           index: true,
           element: <Home />,
+        },
+        {
+          path: "djs",
+          children: [
+            { path: "create", element: <CreateDj /> },
+            { path: ":djId", element: <DjDetails /> },
+          ],
         },
         {
           path: "events",

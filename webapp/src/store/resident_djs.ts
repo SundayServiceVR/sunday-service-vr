@@ -4,38 +4,47 @@ import { Dj } from "../util/types"
 
 export const RESIDENT_DJS: { [key: string]: Dj } = {
     "StrawberryProtato": {
-        name: "StrawberryProtato",
+        discord_username: "", // These are going away very soon
+        dj_name: "StrawberryProtato",
         twitch_url: "https://www.twitch.com/StrawberryProtato",
     },
     "kazzdoggo": {
-        name: "kazzdoggo",
+        discord_username: "", // These are going away very soon
+        dj_name: "kazzdoggo",
         twitch_url: "https://www.twitch.com/kazzdoggo",
     },
     "icedog": {
-        name: "Icedog",
+        discord_username: "", // These are going away very soon
+        dj_name: "Icedog",
         twitch_url: "https://www.twitch.com/icedog26",
     },
     "whitty": {
-        name: "Whitty",
+        discord_username: "", // These are going away very soon
+        dj_name: "Whitty",
         twitch_url: "https://www.twitch.com/WhittyCat",
     },
     "bleatr": {
-        name: "bleatr",
+        discord_username: "", // These are going away very soon
+        dj_name: "bleatr",
         twitch_url: "https://www.twitch.com/bleatrbeats",
     },
     "schlick": {
-        name: "Schlick",
+        discord_username: "", // These are going away very soon
+        dj_name: "Schlick",
         twitch_url: "https://www.twitch.tv/schlick_wolf",
     },
     "kittz": {
-        name: "Kittz",
+        discord_username: "", // These are going away very soon
+        dj_name: "Kittz",
         twitch_url: "https://www.twitch.com/kittzbeatz",
     },
     "warned1": {
-        name: "WarneD1",
+        discord_username: "", // These are going away very soon
+        dj_name: "WarneD1",
         twitch_url: "https://www.twitch.tv/warned1"
     },
     "gogogaj3tt": {
-        name: "GoGoGaj3tt"
+        discord_username: "", // These are going away very soon
+        dj_name: "GoGoGaj3tt"
     },
 }
