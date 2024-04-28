@@ -21,7 +21,7 @@ export const createEvent = async (event: Event) => {
 }
 
 export const saveEvent = async (event: Event) => {
-  calcSlotTimes(event);
+  event = calcSlotTimes(event);
   if (!event.id) {
     throw (new Error("Attempted to save an event with no assigned id"));
   }
@@ -38,7 +38,6 @@ export const docToEvent = (doc: DocumentData) => {
       end_datetime: data.end_datetime.toDate(),
       slots: data.slots.map((slot: any) => ({ ...slot, startTime: slot.startTime.toDate() }) as Slot)
     } as Event;
-    console.log(`docToEvent - Start: ${event.start_datetime}, End: ${event.end_datetime}`);
 
     return event;
   }
@@ -66,7 +65,6 @@ export const calcSlotTimes = (event: Event): Event => {
   }
 
   newEvent.end_datetime = new Date(time_counter);
-  console.log(`calcSlot - Start: ${newEvent.start_datetime}, End: ${newEvent.end_datetime}`);
 
   return newEvent;
 }
