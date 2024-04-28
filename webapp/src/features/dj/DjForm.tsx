@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Form, Button, Spinner } from "react-bootstrap";
 import { Dj } from "../../util/types";
 

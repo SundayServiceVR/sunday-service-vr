@@ -30,6 +30,7 @@ const CreateDj = () => {
             <Breadcrumb.Item><Link to="/djs">Djs</Link></Breadcrumb.Item>
             <Breadcrumb.Item><Link to="/djs/create">Create</Link></Breadcrumb.Item>
         </Breadcrumb>
+        <h2 className="display-6">Create Dj</h2>
         <DjForm dj={defaultDj} onSubmitDj={onSubmit} busy={busy}/>
     </section>
 }
