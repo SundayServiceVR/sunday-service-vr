@@ -7,3 +7,5 @@
     * `cd webapp`
     * `npm install`
     * `npm run start`
+
+At this point, the app will be running on `localhost:3000` and the emulator UI will be (probably) running on `http://127.0.0.1:4000/`
