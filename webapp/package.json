@@ -24,7 +24,10 @@
         "web-vitals": "^2.1.4"
     },
     "scripts": {
-        "start": "react-scripts start",
+        "start": "concurrently \"npm:start:webapp\" \"npm:start:emulator\"",
+        "start:webapp": "react-scripts start",
+        "start:emulator": "firebase emulators:start --import ../firebase-emulator-data --export-on-exit",
+        "force-kill-emulators": "npx kill-port 4000 8080 8085",
         "build": "react-scripts build",
         "test": "react-scripts test",
         "eject": "react-scripts eject",
@@ -52,6 +55,7 @@
     "devDependencies": {
         "@types/react-datepicker": "^4.4.2",
         "bootstrap": "^5.3.3",
+        "concurrently": "^8.2.2",
         "firebase": "^10.11.0",
         "gh-pages": "^4.0.0",
         "react-bootstrap": "^2.10.2"
