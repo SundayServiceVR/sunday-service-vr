@@ -15,12 +15,13 @@ const EventAnnouncements = () => {
         <Form>
             <Form.Group>
                 <Form.Label>
-                    Event Name
+                    Discord Announcement Message
                 </Form.Label>
                 <Form.Control
                     placeholder="Event Message Goes Here"
                     type="text"
                     as="textarea"
+                    rows={8}
                     value={eventScratchpad.message}
                     onChange={(event) => { proposeEventChange({ ...eventScratchpad, message: event.target.value }); }}
                 />
@@ -28,10 +29,15 @@ const EventAnnouncements = () => {
         </Form>
         <Tabs className="mt-4">
             <Tab eventKey="discord" title="Discord">
-                <EventPasteCard event={eventScratchpad} message={discordMessage}></EventPasteCard>
+                <EventPasteCard 
+                message={discordMessage} 
+                destinationText="s4-vrchat-events"
+                destinationLink="https://discord.com/channels/1004489038159413248/1004489042890588165"/>
             </Tab>
-            <Tab eventKey="twitter" title="Twitter">
-                <EventPasteCard event={eventScratchpad} message={twitterMessage}></EventPasteCard>
+            <Tab eventKey="twitter" title="Social Media">
+                <EventPasteCard 
+                message={twitterMessage}
+                destinationText="Twitter and Bluesky"/>
             </Tab>
         </Tabs>
     </section>
