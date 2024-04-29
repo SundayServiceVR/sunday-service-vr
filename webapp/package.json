@@ -26,7 +26,8 @@
     "scripts": {
         "start": "concurrently \"npm:start:webapp\" \"npm:start:emulator\"",
         "start:webapp": "react-scripts start",
-        "start:emulator": "firebase emulators:start",
+        "start:emulator": "firebase emulators:start --import ../firebase-emulator-data --export-on-exit",
+        "force-kill-emulators": "npx kill-port 4000 8080 8085",
         "build": "react-scripts build",
         "test": "react-scripts test",
         "eject": "react-scripts eject",
