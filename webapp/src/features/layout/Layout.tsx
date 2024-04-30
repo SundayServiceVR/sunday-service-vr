@@ -20,7 +20,7 @@ const Layout = () => {
                     <Nav.Link href="/events">
                         Events
                     </Nav.Link>
-                    <Nav.Link href="/djs/create">
+                    <Nav.Link href="/djs">
                         Djs
                     </Nav.Link>
                     <Nav.Link onClick={onSignOutClicked}>

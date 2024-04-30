@@ -1,18 +1,20 @@
-import React, { useState } from "react";
-import { Form, Button, Spinner } from "react-bootstrap";
+import React, { FormEvent, useState } from "react";
+import { Form, Button, Spinner, Stack } from "react-bootstrap";
 import { Dj } from "../../util/types";
 
 type Props = {
     dj: Dj,
     onSubmitDj: (dj: Dj) => void,
     busy: boolean,
+    onCancel?: () => void
 }
 
-const DjForm = ({dj, onSubmitDj, busy}: Props) => {
+const DjForm = ({dj, onSubmitDj, busy, onCancel}: Props) => {
 
     const [formData, setFormData] = useState<Dj>(dj);
 
-    const onSubmit = () => {
+    const onSubmit = (evt: FormEvent) => {
+        evt.preventDefault();
         onSubmitDj(formData);
     }
 
@@ -21,8 +23,8 @@ const DjForm = ({dj, onSubmitDj, busy}: Props) => {
     }
 
     return <div>
-        <Form className="pt-3" onSubmit={onSubmit}>
-            <Form.Group>
+        <Form onSubmit={onSubmit}>
+            <Form.Group className="mt-3">
                 <Form.Label>Discord Username</Form.Label>
                 <Form.Control
                     required
@@ -31,7 +33,7 @@ const DjForm = ({dj, onSubmitDj, busy}: Props) => {
                     type="input"
                     onChange={(e) => setFormData({...formData, "discord_username": e.target.value})} />
             </Form.Group>
-            <Form.Group>
+            <Form.Group className="mt-3">
                 <Form.Label>Dj Name</Form.Label>
                 <Form.Control
                     required
@@ -40,7 +42,7 @@ const DjForm = ({dj, onSubmitDj, busy}: Props) => {
                     type="input"
                     onChange={(e) => setFormData({...formData, "dj_name": e.target.value})} />
             </Form.Group>
-            <Form.Group>
+            <Form.Group className="mt-3">
                 <Form.Label>Stream Url</Form.Label>
                 <Form.Control 
                     name="stream_url"
@@ -52,7 +54,7 @@ const DjForm = ({dj, onSubmitDj, busy}: Props) => {
                     Typically VRCDN or Twitch, but a few dj's have their own streaming methods we can notate here.
                 </Form.Text>
             </Form.Group>
-            <Form.Group>
+            <Form.Group className="mt-3">
                 <Form.Label>Twitch URL</Form.Label>
                 <Form.Control
                     name="twitch_url"
@@ -60,9 +62,14 @@ const DjForm = ({dj, onSubmitDj, busy}: Props) => {
                     type="input"
                     onChange={(e) => setFormData({...formData, "twitch_url": e.target.value})}/>
             </Form.Group>
-            <Button variant="primary" type="submit" className="mt-3">
-                Submit
-            </Button>
+            <Stack direction="horizontal" gap={3}>
+                <Button variant="primary" type="submit" className="mt-3">
+                    Submit
+                </Button>
+                { onCancel && <Button variant="primary" onClick={onCancel} className="mt-3">
+                    Cancel
+                </Button> }
+            </Stack>
         </Form>
     </div>
 }

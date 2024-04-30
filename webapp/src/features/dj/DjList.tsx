@@ -4,6 +4,7 @@ import { Dj } from "../../util/types";
 import { db } from "../../util/firebase";
 import { Alert, AlertHeading, Breadcrumb, Button, Spinner, Stack, Table } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
+import { docToRawType } from "../../store/util";
 
 type Props = {
     past?: boolean;
@@ -12,7 +13,6 @@ type Props = {
 const DjList = ({ past = false}: Props) => {
     const [djs, setDjs] = useState<Dj[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
-
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -22,7 +22,7 @@ const DjList = ({ past = false}: Props) => {
             const querySnapshot = await getDocs(q);
 
             const djs: Dj[] = querySnapshot.docs
-                .map((doc) => ({ id: doc.id, ...doc.data() })as Dj)
+                .map((doc) => docToRawType<Dj>(doc))
                 .filter((doc): doc is Exclude<typeof doc, null> => doc !== null);
             setDjs(djs ?? []);
             setLoading(false);
