@@ -21,6 +21,7 @@ export type Event = {
     name: string;
     message: string;
     start_datetime: Date;
+    end_datetime?: Date;
     host: string;
     slots: Slot[];
     footer: string;

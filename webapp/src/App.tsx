@@ -16,12 +16,19 @@ import EventSetup from './features/event/EventSetup';
 import EventList from './features/event/EventList';
 import EventCreate from './features/event/EventCreate';
 import EventWhiteboard from './features/event/EventWhiteboard';
+import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 
 import './App.css';
 import CreateDj from './features/dj/CreateDj';
 import DjDetails from './features/dj/DjDetails';
+import DjList from './features/dj/DjList';
 
 function App() {
+  // 
+  if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+    const db = getFirestore();
+    connectFirestoreEmulator(db, '127.0.0.1', 8080)
+  };
 
   const router = createBrowserRouter([
     {
@@ -35,6 +42,7 @@ function App() {
         {
           path: "djs",
           children: [
+            { index: true, element: <DjList />},
             { path: "create", element: <CreateDj /> },
             { path: ":djId", element: <DjDetails /> },
           ],
