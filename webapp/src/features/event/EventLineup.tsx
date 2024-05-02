@@ -101,7 +101,7 @@ const ResidentDjs = ({ onAddSlot, currentSlots }: ReseidentDjsProps) => {
         <div><span className="is-size-5">(Quick Add Residents)</span></div>
         {
             Object.entries(freeDjs).map(([dj_name, dj], i) => {
-                return <Button key={`add-${dj_name}-button`} className="m-1" color="primary" onClick={() => { onAddSlot(newDjTimeSlot(dj)) }}>{dj.dj_name}</Button>
+                return <Button key={`add-${dj_name}-button`} className="m-1" color="primary" onClick={() => { onAddSlot(newDjTimeSlot(dj)) }}>{dj.name}</Button>
             })
         }
 
@@ -116,7 +116,7 @@ const CustomDjSlotInserter = ({ onAddSlot }: CustomDjSlotInserterProps) => {
 
     const [guestDj, setGuestDj] = useState<Dj>({
         discord_username: "",
-        dj_name: "",
+        name: "",
         twitch_url: "",
     });
 
@@ -135,7 +135,7 @@ const CustomDjSlotInserter = ({ onAddSlot }: CustomDjSlotInserterProps) => {
             <span className="is-size-5">Guest</span>
             <Form.Group>
                 <Form.Label>Name</Form.Label>
-                <Form.Control type="input" value={guestDj.dj_name} onChange={event => setGuestDj({ ...guestDj, dj_name: event.target.value })} />
+                <Form.Control type="input" value={guestDj.name} onChange={event => setGuestDj({ ...guestDj, name: event.target.value })} />
             </Form.Group>
             <Form.Group>
                 <Form.Label>Twitch URL</Form.Label>
@@ -183,7 +183,7 @@ const SortableDj = ({
             {slot.startTime?.toLocaleTimeString()}
         </span>
         <span className="lead mx-3">
-            {dj.dj_name}
+            {dj.name}
         </span>
         <span className="mx-auto" />
         <span className="mx-2">

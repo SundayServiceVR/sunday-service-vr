@@ -11,7 +11,7 @@ const CreateDj = () => {
 
     const defaultDj: Dj = { 
         discord_username: "",
-        dj_name: "",
+        name: "",
      };
     const [ busy, setBusy ] = useState<boolean>(false);
     const navigate = useNavigate();

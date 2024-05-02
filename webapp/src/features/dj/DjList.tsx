@@ -54,7 +54,7 @@ const DjList = ({ past = false}: Props) => {
                 </thead>
                 <tbody>
                     {djs.map(dj => <tr key={dj.id}>
-                        <td><Link to={`/djs/${dj.id}`}>{dj.dj_name}</Link></td>
+                        <td><Link to={`/djs/${dj.id}`}>{dj.name}</Link></td>
                         <td>{dj.discord_username}</td>
                     </tr>)}
                 </tbody>

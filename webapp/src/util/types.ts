@@ -2,7 +2,7 @@
 export type Dj = {
     id?: string;
     discord_username: string;
-    dj_name?: string;
+    name?: string;
     twitch_url?: string;
     stream_url?: string;
 }

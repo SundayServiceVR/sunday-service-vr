@@ -38,9 +38,9 @@ const DjForm = ({dj, onSubmitDj, busy, onCancel}: Props) => {
                 <Form.Control
                     required
                     name="dj_name"
-                    value={formData.dj_name}
+                    value={formData.name}
                     type="input"
-                    onChange={(e) => setFormData({...formData, "dj_name": e.target.value})} />
+                    onChange={(e) => setFormData({...formData, "name": e.target.value})} />
             </Form.Group>
             <Form.Group className="mt-3">
                 <Form.Label>Stream Url</Form.Label>
