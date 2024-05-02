@@ -70,7 +70,7 @@ const DjDetails = () => {
                 <dd>{ dj.dj_name }</dd>
                 <dt>Discord Username</dt>
                 <dd>{ dj.discord_username }</dd>
-                <dt>Steam URL</dt>
+                <dt>Stream URL</dt>
                 <dd>{ dj.stream_url }</dd>
                 <dt>Twitch URL</dt>
                 <dd>{ dj.twitch_url }</dd>
