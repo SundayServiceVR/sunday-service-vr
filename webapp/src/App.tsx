@@ -19,6 +19,9 @@ import EventWhiteboard from './features/event/EventWhiteboard';
 import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 
 import './App.css';
+import CreateDj from './features/dj/CreateDj';
+import DjDetails from './features/dj/DjDetails';
+import DjList from './features/dj/DjList';
 
 function App() {
   // 
@@ -35,6 +38,14 @@ function App() {
         {
           index: true,
           element: <Home />,
+        },
+        {
+          path: "djs",
+          children: [
+            { index: true, element: <DjList />},
+            { path: "create", element: <CreateDj /> },
+            { path: ":djId", element: <DjDetails /> },
+          ],
         },
         {
           path: "events",

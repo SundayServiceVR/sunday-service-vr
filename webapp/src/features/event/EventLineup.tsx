@@ -115,6 +115,7 @@ type CustomDjSlotInserterProps = {
 const CustomDjSlotInserter = ({ onAddSlot }: CustomDjSlotInserterProps) => {
 
     const [guestDj, setGuestDj] = useState<Dj>({
+        discord_username: "",
         name: "",
         twitch_url: "",
     });
