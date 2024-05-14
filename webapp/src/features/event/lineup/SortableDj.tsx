@@ -36,13 +36,15 @@ const SortableDj = ({
                     </span>
                 </Col>
                 <Col xs={6} sm={10}>
-                    <Row>
-                        <Col sm={12} md={3} lg={2}>
-                            <Stack gap={3}>
-                                <span>{dj.name}</span>
-                                <span>{slot.startTime?.toLocaleTimeString()}</span>
+                    <Row className="mb-3">
+                        <Col>
+                            <Stack gap={3} direction="horizontal">
+                                <span className="lead">{dj.name}</span>
+                                <span className="lead text-muted">({slot.startTime?.toLocaleTimeString()})</span>
                             </Stack>
                         </Col>
+                    </Row>
+                    <Row>
                         <Col sm={12} md={9} lg={10}>
                             <Form.Group as={Row}  className="mb-3">
                                 <Form.Label column sm={4}>Slot Length (In Hours)</Form.Label>
@@ -59,7 +61,6 @@ const SortableDj = ({
                             </Form.Group>
                             <Form.Group as={Row}  className="mb-3">
                                 <Form.Label column sm={4} className="text-right">Set Type</Form.Label>
-                                <Col>
                                 <ButtonGroup className="mb-2">
                                     <ToggleButton
                                         id={`slot-${index}-rtmp`}
@@ -97,38 +98,30 @@ const SortableDj = ({
                                     >
                                         PreRecord
                                     </ToggleButton>
-                            
                                 </ButtonGroup>
-                                </Col>
-                            </Form.Group>
-                            <Form.Group as={Row} className="mb-3" hidden={![SlotType.PRERECORD, SlotType.RTMP].includes(slot.slotType)}>
-                                <Form.Label column sm={4}>Media Source URL</Form.Label>
-                                <Col>
+                          
+                                <Form.Control
+                                    type={"input"}
+                                    value={slot.mediaSourceUrl}
+                                    onChange={(event) => { onUpdateSlot({...slot, mediaSourceUrl: event.target.value})}}
+                                    placeholder="Media Source (RTMP/URL)"
+                                    hidden={![SlotType.PRERECORD, SlotType.RTMP].includes(slot.slotType)}
+                                />
+                       
+                                <InputGroup className="mb-2"  hidden={slot.slotType !== SlotType.TWITCH}>
+                                    <InputGroup.Text>https://www.twitch.tv/</InputGroup.Text>
                                     <Form.Control
                                         type={"input"}
-                                        value={slot.mediaSourceUrl}
-                                        onChange={(event) => { onUpdateSlot({...slot, mediaSourceUrl: event.target.value})}}
+                                        value={slot.twitchUserName}
+                                        onChange={(event) => { onUpdateSlot({...slot, twitchUserName: event.target.value})}}
+                                        placeholder="username"
                                     />
-                                </Col>
-                            </Form.Group>
-                            <Form.Group as={Row} className="mb-3" hidden={slot.slotType !== SlotType.TWITCH}>
-                                <Form.Label column sm={4}>Twitch</Form.Label>
-                                <Col>
-                                <Form.Group>
-                                        <InputGroup className="mb-2">
-                                            <InputGroup.Text>https://www.twitch.tv/</InputGroup.Text>
-                                            <Form.Control
-                                                type={"input"}
-                                                value={slot.twitchUserName}
-                                                onChange={(event) => { onUpdateSlot({...slot, twitchUserName: event.target.value})}}
-                                            />
-                                        </InputGroup>
-                                    </Form.Group>
-                                </Col>
+                                </InputGroup>
+                    
                             </Form.Group>
 
                             <Form.Group as={Row} className="mb-3">
-                                <Form.Label  column sm={4}>Is Debutt</Form.Label>
+                                <Form.Label  column >Is Debutt?</Form.Label>
                                 <Col>
                                     <Form.Check
                                         className="mt-2" 
