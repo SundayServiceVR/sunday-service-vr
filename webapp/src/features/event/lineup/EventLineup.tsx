@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
-import { RESIDENT_DJS } from "../../store/resident_djs";
-import { Dj, Slot } from "../../util/types";
-import { useEventOperations } from "./EventRoot";
-import SortableDjList from "./lineup/SortableDjList";
+import { RESIDENT_DJS } from "../../../store/resident_djs";
+import { Dj, Slot, SlotType } from "../../../util/types";
+import { useEventOperations } from "../EventRoot";
+import SortableDjList from "./SortableDjList";
 
 const EventLineup = () => {
 
@@ -49,7 +49,9 @@ const ResidentDjs = ({ onAddSlot, currentSlots }: ReseidentDjsProps) => {
     const newDjTimeSlot = (dj: Dj): Slot => ({
         dj,
         duration: 1,
-        isDebutt: false
+        slotType: SlotType.LIVE,
+        mediaSourceUrl: "",
+        isDebutt: false,
     });
 
     // TODO:  Duplicate dj's seems to break the list.  We can easilly reproduce that behavior here.
@@ -83,7 +85,9 @@ const CustomDjSlotInserter = ({ onAddSlot }: CustomDjSlotInserterProps) => {
     const newDjTimeSlot = (dj: Dj): Slot => ({
         dj,
         duration: 1,
-        isDebutt: false
+        slotType: SlotType.LIVE,
+        mediaSourceUrl: "",
+        isDebutt: false,
     });
 
     const addGuestDj = (dj: Dj) => {

@@ -34,6 +34,14 @@ const SortableDjList = () => {
         proposeEventChange({...eventScratchpad, slots: slots_copy});
     }
 
+    const updateSlot = (slot_index: number, newSlot: Slot) => {
+        const slots_copy = [...eventScratchpad.slots];
+        slots_copy[slot_index] = newSlot;
+        proposeEventChange({...eventScratchpad, slots: slots_copy});
+        console.log("Proposal");
+        console.table(slots_copy);
+    }
+
     return <ListGroup variant="flush" >
         {eventScratchpad.slots.map(
             (slot: Slot, index: number) => <ListGroupItem key={`slot-${index}`} className="py-0">
@@ -46,6 +54,7 @@ const SortableDjList = () => {
                     onSetSlotLength={(duration: SlotDuration) => { setSlotLength(index, duration); }}
                     onRemoveSlot={() => { removeSlot(index); }}
                     onToggleDebutt={() => {toggleDebutt(index)}}
+                    onUpdateSlot={(newSlot: Slot) => {updateSlot(index, newSlot)}}
                 />
             </ListGroupItem>
         )}

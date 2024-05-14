@@ -9,12 +9,11 @@ import Layout from './features/layout/Layout';
 import AnonymousLayout from './features/layout/AnonymousLayout';
 import ResetPassword from './features/auth/ResetPassword';
 
-import EventLineup from './features/event/EventLineup';
+import EventLineup from './features/event/lineup/EventLineup';
 import EventAnnouncements from './features/event/EventAnnouncements';
 import Home from './features/home/Home';
-import EventSetup from './features/event/EventSetup';
 import EventList from './features/event/EventList';
-import EventCreate from './features/event/EventCreate';
+import EventCreate from './features/event/basic/EventCreate';
 import EventWhiteboard from './features/event/EventWhiteboard';
 import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 
@@ -22,6 +21,7 @@ import './App.css';
 import CreateDj from './features/dj/CreateDj';
 import DjDetails from './features/dj/DjDetails';
 import DjList from './features/dj/DjList';
+import EventDetails from './features/event/basic/EventDetails';
 
 function App() {
   // 
@@ -70,12 +70,12 @@ function App() {
               children: [
                 {
                   index: true,
-                  element: <EventSetup />,
+                  element: <EventDetails />,
                   handle: { crumb: () => <Link to="setup">Setup</Link>},
                 },
                 {
                   path: "setup",
-                  element: <EventSetup />,
+                  element: <EventDetails />,
                   handle: { crumb: () => <Link to="setup">Setup</Link>},
                 },
                 {

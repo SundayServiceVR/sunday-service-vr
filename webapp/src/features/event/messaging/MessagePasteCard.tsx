@@ -5,7 +5,7 @@ type Props = {
     footerInstructions? : React.ReactNode
 };
 
-const EventPasteCard = ({message, footerInstructions /* destinationText, destinationLink*/}: Props) => {
+const MessagePasteCard = ({message, footerInstructions /* destinationText, destinationLink*/}: Props) => {
     return <Card>
         <CardBody>
             <Form.Control as="textarea" value={message} rows={16} readOnly className="has-fixed-size" />
@@ -17,4 +17,4 @@ const EventPasteCard = ({message, footerInstructions /* destinationText, destina
     </Card>;
 };
 
-export default EventPasteCard;
+export default MessagePasteCard;

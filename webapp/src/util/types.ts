@@ -11,8 +11,23 @@ export type Slot = {
     dj: Dj;
     startTime?: Date | undefined;
     duration: SlotDuration;
-    isDebutt: boolean; 
+    slotType: SlotType;
+    mediaSourceUrl: string;
+    isDebutt: boolean;
 }
+
+export enum SlotType {
+    LIVE = "LIVE",
+    PRERECORD = "PRERECORD"
+}
+
+export const SlotTypes = 
+    [
+        { name: 'Active', value: '1' },
+        { name: 'Radio', value: '2' },
+        { name: 'Radio', value: '3' },
+      ];
+
 
 export type SlotDuration = (0.5 | 1 | 1.5 | 2 | 2.5 | 3 | 3.5 | 4);
 
