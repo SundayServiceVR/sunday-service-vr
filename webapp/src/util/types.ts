@@ -12,13 +12,15 @@ export type Slot = {
     startTime?: Date | undefined;
     duration: SlotDuration;
     slotType: SlotType;
-    mediaSourceUrl: string;
+    mediaSourceUrl?: string;
+    twitchUserName?: string;
     isDebutt: boolean;
 }
 
 export enum SlotType {
-    LIVE = "LIVE",
-    PRERECORD = "PRERECORD"
+    RTMP = "RTMP",
+    TWITCH = "TWITCH",
+    PRERECORD = "PRERECORD",
 }
 
 export const SlotTypes = 

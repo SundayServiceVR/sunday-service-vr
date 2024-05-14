@@ -49,7 +49,7 @@ const ResidentDjs = ({ onAddSlot, currentSlots }: ReseidentDjsProps) => {
     const newDjTimeSlot = (dj: Dj): Slot => ({
         dj,
         duration: 1,
-        slotType: SlotType.LIVE,
+        slotType: SlotType.RTMP,
         mediaSourceUrl: "",
         isDebutt: false,
     });
@@ -85,7 +85,7 @@ const CustomDjSlotInserter = ({ onAddSlot }: CustomDjSlotInserterProps) => {
     const newDjTimeSlot = (dj: Dj): Slot => ({
         dj,
         duration: 1,
-        slotType: SlotType.LIVE,
+        slotType: SlotType.RTMP,
         mediaSourceUrl: "",
         isDebutt: false,
     });
@@ -102,7 +102,7 @@ const CustomDjSlotInserter = ({ onAddSlot }: CustomDjSlotInserterProps) => {
                 <Form.Control type="input" value={guestDj.name} onChange={event => setGuestDj({ ...guestDj, name: event.target.value })} />
             </Form.Group>
             <Form.Group>
-                <Form.Label>Twitch URL</Form.Label>
+                <Form.Label>Twitch</Form.Label>
                 <Form.Control type="input" value={guestDj.twitch_url} onChange={event => setGuestDj({ ...guestDj, twitch_url: event.target.value })} />
             </Form.Group>
             {/* <Form.Check className="mt-2" type="checkbox" label="Debutt?" checked={guestDj.}/> */}

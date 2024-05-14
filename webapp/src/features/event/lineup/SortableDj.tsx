@@ -1,4 +1,4 @@
-import { Stack, Button, Form, Container, Row, Col, ButtonGroup, ToggleButton } from "react-bootstrap";
+import { Stack, Button, Form, Container, Row, Col, ButtonGroup, ToggleButton, InputGroup } from "react-bootstrap";
 import { Dj, Slot, SlotDuration, SlotType } from "../../../util/types";
 
 type Props = {
@@ -7,9 +7,7 @@ type Props = {
     slot: Slot,
     onSlotMoveSooner: () => void,
     onSlotMoveLater: () => void,
-    onSetSlotLength: (duration: SlotDuration) => void,
     onRemoveSlot: () => void,
-    onToggleDebutt: () => void,
     onUpdateSlot: (newSlot: Slot) => void,
 }
 
@@ -19,9 +17,7 @@ const SortableDj = ({
     slot,
     onSlotMoveSooner,
     onSlotMoveLater,
-    onSetSlotLength,
     onRemoveSlot,
-    onToggleDebutt,
     onUpdateSlot,
 }: Props) =>
     {
@@ -49,20 +45,45 @@ const SortableDj = ({
                         </Col>
                         <Col sm={12} md={9} lg={10}>
                             <Form.Group as={Row}  className="mb-3">
+                                <Form.Label column sm={4}>Slot Length (In Hours)</Form.Label>
+                                <Col>
+                                    <Form.Control
+                                        type={"number"}
+                                        step={0.5}
+                                        value={slot.duration}
+                                        onChange={(event) => { onUpdateSlot({...slot, duration: parseFloat(event.target.value) as SlotDuration})}}
+                                        min={0}
+                                        max={4}
+                                    />
+                                </Col>
+                            </Form.Group>
+                            <Form.Group as={Row}  className="mb-3">
                                 <Form.Label column sm={4} className="text-right">Set Type</Form.Label>
                                 <Col>
                                 <ButtonGroup className="mb-2">
                                     <ToggleButton
-                                        id={`slot-${index}-live`}
-                                        key={`slot-${index}-live`}
+                                        id={`slot-${index}-rtmp`}
+                                        key={`slot-${index}-rtmp`}
                                         type="radio"
                                         variant="outline-dark"
                                         name={`slot-${index}-slotType`}
-                                        value={SlotType.LIVE}
-                                        checked={slot.slotType === SlotType.LIVE}
-                                        onChange={(e) => onUpdateSlot({...slot, slotType: SlotType.LIVE})}
+                                        value={SlotType.RTMP}
+                                        checked={slot.slotType === SlotType.RTMP}
+                                        onChange={(e) => onUpdateSlot({...slot, slotType: SlotType.RTMP})}
                                     >
-                                        Live
+                                        VRCDN/RTMP
+                                    </ToggleButton>
+                                    <ToggleButton
+                                        id={`slot-${index}-twitch`}
+                                        key={`slot-${index}-twitch`}
+                                        type="radio"
+                                        variant="outline-dark"
+                                        name={`slot-${index}-slotType`}
+                                        value={SlotType.TWITCH}
+                                        checked={slot.slotType === SlotType.TWITCH}
+                                        onChange={(e) => onUpdateSlot({...slot, slotType: SlotType.TWITCH})}
+                                    >
+                                        Twitch
                                     </ToggleButton>
                                     <ToggleButton
                                         id={`slot-${index}-prerecord`}
@@ -80,7 +101,7 @@ const SortableDj = ({
                                 </ButtonGroup>
                                 </Col>
                             </Form.Group>
-                            <Form.Group as={Row}  className="mb-3">
+                            <Form.Group as={Row} className="mb-3" hidden={![SlotType.PRERECORD, SlotType.RTMP].includes(slot.slotType)}>
                                 <Form.Label column sm={4}>Media Source URL</Form.Label>
                                 <Col>
                                     <Form.Control
@@ -90,27 +111,30 @@ const SortableDj = ({
                                     />
                                 </Col>
                             </Form.Group>
-                            <Form.Group as={Row}  className="mb-3">
-                                <Form.Label column sm={4}>Slot Length</Form.Label>
+                            <Form.Group as={Row} className="mb-3" hidden={slot.slotType !== SlotType.TWITCH}>
+                                <Form.Label column sm={4}>Twitch</Form.Label>
                                 <Col>
-                                    <Form.Control
-                                        type={"number"}
-                                        step={0.5}
-                                        value={slot.duration}
-                                        onChange={(event) => { onSetSlotLength(parseFloat(event.target.value) as SlotDuration) }}
-                                        min={0}
-                                        max={4}
-                                    />
+                                <Form.Group>
+                                        <InputGroup className="mb-2">
+                                            <InputGroup.Text>https://www.twitch.tv/</InputGroup.Text>
+                                            <Form.Control
+                                                type={"input"}
+                                                value={slot.twitchUserName}
+                                                onChange={(event) => { onUpdateSlot({...slot, twitchUserName: event.target.value})}}
+                                            />
+                                        </InputGroup>
+                                    </Form.Group>
                                 </Col>
                             </Form.Group>
+
                             <Form.Group as={Row} className="mb-3">
-                                <Form.Label  column sm={4}>Debutt</Form.Label>
+                                <Form.Label  column sm={4}>Is Debutt</Form.Label>
                                 <Col>
                                     <Form.Check
                                         className="mt-2" 
-                                        type="checkbox" 
+                                        type="switch" 
                                         checked={slot.isDebutt} 
-                                        onChange={onToggleDebutt}
+                                        onChange={(event) => { onUpdateSlot({...slot, isDebutt: event.target.checked})}}
                                     /> 
                                 </Col>
                             </Form.Group>

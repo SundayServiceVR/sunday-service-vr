@@ -1,5 +1,5 @@
 import { ListGroup, ListGroupItem } from "react-bootstrap";
-import { Slot, SlotDuration } from "../../../util/types";
+import { Slot } from "../../../util/types";
 import { useEventOperations } from "../EventRoot";
 import SortableDj from "./SortableDj";
 
@@ -16,21 +16,9 @@ const SortableDjList = () => {
         proposeEventChange({...eventScratchpad, slots: slots_copy});
     }
 
-    const setSlotLength = (slot_index: number, duration: SlotDuration) => {
-        const slots_copy = [...eventScratchpad.slots];
-        slots_copy[slot_index].duration = duration;
-        proposeEventChange({...eventScratchpad, slots: slots_copy});
-    }
-
     const removeSlot = (slot_index: number) => {
         const slots_copy = [...eventScratchpad.slots];
         slots_copy.splice(slot_index, 1);  //delete slots_copy[slot_index];
-        proposeEventChange({...eventScratchpad, slots: slots_copy});
-    }
-
-    const toggleDebutt = (slot_index: number) => {
-        const slots_copy = [...eventScratchpad.slots];
-        slots_copy[slot_index].isDebutt = !eventScratchpad.slots[slot_index].isDebutt;
         proposeEventChange({...eventScratchpad, slots: slots_copy});
     }
 
@@ -51,9 +39,7 @@ const SortableDjList = () => {
                     slot={slot}
                     onSlotMoveLater={() => { swapSlots(index, index + 1); }}
                     onSlotMoveSooner={() => { swapSlots(index, index - 1); }}
-                    onSetSlotLength={(duration: SlotDuration) => { setSlotLength(index, duration); }}
                     onRemoveSlot={() => { removeSlot(index); }}
-                    onToggleDebutt={() => {toggleDebutt(index)}}
                     onUpdateSlot={(newSlot: Slot) => {updateSlot(index, newSlot)}}
                 />
             </ListGroupItem>
