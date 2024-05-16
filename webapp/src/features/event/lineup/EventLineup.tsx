@@ -1,4 +1,4 @@
-import { FormEvent, FormEventHandler, useState } from "react";
+import { FormEvent, useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { RESIDENT_DJS } from "../../../store/resident_djs";
 import { Dj, Slot, SlotType } from "../../../util/types";
