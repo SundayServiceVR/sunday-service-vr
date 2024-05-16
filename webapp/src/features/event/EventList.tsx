@@ -34,8 +34,6 @@ const EventList = ({ past = false}: Props) => {
         return <Spinner />
     }
 
-
-
     return <section>
         <Breadcrumb className="px-2">
             <Breadcrumb.Item><Link to="/events">Events</Link></Breadcrumb.Item>

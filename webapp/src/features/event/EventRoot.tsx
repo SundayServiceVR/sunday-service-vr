@@ -115,5 +115,3 @@ export type EventRouterOutletMemebers = [Event, (event: Event) => void];
 export function useEventOperations() {
     return useOutletContext<EventRouterOutletMemebers>();
 }
-
-export { }
