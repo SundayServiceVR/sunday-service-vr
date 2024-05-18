@@ -67,3 +67,7 @@ node_modules/
 
 #Firebase Emulator Data
 firebase-emulator-data
+
+#Intellij
+.idea
+*.iml
