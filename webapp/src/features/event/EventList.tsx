@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { docToEvent } from "../../store/events";
 import { Timestamp, collection, getDocs, orderBy, query, where } from "firebase/firestore";
 import { Event } from "../../util/types";

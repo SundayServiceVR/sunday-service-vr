@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { Link, RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { FirebaseAuthProvider } from './contexts/FirebaseAuthContext';
 
@@ -28,7 +26,7 @@ function App() {
   if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
     const db = getFirestore();
     connectFirestoreEmulator(db, '127.0.0.1', 8080)
-  };
+  }
 
   const router = createBrowserRouter([
     {

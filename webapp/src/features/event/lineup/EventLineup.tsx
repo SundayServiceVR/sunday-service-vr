@@ -55,14 +55,14 @@ const ResidentDjs = ({ onAddSlot, currentSlots }: ReseidentDjsProps) => {
     });
 
     // TODO:  Duplicate dj's seems to break the list.  We can easilly reproduce that behavior here.
-    const freeDjs = Object.entries(RESIDENT_DJS).map(([djName, dj]) => dj).filter(
+    const freeDjs = Object.entries(RESIDENT_DJS).map(([, dj]) => dj).filter(
         (dj) => !currentSlots.map(slot => slot.dj).includes(dj)
     );
 
     return <div>
         <div><span className="is-size-5">(Quick Add)</span></div>
         {
-            Object.entries(freeDjs).map(([dj_name, dj], i) => {
+            Object.entries(freeDjs).map(([dj_name, dj]) => {
                 return <Button key={`add-${dj_name}-button`} className="m-1" color="primary" onClick={() => { onAddSlot(newDjTimeSlot(dj)) }}>{dj.name}</Button>
             })
         }
@@ -93,7 +93,7 @@ const CustomDjSlotInserter = ({ onAddSlot }: CustomDjSlotInserterProps) => {
     });
 
     const addGuestDj = (dj: Dj) => {
-        onAddSlot(newDjTimeSlot(guestDj));
+        onAddSlot(newDjTimeSlot(dj));
     }
 
     const handleDjSubmit = (e: FormEvent) => {

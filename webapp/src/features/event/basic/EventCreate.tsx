@@ -1,4 +1,4 @@
-import React, { FormEvent, useState } from "react";
+import { FormEvent, useState } from "react";
 import { createEvent, default_event } from "../../../store/events";
 import { Event } from "../../../util/types";
 import EventBasicDetailsForm from "./EventBasicDetailsForm";
