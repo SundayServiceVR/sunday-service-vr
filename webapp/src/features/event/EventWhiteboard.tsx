@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button, Card, Form, Stack, Tab, Tabs } from "react-bootstrap";
 import { getAusPasteMessage, getUkPasteMessage } from "../../util/messageWriters";
-import { useEventOperations } from "./EventRoot";
+import { useEventOperations } from "./outletContext";
 import { updateBoards } from "../../store/events";
 
 const WhiteboardWriter = () => {
