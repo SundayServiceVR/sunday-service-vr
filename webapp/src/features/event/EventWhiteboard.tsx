@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Button, Card, Form, Stack, Tab, Tabs } from "react-bootstrap";
 import { getAusPasteMessage, getUkPasteMessage } from "../../util/messageWriters";
 import { useEventOperations } from "./EventRoot";

@@ -70,7 +70,7 @@ const SortableDj = ({
                                         name={`slot-${index}-slotType`}
                                         value={SlotType.RTMP}
                                         checked={slot.slotType === SlotType.RTMP}
-                                        onChange={(e) => onUpdateSlot({...slot, slotType: SlotType.RTMP})}
+                                        onChange={() => onUpdateSlot({...slot, slotType: SlotType.RTMP})}
                                     >
                                         VRCDN/RTMP
                                     </ToggleButton>
@@ -82,7 +82,7 @@ const SortableDj = ({
                                         name={`slot-${index}-slotType`}
                                         value={SlotType.TWITCH}
                                         checked={slot.slotType === SlotType.TWITCH}
-                                        onChange={(e) => onUpdateSlot({...slot, slotType: SlotType.TWITCH})}
+                                        onChange={() => onUpdateSlot({...slot, slotType: SlotType.TWITCH})}
                                     >
                                         Twitch
                                     </ToggleButton>
@@ -94,7 +94,7 @@ const SortableDj = ({
                                         name={`slot-${index}-slotType`}
                                         value={SlotType.PRERECORD}
                                         checked={slot.slotType === SlotType.PRERECORD}
-                                        onChange={(e) => onUpdateSlot({...slot, slotType: SlotType.PRERECORD})}
+                                        onChange={() => onUpdateSlot({...slot, slotType: SlotType.PRERECORD})}
                                     >
                                         PreRecord
                                     </ToggleButton>
