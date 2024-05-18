@@ -1,7 +1,7 @@
 import { Tabs, Tab, Form } from "react-bootstrap";
 import MessagePasteCard from "./messaging/MessagePasteCard";
 import { getDiscordMessage, getTwitterMessage } from "../../util/messageWriters";
-import { useEventOperations } from "./EventRoot";
+import { useEventOperations } from "./outletContext";
 
 const EventAnnouncements = () => {
 

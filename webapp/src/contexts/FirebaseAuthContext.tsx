@@ -11,7 +11,7 @@ const FirebaseAuthContext =
   React.createContext<ContextState | false | null>(null);
 
 type Props = {
-  children: any
+  children: React.ReactNode
 }
 
 const FirebaseAuthProvider = ({ children }: Props) => {

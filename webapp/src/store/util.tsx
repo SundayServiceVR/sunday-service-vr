@@ -5,4 +5,4 @@ export function docToRawType<T>(doc:  DocumentSnapshot){
         id: doc.id,
         ...doc.data()
     } as T;
-};
+}
