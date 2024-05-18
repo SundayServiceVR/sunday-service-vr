@@ -41,12 +41,14 @@ const EventAnnouncements = () => {
         <Tabs className="mt-4">
             <Tab eventKey="discord" title="Discord">
                 <EventPasteCard 
+                textBoxLabel="Discord Announcement Text"
                 message={discordMessage} 
                 footerInstructions={discordFooterInstructions}
                 />
             </Tab>
             <Tab eventKey="twitter" title="Social Media">
                 <EventPasteCard 
+                textBoxLabel="Social Media Announcement Text"
                 message={twitterMessage}
                 footerInstructions={twitterFooterInstructions}
                 />
