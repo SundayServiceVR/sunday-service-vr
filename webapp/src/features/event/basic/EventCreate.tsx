@@ -1,7 +1,7 @@
-import React, { FormEvent, useState } from "react";
-import { createEvent, default_event } from "../../store/events";
-import { Event } from "../../util/types";
-import EventSetupBasicDetails from "./EventSetupBasicDetailsForm";
+import { FormEvent, useState } from "react";
+import { createEvent, default_event } from "../../../store/events";
+import { Event } from "../../../util/types";
+import EventBasicDetailsForm from "./EventBasicDetailsForm";
 import { Breadcrumb, Button, Form, Spinner, Stack } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
@@ -30,7 +30,7 @@ const EventCreate = () => {
         </Breadcrumb>
         <h2 className="display-5">Create Event</h2>
         <Form onSubmit={(evt) => onCreateEvent(evt)}>
-            <EventSetupBasicDetails event={event} onEventChange={setEvent} />
+            <EventBasicDetailsForm event={event} onEventChange={setEvent} />
             <Stack direction="horizontal" gap={3} className="p-3">
                 <span className="me-auto" />
                 <Button type="submit" variant="primary">Create Event</Button>

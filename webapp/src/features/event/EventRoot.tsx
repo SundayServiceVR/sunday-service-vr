@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Alert, Breadcrumb, Button, Container, Nav, Stack, } from 'react-bootstrap';
 import { calcSlotTimes, default_event, docToEvent, saveEvent } from "../../store/events";
 import { onSnapshot, doc } from "firebase/firestore";
@@ -115,5 +115,3 @@ export type EventRouterOutletMemebers = [Event, (event: Event) => void];
 export function useEventOperations() {
     return useOutletContext<EventRouterOutletMemebers>();
 }
-
-export { }

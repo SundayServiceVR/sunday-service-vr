@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import { ReactNode } from "react";
 import "./FloatingActionBar.css";
 import { Navbar } from "react-bootstrap";
 

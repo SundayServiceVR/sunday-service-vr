@@ -1,5 +1,5 @@
 import { Tabs, Tab, Form } from "react-bootstrap";
-import EventPasteCard from "./EventPasteCard";
+import MessagePasteCard from "./messaging/MessagePasteCard";
 import { getDiscordMessage, getTwitterMessage } from "../../util/messageWriters";
 import { useEventOperations } from "./EventRoot";
 
@@ -40,14 +40,14 @@ const EventAnnouncements = () => {
         </Form>
         <Tabs className="mt-4">
             <Tab eventKey="discord" title="Discord">
-                <EventPasteCard 
+                <MessagePasteCard 
                 textBoxLabel="Discord Announcement Text"
                 message={discordMessage} 
                 footerInstructions={discordFooterInstructions}
                 />
             </Tab>
             <Tab eventKey="twitter" title="Social Media">
-                <EventPasteCard 
+                <MessagePasteCard 
                 textBoxLabel="Social Media Announcement Text"
                 message={twitterMessage}
                 footerInstructions={twitterFooterInstructions}

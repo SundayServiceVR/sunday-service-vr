@@ -71,6 +71,7 @@ export const calcSlotTimes = (event: Event): Event => {
 
 export const updateBoards = async (event: Event) => {
   await updateDoc(doc(db, "whiteboards", "current"), {
+    event,
     au: getAusPasteMessage(event),
     gmt: getUkPasteMessage(event),
   });

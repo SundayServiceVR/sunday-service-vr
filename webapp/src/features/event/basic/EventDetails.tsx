@@ -1,6 +1,5 @@
-import React from "react";
-import { useEventOperations } from "./EventRoot";
-import EventSetupBasicDetails from "./EventSetupBasicDetailsForm";
+import { useEventOperations } from "../EventRoot";
+import EventBasicDetailsForm from "./EventBasicDetailsForm";
 import "react-datepicker/dist/react-datepicker.css";
 
 const EventDetails = () => {
@@ -9,7 +8,7 @@ const EventDetails = () => {
 
     return <>
         <h2 className="display-6">Event Setup</h2>
-        <EventSetupBasicDetails event={eventScratchpad} onEventChange={proposeEventChange} />
+        <EventBasicDetailsForm event={eventScratchpad} onEventChange={proposeEventChange} />
     </>
 };
 
