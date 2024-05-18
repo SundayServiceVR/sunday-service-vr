@@ -1,7 +1,8 @@
 import { render, screen } from '@testing-library/react'
 import App from './App'
 
-test('App renders', async () => {
+test('App renders text (smoke test)', async () => {
     render(<App />)
-    expect(await screen.findAllByText(/./)).toBeTruthy()
+    const elementsWithText = await screen.findAllByText(/\w+/)
+    expect(elementsWithText).toBeTruthy()
 })
