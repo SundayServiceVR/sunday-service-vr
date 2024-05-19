@@ -35,8 +35,8 @@ const EventLineup = () => {
             <Row>
                 <Col md={8}>
                     <DjSearchSelect onDjSelect={dj => addSlot({
-                        // djRecord: dj,
                         duration: 1,
+                        dj_name: dj?.name,
                         rtmp_url: dj?.rtmp_url,
                         twitch_username: dj?.twitch_username
                     } as Slot)} />
