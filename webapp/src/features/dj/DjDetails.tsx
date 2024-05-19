@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Breadcrumb, Button, Spinner } from "react-bootstrap";
+import { Alert, Breadcrumb, Button, Spinner } from "react-bootstrap";
 import { useParams } from "react-router";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "../../util/firebase";
@@ -63,7 +63,13 @@ const DjDetails = () => {
         </Breadcrumb>
         <h2 className="display-6">Dj Details</h2>
         { isEditing 
-        ? <DjForm dj={djScratchpad} onSubmitDj={onSubmitDj} busy={busy} onCancel={onCancelUpdate}/>
+        ? <>
+                <Alert variant="info">
+                    <Alert.Heading>Editing fields here will not affect any existing dj information in existing events.</Alert.Heading>
+                    To edit event information as well, edit the dj information from the event
+                </Alert>
+                <DjForm dj={djScratchpad} onSubmitDj={onSubmitDj} busy={busy} onCancel={onCancelUpdate}/>
+            </>
         : <div>
             <dl>
                 <dt>Dj Name</dt>
