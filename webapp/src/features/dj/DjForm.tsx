@@ -46,21 +46,21 @@ const DjForm = ({dj, onSubmitDj, busy, onCancel}: Props) => {
                 <Form.Label>Stream Url</Form.Label>
                 <Form.Control 
                     name="stream_url"
-                    value={formData.stream_url}
+                    value={formData.rtmp_url}
                     type="input"
                     aria-describedby="twitchUrlHelpBlock"
-                    onChange={(e) => setFormData({...formData, "stream_url": e.target.value})} />
+                    onChange={(e) => setFormData({...formData, "rtmp_url": e.target.value})} />
                 <Form.Text id="twitchUrlHelpBlock" muted>
                     Typically VRCDN or Twitch, but a few dj's have their own streaming methods we can notate here.
                 </Form.Text>
             </Form.Group>
             <Form.Group className="mt-3">
-                <Form.Label>Twitch URL</Form.Label>
+                <Form.Label>Twitch Username</Form.Label>
                 <Form.Control
-                    name="twitch_url"
-                    value={formData.twitch_url}
+                    name="twitch_username"
+                    value={formData.twitch_username}
                     type="input"
-                    onChange={(e) => setFormData({...formData, "twitch_url": e.target.value})}/>
+                    onChange={(e) => setFormData({...formData, "twitch_username": e.target.value})}/>
             </Form.Group>
             <Stack direction="horizontal" gap={3}>
                 <Button variant="primary" type="submit" className="mt-3">

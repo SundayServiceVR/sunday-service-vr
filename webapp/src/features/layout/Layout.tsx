@@ -23,7 +23,7 @@ const Layout = () => {
                     {
                         process.env.NODE_ENV === "development" 
                         && <Nav.Link href="/djs">
-                            Djs
+                            Dj Roster
                         </Nav.Link>
                     }
                     <Nav.Link onClick={onSignOutClicked}>

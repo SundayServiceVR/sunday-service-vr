@@ -1,19 +1,25 @@
+import { DocumentReference } from "firebase/firestore";
 
 export type Dj = {
     id?: string;
     discord_username: string;
     name?: string;
-    twitch_url?: string;
-    stream_url?: string;
+    twitch_username?: string;
+    rtmp_url?: string;
 }
 
 export type Slot = {
-    dj: Dj;
+    // djRecord: Dj;
+    dj_ref: DocumentReference;
     startTime?: Date | undefined;
     duration: SlotDuration;
-    slotType: SlotType;
-    mediaSourceUrl?: string;
-    twitchUserName?: string;
+    slotType?: SlotType;
+
+    dj_name: string,
+    rtmp_url?: string;
+    twitch_username?: string;
+    prerecord_url?: string;
+
     isDebutt: boolean;
 }
 
@@ -28,7 +34,7 @@ export const SlotTypes =
         { name: 'Active', value: '1' },
         { name: 'Radio', value: '2' },
         { name: 'Radio', value: '3' },
-      ];
+    ];
 
 
 export type SlotDuration = (0.5 | 1 | 1.5 | 2 | 2.5 | 3 | 3.5 | 4);

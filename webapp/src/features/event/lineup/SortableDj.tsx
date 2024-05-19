@@ -1,9 +1,8 @@
 import { Stack, Button, Form, Container, Row, Col, ButtonGroup, ToggleButton, InputGroup } from "react-bootstrap";
-import { Dj, Slot, SlotDuration, SlotType } from "../../../util/types";
+import { Slot, SlotDuration, SlotType } from "../../../util/types";
 
 type Props = {
     index: number,
-    dj: Dj,
     slot: Slot,
     onSlotMoveSooner: () => void,
     onSlotMoveLater: () => void,
@@ -13,7 +12,6 @@ type Props = {
 
 const SortableDj = ({
     index,
-    dj,
     slot,
     onSlotMoveSooner,
     onSlotMoveLater,
@@ -39,7 +37,7 @@ const SortableDj = ({
                     <Row className="mb-3">
                         <Col>
                             <Stack gap={3} direction="horizontal">
-                                <span className="lead">{dj.name}</span>
+                                <span className="lead">{slot.dj_name}</span>
                                 <span className="lead text-muted">({slot.startTime?.toLocaleTimeString()})</span>
                             </Stack>
                         </Col>
@@ -102,18 +100,18 @@ const SortableDj = ({
                           
                                 <Form.Control
                                     type={"input"}
-                                    value={slot.mediaSourceUrl}
-                                    onChange={(event) => { onUpdateSlot({...slot, mediaSourceUrl: event.target.value})}}
+                                    value={slot.rtmp_url}
+                                    onChange={(event) => { onUpdateSlot({...slot, rtmp_url: event.target.value})}}
                                     placeholder="Media Source (RTMP/URL)"
-                                    hidden={![SlotType.PRERECORD, SlotType.RTMP].includes(slot.slotType)}
+                                    hidden={!([SlotType.PRERECORD, SlotType.RTMP] as Array<SlotType|undefined>).includes(slot.slotType)}
                                 />
                        
                                 <InputGroup className="mb-2"  hidden={slot.slotType !== SlotType.TWITCH}>
                                     <InputGroup.Text>https://www.twitch.tv/</InputGroup.Text>
                                     <Form.Control
                                         type={"input"}
-                                        value={slot.twitchUserName}
-                                        onChange={(event) => { onUpdateSlot({...slot, twitchUserName: event.target.value})}}
+                                        value={slot.twitch_username}
+                                        onChange={(event) => { onUpdateSlot({...slot, twitch_username: event.target.value})}}
                                         placeholder="username"
                                     />
                                 </InputGroup>

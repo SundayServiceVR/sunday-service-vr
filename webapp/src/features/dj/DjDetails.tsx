@@ -71,9 +71,9 @@ const DjDetails = () => {
                 <dt>Discord Username</dt>
                 <dd>{ dj.discord_username }</dd>
                 <dt>Stream URL</dt>
-                <dd>{ dj.stream_url }</dd>
-                <dt>Twitch URL</dt>
-                <dd>{ dj.twitch_url }</dd>
+                <dd>{ dj.rtmp_url }</dd>
+                <dt>Twitch Username</dt>
+                <dd>{ dj.twitch_username }</dd>
                 <Button onClick={() => { setDjScratchpad({...dj}); setIsEditing(true); }}>Edit</Button>
             </dl>
         </div>
