@@ -38,7 +38,7 @@ const SortableDj = ({
                         <Col>
                             <Stack gap={3} direction="horizontal">
                                 <span className="lead">{slot.dj_name}</span>
-                                <span className="lead text-muted">({slot.startTime?.toLocaleTimeString()})</span>
+                                <span className="lead text-muted">({slot.start_time?.toLocaleTimeString()})</span>
                             </Stack>
                         </Col>
                     </Row>
@@ -67,8 +67,8 @@ const SortableDj = ({
                                         variant="outline-dark"
                                         name={`slot-${index}-slotType`}
                                         value={SlotType.RTMP}
-                                        checked={slot.slotType === SlotType.RTMP}
-                                        onChange={() => onUpdateSlot({...slot, slotType: SlotType.RTMP})}
+                                        checked={slot.slot_type === SlotType.RTMP}
+                                        onChange={() => onUpdateSlot({...slot, slot_type: SlotType.RTMP})}
                                     >
                                         VRCDN/RTMP
                                     </ToggleButton>
@@ -79,8 +79,8 @@ const SortableDj = ({
                                         variant="outline-dark"
                                         name={`slot-${index}-slotType`}
                                         value={SlotType.TWITCH}
-                                        checked={slot.slotType === SlotType.TWITCH}
-                                        onChange={() => onUpdateSlot({...slot, slotType: SlotType.TWITCH})}
+                                        checked={slot.slot_type === SlotType.TWITCH}
+                                        onChange={() => onUpdateSlot({...slot, slot_type: SlotType.TWITCH})}
                                     >
                                         Twitch
                                     </ToggleButton>
@@ -91,8 +91,8 @@ const SortableDj = ({
                                         variant="outline-dark"
                                         name={`slot-${index}-slotType`}
                                         value={SlotType.PRERECORD}
-                                        checked={slot.slotType === SlotType.PRERECORD}
-                                        onChange={() => onUpdateSlot({...slot, slotType: SlotType.PRERECORD})}
+                                        checked={slot.slot_type === SlotType.PRERECORD}
+                                        onChange={() => onUpdateSlot({...slot, slot_type: SlotType.PRERECORD})}
                                     >
                                         PreRecord
                                     </ToggleButton>
@@ -103,10 +103,10 @@ const SortableDj = ({
                                     value={slot.rtmp_url}
                                     onChange={(event) => { onUpdateSlot({...slot, rtmp_url: event.target.value})}}
                                     placeholder="Media Source (RTMP/URL)"
-                                    hidden={!([SlotType.PRERECORD, SlotType.RTMP] as Array<SlotType|undefined>).includes(slot.slotType)}
+                                    hidden={!([SlotType.PRERECORD, SlotType.RTMP] as Array<SlotType|undefined>).includes(slot.slot_type)}
                                 />
                        
-                                <InputGroup className="mb-2"  hidden={slot.slotType !== SlotType.TWITCH}>
+                                <InputGroup className="mb-2"  hidden={slot.slot_type !== SlotType.TWITCH}>
                                     <InputGroup.Text>https://www.twitch.tv/</InputGroup.Text>
                                     <Form.Control
                                         type={"input"}
@@ -124,8 +124,8 @@ const SortableDj = ({
                                     <Form.Check
                                         className="mt-2" 
                                         type="switch" 
-                                        checked={slot.isDebutt} 
-                                        onChange={(event) => { onUpdateSlot({...slot, isDebutt: event.target.checked})}}
+                                        checked={slot.is_debut} 
+                                        onChange={(event) => { onUpdateSlot({...slot, is_debut: event.target.checked})}}
                                     /> 
                                 </Col>
                             </Form.Group>

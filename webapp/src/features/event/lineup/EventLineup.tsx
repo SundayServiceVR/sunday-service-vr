@@ -23,7 +23,7 @@ const EventLineup = () => {
             dj_ref: documentRef,
             dj_name: newDj.name ?? "",
             duration: 1,
-            isDebutt: false, // When more djs are added, we want to set this to true
+            is_debut: false, // When more djs are added, we want to set this to true
         }
         setAddDjModalShow(false);
         addSlot(newSlot);

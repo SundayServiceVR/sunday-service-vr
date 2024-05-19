@@ -1,7 +1,6 @@
 import { DocumentReference } from "firebase/firestore";
 
 export type Dj = {
-    id?: string;
     discord_username: string;
     name?: string;
     twitch_username?: string;
@@ -9,18 +8,17 @@ export type Dj = {
 }
 
 export type Slot = {
-    // djRecord: Dj;
     dj_ref: DocumentReference;
-    startTime?: Date | undefined;
+    start_time?: Date | undefined;
     duration: SlotDuration;
-    slotType?: SlotType;
+    slot_type?: SlotType;
 
     dj_name: string,
     rtmp_url?: string;
     twitch_username?: string;
     prerecord_url?: string;
 
-    isDebutt: boolean;
+    is_debut: boolean;
 }
 
 export enum SlotType {

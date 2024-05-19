@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { collection, getDocs, query } from "firebase/firestore";
+import { DocumentReference, collection, getDocs, query } from "firebase/firestore";
 import { Dj } from "../../util/types";
 import { db } from "../../util/firebase";
 import { Alert, AlertHeading, Breadcrumb, Button, Spinner, Stack, Table } from "react-bootstrap";
@@ -11,7 +11,7 @@ type Props = {
 }
 
 const DjList = ({ past = false}: Props) => {
-    const [djs, setDjs] = useState<Dj[]>([]);
+    const [djs, setDjs] = useState<{ dj: Dj, reference: DocumentReference}[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const navigate = useNavigate();
 
@@ -21,9 +21,8 @@ const DjList = ({ past = false}: Props) => {
             const q = query(collection(db, "djs"));
             const querySnapshot = await getDocs(q);
 
-            const djs: Dj[] = querySnapshot.docs
-                .map((doc) => docToRawType<Dj>(doc))
-                .filter((doc): doc is Exclude<typeof doc, null> => doc !== null);
+            const djs: { dj: Dj, reference: DocumentReference}[] = querySnapshot.docs
+                .map((doc) => ({dj: docToRawType<Dj>(doc), reference: doc.ref}));
             setDjs(djs ?? []);
             setLoading(false);
         })()
@@ -53,9 +52,9 @@ const DjList = ({ past = false}: Props) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {djs.map(dj => <tr key={dj.id}>
-                        <td><Link to={`/djs/${dj.id}`}>{dj.name}</Link></td>
-                        <td>{dj.discord_username}</td>
+                    {djs.map(entry => <tr key={entry.reference.id}>
+                        <td><Link to={`/djs/${entry.reference.id}`}>{entry.dj.name}</Link></td>
+                        <td>{entry.dj.discord_username}</td>
                     </tr>)}
                 </tbody>
             </Table>

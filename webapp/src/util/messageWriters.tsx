@@ -73,28 +73,28 @@ const dateToLineupTime = (date: Date, timezone : string): string => {
 
 
 const getDiscordSlotText = (slot: Slot): string => {
-    const debuttText = `${slot.isDebutt? " (DEBUTT!)" : ""}`
-    const slotText = `${slot.startTime ? dateToDiscordTime(slot.startTime) : ""} : ${slot.dj_name}${debuttText}`;
+    const debuttText = `${slot.is_debut? " (DEBUTT!)" : ""}`
+    const slotText = `${slot.start_time ? dateToDiscordTime(slot.start_time) : ""} : ${slot.dj_name}${debuttText}`;
     return slotText;
 }
 
 
 const getTwitterSlotText = (slot : Slot): string => {
-    const debuttText = `${slot.isDebutt? " - DEBUTT" : ""}`
-    const slotText = `${slot.startTime ? dateToLineupTime(slot.startTime, "Europe/London") : ""} - ${slot.dj_name}${debuttText}`;
+    const debuttText = `${slot.is_debut? " - DEBUTT" : ""}`
+    const slotText = `${slot.start_time ? dateToLineupTime(slot.start_time, "Europe/London") : ""} - ${slot.dj_name}${debuttText}`;
     return slotText;
 }
 
 
 const getUkSlotText = (slot : Slot): string => {
-    const debuttText = `${slot.isDebutt? " DEBUTT" : ""}`
-    const slotText = `${slot.startTime ? dateToLineupTime(slot.startTime, "Europe/London") : ""} ${slot.dj_name}${debuttText}`;
+    const debuttText = `${slot.is_debut? " DEBUTT" : ""}`
+    const slotText = `${slot.start_time ? dateToLineupTime(slot.start_time, "Europe/London") : ""} ${slot.dj_name}${debuttText}`;
     return slotText;
 }
 
 
 const getAusSlotText = (slot : Slot): string => {
-    const debuttText = `${slot.isDebutt? " DEBUTT" : ""}`
-    const slotText = `${slot.startTime ? dateToLineupTime(slot.startTime, "Australia/Sydney") : ""} ${slot.dj_name}${debuttText}`;
+    const debuttText = `${slot.is_debut? " DEBUTT" : ""}`
+    const slotText = `${slot.start_time ? dateToLineupTime(slot.start_time, "Australia/Sydney") : ""} ${slot.dj_name}${debuttText}`;
     return slotText;
 }

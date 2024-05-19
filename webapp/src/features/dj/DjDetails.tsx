@@ -37,10 +37,10 @@ const DjDetails = () => {
     const onSubmitDj = (newDj: Dj) => {
         setBusy(true);
         (async () => {
-            if(!newDj.id) {
+            if(!djId) {
                 throw(new Error("Attempted to update a dj with no id"))
             }
-            const newDoc = doc(db, "djs", newDj.id);
+            const newDoc = doc(db, "djs", djId);
             await setDoc(newDoc, newDj);
             setDj(newDj);
             setBusy(false);
@@ -59,7 +59,7 @@ const DjDetails = () => {
     return <div>
         <Breadcrumb className="px-2">
             <Breadcrumb.Item><Link to="/djs">Djs</Link></Breadcrumb.Item>
-            <Breadcrumb.Item><Link to={`/djs/${dj.id}`}>{dj.name}</Link></Breadcrumb.Item>
+            <Breadcrumb.Item><Link to={`/djs/${djId}`}>{dj.name}</Link></Breadcrumb.Item>
         </Breadcrumb>
         <h2 className="display-6">Dj Details</h2>
         { isEditing 

@@ -36,7 +36,7 @@ export const docToEvent = (doc: DocumentData) => {
       id: doc.ref.id,
       start_datetime: data.start_datetime.toDate(),
       end_datetime: data.end_datetime?.toDate(),
-      slots: data.slots.map((slot: any) => ({ ...slot, startTime: slot.startTime.toDate() }) as Slot)
+      slots: data.slots.map((slot: any) => ({ ...slot, start_time: slot.startTime.toDate() }) as Slot)
     } as Event;
 
     return event;
@@ -60,7 +60,7 @@ export const calcSlotTimes = (event: Event): Event => {
 
   const time_counter = new Date(newEvent.start_datetime);
   for (let i = 0; i < event.slots.length; i++) {
-    event.slots[i].startTime = new Date(time_counter);
+    event.slots[i].start_time = new Date(time_counter);
     time_counter.setTime(time_counter.getTime() + ONE_HOUR * event.slots[i].duration);
   }
 
