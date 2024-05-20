@@ -11,22 +11,19 @@ const EventLineup = () => {
 
     const [ eventScratchpad, proposeEventChange ] = useEventOperations();
     const [ addDjModalShow, setAddDjModalShow ] = useState<boolean>(false);
-    
-    const addSlot = (slot: Slot) => {
-        const slots_copy = [...eventScratchpad.slots, slot];
-        proposeEventChange({...eventScratchpad, slots: slots_copy});
-    }
 
     const addNewDjAsSlot = (newDj: Dj, documentRef: DocumentReference) => {
-        const newSlot: Slot = {
-            // djRecord: newDj,
+        const slot: Slot = {
             dj_ref: documentRef,
             dj_name: newDj.name ?? "",
+            rtmp_url: newDj.rtmp_url,
+            twitch_username: newDj.twitch_username,
             duration: 1,
-            is_debut: false, // When more djs are added, we want to set this to true
+            is_debut: false,
         }
         setAddDjModalShow(false);
-        addSlot(newSlot);
+        const slots_copy = [...eventScratchpad.slots, slot];
+        proposeEventChange({...eventScratchpad, slots: slots_copy});
     }
 
     return <>
@@ -34,12 +31,7 @@ const EventLineup = () => {
         <Container>
             <Row>
                 <Col md={8}>
-                    <DjSearchSelect onDjSelect={dj => addSlot({
-                        duration: 1,
-                        dj_name: dj?.name,
-                        rtmp_url: dj?.rtmp_url,
-                        twitch_username: dj?.twitch_username
-                    } as Slot)} />
+                    <DjSearchSelect onDjSelect={addNewDjAsSlot} />
                 </Col>
                 <Col className="d-flex justify-content-center">
                     <Button variant="primary" size="lg" onClick={() => setAddDjModalShow(true)}>Add a New DJ</Button>

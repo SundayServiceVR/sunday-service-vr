@@ -108,10 +108,17 @@ const SortableDj = ({
                             type={"input"}
                             value={slot.rtmp_url}
                             onChange={(event) => { onUpdateSlot({...slot, rtmp_url: event.target.value})}}
-                            placeholder="Media Source (RTMP/URL)"
-                            hidden={!([SlotType.PRERECORD, SlotType.RTMP] as Array<SlotType|undefined>).includes(slot.slot_type)}
+                            placeholder="RTMP URL"
+                            hidden={slot.slot_type !== SlotType.RTMP}
                         />
-                
+                        <Form.Control
+                            type={"input"}
+                            value={slot.prerecord_url}
+                            onChange={(event) => { onUpdateSlot({...slot, prerecord_url: event.target.value})}}
+                            placeholder="PreRecord URL"
+                            hidden={slot.slot_type !== SlotType.PRERECORD}
+                        />
+
                         <InputGroup className="mb-2"  hidden={slot.slot_type !== SlotType.TWITCH}>
                             <InputGroup.Text>https://www.twitch.tv/</InputGroup.Text>
                             <Form.Control

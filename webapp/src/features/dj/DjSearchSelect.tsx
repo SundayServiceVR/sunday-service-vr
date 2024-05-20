@@ -2,15 +2,15 @@ import { ComponentProps, useEffect, useRef, useState } from "react"
 import { Form } from "react-bootstrap"
 import { Dj } from "../../util/types";
 import { db } from "../../util/firebase";
-import { collection, getDocs, query } from "firebase/firestore";
+import { DocumentReference, collection, getDocs, query } from "firebase/firestore";
 import { Typeahead } from "react-bootstrap-typeahead";
 import { docToRawType } from "../../store/util";
 
 type Props = {
-    onDjSelect: (dj: Dj | null) => void;
+    onDjSelect: (dj: Dj, doc: DocumentReference) => void;
 }
 
-type DjRecord = Record<string, { dj: Dj, label: string }>;
+type DjRecord = Record<string, { dj: Dj, doc: DocumentReference, label: string }>;
 
 export const DjSearchSelect = ({onDjSelect}: Props) => {
 
@@ -22,9 +22,10 @@ export const DjSearchSelect = ({onDjSelect}: Props) => {
             const q = query(djCollectionRef);
             const querySnapshot = await getDocs(q);
             const suggestionResults: DjRecord[] = [];
+
             querySnapshot.forEach((doc) => {
                 const dj = docToRawType<Dj>(doc);
-                const record: DjRecord = {[`${doc.id}`]: { dj: dj, label: dj.name ?? "unknown" }};
+                const record: DjRecord = {[`${doc.id}`]: {dj: dj, doc: doc.ref, label: dj.name ?? "unknown"}};
                 suggestionResults.push(record)
             });
             setMatchedDjs(suggestionResults);
@@ -46,8 +47,8 @@ export const DjSearchSelect = ({onDjSelect}: Props) => {
                 }}
                 placeholder="Search DJ"
                 onChange={e => { 
-                    const dj = Object.values(e[0])[0].dj;
-                    onDjSelect(dj);
+                    const result = Object.values(e[0])[0];
+                    onDjSelect(result.dj, result.doc);
                     ref.current?.clear()
                 }}
                 selected={undefined}
