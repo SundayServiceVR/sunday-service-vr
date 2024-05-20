@@ -40,7 +40,7 @@ const EventLineup = () => {
         </Container>
         < hr />
         <div>
-            <h3 className="display-6">Schedule</h3>
+            <h3 className="display-6">Schedule (Local Times)</h3>
             <SortableDjList />
         </div>
 
