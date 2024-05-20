@@ -10,7 +10,7 @@
         "force-kill-emulators": "npx kill-port 4000 8080 8085",
         "build": "tsc && vite build",
         "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-        "test": "vitest --watch --globals",
+        "test": "vitest --globals",
         "predeploy": "npm run build",
         "deploy": "gh-pages -d build"
     },
