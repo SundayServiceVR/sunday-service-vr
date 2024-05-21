@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import { RenderRouteWithOutletContext } from "../../../util/test/RenderRouteWithOutletContext";
+import { RenderRouteWithOutletContext } from "../../../test/RenderRouteWithOutletContext";
 import { testEvent } from "./EventTestingUtil";
 import WhiteboardWriter from "../EventWhiteboard";
 
