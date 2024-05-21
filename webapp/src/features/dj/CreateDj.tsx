@@ -1,22 +1,24 @@
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import DjForm from "./DjForm";
-import { Breadcrumb } from "react-bootstrap";
+import { Breadcrumb, Button, Form, Stack } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { addDoc, collection } from "firebase/firestore";
 import { db } from "../../util/firebase";
 import { Dj } from "../../util/types";
 
 const CreateDj = () => {
-
-
     const defaultDj: Dj = { 
-        discord_username: "",
+        discord_username: "asdf",
         name: "",
      };
+
+    const [dj, setDj] = useState<Dj>(defaultDj);
+
     const [ busy, setBusy ] = useState<boolean>(false);
     const navigate = useNavigate();
 
-    const onSubmit = (dj: Dj) => {
+    const onSubmit = (event: FormEvent) => {
+        event.preventDefault();
         setBusy(true);
         (async () => {
             const result = await addDoc(collection(db, "djs"), dj);
@@ -31,7 +33,14 @@ const CreateDj = () => {
             <Breadcrumb.Item><Link to="/djs/create">Create</Link></Breadcrumb.Item>
         </Breadcrumb>
         <h2 className="display-6">Create Dj</h2>
-        <DjForm dj={defaultDj} onSubmitDj={onSubmit} busy={busy}/>
+        <Form onSubmit={onSubmit}>
+            <DjForm dj={dj} setDj={setDj} busy={busy}/>
+            <Stack direction="horizontal" gap={3}>
+                <Button variant="primary" type="submit" className="mt-3">
+                    Submit
+                </Button>
+            </Stack>
+        </Form>
     </section>
 }
 

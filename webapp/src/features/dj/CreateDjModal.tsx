@@ -1,6 +1,6 @@
-import { Modal } from "react-bootstrap"
+import { Button, Form, Modal } from "react-bootstrap"
 import { Dj } from "../../util/types"
-import { useState } from "react"
+import { FormEvent, useState } from "react"
 import DjForm from "./DjForm"
 import { DocumentReference, addDoc, collection } from "firebase/firestore"
 import { db } from "../../util/firebase"
@@ -12,36 +12,43 @@ type Props = {
 }
 
 export const CreateDjModal = ({ show, handleClose, onDjCreated }: Props) => {
-
     const defaultDj: Dj = {
         discord_username: "",
     }
+    const [dj, setDj] = useState<Dj>(defaultDj);
 
     const [busy, setBusy] = useState<boolean>(false);
 
-    const createDj = (newDj: Dj) => {
+    const createDj = () => {
         setBusy(true);
         (async () => {
-            const documentRef = await addDoc(collection(db, "djs"), newDj);
-            onDjCreated(newDj, documentRef);
+            const documentRef = await addDoc(collection(db, "djs"), dj);
+            onDjCreated(dj, documentRef);
             setBusy(false);
         })();
     }
 
+    const onFormSubmit = (event: FormEvent) => {
+        event.preventDefault();
+        createDj();
+    }
+
     return <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-        <Modal.Title>Create Dj</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-            <DjForm dj={defaultDj} onSubmitDj={createDj} busy={busy} onCancel={handleClose} />
-        </Modal.Body>
-        {/* <Modal.Footer>
-        <Button variant="secondary" onClick={handleClose}>
-            Close
-        </Button>
-        <Button variant="primary" onClick={() => createDj()}>
-            Save Changes
-        </Button>
-        </Modal.Footer> */}
-    </Modal>
+            <Form onSubmit={onFormSubmit}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Create Dj</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                        <DjForm dj={dj} setDj={setDj} busy={busy} />
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleClose}>
+                        Close
+                    </Button>
+                    <Button variant="primary" type="submit">
+                        Save Changes
+                    </Button>
+                </Modal.Footer>
+            </Form>
+        </Modal>
 }
