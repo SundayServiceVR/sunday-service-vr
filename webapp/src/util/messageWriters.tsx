@@ -95,6 +95,6 @@ const getUkSlotText = (slot : Slot): string => {
 
 const getAusSlotText = (slot : Slot): string => {
     const debuttText = `${slot.is_debut? " DEBUTT" : ""}`
-    const slotText = `${slot.start_time ? dateToLineupTime(slot.start_time, "Australia/Sydney") : ""} ${slot.name}${debuttText}`;
+    const slotText = `${slot.start_time ? dateToLineupTime(slot.start_time, "Australia/Sydney") : ""} ${slot.dj_name}${debuttText}`;
     return slotText;
 }
