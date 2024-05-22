@@ -41,14 +41,14 @@ export const DjSearchSelect = ({onDjSelect}: Props) => {
                 id="dj-search-typeahead"
                 ref={ref}
                 options={matchedDjs}
-                labelKey={(option) => { 
-                    const dj = Object.values(option)[0].Dj;
-                    return `${dj.name} (${dj.discord_username})`
+                labelKey={(option) => {
+                    const dj = Object.values(option)[0].dj as Dj;
+                    return `${dj.dj_name} (${dj.public_name})`
                 }}
                 placeholder="Search DJ"
                 onChange={e => { 
                     const result = Object.values(e[0])[0];
-                    onDjSelect(result.dj, result.doc);
+                    onDjSelect(result.dj as Dj, result.doc);
                     ref.current?.clear()
                 }}
                 selected={undefined}

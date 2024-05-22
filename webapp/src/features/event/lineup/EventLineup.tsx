@@ -30,10 +30,10 @@ const EventLineup = () => {
         <h3 className="display-6">Add DJs</h3>
         <Container>
             <Row>
-                <Col md={8}>
-                    <DjSearchSelect onDjSelect={addNewDjAsSlot} />
+                <Col md={8} className="pt-2">
+                    <DjSearchSelect onDjSelect={addNewDjAsSlot}/>
                 </Col>
-                <Col className="d-flex justify-content-center">
+                <Col className="d-flex justify-content-center pt-2">
                     <Button variant="primary" size="lg" onClick={() => setAddDjModalShow(true)}>Add a New DJ</Button>
                 </Col>
             </Row>
