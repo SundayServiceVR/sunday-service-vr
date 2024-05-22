@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button, Col, Container, Row } from "react-bootstrap";
 import { Dj, Slot } from "../../../util/types";
-import { useEventOperations } from "../EventRoot";
+import { useEventOperations } from "../outletContext";
 import SortableDjList from "./SortableDjList";
 import { DjSearchSelect } from "../../dj/DjSearchSelect";
 import { CreateDjModal } from "../../dj/CreateDjModal";

@@ -1,6 +1,6 @@
 import { ListGroup, ListGroupItem } from "react-bootstrap";
 import { Slot } from "../../../util/types";
-import { useEventOperations } from "../EventRoot";
+import { useEventOperations } from "../outletContext";
 import SortableDj from "./SortableDj";
 
 const SortableDjList = () => {

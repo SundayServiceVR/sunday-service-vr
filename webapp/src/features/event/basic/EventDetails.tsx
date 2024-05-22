@@ -1,4 +1,4 @@
-import { useEventOperations } from "../EventRoot";
+import { useEventOperations } from "../outletContext";
 import EventBasicDetailsForm from "./EventBasicDetailsForm";
 import "react-datepicker/dist/react-datepicker.css";
 
