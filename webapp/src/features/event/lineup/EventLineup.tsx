@@ -2,7 +2,7 @@ import { FormEvent, useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { RESIDENT_DJS } from "../../../store/resident_djs";
 import { Dj, Slot, SlotType } from "../../../util/types";
-import { useEventOperations } from "../EventRoot";
+import { useEventOperations } from "../outletContext";
 import SortableDjList from "./SortableDjList";
 
 const EventLineup = () => {
