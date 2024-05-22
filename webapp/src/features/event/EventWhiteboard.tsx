@@ -29,10 +29,10 @@ const WhiteboardWriter = () => {
 
             <Tabs className="mt-4">
                 <Tab eventKey="GMT" title="GMT">
-                    <Form.Control aria-label="UK whiteboard textbox" as="textarea" value={getUkPasteMessage(eventScratchpad)} rows={16} readOnly className="has-fixed-size" />
+                    <Form.Control as="textarea" value={getUkPasteMessage(eventScratchpad)} rows={16} readOnly className="has-fixed-size" />
                 </Tab>
                 <Tab eventKey="AU" title="AU">
-                    <Form.Control aria-label="AU whiteboard textbox" as="textarea" value={getAusPasteMessage(eventScratchpad)} rows={16} readOnly className="has-fixed-size" />
+                    <Form.Control as="textarea" value={getAusPasteMessage(eventScratchpad)} rows={16} readOnly className="has-fixed-size" />
                 </Tab>
             </Tabs>
             <Card.Footer>
