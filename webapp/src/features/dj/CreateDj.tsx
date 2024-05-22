@@ -8,7 +8,7 @@ import { Dj } from "../../util/types";
 
 const CreateDj = () => {
     const defaultDj: Dj = { 
-        fur_name: "asdf",
+        public_name: "asdf",
         dj_name: "",
      };
 

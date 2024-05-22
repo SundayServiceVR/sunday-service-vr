@@ -54,7 +54,7 @@ const DjList = ({ past = false}: Props) => {
                 <tbody>
                     {djs.map(entry => <tr key={entry.reference.id}>
                         <td><Link to={`/djs/${entry.reference.id}`}>{entry.dj.dj_name ?? "(No Dj Name)"}</Link></td>
-                        <td>{entry.dj.fur_name}</td>
+                        <td>{entry.dj.public_name}</td>
                     </tr>)}
                 </tbody>
             </Table>
