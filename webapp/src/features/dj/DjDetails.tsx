@@ -15,7 +15,7 @@ const DjDetails = () => {
     const [ isEditing, setIsEditing ] = useState<boolean>(false);
 
     const [ dj, setDj ] = useState<Dj>({ 
-        fur_name: "",
+        public_name: "",
         dj_name: "",
      });
      
@@ -83,8 +83,8 @@ const DjDetails = () => {
                 </>
             : <div>
                 <dl>
-                    <dt>Fur Name</dt>
-                    <dd>{ dj.fur_name }</dd>
+                    <dt>Name</dt>
+                    <dd>{ dj.public_name }</dd>
                     <dt>Dj Name</dt>
                     <dd>{ dj.dj_name }</dd>
                     <dt>Stream URL</dt>

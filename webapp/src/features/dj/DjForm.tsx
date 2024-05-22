@@ -15,13 +15,13 @@ const DjForm = ({dj, setDj, busy}: Props) => {
 
     return <>
         <Form.Group className="mt-3">
-            <Form.Label>Fur Name</Form.Label>
+            <Form.Label>Name (Furname, Username, Etc...)</Form.Label>
             <Form.Control
                 required
-                name="fur_name"
-                value={dj.fur_name}
+                name="public_name"
+                value={dj.public_name}
                 type="input"
-                onChange={(e) => setDj({...dj, "fur_name": e.target.value})} />
+                onChange={(e) => setDj({...dj, "public_name": e.target.value})} />
         </Form.Group>
         <Form.Group className="mt-3">
             <Form.Label>Dj Name</Form.Label>
