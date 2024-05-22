@@ -6,8 +6,8 @@ test('true?', () => {
   expect(true).toBe(true);
 });
 
-test('App renders text (smoke test)', async () => {
-    render(<App />)
-    const elementsWithText = await screen.findAllByText(/\w+/)
-    expect(elementsWithText).toBeTruthy()
-})
+test('renders learn react link', () => {
+  render(<App />);
+  const linkElement = screen.getByText(/Sunday Service/i);
+  expect(linkElement).toBeInTheDocument();
+});
