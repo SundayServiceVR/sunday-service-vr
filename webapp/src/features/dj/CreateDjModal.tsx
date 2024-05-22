@@ -13,7 +13,7 @@ type Props = {
 
 export const CreateDjModal = ({ show, handleClose, onDjCreated }: Props) => {
     const defaultDj: Dj = {
-        discord_username: "",
+        fur_name: "",
     }
     const [dj, setDj] = useState<Dj>(defaultDj);
 

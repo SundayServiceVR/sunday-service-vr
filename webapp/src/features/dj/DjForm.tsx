@@ -15,22 +15,22 @@ const DjForm = ({dj, setDj, busy}: Props) => {
 
     return <>
         <Form.Group className="mt-3">
-            <Form.Label>Discord Username</Form.Label>
+            <Form.Label>Fur Name</Form.Label>
             <Form.Control
                 required
-                name="discord_username"
-                value={dj.discord_username}
+                name="fur_name"
+                value={dj.fur_name}
                 type="input"
-                onChange={(e) => setDj({...dj, "discord_username": e.target.value})} />
+                onChange={(e) => setDj({...dj, "fur_name": e.target.value})} />
         </Form.Group>
         <Form.Group className="mt-3">
             <Form.Label>Dj Name</Form.Label>
             <Form.Control
                 required
                 name="dj_name"
-                value={dj.name}
+                value={dj.dj_name}
                 type="input"
-                onChange={(e) => setDj({...dj, "name": e.target.value})} />
+                onChange={(e) => setDj({...dj, "dj_name": e.target.value})} />
         </Form.Group>
         <Form.Group className="mt-3">
             <Form.Label>Stream Url</Form.Label>

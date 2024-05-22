@@ -8,8 +8,8 @@ import { Dj } from "../../util/types";
 
 const CreateDj = () => {
     const defaultDj: Dj = { 
-        discord_username: "asdf",
-        name: "",
+        fur_name: "asdf",
+        dj_name: "",
      };
 
     const [dj, setDj] = useState<Dj>(defaultDj);

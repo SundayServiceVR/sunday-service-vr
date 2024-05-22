@@ -15,8 +15,8 @@ const DjDetails = () => {
     const [ isEditing, setIsEditing ] = useState<boolean>(false);
 
     const [ dj, setDj ] = useState<Dj>({ 
-        discord_username: "",
-        name: "",
+        fur_name: "",
+        dj_name: "",
      });
      
     const [ djScratchpad, setDjScratchpad ] = useState<Dj>({...dj});
@@ -60,7 +60,7 @@ const DjDetails = () => {
     return <div>
         <Breadcrumb className="px-2">
             <Breadcrumb.Item><Link to="/djs">Djs</Link></Breadcrumb.Item>
-            <Breadcrumb.Item><Link to={`/djs/${djId}`}>{dj.name}</Link></Breadcrumb.Item>
+            <Breadcrumb.Item><Link to={`/djs/${djId}`}>{dj.dj_name}</Link></Breadcrumb.Item>
         </Breadcrumb>
         <h2 className="display-6">Dj Details</h2>
         { isEditing 
@@ -83,10 +83,10 @@ const DjDetails = () => {
                 </>
             : <div>
                 <dl>
-                    <dt>Discord Username</dt>
-                    <dd>{ dj.discord_username }</dd>
+                    <dt>Fur Name</dt>
+                    <dd>{ dj.fur_name }</dd>
                     <dt>Dj Name</dt>
-                    <dd>{ dj.name }</dd>
+                    <dd>{ dj.dj_name }</dd>
                     <dt>Stream URL</dt>
                     <dd>{ dj.rtmp_url }</dd>
                     <dt>Twitch Username</dt>

@@ -25,7 +25,7 @@ export const DjSearchSelect = ({onDjSelect}: Props) => {
 
             querySnapshot.forEach((doc) => {
                 const dj = docToRawType<Dj>(doc);
-                const record: DjRecord = {[`${doc.id}`]: {dj: dj, doc: doc.ref, label: dj.name ?? "unknown"}};
+                const record: DjRecord = {[`${doc.id}`]: {dj: dj, doc: doc.ref, label: dj.dj_name ?? "unknown"}};
                 suggestionResults.push(record)
             });
             setMatchedDjs(suggestionResults);
@@ -42,7 +42,7 @@ export const DjSearchSelect = ({onDjSelect}: Props) => {
                 ref={ref}
                 options={matchedDjs}
                 labelKey={(option) => { 
-                    const dj = Object.values(option)[0].dj;
+                    const dj = Object.values(option)[0].Dj;
                     return `${dj.name} (${dj.discord_username})`
                 }}
                 placeholder="Search DJ"

@@ -1,8 +1,8 @@
 import { DocumentReference } from "firebase/firestore";
 
 export type Dj = {
-    discord_username: string;
-    name?: string;
+    fur_name: string;
+    dj_name?: string;
     twitch_username?: string;
     rtmp_url?: string;
 }
