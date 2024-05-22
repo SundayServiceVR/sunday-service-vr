@@ -1,7 +1,7 @@
 import { Tabs, Tab, Form } from "react-bootstrap";
 import MessagePasteCard from "./messaging/MessagePasteCard";
 import { getDiscordMessage, getTwitterMessage } from "../../util/messageWriters";
-import { useEventOperations } from "./EventRoot";
+import { useEventOperations } from "./outletContext";
 
 const EventAnnouncements = () => {
 
@@ -41,12 +41,14 @@ const EventAnnouncements = () => {
         <Tabs className="mt-4">
             <Tab eventKey="discord" title="Discord">
                 <MessagePasteCard 
+                textBoxLabel="Discord Announcement Text"
                 message={discordMessage} 
                 footerInstructions={discordFooterInstructions}
                 />
             </Tab>
             <Tab eventKey="twitter" title="Social Media">
                 <MessagePasteCard 
+                textBoxLabel="Social Media Announcement Text"
                 message={twitterMessage}
                 footerInstructions={twitterFooterInstructions}
                 />

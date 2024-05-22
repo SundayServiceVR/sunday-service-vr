@@ -5,7 +5,7 @@ import { onSnapshot, doc } from "firebase/firestore";
 import { Event } from "../../util/types";
 import { db } from "../../util/firebase";
 import FloatingActionBar from "../../components/FloatingActionBar";
-import { Outlet, useLocation, useOutletContext, useParams } from "react-router";
+import { Outlet, useLocation, useParams } from "react-router";
 import { Link } from "react-router-dom";
 
 
@@ -109,9 +109,3 @@ const EventRoot = () => {
     </>
 }
 export default EventRoot;
-
-export type EventRouterOutletMemebers = [Event, (event: Event) => void];
-
-export function useEventOperations() {
-    return useOutletContext<EventRouterOutletMemebers>();
-}
