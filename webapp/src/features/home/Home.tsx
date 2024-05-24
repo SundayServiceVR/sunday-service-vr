@@ -14,7 +14,7 @@ const helpfulLinks = [
         extra: [
             {
                 title: "Signup Sheet",
-                url: "https://docs.google.com/spreadsheets/d/1ANiFOmz1_ADaMxCtcQE0HdGq3TsJM__Whg87DDN_y9Q/edit?usp=drive_link"
+                url: "https://docs.google.com/spreadsheets/d/1xzejwFYiaFkS7atfWf9YJe7nmZqF_UxwZBjkigoL4DI/edit?usp=sharing"
             },
             {
                 title: "Performer Stream Links",
