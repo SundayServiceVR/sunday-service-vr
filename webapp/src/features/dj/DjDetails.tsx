@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Breadcrumb, Button } from "react-bootstrap";
+import { FormEvent, useEffect, useState } from "react";
+import { Alert, Breadcrumb, Button, Form, Stack } from "react-bootstrap";
 import { useParams } from "react-router";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "../../util/firebase";
@@ -17,8 +17,8 @@ const DjDetails = () => {
     const [ isEditing, setIsEditing ] = useState<boolean>(false);
 
     const [ dj, setDj ] = useState<Dj>({ 
-        discord_username: "",
-        name: "",
+        public_name: "",
+        dj_name: "",
      });
      
     const [ djScratchpad, setDjScratchpad ] = useState<Dj>({...dj});
@@ -36,15 +36,16 @@ const DjDetails = () => {
         })();
     }, [djId]);
 
-    const onSubmitDj = (newDj: Dj) => {
+    const onSubmitDj = (event: FormEvent) => {
+        event.preventDefault();
         setBusy(true);
         (async () => {
-            if(!newDj.id) {
+            if(!djId) {
                 throw(new Error("Attempted to update a dj with no id"))
             }
-            const newDoc = doc(db, "djs", newDj.id);
-            await setDoc(newDoc, newDj);
-            setDj(newDj);
+            const newDoc = doc(db, "djs", djId);
+            await setDoc(newDoc, djScratchpad);
+            setDj(djScratchpad);
             setBusy(false);
             setIsEditing(false);
         })();
@@ -61,24 +62,40 @@ const DjDetails = () => {
     return <div>
         <Breadcrumb className="px-2">
             <Breadcrumb.Item><Link to="/djs">Djs</Link></Breadcrumb.Item>
-            <Breadcrumb.Item><Link to={`/djs/${dj.id}`}>{dj.name}</Link></Breadcrumb.Item>
+            <Breadcrumb.Item><Link to={`/djs/${djId}`}>{dj.dj_name}</Link></Breadcrumb.Item>
         </Breadcrumb>
         <h2 className="display-6">Dj Details</h2>
         { isEditing 
-        ? <DjForm dj={djScratchpad} onSubmitDj={onSubmitDj} busy={busy} onCancel={onCancelUpdate}/>
-        : <div>
-            <dl>
-                <dt>Dj Name</dt>
-                <dd>{ dj.name }</dd>
-                <dt>Discord Username</dt>
-                <dd>{ dj.discord_username }</dd>
-                <dt>Stream URL</dt>
-                <dd>{ dj.stream_url }</dd>
-                <dt>Twitch URL</dt>
-                <dd>{ dj.twitch_url }</dd>
-                <Button onClick={() => { setDjScratchpad({...dj}); setIsEditing(true); }}>Edit</Button>
-            </dl>
-        </div>
+            ? <>
+                    <Alert variant="info">
+                        <Alert.Heading>Editing fields here will not affect any existing dj information in existing events.</Alert.Heading>
+                        To edit event information as well, edit the dj information from the event
+                    </Alert>
+                    <Form onSubmit={onSubmitDj}>
+                        <DjForm dj={djScratchpad} setDj={setDjScratchpad} busy={busy}/>
+                        <Stack direction="horizontal" gap={3}>
+                            <Button variant="primary" type="submit" className="mt-3">
+                                Submit
+                            </Button>
+                            <Button variant="primary" onClick={onCancelUpdate} className="mt-3">
+                                Cancel
+                            </Button>
+                        </Stack>
+                    </Form>
+                </>
+            : <div>
+                <dl>
+                    <dt>Name</dt>
+                    <dd>{ dj.public_name }</dd>
+                    <dt>Dj Name</dt>
+                    <dd>{ dj.dj_name }</dd>
+                    <dt>Stream URL</dt>
+                    <dd>{ dj.rtmp_url }</dd>
+                    <dt>Twitch Username</dt>
+                    <dd>{ dj.twitch_username }</dd>
+                    <Button onClick={() => { setDjScratchpad({...dj}); setIsEditing(true); }}>Edit</Button>
+                </dl>
+            </div>
         }
     </div>
 }
