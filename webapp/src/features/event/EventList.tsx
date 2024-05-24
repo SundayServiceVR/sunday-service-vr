@@ -3,8 +3,10 @@ import { docToEvent } from "../../store/events";
 import { Timestamp, collection, getDocs, orderBy, query, where } from "firebase/firestore";
 import { Event } from "../../util/types";
 import { db } from "../../util/firebase";
-import { Alert, AlertHeading, Breadcrumb, Button, Nav, Spinner, Stack, Table } from "react-bootstrap";
+import { Alert, AlertHeading, Breadcrumb, Button, Nav, Stack, Table } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
+
+import Spinner from "../../components/spinner";
 
 type Props = {
     past?: boolean;
@@ -31,7 +33,7 @@ const EventList = ({ past = false}: Props) => {
     }, [past]);
 
     if (loading) {
-        return <Spinner />
+        return <Spinner type="logo" />
     }
 
     return <section>

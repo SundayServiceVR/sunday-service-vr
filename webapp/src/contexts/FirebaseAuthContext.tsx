@@ -2,8 +2,8 @@
 import * as React from "react";
 import { getAuth, User } from "firebase/auth";
 import { Navigate } from "react-router"
-import { Spinner } from "react-bootstrap";
 
+import Spinner from "../components/spinner";
 
 type ContextState = { user: User | false | null };
 
@@ -28,7 +28,7 @@ const FirebaseAuthProvider = ({ children }: Props) => {
   }
 
   if(user === null) {
-    return <Spinner />;
+    return <Spinner type="logo" />;
   }
 
   return (
