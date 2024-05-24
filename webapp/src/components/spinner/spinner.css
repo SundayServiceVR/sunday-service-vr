@@ -1,0 +1,54 @@
+.spinnerWrapper {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* SVG transform from center */
+.logoSpinner * { transform-origin: center; }
+
+.logoSpinner {
+  width: 300px;
+  height: auto;
+}
+.logoSpinner.withFade {
+  opacity: 0;
+  animation: opacity 500ms ease-in-out 0ms 1 forwards;
+}
+
+/* use of css pre-processor would help with timings, delays and so on */
+.logoSpinner.withFade > #GroupA {
+  animation:
+      rotate 4000ms cubic-bezier(1, 0, 0.5, 0.5) 4000ms 1,
+      rotate 6000ms linear 8000ms infinite
+  ;
+}
+.logoSpinner.withFade > #GroupB {
+  animation:
+      rotate 2000ms cubic-bezier(1, 0, 0.5, 0.5) 0ms 1,
+      rotate 1000ms linear 2000ms infinite
+  ;
+}
+
+.logoSpinner:not(.withFade) > #GroupA {
+  animation:
+      rotate 4000ms cubic-bezier(1, 0, 0.5, 0.5) 4000ms 1,
+      rotate 6000ms linear 8000ms infinite
+  ;
+}
+.logoSpinner:not(.withFade) > #GroupB {
+  animation:
+      rotate 2000ms cubic-bezier(1, 0, 0.5, 0.5) 0ms 1,
+      rotate 1000ms linear 2000ms infinite
+  ;
+}
+
+@keyframes rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+@keyframes opacity {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}

@@ -2,8 +2,10 @@ import { FormEvent, useState } from "react";
 import { createEvent, default_event } from "../../../store/events";
 import { Event } from "../../../util/types";
 import EventBasicDetailsForm from "./EventBasicDetailsForm";
-import { Breadcrumb, Button, Form, Spinner, Stack } from "react-bootstrap";
+import { Breadcrumb, Button, Form, Stack } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+
+import Spinner from "../../../components/spinner";
 
 const EventCreate = () => {
     const [ event, setEvent ] = useState<Event>({ ...default_event });
@@ -20,7 +22,7 @@ const EventCreate = () => {
     }
 
     if(busy) {
-        return <Spinner />
+        return <Spinner type="logo" />
     }
 
     return <section>

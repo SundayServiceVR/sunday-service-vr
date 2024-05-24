@@ -1,5 +1,7 @@
-import { Form, Spinner } from "react-bootstrap";
+import { Form } from "react-bootstrap";
 import { Dj } from "../../util/types";
+
+import Spinner from "../../components/spinner";
 
 type Props = {
     dj: Dj,
@@ -10,7 +12,7 @@ type Props = {
 const DjForm = ({dj, setDj, busy}: Props) => {
 
     if(busy) {
-        return <Spinner />
+        return <Spinner type="logo" />;
     }
 
     return <>
@@ -34,7 +36,7 @@ const DjForm = ({dj, setDj, busy}: Props) => {
         </Form.Group>
         <Form.Group className="mt-3">
             <Form.Label>Stream Url</Form.Label>
-            <Form.Control 
+            <Form.Control
                 name="stream_url"
                 value={dj.rtmp_url}
                 type="input"

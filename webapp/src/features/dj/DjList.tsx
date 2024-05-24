@@ -2,9 +2,11 @@ import { useEffect, useState } from "react";
 import { DocumentReference, collection, getDocs, query } from "firebase/firestore";
 import { Dj } from "../../util/types";
 import { db } from "../../util/firebase";
-import { Alert, AlertHeading, Breadcrumb, Button, Spinner, Stack, Table } from "react-bootstrap";
+import { Alert, AlertHeading, Breadcrumb, Button, Stack, Table } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { docToRawType } from "../../store/util";
+
+import Spinner from "../../components/spinner";
 
 type Props = {
     past?: boolean;
@@ -29,7 +31,7 @@ const DjList = ({ past = false}: Props) => {
     }, [past]);
 
     if (loading) {
-        return <Spinner />
+        return <Spinner type="logo" />
     }
 
     return <section>
