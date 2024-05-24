@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { sendPasswordResetEmail } from 'firebase/auth';
 import { auth } from '../../util/firebase';
-import { Form, Card, Button, Alert, Stack } from 'react-bootstrap';
-import Login from './Login';
+import { Form, Card, Button, Stack } from 'react-bootstrap';
+import { Navigate } from 'react-router-dom';
 
 const ResetPassword = () => {
 
@@ -28,11 +28,7 @@ const ResetPassword = () => {
 
             {success ?
                 <>
-                <Alert className="mt-3">
-                    <Alert.Heading>Password Reset Request has been Sent</Alert.Heading>
-                    If your email address is associated with an account, you will receive an email with instructions to reset your password.  Once completed, return and login.
-                </Alert>
-                <Login />
+                <Navigate to={"/login?alert=pwrst"} />
                 </>
                 : <Form onSubmit={onSubmit}>
                     <Form.Group>
