@@ -39,7 +39,7 @@ const Home = () =>
                         <Card.Title>{entry.title}</Card.Title>
                     </Card.Header>
                     <Card.Body>
-                        <p><a href={entry.url}>{entry.url}</a></p>
+                        <p><a href={entry.url} target="_blank">{entry.url}</a></p>
                         <p>{entry.text}</p>
                     </Card.Body>
                 </Card>)
