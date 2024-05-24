@@ -26,8 +26,6 @@ const SortableDjList = () => {
         const slots_copy = [...eventScratchpad.slots];
         slots_copy[slot_index] = newSlot;
         proposeEventChange({...eventScratchpad, slots: slots_copy});
-        console.log("Proposal");
-        console.table(slots_copy);
     }
 
     return <ListGroup variant="flush" >
@@ -35,7 +33,6 @@ const SortableDjList = () => {
             (slot: Slot, index: number) => <ListGroupItem key={`slot-${index}`} className="py-0">
                 <SortableDj
                     index={index}
-                    dj={slot.dj}
                     slot={slot}
                     onSlotMoveLater={() => { swapSlots(index, index + 1); }}
                     onSlotMoveSooner={() => { swapSlots(index, index - 1); }}

@@ -41,7 +41,7 @@ export const docToEvent = (doc: DocumentData) => {
       // https://firebase.google.com/docs/reference/node/firebase.firestore.FirestoreDataConverter
       // Issue #59
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      slots: data.slots.map((slot: any) => ({ ...slot, startTime: slot.startTime.toDate() }) as Slot)
+      slots: data.slots.map((slot: any) => ({ ...slot, startTime: slot.start_time.toDate() }) as Slot)
     } as Event;
 
     return event;
@@ -65,7 +65,7 @@ export const calcSlotTimes = (event: Event): Event => {
 
   const time_counter = new Date(newEvent.start_datetime);
   for (let i = 0; i < event.slots.length; i++) {
-    event.slots[i].startTime = new Date(time_counter);
+    event.slots[i].start_time = new Date(time_counter);
     time_counter.setTime(time_counter.getTime() + ONE_HOUR * event.slots[i].duration);
   }
 

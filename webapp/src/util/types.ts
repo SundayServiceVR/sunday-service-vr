@@ -1,20 +1,24 @@
+import { DocumentReference } from "firebase/firestore";
 
 export type Dj = {
-    id?: string;
-    discord_username: string;
-    name?: string;
-    twitch_url?: string;
-    stream_url?: string;
+    public_name: string;
+    dj_name?: string;
+    twitch_username?: string;
+    rtmp_url?: string;
 }
 
 export type Slot = {
-    dj: Dj;
-    startTime?: Date | undefined;
+    dj_ref: DocumentReference;
+    start_time?: Date | undefined;
     duration: SlotDuration;
-    slotType: SlotType;
-    mediaSourceUrl?: string;
-    twitchUserName?: string;
-    isDebutt: boolean;
+    slot_type?: SlotType;
+
+    dj_name: string,
+    rtmp_url?: string;
+    twitch_username?: string;
+    prerecord_url?: string;
+
+    is_debut: boolean;
 }
 
 export enum SlotType {
@@ -28,7 +32,7 @@ export const SlotTypes =
         { name: 'Active', value: '1' },
         { name: 'Radio', value: '2' },
         { name: 'Radio', value: '3' },
-      ];
+    ];
 
 
 export type SlotDuration = (0.5 | 1 | 1.5 | 2 | 2.5 | 3 | 3.5 | 4);
