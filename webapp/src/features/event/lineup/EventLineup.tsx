@@ -16,8 +16,9 @@ const EventLineup = () => {
         const slot: Slot = {
             dj_ref: documentRef,
             dj_name: newDj.dj_name ?? "",
-            rtmp_url: newDj.rtmp_url,
-            twitch_username: newDj.twitch_username,
+            rtmp_url: newDj.rtmp_url ?? "",
+            twitch_username: newDj.twitch_username ?? "",
+            prerecord_url: "",
             duration: 1,
             is_debut: false,
         }

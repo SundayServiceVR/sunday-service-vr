@@ -41,7 +41,7 @@ export const docToEvent = (doc: DocumentData) => {
       // https://firebase.google.com/docs/reference/node/firebase.firestore.FirestoreDataConverter
       // Issue #59
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      slots: data.slots.map((slot: any) => ({ ...slot, startTime: slot.start_time.toDate() }) as Slot)
+      slots: data.slots.map((slot: any) => ({ ...slot, start_time: slot.start_time.toDate() }) as Slot)
     } as Event;
 
     return event;
