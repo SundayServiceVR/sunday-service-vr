@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Breadcrumb, Button, Spinner } from "react-bootstrap";
+import { Breadcrumb, Button } from "react-bootstrap";
 import { useParams } from "react-router";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "../../util/firebase";
@@ -7,6 +7,8 @@ import { Dj } from "../../util/types";
 import DjForm from "./DjForm";
 import { Link } from "react-router-dom";
 import { docToRawType } from "../../store/util";
+
+import Spinner from "../../components/spinner";
 
 const DjDetails = () => {
     
@@ -53,7 +55,7 @@ const DjDetails = () => {
     }
 
     if(busy) {
-        return <Spinner />
+        return <Spinner type="logo" />
     }
 
     return <div>

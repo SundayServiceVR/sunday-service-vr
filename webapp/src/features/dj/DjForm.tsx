@@ -1,6 +1,8 @@
 import { FormEvent, useState } from "react";
-import { Form, Button, Spinner, Stack } from "react-bootstrap";
+import { Form, Button, Stack } from "react-bootstrap";
 import { Dj } from "../../util/types";
+
+import Spinner from "../../components/spinner";
 
 type Props = {
     dj: Dj,
@@ -19,7 +21,7 @@ const DjForm = ({dj, onSubmitDj, busy, onCancel}: Props) => {
     }
 
     if(busy) {
-        return <Spinner />
+        return <Spinner type="logo" />;
     }
 
     return <div>
