@@ -14,9 +14,9 @@ export type Slot = {
     slot_type?: SlotType;
 
     dj_name: string,
-    rtmp_url?: string;
-    twitch_username?: string;
-    prerecord_url?: string;
+    rtmp_url: string;
+    twitch_username: string;
+    prerecord_url: string;
 
     is_debut: boolean;
 }
