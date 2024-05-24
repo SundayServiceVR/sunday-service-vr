@@ -11,16 +11,20 @@ const helpfulLinks = [
         title: "S4 Drive Folder",
         text: "All the spreadsheets and documents relevant to hosting can be found here.",
         url: "https://drive.google.com/drive/u/1/folders/1LSc92ZMwD4B68Ocx0dwKJSE2Eek21SET",
-    },
-    {
-        title: "Performer Interest Sheet (Q2)",
-        text: "This is where the performers actually sign up.",
-        url: "https://docs.google.com/spreadsheets/d/1xzejwFYiaFkS7atfWf9YJe7nmZqF_UxwZBjkigoL4DI/edit?usp=sharing",
-    },
-    {
-        title: "Streaming Assets",
-        text: "Images and logos that are used in our streams, including DJ logos.",
-        url: "https://drive.google.com/drive/u/1/folders/1tuZddCNBcFpVFjyk3XKB6M1d64mAnjX8",
+        extra: [
+            {
+                title: "Signup Sheet",
+                url: "https://docs.google.com/spreadsheets/d/1ANiFOmz1_ADaMxCtcQE0HdGq3TsJM__Whg87DDN_y9Q/edit?usp=drive_link"
+            },
+            {
+                title: "Performer Stream Links",
+                url: "https://docs.google.com/spreadsheets/d/1nsAQAiOsuZQcpBBg44SZ8jUvFtXI6WNKE8-WSo9_kiE/edit?usp=drive_link"
+            },
+            {
+                title: "Performer Tracking Sheet",
+                url: "https://docs.google.com/spreadsheets/d/1x3o6jmxjimZzlY7kRNVyiCG-A5yQ2XHvQlokeeJd8iI/edit?usp=drive_link"
+            }
+        ]
     },
     {
         title: "Whiteboard Endpoint",
@@ -34,15 +38,31 @@ const Home = () =>
         <h2 className="display-6">Helpful Links</h2>
         <div className="linksList">
             {
-                helpfulLinks.map((entry) => <Card style={{ "maxWidth": "400px" }}>
-                    <Card.Header>
-                        <Card.Title>{entry.title}</Card.Title>
-                    </Card.Header>
-                    <Card.Body>
-                        <p><a href={entry.url} target="_blank">{entry.url}</a></p>
-                        <p>{entry.text}</p>
-                    </Card.Body>
-                </Card>)
+                helpfulLinks.map((entry, entryIndex) =>
+                    <Card
+                      key={`entry${entryIndex}`}
+                      style={{"maxWidth": "400px"}}
+                    >
+                        <Card.Header>
+                            <Card.Title>{entry.title}</Card.Title>
+                        </Card.Header>
+                        <Card.Body>
+                            <p><a href={entry.url} target="_blank">{entry.url}</a></p>
+                            <p>{entry.text}</p>
+                            {entry?.extra ? (
+                                <ul>
+                                    {entry.extra.map((extraEntry, extraIndex) =>
+                                        <li key={`entry${entryIndex}extra${extraIndex}`}>
+                                            <a href={extraEntry.url} target="_blank">
+                                                {extraEntry.title}
+                                            </a>
+                                        </li>
+                                    )}
+                                </ul>
+                            ) : null}
+                        </Card.Body>
+                    </Card>
+                )
             }
         </div>
     </section>
