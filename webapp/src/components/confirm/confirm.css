@@ -31,9 +31,11 @@
 
 .confirmCardTitle {
   text-align: center;
-  font-weight: bold;
-  font-size: 1.5rem;
-  padding: 0.5rem;
+  font-size: 1.25rem;
+  font-weight: 500;
+  line-height: 1.2;
+  padding: 0.5rem 1rem;
+  margin-bottom: 0;
   background-color: rgba(var(--bs-body-color-rgb), 0.15);
   border-bottom: var(--bs-border-width) solid var(--bs-border-color-translucent);
 }
@@ -41,13 +43,13 @@
 .confirmCardBody {
   text-align: center;
   font-size: 1.25rem;
-  padding: 0.5rem;
+  padding: 1rem;
 }
 
 .confirmCardButtons {
   display: flex;
   gap: 1rem;
   width: 100%;
-  margin: 0.75rem 0 0.5rem;
-  justify-content: center;
+  margin: 0 0 0.75rem;
+  justify-content: space-around;
 }

@@ -55,6 +55,7 @@ function Confirm({ title, message, confirmButton, cancelButton, onShow }: Confir
           <div className="confirmCardButtons">
             <Button
               variant="success"
+              size="lg"
               onClick={() => {
                 if (confirmButton.action) {
                   setTimeout(confirmButton.action, 150);
@@ -66,6 +67,7 @@ function Confirm({ title, message, confirmButton, cancelButton, onShow }: Confir
             </Button>
             <Button
               variant="danger"
+              size="lg"
               onClick={() => {
                 if (cancelButton?.action) {
                   setTimeout(cancelButton.action, 150);
