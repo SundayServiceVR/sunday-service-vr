@@ -3,11 +3,9 @@ import { Container, Nav, Navbar } from 'react-bootstrap';
 import { Outlet } from "react-router";
 import { auth } from "../../util/firebase";
 
-const Layout = () => {
-    const onSignOutClicked = () => {
-        signOut(auth);
-    };
+import { confirm } from "../../components/confirm";
 
+const Layout = () => {
     return <>
         <Navbar expand="lg" className="bg-body-secondary" data-bs-theme="dark">
             <Navbar.Brand className="px-3">Sunday Service</Navbar.Brand>
@@ -23,7 +21,19 @@ const Layout = () => {
                     <Nav.Link href="/djs">
                         Dj Roster
                     </Nav.Link>
-                    <Nav.Link onClick={onSignOutClicked}>
+                    <Nav.Link onClick={() => confirm({
+                        title: "Are You sure?",
+                        message: "You are about to logout",
+                        confirmButton: {
+                            text: "Yes",
+                            action: () => {
+                                signOut(auth);
+                            }
+                        },
+                        cancelButton: {
+                            text: "Cancel"
+                        }
+                    })}>
                         Logout
                     </Nav.Link>
                 </Nav>

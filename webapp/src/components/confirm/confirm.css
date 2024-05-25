@@ -1,0 +1,55 @@
+.confirm {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  backdrop-filter: blur(3px);
+  z-index: 9999;
+}
+
+.confirmCard {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  opacity: 0;
+  transition: opacity 250ms;
+
+  display: flex;
+  background: #ffffff;
+  padding: 0;
+  border: var(--bs-border-width) solid var(--bs-border-color-translucent);
+  border-radius: var(--bs-border-radius);
+}
+
+.confirmCardContent {
+  width: 100%;
+}
+
+.confirmCardTitle {
+  text-align: center;
+  font-size: 1.25rem;
+  font-weight: 500;
+  line-height: 1.2;
+  padding: 0.5rem 1rem;
+  margin-bottom: 0;
+  background-color: rgba(var(--bs-body-color-rgb), 0.15);
+  border-bottom: var(--bs-border-width) solid var(--bs-border-color-translucent);
+}
+
+.confirmCardBody {
+  text-align: center;
+  font-size: 1.25rem;
+  padding: 1rem;
+}
+
+.confirmCardButtons {
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+  margin: 0 0 0.75rem;
+  justify-content: space-around;
+}
