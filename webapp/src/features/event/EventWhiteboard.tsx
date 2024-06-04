@@ -10,7 +10,6 @@ const WhiteboardWriter = () => {
     const [ buttonText, setButtonText ] = useState<string>("Update Whiteboard");
     const [ buttonEnabled, setButtonEnabled ] = useState<boolean>(true);
 
-
     const onUpdateWhiteboard = () => {
         updateBoards(eventScratchpad);
         setButtonText("Update Successful");
