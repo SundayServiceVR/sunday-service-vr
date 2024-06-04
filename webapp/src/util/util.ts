@@ -1,12 +1,7 @@
-
 import dayjs from "dayjs";
-import timezone from "dayjs/plugin/timezone";
-import utc from "dayjs/plugin/utc";
-import advancedFormat from "dayjs/plugin/advancedFormat"
+import setupDayjs from "./setupDayjs";
 
-dayjs.extend(utc);
-dayjs.extend(timezone);
-dayjs.extend(advancedFormat);
+setupDayjs();
 
 // God forgive these sins
 // i forgive u bc i did worse -frosty

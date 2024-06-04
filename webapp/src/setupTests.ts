@@ -5,14 +5,8 @@
 import '@testing-library/jest-dom/vitest';
 
 import { TextEncoder, TextDecoder } from 'util';
+import setupDayjs from './util/setupDayjs';
 
-import dayjs from "dayjs";
-import timezone from "dayjs/plugin/timezone";
-import utc from "dayjs/plugin/utc";
-import advancedFormat from "dayjs/plugin/advancedFormat"
-
-dayjs.extend(utc);
-dayjs.extend(timezone);
-dayjs.extend(advancedFormat);
+setupDayjs();
 
 Object.assign(global, { TextDecoder, TextEncoder });
