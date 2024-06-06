@@ -19,7 +19,6 @@ export const nextSundayServiceDefaultDateTime = (): Date => {
     targetDay.getTimezoneOffset();
 
     const dateString = `${targetDay.toISOString().slice(0, 10)} 20:00`;
-    // console.log(dateString);
     const targetDate = dayjs.tz(dateString, "Europe/London").toDate();
 
     return targetDate;
