@@ -10,7 +10,6 @@ const WhiteboardWriter = () => {
     const [ buttonText, setButtonText ] = useState<string>("Update Whiteboard");
     const [ buttonEnabled, setButtonEnabled ] = useState<boolean>(true);
 
-
     const onUpdateWhiteboard = () => {
         updateBoards(eventScratchpad);
         setButtonText("Update Successful");
@@ -29,10 +28,10 @@ const WhiteboardWriter = () => {
 
             <Tabs className="mt-4">
                 <Tab eventKey="GMT" title="GMT">
-                    <Form.Control as="textarea" value={getUkPasteMessage(eventScratchpad)} rows={16} readOnly className="has-fixed-size" />
+                    <Form.Control aria-label="UK whiteboard textbox" as="textarea" value={getUkPasteMessage(eventScratchpad)} rows={16} readOnly className="has-fixed-size" />
                 </Tab>
                 <Tab eventKey="AU" title="AU">
-                    <Form.Control as="textarea" value={getAusPasteMessage(eventScratchpad)} rows={16} readOnly className="has-fixed-size" />
+                    <Form.Control aria-label="AU whiteboard textbox" as="textarea" value={getAusPasteMessage(eventScratchpad)} rows={16} readOnly className="has-fixed-size" />
                 </Tab>
             </Tabs>
             <Card.Footer>
