@@ -1,14 +1,40 @@
 import { useEventOperations } from "../outletContext";
 import EventBasicDetailsForm from "./EventBasicDetailsForm";
 import "react-datepicker/dist/react-datepicker.css";
+import { Button, Card, CardBody, Form } from "react-bootstrap";
 
 const EventDetails = () => {
 
     const [eventScratchpad, proposeEventChange] = useEventOperations();
+    const message = `Signups are open for this Sunday! Here's the signup sheet:
+
+https://docs.google.com/spreadsheets/d/1xzejwFYiaFkS7atfWf9YJe7nmZqF_UxwZBjkigoL4DI/edit?usp=sharing`;
 
     return <>
-        <h2 className="display-6">Event Setup</h2>
-        <EventBasicDetailsForm event={eventScratchpad} onEventChange={proposeEventChange} />
+        <Card>
+            <CardBody>
+                <h2 className="display-6">Event Setup</h2>
+                <EventBasicDetailsForm event={eventScratchpad} onEventChange={proposeEventChange} />
+            </CardBody>
+        </Card>
+        <Card className="mt-4">
+            <CardBody>
+                <div className="d-grid gap-2">
+                    <h3>Signup Sheet</h3>
+                    <p>At the start of the week (usually Monday), unlock the S4 signup scheet and post a link in <a target="_blank"
+                        rel="noopener noreferrer"
+                        href="https://discord.com/channels/1004489038159413248/1204320477732929566">
+                            #scheduling
+                    </a> in Discord.</p>
+                    <p>
+                        Here's an sample message:
+                    </p>
+                    <Form.Control as="textarea" value={message} rows={5} readOnly className="has-fixed-size" />
+                    <Button color={"primary"} onClick={() => { navigator.clipboard.writeText(message); }}>Copy Text</Button>
+                    <p>Be sure to add a ping to <span style={{color: "#9B59B6"}}><strong>@Saltare Musica Hospite</strong></span> at the end!</p>
+                </div>
+            </CardBody>
+        </Card>
     </>
 };
 
