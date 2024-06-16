@@ -21,13 +21,14 @@ https://docs.google.com/spreadsheets/d/1xzejwFYiaFkS7atfWf9YJe7nmZqF_UxwZBjkigoL
             <CardBody>
                 <div className="d-grid gap-2">
                     <h3>Signup Sheet</h3>
-                    <p>At the start of the week (usually Monday), unlock the S4 signup scheet and post a link in <a target="_blank"
+                    <p>At the start of the week (usually Monday), unlock the S4 signup spreadsheet and post a link to it in <a target="_blank"
                         rel="noopener noreferrer"
                         href="https://discord.com/channels/1004489038159413248/1204320477732929566">
                             #scheduling
                     </a> in Discord.</p>
+                    <p>Feel free to customize this message a bit. Have fun with it!</p>
                     <p>
-                        Here's an sample message:
+                        Here's a basic message:
                     </p>
                     <Form.Control as="textarea" value={message} rows={5} readOnly className="has-fixed-size" />
                     <Button color={"primary"} onClick={() => { navigator.clipboard.writeText(message); }}>Copy Text</Button>
