@@ -2,12 +2,12 @@ import { useEventOperations } from "../outletContext";
 import EventBasicDetailsForm from "./EventBasicDetailsForm";
 import "react-datepicker/dist/react-datepicker.css";
 import { Button, Card, CardBody, Form } from "react-bootstrap";
-import { getScheduleVerifyMessage } from "../../../util/messageWriters";
+import { getSignupsPostedMessage } from "../../../util/messageWriters";
 
 const EventDetails = () => {
 
     const [eventScratchpad, proposeEventChange] = useEventOperations();
-    const message = getScheduleVerifyMessage(eventScratchpad);
+    const message = getSignupsPostedMessage(eventScratchpad);
 
     return <>
         <Card>

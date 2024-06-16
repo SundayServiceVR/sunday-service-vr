@@ -46,6 +46,7 @@ ${event.slots.map(getUkSlotText).join("\n")}
 `;
 }
 
+
 export const getAusPasteMessage = (event: Event): string => {
     const ausDayTz = dayjs.tz(event.start_datetime, "Australia/Sydney");
     return `${event.name}
@@ -60,7 +61,19 @@ ${event.slots.map(getAusSlotText).join("\n")}
 }
 
 
-export const getScheduleVerifyMessage = (event: Event): string => {
+export const getProposedLineupMessage = (event: Event): string => 
+`**Proposed Lineup for ${dateToDiscordTime(event.start_datetime).replace(">",":F>")}**
+
+DJs:
+${event.slots.map(getDiscordSlotText).join("\n")}
+
+Host: ${event.host || "TBA"}
+
+Please react to this message if your slot works for you.
+`;
+
+
+export const getSignupsPostedMessage = (event: Event): string => {
 return `Signups are open for ${dateToDiscordTime(event.start_datetime).replace(">",":F>")}! Here's the signup sheet:
 
 ${signupSheetUrl}
