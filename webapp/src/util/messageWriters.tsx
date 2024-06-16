@@ -9,7 +9,7 @@ ${event.message}
 
 Event start: ${dateToDiscordTime(event.start_datetime).replace(">",":F>")}
 
-Host: ${event.host}
+Host: ${event.host || "TBA"}
 
 DJs:
 ${event.slots.map(getDiscordSlotText).join("\n")}
@@ -23,7 +23,7 @@ export const getTwitterMessage = (event: Event): string => {
     const ukDayTz = dayjs.tz(event.start_datetime, "GB");
 return `${event.name}
 ${ukDayTz.format("YYYY-MM-DD")}
-Host: ${event.host}
+Host: ${event.host || "TBA"}
 
 Lineup: (times ${ukDayTz.format('z')
                         .replace("GMT+1","BST")})
@@ -38,7 +38,7 @@ export const getUkPasteMessage = (event: Event): string => {
     const ukDayTz = dayjs.tz(event.start_datetime, "GB");
 return `${event.name}
 ${ukDayTz.format("YYYY-MM-DD")}
-Host: ${event.host}
+Host: ${event.host || "TBA"}
 
 Lineup: (times ${ukDayTz.format('z')
                         .replace("GMT+1","BST")})
@@ -50,7 +50,7 @@ export const getAusPasteMessage = (event: Event): string => {
     const ausDayTz = dayjs.tz(event.start_datetime, "Australia/Sydney");
     return `${event.name}
 ${ausDayTz.format("YYYY-MM-DD")}
-Host: ${event.host}
+Host: ${event.host || "TBA"}
 
 Lineup: (times ${ausDayTz.format('z')
                         .replace("GMT+11","AEDT")
