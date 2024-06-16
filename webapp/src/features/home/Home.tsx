@@ -1,5 +1,6 @@
 import { Card } from "react-bootstrap";
 import "./Home.css";
+import { signupSheetUrl } from "../../util/util";
 
 const helpfulLinks = [
     {
@@ -14,7 +15,7 @@ const helpfulLinks = [
         extra: [
             {
                 title: "Signup Sheet",
-                url: "https://docs.google.com/spreadsheets/d/1xzejwFYiaFkS7atfWf9YJe7nmZqF_UxwZBjkigoL4DI/edit?usp=sharing"
+                url: signupSheetUrl
             },
             {
                 title: "Performer Stream Links",

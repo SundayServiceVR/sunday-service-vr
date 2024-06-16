@@ -24,3 +24,6 @@ export const nextSundayServiceDefaultDateTime = (): Date => {
     return targetDate;
 
 }
+
+// Current link: Q2 signup sheet
+export const signupSheetUrl = "https://docs.google.com/spreadsheets/d/1xzejwFYiaFkS7atfWf9YJe7nmZqF_UxwZBjkigoL4DI/edit?usp=sharing";

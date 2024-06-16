@@ -2,13 +2,12 @@ import { useEventOperations } from "../outletContext";
 import EventBasicDetailsForm from "./EventBasicDetailsForm";
 import "react-datepicker/dist/react-datepicker.css";
 import { Button, Card, CardBody, Form } from "react-bootstrap";
+import { getScheduleVerifyMessage } from "../../../util/messageWriters";
 
 const EventDetails = () => {
 
     const [eventScratchpad, proposeEventChange] = useEventOperations();
-    const message = `Signups are open for this Sunday! Here's the signup sheet:
-
-https://docs.google.com/spreadsheets/d/1xzejwFYiaFkS7atfWf9YJe7nmZqF_UxwZBjkigoL4DI/edit?usp=sharing`;
+    const message = getScheduleVerifyMessage(eventScratchpad);
 
     return <>
         <Card>
@@ -28,7 +27,7 @@ https://docs.google.com/spreadsheets/d/1xzejwFYiaFkS7atfWf9YJe7nmZqF_UxwZBjkigoL
                     </a> in Discord.</p>
                     <p>Feel free to customize this message a bit. Have fun with it!</p>
                     <p>
-                        Here's a basic message:
+                        Here's a basic message to get you started:
                     </p>
                     <Form.Control as="textarea" value={message} rows={5} readOnly className="has-fixed-size" />
                     <Button color={"primary"} onClick={() => { navigator.clipboard.writeText(message); }}>Copy Text</Button>

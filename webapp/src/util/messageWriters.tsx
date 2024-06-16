@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 import { Event, Slot } from "./types";
+import { signupSheetUrl } from "./util";
 
 export const getDiscordMessage = (event: Event): string => 
 `**${event.name}**
@@ -45,7 +46,7 @@ ${event.slots.map(getUkSlotText).join("\n")}
 `;
 }
 
-export const getAusPasteMessage = (event: Event): string =>{
+export const getAusPasteMessage = (event: Event): string => {
     const ausDayTz = dayjs.tz(event.start_datetime, "Australia/Sydney");
     return `${event.name}
 ${ausDayTz.format("YYYY-MM-DD")}
@@ -56,6 +57,15 @@ Lineup: (times ${ausDayTz.format('z')
                         .replace("GMT+10","AEST")})
 ${event.slots.map(getAusSlotText).join("\n")}
 `;
+}
+
+
+export const getScheduleVerifyMessage = (event: Event): string => {
+return `Signups are open for ${dateToDiscordTime(event.start_datetime).replace(">",":F>")}! Here's the signup sheet:
+
+${signupSheetUrl}
+
+${event.host ? `Your host this week is ${event.host}!` : "Host TBD!"}`
 }
 
 
