@@ -5,7 +5,7 @@ import MessagePasteCard from "../messaging/MessagePasteCard";
 
 const EventVerifyDJs = () => {
 
-    const [eventScratchpad, proposeEventChange] = useEventOperations();
+    const [eventScratchpad] = useEventOperations();
 
     const footerInstructions = <>
         <p className="mb-0 mt-2">Paste this message to <a target="_blank" 
