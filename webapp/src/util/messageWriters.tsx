@@ -68,7 +68,7 @@ ${event.slots.map(getDiscordSlotText).join("\n")}
 
 Host: ${event.host || "TBA"}
 
-Please react to this message if your slot works for you.`;
+If you are listed above, please react to this message if your slot works for you!`;
 
 
 export const getSignupsPostedMessage = (event: Event): string => {
