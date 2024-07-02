@@ -25,14 +25,12 @@ const EventDetails = () => {
                         href="https://discord.com/channels/1004489038159413248/1204320477732929566">
                             #scheduling
                     </a> in Discord.</p>
-                    <p>Feel free to customize this message a bit. Have fun with it!</p>
                     <p>
-                        Here's a basic message to get you started:
+                        Here's a sample message to get you started. <strong>Be sure to add a ping to <span style={{color: "#9B59B6"}}>@Saltare Musica Hospite</span> at the end!</strong>
                     </p>
                     <div className="d-grid gap-2">
                         <Form.Control as="textarea" value={message} rows={8} readOnly className="has-fixed-size" />
                         <Button color={"primary"} className="mt-3 mb-2" onClick={() => { navigator.clipboard.writeText(message); }}>Copy Text</Button>
-                        <p>Be sure to add a ping to <span style={{color: "#9B59B6"}}><strong>@Saltare Musica Hospite</strong></span> at the end!</p>
                     </div>
                 </div>
             </CardBody>
