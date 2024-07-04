@@ -1,6 +1,6 @@
 import { nextSundayServiceDefaultDateTime } from '../util/util';
 import { Event, Slot } from '../util/types';
-import { DocumentData, Timestamp, addDoc, collection, doc, getDoc, getDocs, orderBy, query, setDoc, updateDoc, where } from 'firebase/firestore';
+import { DocumentData, Timestamp, addDoc, collection, doc, getDocs, orderBy, query, setDoc, updateDoc, where } from 'firebase/firestore';
 import { db } from '../util/firebase';
 import { getAusPasteMessage, getUkPasteMessage } from '../util/messageWriters';
 
