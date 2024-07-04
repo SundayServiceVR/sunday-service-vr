@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import Spinner from "../spinner";
 import { Event } from "../../util/types";
 import { getCurrentEvent, getNextEvent } from "../../store/events";
-import { Card, Col, Container, ListGroup, ListGroupItem, Row } from "react-bootstrap";
+import { Alert, AlertHeading, Button, Card, Col, Container, ListGroup, ListGroupItem, Row, Spinner } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { LinkContainer } from "react-router-bootstrap";
 
 export const CurrentOrNextEvent = () => {
 
@@ -24,12 +24,30 @@ export const CurrentOrNextEvent = () => {
         })()
     }, []);
 
-    if (loading) {
-        return <Spinner type="simple" />
+    // Undefined = we haven't tried to fetch it yet
+    if (event === undefined) {
+        return <></>
     }
 
-    if (event === null || event === undefined) {
-        return <></>
+    // loading = we're trying to fetch it
+    if (loading) {
+        return <Spinner />
+    }
+
+    // Null = we tried to fetch it but we didn't find anything
+    if (event === null) {
+        return <Alert variant="warning" className="my-3 mx-auto" style={{maxWidth: "42em"}}>
+            <AlertHeading className="text-center">No Upcoming Events Found</AlertHeading>
+            <p className="text-center">Get started by creating a new event.</p>
+            <Container>
+                <Row className="justify-content-center">
+                    <Col xs="auto">
+                        <LinkContainer to="/events/create"><Button size="lg">Create Event</Button></LinkContainer>
+                    </Col>
+                </Row>
+
+            </Container>
+        </Alert>
     }
 
     return <Container className="my-3">
