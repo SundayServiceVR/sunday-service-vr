@@ -1,3 +1,5 @@
+import { attendeeRoleId } from "../../../util/constants";
+
 export const expectedUk = `Sunday Service
 2024-06-09
 Host: Strawbs
@@ -36,7 +38,8 @@ DJs:
 
 https://discord.s4vr.net/
 https://twitch.s4vr.net/
-`;
+
+<@&${attendeeRoleId}>`;
 
 export const expectedSocialMedia = `Sunday Service
 2024-06-09
