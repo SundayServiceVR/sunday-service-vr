@@ -8,9 +8,15 @@
  */
 
 import { onRequest } from "firebase-functions/v2/https";
-import * as logger from "firebase-functions/logger";
 import { initializeApp } from "firebase-admin/app";
-import { getFirestore } from "firebase-admin/firestore";
+import { Timestamp, getFirestore } from "firebase-admin/firestore";
+
+import * as logger from "firebase-functions/logger";
+
+import { getLineupText } from "../util/messageWriters";
+
+import { docToEvent } from "../util/converters";
+
 
 initializeApp();
 
@@ -26,3 +32,34 @@ export const whiteboard = onRequest(async (request, response) => {
     logger.info("Request from ", { structuredData: true });
     response.send(responseText);
 });
+
+export const nextEventWhiteboard = onRequest(async (request, response) => {
+    logger.info("Request from ", { structuredData: true });
+    const docRef = await getFirestore()
+        .collection("events")
+        .where("end_datetime", ">", Timestamp.now())
+        .orderBy("start_datetime", "asc");
+
+    const snapshot = await docRef.get();
+
+    const eventDoc = snapshot.docs[0]?.data();
+    const event = docToEvent(eventDoc);
+
+    logger.info(event);
+
+    const result = {
+        "BST": "No Upcoming Events"
+    }
+
+    if(event) {
+        result["BST"] = getLineupText(event)
+    }
+
+    if(event) {
+        response.send(JSON.stringify(result));
+    } else {
+        response.send("No Upcoming Events Found");
+    }
+});
+
+

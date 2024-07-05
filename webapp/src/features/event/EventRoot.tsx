@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Alert, Breadcrumb, Button, Container, Nav, Stack, } from 'react-bootstrap';
-import { calcSlotTimes, default_event, docToEvent, saveEvent } from "../../store/events";
+import { calcSlotTimes, default_event, saveEvent } from "../../store/events";
+import { docToEvent } from "../../store/converters";
 import { onSnapshot, doc } from "firebase/firestore";
 import { Event } from "../../util/types";
 import { db } from "../../util/firebase";
