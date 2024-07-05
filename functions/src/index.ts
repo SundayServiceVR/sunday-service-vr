@@ -13,7 +13,7 @@ import { Timestamp, getFirestore } from "firebase-admin/firestore";
 
 import * as logger from "firebase-functions/logger";
 
-import { getLineupText } from "../util/messageWriters";
+import { getLineupText, timeFormats } from "../util/messageWriters";
 
 import { docToEvent } from "../util/converters";
 
@@ -48,18 +48,18 @@ export const nextEventWhiteboard = onRequest(async (request, response) => {
     logger.info(event);
 
     const result = {
-        "BST": "No Upcoming Events"
+        "gmt": "Stay Tuned!",
+        "au": "Stay Tuned!",
+        "event": null as null | string,
+    };
+
+    if (event) {
+        result["gmt"] = getLineupText(event, timeFormats.GMT);
+        result["au"] = getLineupText(event, timeFormats.AU);
+        result["event"] = JSON.stringify(event);
     }
 
-    if(event) {
-        result["BST"] = getLineupText(event)
-    }
-
-    if(event) {
-        response.send(JSON.stringify(result));
-    } else {
-        response.send("No Upcoming Events Found");
-    }
+    response.send(JSON.stringify(result));
 });
 
 
