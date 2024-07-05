@@ -62,7 +62,6 @@ const EventRoot = () => {
     const onCancelChanges = () => {
         setHasChanges(false);
         if (!event) return;
-        setEventScratchpad(event);
     }
 
     return <>
@@ -83,10 +82,6 @@ const EventRoot = () => {
             <Nav.Item as="li">
                 <Link to={`/events/${event.id}/announcements`} className="nav-link">Announcements</Link>
             </Nav.Item>
-            <Nav.Item as="li">
-                <Link to={`/events/${event.id}/whiteboard`} className="nav-link">Whiteboard</Link>
-            </Nav.Item>
-
         </Nav>
         
         <Container className="mt-3">

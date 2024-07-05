@@ -15,7 +15,7 @@ import * as logger from "firebase-functions/logger";
 
 import { getLineupText, timeFormats } from "../util/messageWriters";
 
-import { docToEvent } from "../util/converters";
+import { docToEventRaw } from "../../webapp/src/store/converters";
 
 
 initializeApp();
@@ -43,7 +43,7 @@ export const nextEventWhiteboard = onRequest(async (request, response) => {
     const snapshot = await docRef.get();
 
     const eventDoc = snapshot.docs[0]?.data();
-    const event = docToEvent(eventDoc);
+    const event = docToEventRaw(eventDoc);
 
     logger.info(event);
 

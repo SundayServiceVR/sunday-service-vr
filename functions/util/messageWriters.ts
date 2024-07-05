@@ -1,16 +1,19 @@
 import { Event, Slot } from "../../webapp/src/util/types";
 
 type TimeFormat = {
+    shortTimezone: string,
     locale: string,
     timezone: string,
 }
 
 export const timeFormats: {[key: string] : TimeFormat} = {
     GMT: {
+        shortTimezone: "GMT",
         locale: "en-GB",
         timezone: "Europe/London",
     },
     AU: {
+        shortTimezone: "AU",
         locale: "en-AU",
         timezone: "Australia/Sydney",
     },
@@ -30,7 +33,7 @@ export const getLineupText = (event: Event, timeFormat: TimeFormat): string => {
 ${eventStartDateFormatted}
 Host: ${event.host}
 
-Lineup: (times BST)
+Lineup: (times ${timeFormat.shortTimezone})
             
 ${event.slots.map((slot) => getSlotText(slot, timeFormat)).join("\n")}
 `;
@@ -41,10 +44,3 @@ const getSlotText = (slot: Slot, timeFormat: TimeFormat): string => [
     slot.dj_name,
     slot.is_debut ? " DEBUTT" : null,
 ].join(" ").trim();
-
-// const getAusSlotText = (slot: Slot): string => {
-//     const debuttText = `${slot.is_debut ? " DEBUTT" : ""}`
-//     const slotText = `${slot.start_time ? dateToLineupTime(slot.start_time, "Australia/Sydney") : ""} ${slot.dj_name}${debuttText}`;
-//     return slotText;
-// }
-
