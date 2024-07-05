@@ -17,6 +17,26 @@ export const timeFormats: {[key: string] : TimeFormat} = {
         locale: "en-AU",
         timezone: "Australia/Sydney",
     },
+    EST: {
+        shortTimezone: "EST",
+        locale: "en-US",
+        timezone: "America/New_York",
+    },
+    CST: {
+        shortTimezone: "CST",
+        locale: "en-US",
+        timezone: "America/Chicago",
+    },
+    MST: {
+        shortTimezone: "MST",
+        locale: "en-US",
+        timezone: "America/Denver",
+    },
+    PST: {
+        shortTimezone: "PST",
+        locale: "en-US",
+        timezone: "America/Los_Angeles",
+    },
 };
 
 export const getLineupText = (event: Event, timeFormat: TimeFormat): string => {

@@ -9,17 +9,41 @@
 
 import { onRequest } from "firebase-functions/v2/https";
 import { initializeApp } from "firebase-admin/app";
-import { Timestamp, getFirestore } from "firebase-admin/firestore";
+import { getFirestore } from "firebase-admin/firestore";
 
 import * as logger from "firebase-functions/logger";
 
 import { getLineupText, timeFormats } from "../util/messageWriters";
 
-import { docToEventRaw } from "../../webapp/src/store/converters";
-
+import { getNextEvent } from "../util/events";
 
 initializeApp();
 
+export const nextEventBoardText = onRequest(async (request, response) => {
+    logger.info(`Request from ${request.ip}`, { structuredData: true });
+
+    const requestedTimezone = request.query["timezone"]?.toString().toUpperCase();
+
+    if(!requestedTimezone || !Object.keys(timeFormats).includes(requestedTimezone)) {
+        response.status(400).send(`Bad Query Parameter: timezone (Requested ${requestedTimezone})`);
+        return;
+    };
+
+    const timeFormat = timeFormats[requestedTimezone];
+
+    const event = await getNextEvent();
+
+    const result = event ? getLineupText(event, timeFormat) : "Stay Tuned!";
+
+    response.send(result);
+});
+
+export const nextEvent = onRequest(async (request, response) => {
+    logger.info(`Request from ${request.ip}`, { structuredData: true });
+    response.send(JSON.stringify(await getNextEvent()));
+});
+
+// Legacy Endpoint
 export const whiteboard = onRequest(async (request, response) => {
     const docRef = await getFirestore()
         .collection("whiteboards")
@@ -29,37 +53,6 @@ export const whiteboard = onRequest(async (request, response) => {
 
     const responseText = JSON.stringify(whiteboard);
 
-    logger.info("Request from ", { structuredData: true });
+    logger.info(`Request from ${request.ip}`, { structuredData: true });
     response.send(responseText);
 });
-
-export const nextEventWhiteboard = onRequest(async (request, response) => {
-    logger.info("Request from ", { structuredData: true });
-    const docRef = await getFirestore()
-        .collection("events")
-        .where("end_datetime", ">", Timestamp.now())
-        .orderBy("start_datetime", "asc");
-
-    const snapshot = await docRef.get();
-
-    const eventDoc = snapshot.docs[0]?.data();
-    const event = docToEventRaw(eventDoc);
-
-    logger.info(event);
-
-    const result = {
-        "gmt": "Stay Tuned!",
-        "au": "Stay Tuned!",
-        "event": null as null | string,
-    };
-
-    if (event) {
-        result["gmt"] = getLineupText(event, timeFormats.GMT);
-        result["au"] = getLineupText(event, timeFormats.AU);
-        result["event"] = JSON.stringify(event);
-    }
-
-    response.send(JSON.stringify(result));
-});
-
-
