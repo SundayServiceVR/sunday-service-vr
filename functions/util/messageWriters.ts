@@ -19,10 +19,7 @@ export const timeFormats: {[key: string] : TimeFormat} = {
     },
 };
 
-// "GB",
-// "Australia/Sydney",
 export const getLineupText = (event: Event, timeFormat: TimeFormat): string => {
-    // const ukDayTz = dayjs.tz(event.start_datetime, timezone);
     const eventStartDateFormatted = [
         event.start_datetime.getUTCFullYear(),
         event.start_datetime.getUTCMonth() + 1,
