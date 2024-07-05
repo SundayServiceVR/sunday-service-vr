@@ -1,6 +1,6 @@
 import { Card } from "react-bootstrap";
 import "./Home.css";
-import { signupSheetUrl } from "../../util/util";
+import { signupSheetUrl } from "../../util/constants";
 
 const helpfulLinks = [
     {

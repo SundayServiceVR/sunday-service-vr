@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import { Event, Slot } from "./types";
-import { signupSheetUrl } from "./util";
+import { attendeeRoleId, performerRoleId, signupSheetUrl } from "./constants";
 
 export const getDiscordMessage = (event: Event): string => 
 `**${event.name}**
@@ -16,7 +16,8 @@ ${event.slots.map(getDiscordSlotText).join("\n")}
 
 https://discord.s4vr.net/
 https://twitch.s4vr.net/
-`;
+
+<@&${attendeeRoleId}>`;
 
 
 export const getTwitterMessage = (event: Event): string => {
@@ -76,7 +77,9 @@ return `Signups are open for ${dateToDiscordTime(event.start_datetime).replace("
 
 ${signupSheetUrl}
 
-${event.host ? `Your host this week is ${event.host}!` : "Host TBD!"}`
+${event.host ? `Your host this week is ${event.host}!` : "Host TBD!"}
+
+<@&${performerRoleId}>`
 }
 
 

@@ -26,7 +26,7 @@ const EventDetails = () => {
                             #scheduling
                     </a> in Discord.</p>
                     <p>
-                        Here's a sample message to get you started. <strong>Be sure to add a ping to <span style={{color: "#9B59B6"}}>@Saltare Musica Hospite</span> at the end!</strong>
+                        Here's a sample message to get you started.
                     </p>
                     <div className="d-grid gap-2">
                         <Form.Control as="textarea" value={message} rows={8} readOnly className="has-fixed-size" />
