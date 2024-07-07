@@ -1,7 +1,7 @@
 import { useEventOperations } from "../outletContext";
 import EventBasicDetailsForm from "./EventBasicDetailsForm";
 import "react-datepicker/dist/react-datepicker.css";
-import { Button, Card, CardBody, Form } from "react-bootstrap";
+import { Card, CardBody } from "react-bootstrap";
 import { getSignupsPostedMessage } from "../../../util/messageWriters";
 import MessagePasteCard from "../messaging/MessagePasteCard";
 
