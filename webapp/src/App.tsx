@@ -20,6 +20,7 @@ import CreateDj from './features/dj/CreateDj';
 import DjDetails from './features/dj/DjDetails';
 import DjList from './features/dj/DjList';
 import EventDetails from './features/event/basic/EventDetails';
+import EventVerifyDJs from './features/event/lineup/EventVerifyDJs';
 
 function App() {
   // 
@@ -80,6 +81,11 @@ function App() {
                   path: "lineup",
                   element: <EventLineup />,
                   handle: { crumb: () => <Link to="event">Lineup</Link>},
+                },
+                {
+                  path: "verifyDJs",
+                  element: <EventVerifyDJs/>,
+                  handle: { crumb: () => <Link to="verifyDJs">Verify DJs</Link>}
                 },
                 {
                   path: "announcements",

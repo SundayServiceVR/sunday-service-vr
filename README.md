@@ -1,4 +1,8 @@
-# First time setup
+# Sunday Service Webb App
+
+Production: https://sunday-service-vr.web.app/
+
+## First time setup
 
 * Download Node/NPM (https://nodejs.org/en/download)
 * Download JDK (https://www.oracle.com/java/technologies/downloads/)
