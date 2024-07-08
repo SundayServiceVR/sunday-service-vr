@@ -12,6 +12,7 @@ export const default_event: Event = {
   message: "Come by to chill and wiggle to some Sunday Service tunes!",
   slots: [],
   footer: "https://discord.s4vr.net/\nhttps://twitch.s4vr.net/",
+  dj_plays: [],
 }
 
 export const createEvent = async (event: Event) => {
