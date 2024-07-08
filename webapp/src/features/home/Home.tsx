@@ -1,6 +1,7 @@
 import { Card, Container } from "react-bootstrap";
 import "./Home.css";
 import { CurrentOrNextEvent } from "../../components/currentOrNextEvent/CurrentOrNextEvent";
+import { signupSheetUrl } from "../../util/constants";
 
 const helpfulLinks = [
     {
@@ -15,7 +16,7 @@ const helpfulLinks = [
         extra: [
             {
                 title: "Signup Sheet",
-                url: "https://docs.google.com/spreadsheets/d/1xzejwFYiaFkS7atfWf9YJe7nmZqF_UxwZBjkigoL4DI/edit?usp=sharing"
+                url: signupSheetUrl
             },
             {
                 title: "Performer Stream Links",

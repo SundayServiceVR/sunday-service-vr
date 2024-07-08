@@ -20,28 +20,50 @@ const WhiteboardWriter = () => {
         }, 3000)
     }
 
-    return <Card>
+    return (
+      <Card>
         <Card.Body>
-            <Card.Title>
-                Frontboard Preview
-            </Card.Title>
-
-            <Tabs className="mt-4">
-                <Tab eventKey="GMT" title="GMT">
-                    <Form.Control aria-label="UK whiteboard textbox" as="textarea" value={getUkPasteMessage(eventScratchpad)} rows={16} readOnly className="has-fixed-size" />
-                </Tab>
-                <Tab eventKey="AU" title="AU">
-                    <Form.Control aria-label="AU whiteboard textbox" as="textarea" value={getAusPasteMessage(eventScratchpad)} rows={16} readOnly className="has-fixed-size" />
-                </Tab>
-            </Tabs>
-            <Card.Footer>
-                <Stack>
-                    <Button disabled={!buttonEnabled} onClick={onUpdateWhiteboard}>{buttonText}</Button>
-                </Stack>
-                
-            </Card.Footer>
+          <Card.Title>Whiteboard Preview</Card.Title>
+          <section className="mt-3">
+              <p>
+                Whiteboards are the in-world panels that show the lineup.
+              </p>
+              <p>
+                You can update the whiteboard text by pressing the button at the bottom of this page.
+              </p>
+          </section>
+          <Tabs className="mt-4">
+            <Tab eventKey="GMT" title="GMT">
+              <Form.Control
+                aria-label="UK whiteboard textbox"
+                as="textarea"
+                value={getUkPasteMessage(eventScratchpad)}
+                rows={16}
+                readOnly
+                className="has-fixed-size"
+              />
+            </Tab>
+            <Tab eventKey="AU" title="AU">
+              <Form.Control
+                aria-label="AU whiteboard textbox"
+                as="textarea"
+                value={getAusPasteMessage(eventScratchpad)}
+                rows={16}
+                readOnly
+                className="has-fixed-size"
+              />
+            </Tab>
+          </Tabs>
+          <Card.Footer>
+            <Stack>
+              <Button disabled={!buttonEnabled} onClick={onUpdateWhiteboard}>
+                {buttonText}
+              </Button>
+            </Stack>
+          </Card.Footer>
         </Card.Body>
-    </Card>
+      </Card>
+    );
 }
 
 export default WhiteboardWriter;
