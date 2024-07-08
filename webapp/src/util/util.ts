@@ -24,3 +24,4 @@ export const nextSundayServiceDefaultDateTime = (): Date => {
     return targetDate;
 
 }
+

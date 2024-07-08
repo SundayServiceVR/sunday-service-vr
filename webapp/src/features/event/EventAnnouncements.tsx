@@ -17,12 +17,12 @@ const EventAnnouncements = () => {
                     #s4-vrchat-events
             </a> in Discord.
         </p>
-        <p className="mb-2 ">Be sure to add a ping to <span style={{color: "#eac645"}}><strong>@Congregatio Mirabilis</strong></span> and press <strong>📢 Publish</strong> after posting, so all members and servers get notified!</p>
+        <p className="mb-2 ">Be sure to press <strong>📢 Publish</strong> after posting, so other servers that subscribe to the channel get notified!</p>
     </>
     const twitterFooterInstructions = <p className="my-2">Paste this text to Twitter and Bluesky.</p>
     
     return <section>
-        <h1 className="display-5">Announcements</h1>
+        <h1 className="display-5">Public Announcements</h1>
         <Form>
             <Form.Group>
                 <Form.Label>
