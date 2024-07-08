@@ -38,7 +38,7 @@ const DjDetails = () => {
             setDj(docToRawType<Dj>(result));
             const playsQuery = query(collection(db, "events"), where("dj_plays", "array-contains", djReference));
             const playsQuerySnapshot = await getDocs(playsQuery);
-            const playedEvents = playsQuerySnapshot.docs.map(doc => docToEvent(doc)).filter(event => event !== null);
+            const playedEvents = playsQuerySnapshot.docs.map(doc => docToEvent(doc)).filter(event => event !== null) as Event[];
             setPlayedEvents(playedEvents)
             setBusy(false);
         })();
