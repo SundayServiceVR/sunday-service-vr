@@ -87,6 +87,6 @@ export const updateBoards = async (event: Event) => {
 const setDjPlays = (event: Event) => {
   return {
     ...event,
-    djPlays: event.slots.map(slot => slot.dj_ref) ?? []
-  }
+    dj_plays: event.slots.map(slot => slot.dj_ref) ?? []
+  } as Event
 }
