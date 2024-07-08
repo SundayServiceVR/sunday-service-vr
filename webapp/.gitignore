@@ -11,6 +11,9 @@
 # production
 /build
 
+# firebase emulator
+firebase-export-*
+
 # misc
 .DS_Store
 .env.local
