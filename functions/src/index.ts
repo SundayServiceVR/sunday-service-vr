@@ -19,7 +19,7 @@ import { getNextEvent } from "../util/events";
 
 initializeApp();
 
-export const nextEventBoardText = onRequest(async (request, response) => {
+export const nextEventBoardAnyTz = onRequest(async (request, response) => {
     logger.info(`Request from ${request.ip}`, { structuredData: true });
 
     let requestedTimezone = request.query["timezone"]?.toString().toUpperCase();
@@ -37,6 +37,21 @@ export const nextEventBoardText = onRequest(async (request, response) => {
 
     response.send(result);
 });
+
+export const nextEventWhiteboard = onRequest(async (request, response) => {
+    logger.info(`Request from ${request.ip}`, { structuredData: true });
+
+
+    const event = await getNextEvent();
+
+    const result = {
+        "GMT": event ? getLineupText(event, timeFormats.GMT) : "Stay Tuned!",
+        "AU": event ? getLineupText(event, timeFormats.AU) : "Stay Tuned!",
+    }
+
+    response.send(result);
+});
+
 
 export const nextEvent = onRequest(async (request, response) => {
     logger.info(`Request from ${request.ip}`, { structuredData: true });

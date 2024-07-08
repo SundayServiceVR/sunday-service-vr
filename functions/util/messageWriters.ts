@@ -51,7 +51,7 @@ ${eventStartDateFormatted}
 Host: ${event.host}
 
 Lineup: (times ${timeFormat.shortTimezone})
-            
+
 ${event.slots.map((slot) => getSlotText(slot, timeFormat)).join("\n")}
 `;
 };
