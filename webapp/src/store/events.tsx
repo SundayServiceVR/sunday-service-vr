@@ -22,6 +22,8 @@ export const createEvent = async (event: Event) => {
 
 export const saveEvent = async (event: Event) => {
   event = calcSlotTimes(event);
+  event = setDjPlays(event);
+
   if (!event.id) {
     throw (new Error("Attempted to save an event with no assigned id"));
   }
@@ -44,7 +46,7 @@ export const docToEvent = (doc: DocumentData) => {
       slots: data.slots.map((slot: any) => ({ ...slot, start_time: slot.start_time.toDate() }) as Slot)
     } as Event;
 
-    return event;
+    return setDjPlays(event);
   }
   return null;
 }
@@ -80,4 +82,11 @@ export const updateBoards = async (event: Event) => {
     au: getAusPasteMessage(event),
     gmt: getUkPasteMessage(event),
   });
+}
+
+const setDjPlays = (event: Event) => {
+  return {
+    ...event,
+    djPlays: event.slots.map(slot => slot.dj_ref) ?? []
+  }
 }
