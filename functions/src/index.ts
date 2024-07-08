@@ -22,7 +22,7 @@ initializeApp();
 export const nextEventBoardText = onRequest(async (request, response) => {
     logger.info(`Request from ${request.ip}`, { structuredData: true });
 
-    const requestedTimezone = request.query["timezone"]?.toString().toUpperCase();
+    let requestedTimezone = request.query["timezone"]?.toString().toUpperCase();
 
     if(!requestedTimezone || !Object.keys(timeFormats).includes(requestedTimezone)) {
         response.status(400).send(`Bad Query Parameter: timezone (Requested ${requestedTimezone})`);

@@ -11,7 +11,7 @@ export const docToEvent = (doc: DocumentData) => {
     const data = doc.data();
     if (data) {
       return {
-        ...docToEventRaw(doc),
+        ...docToEventRaw(data),
         id: doc.ref.id,
       } as Event;
     }
