@@ -46,17 +46,21 @@ const DjList = ({ past = false}: Props) => {
         { djs.length <= 0 && <Alert variant="warning"><AlertHeading>No Djs Found</AlertHeading>Should we add a dj?</Alert> }
 
         { djs.length > 0 &&
-            <Table>
+            <Table responsive="sm">
                 <thead>
                     <tr>
                         <th>Dj Name</th>
                         <th>Discord Name</th>
+                        <th>VRCDN/RTMP</th>
+                        <th>Twitch Username</th>
                     </tr>
                 </thead>
                 <tbody>
                     {djs.map(entry => <tr key={entry.reference.id}>
                         <td><Link to={`/djs/${entry.reference.id}`}>{entry.dj.dj_name ?? "(No Dj Name)"}</Link></td>
                         <td>{entry.dj.public_name}</td>
+                        <td>{entry.dj.rtmp_url}</td>
+                        <td>{entry.dj.twitch_username}</td>
                     </tr>)}
                 </tbody>
             </Table>
