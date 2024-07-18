@@ -1,5 +1,9 @@
 {
   "projects": {
-    "default": "sunday-service-vr"
-  }
+    "default": "sunday-service-vr",
+    "develop": "s4tan-peach-dev"
+  },
+  "targets": {},
+  "etags": {},
+  "dataconnectEmulatorConfig": {}
 }
