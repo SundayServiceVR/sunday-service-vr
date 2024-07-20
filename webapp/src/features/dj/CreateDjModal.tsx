@@ -31,6 +31,7 @@ export const CreateDjModal = ({ show, handleClose, onDjCreated }: Props) => {
     const onFormSubmit = (event: FormEvent) => {
         event.preventDefault();
         createDj();
+        setDj(defaultDj);
     }
 
     return <Modal show={show} onHide={handleClose}>
