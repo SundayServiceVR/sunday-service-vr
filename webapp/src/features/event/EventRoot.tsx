@@ -62,6 +62,7 @@ const EventRoot = () => {
     const onCancelChanges = () => {
         setHasChanges(false);
         if (!event) return;
+        setEventScratchpad(event);
     }
 
     return <>
