@@ -4,9 +4,9 @@ import { docToEventRaw } from "../../webapp/src/store/converters";
 
 export const getNextEvent = async () => {
     const docRef = await getFirestore()
-    .collection("events")
-    .where("end_datetime", ">", Timestamp.now())
-    .orderBy("start_datetime", "asc");
+        .collection("events")
+        .where("end_datetime", ">", Timestamp.now())
+        .orderBy("start_datetime", "asc");
 
     const snapshot = await docRef.get();
 
@@ -14,4 +14,4 @@ export const getNextEvent = async () => {
     const event = docToEventRaw(eventDoc);
 
     return event;
-}
+};

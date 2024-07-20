@@ -57,7 +57,9 @@ ${event.slots.map((slot) => getSlotText(slot, timeFormat)).join("\n")}
 };
 
 const getSlotText = (slot: Slot, timeFormat: TimeFormat): string => [
-    slot?.start_time?.toLocaleTimeString(timeFormat.locale, { timeZone: timeFormat.timezone, timeStyle: "short" }) ?? "",
+    slot?.start_time?.toLocaleTimeString(
+        timeFormat.locale, { timeZone: timeFormat.timezone, timeStyle: "short" }
+    )?? "",
     slot.dj_name,
     slot.is_debut ? " DEBUTT" : null,
 ].join(" ").trim();

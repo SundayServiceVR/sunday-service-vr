@@ -22,12 +22,12 @@ initializeApp();
 export const nextEventBoardAnyTz = onRequest(async (request, response) => {
     logger.info(`Request from ${request.ip}`, { structuredData: true });
 
-    let requestedTimezone = request.query["timezone"]?.toString().toUpperCase();
+    const requestedTimezone = request.query["timezone"]?.toString().toUpperCase();
 
-    if(!requestedTimezone || !Object.keys(timeFormats).includes(requestedTimezone)) {
+    if (!requestedTimezone || !Object.keys(timeFormats).includes(requestedTimezone)) {
         response.status(400).send(`Bad Query Parameter: timezone (Requested ${requestedTimezone})`);
         return;
-    };
+    }
 
     const timeFormat = timeFormats[requestedTimezone];
 
@@ -47,7 +47,7 @@ export const nextEventWhiteboard = onRequest(async (request, response) => {
     const result = {
         "GMT": event ? getLineupText(event, timeFormats.GMT) : "Stay Tuned!",
         "AU": event ? getLineupText(event, timeFormats.AU) : "Stay Tuned!",
-    }
+    };
 
     response.send(result);
 });
