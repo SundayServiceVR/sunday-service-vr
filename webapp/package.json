@@ -6,7 +6,7 @@
     "scripts": {
         "start": "npm-run-all --parallel start:webapp start:emulator",
         "start:webapp": "vite",
-        "start:emulator": "firebase emulators:start --import ../firebase-emulator-data --export-on-exit",
+        "start:emulator": "firebase emulators:start --only functions,firestore --import ../firebase-emulator-data --export-on-exit",
         "force-kill-emulators": "npx kill-port 4000 8080 8085",
         "build": "tsc && vite build",
         "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
