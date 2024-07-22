@@ -7,6 +7,7 @@ import { Alert, AlertHeading, Breadcrumb, Button, Nav, Stack, Table } from "reac
 import { Link, useNavigate } from "react-router-dom";
 
 import Spinner from "../../components/spinner";
+import { CurrentOrNextEvent } from "../../components/currentOrNextEvent/CurrentOrNextEvent";
 
 type Props = {
     past?: boolean;
@@ -21,7 +22,7 @@ const EventList = ({ past = false}: Props) => {
     useEffect(() => {
         setLoading(true);
         (async () => {
-            const q = query(collection(db, "events"), where("start_datetime", past ? "<" : ">=", Timestamp.now()), orderBy("start_datetime", "asc"));
+            const q = query(collection(db, "events"), where("start_datetime", past ? "<" : ">=", Timestamp.now()), orderBy("start_datetime", past ? "desc" : "asc"));
             const querySnapshot = await getDocs(q);
 
             const events: Event[] = querySnapshot.docs
@@ -40,6 +41,7 @@ const EventList = ({ past = false}: Props) => {
         <Breadcrumb className="px-2">
             <Breadcrumb.Item><Link to="/events">Events</Link></Breadcrumb.Item>
         </Breadcrumb>
+        <CurrentOrNextEvent />
         <Stack direction="horizontal" gap={3}>
             <span className="me-auto" />
             <Button variant="primary" onClick={()=>navigate("/events/create")}>Create Event</Button>
