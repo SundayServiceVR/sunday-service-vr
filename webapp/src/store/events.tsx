@@ -1,6 +1,6 @@
 import { nextSundayServiceDefaultDateTime } from '../util/util';
 import { Event } from '../util/types';
-import { addDoc, collection, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
+import { Timestamp, addDoc, collection, doc, getDocs, orderBy, query, setDoc, updateDoc, where } from 'firebase/firestore';
 import { db } from '../util/firebase';
 import { getAusPasteMessage, getUkPasteMessage } from '../util/messageWriters';
 import { docToEvent } from './converters';
@@ -29,15 +29,6 @@ export const saveEvent = async (event: Event) => {
   await setDoc(doc(db, "events", event.id ?? undefined), event);
 }
 
-export const loadEvent = async () => {
-  const docRef = await getDoc(doc(db, "events", "current"));
-  return docToEvent(docRef);
-}
-
-export const resetEvent = async () => {
-  saveEvent(default_event);
-}
-
 export const calcSlotTimes = (event: Event): Event => {
   const newEvent = { ...event }; // Shallow Copy
 
@@ -60,4 +51,31 @@ export const updateBoards = async (event: Event) => {
     au: getAusPasteMessage(event),
     gmt: getUkPasteMessage(event),
   });
+}
+
+export const getNextEvent = async () => {
+  const q = query(collection(db, "events"), where("end_datetime", ">", Timestamp.now()), orderBy("start_datetime", "asc"));
+  const querySnapshot = await getDocs(q);
+
+  const events: Event[] = querySnapshot.docs
+      .map((doc) => docToEvent(doc))
+      .filter((event): event is Exclude<typeof event, null> => event !== null);
+
+  return events[0] ?? null;
+}
+
+export const getCurrentEvent = async () => {
+  const q = query(
+    collection(db, "events"),
+    where("start_datetime", "<=", Timestamp.now()),
+    where("end_datetime", ">", Timestamp.now()),
+    orderBy("start_datetime", "asc"));
+
+  const querySnapshot = await getDocs(q);
+
+  const events: Event[] = querySnapshot.docs
+      .map((doc) => docToEvent(doc))
+      .filter((event): event is Exclude<typeof event, null> => event !== null);
+
+  return events[0] ?? null;
 }
