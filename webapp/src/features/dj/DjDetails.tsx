@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 import { docToRawType } from "../../store/util";
 
 import Spinner from "../../components/spinner";
-import { docToEvent } from "../../store/events";
+import { docToEvent } from "../../store/converters";
 
 const DjDetails = () => {
     

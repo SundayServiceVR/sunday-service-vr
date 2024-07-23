@@ -7,6 +7,12 @@ import { Slot, Event } from "../util/types";
 // https://firebase.google.com/docs/reference/node/firebase.firestore.FirestoreDataConverter
 // Issue #59
 
+/**
+ * Converts a firebase doc to an event and populates its id
+ * 
+ * @param doc 
+ * @returns 
+ */
 export const docToEvent = (doc: DocumentData) => {
     const data = doc.data();
     if (data) {
@@ -18,6 +24,12 @@ export const docToEvent = (doc: DocumentData) => {
     return null;
   }
   
+/**
+ * Converts a raw json object into an event
+ * 
+ * @param data 
+ * @returns 
+ */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const docToEventRaw = (data: any) => {
   if (data) {
