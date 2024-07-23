@@ -19,6 +19,13 @@ import { getNextEvent } from "../util/events";
 
 initializeApp();
 
+const PLACEHOLDER_TEXT = `Sunday Service
+
+Every Sunday
+
+Noon - 5pm-ish PST/PDT
+8pm - 1am-ish BST/BDT`;
+
 export const nextEventBoardAnyTz = onRequest(async (request, response) => {
     logger.info(`Request from ${request.ip}`, { structuredData: true });
 
@@ -33,7 +40,7 @@ export const nextEventBoardAnyTz = onRequest(async (request, response) => {
 
     const event = await getNextEvent();
 
-    const result = event ? getLineupText(event, timeFormat) : "Stay Tuned!";
+    const result = event ? getLineupText(event, timeFormat) : PLACEHOLDER_TEXT;
 
     response.send(result);
 });
@@ -45,8 +52,8 @@ export const nextEventWhiteboard = onRequest(async (request, response) => {
     const event = await getNextEvent();
 
     const result = {
-        "GMT": event ? getLineupText(event, timeFormats.GMT) : "Stay Tuned!",
-        "AU": event ? getLineupText(event, timeFormats.AU) : "Stay Tuned!",
+        "GMT": event ? getLineupText(event, timeFormats.GMT) : PLACEHOLDER_TEXT,
+        "AU": event ? getLineupText(event, timeFormats.AU) : PLACEHOLDER_TEXT,
     };
 
     response.send(result);
