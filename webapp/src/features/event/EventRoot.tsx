@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Alert, Breadcrumb, Button, Container, Nav, Stack, } from 'react-bootstrap';
-import { calcSlotTimes, default_event, docToEvent, saveEvent } from "../../store/events";
+import { calcSlotTimes, default_event, saveEvent } from "../../store/events";
+import { docToEvent } from "../../store/converters";
 import { onSnapshot, doc } from "firebase/firestore";
 import { Event } from "../../util/types";
 import { db } from "../../util/firebase";
@@ -85,10 +86,6 @@ const EventRoot = () => {
             <Nav.Item as="li">
                 <Link to={`/events/${event.id}/announcements`} className="nav-link">Public Announcements</Link>
             </Nav.Item>
-            <Nav.Item as="li">
-                <Link to={`/events/${event.id}/whiteboard`} className="nav-link">Whiteboard</Link>
-            </Nav.Item>
-
         </Nav>
         
         <Container className="mt-3">

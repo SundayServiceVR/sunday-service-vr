@@ -8,12 +8,57 @@
  */
 
 import { onRequest } from "firebase-functions/v2/https";
-import * as logger from "firebase-functions/logger";
 import { initializeApp } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
 
+import * as logger from "firebase-functions/logger";
+
+import { getLineupText, timeFormats } from "../util/messageWriters";
+
+import { getNextEvent } from "../util/events";
+
 initializeApp();
 
+export const nextEventBoardAnyTz = onRequest(async (request, response) => {
+    logger.info(`Request from ${request.ip}`, { structuredData: true });
+
+    const requestedTimezone = request.query["timezone"]?.toString().toUpperCase();
+
+    if (!requestedTimezone || !Object.keys(timeFormats).includes(requestedTimezone)) {
+        response.status(400).send(`Bad Query Parameter: timezone (Requested ${requestedTimezone})`);
+        return;
+    }
+
+    const timeFormat = timeFormats[requestedTimezone];
+
+    const event = await getNextEvent();
+
+    const result = event ? getLineupText(event, timeFormat) : "Stay Tuned!";
+
+    response.send(result);
+});
+
+export const nextEventWhiteboard = onRequest(async (request, response) => {
+    logger.info(`Request from ${request.ip}`, { structuredData: true });
+
+
+    const event = await getNextEvent();
+
+    const result = {
+        "GMT": event ? getLineupText(event, timeFormats.GMT) : "Stay Tuned!",
+        "AU": event ? getLineupText(event, timeFormats.AU) : "Stay Tuned!",
+    };
+
+    response.send(result);
+});
+
+
+export const nextEvent = onRequest(async (request, response) => {
+    logger.info(`Request from ${request.ip}`, { structuredData: true });
+    response.send(JSON.stringify(await getNextEvent()));
+});
+
+// Legacy Endpoint
 export const whiteboard = onRequest(async (request, response) => {
     const docRef = await getFirestore()
         .collection("whiteboards")
@@ -23,6 +68,6 @@ export const whiteboard = onRequest(async (request, response) => {
 
     const responseText = JSON.stringify(whiteboard);
 
-    logger.info("Request from ", { structuredData: true });
+    logger.info(`Request from ${request.ip}`, { structuredData: true });
     response.send(responseText);
 });
