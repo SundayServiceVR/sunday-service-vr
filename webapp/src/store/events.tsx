@@ -87,7 +87,7 @@ export const getCurrentEvent = async () => {
   const events: Event[] = querySnapshot.docs
       .map((doc) => docToEvent(doc))
       .filter((event): event is Exclude<typeof event, null> => event !== null)
-      .map(event => setDjPlays(event));;
+      .map(event => setDjPlays(event));
 
   return events[0] ?? null;
 }
