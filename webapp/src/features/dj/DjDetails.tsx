@@ -1,7 +1,7 @@
 import { FormEvent, useEffect, useState } from "react";
 import { Alert, Breadcrumb, Button, Col, Container, Form, ListGroup, ListGroupItem, Row, Stack } from "react-bootstrap";
 import { useParams } from "react-router";
-import { collection, doc, getDoc, getDocs, query, setDoc, where } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, orderBy, query, setDoc, where } from "firebase/firestore";
 import { db } from "../../util/firebase";
 import { Dj, Event } from "../../util/types";
 import DjForm from "./DjForm";
@@ -36,7 +36,7 @@ const DjDetails = () => {
             const djReference = doc(db, "djs", djId);
             const result = await getDoc(djReference);
             setDj(docToRawType<Dj>(result));
-            const playsQuery = query(collection(db, "events"), where("dj_plays", "array-contains", djReference));
+            const playsQuery = query(collection(db, "events"), where("dj_plays", "array-contains", djReference), orderBy("start_datetime", "desc"));
             const playsQuerySnapshot = await getDocs(playsQuery);
             const playedEvents = playsQuerySnapshot.docs.map(doc => docToEvent(doc)).filter(event => event !== null) as Event[];
             setPlayedEvents(playedEvents)
@@ -112,9 +112,7 @@ const DjDetails = () => {
                 <Col md={4}>
                 <h3>Plays ({playedEvents.length})</h3>
                     <ListGroup>
-                        <ListGroupItem>
-                            { playedEvents.map(event => <Link to={`/events/${event.id}`}>{event.name} - {event.start_datetime.toLocaleDateString()}</Link>) }
-                        </ListGroupItem>
+                        { playedEvents.map(event => <ListGroupItem><Link to={`/events/${event.id}`}>{event.name} - {event.start_datetime.toLocaleDateString()}</Link></ListGroupItem>) }
                     </ListGroup>
                 </Col>
             </Row>
