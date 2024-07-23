@@ -1,8 +1,9 @@
 import { nextSundayServiceDefaultDateTime } from '../util/util';
-import { Event, Slot } from '../util/types';
-import { DocumentData, Timestamp, addDoc, collection, doc, getDocs, orderBy, query, setDoc, updateDoc, where } from 'firebase/firestore';
+import { Event } from '../util/types';
+import { Timestamp, addDoc, collection, doc, getDocs, orderBy, query, setDoc, updateDoc, where } from 'firebase/firestore';
 import { db } from '../util/firebase';
 import { getAusPasteMessage, getUkPasteMessage } from '../util/messageWriters';
+import { docToEvent } from './converters';
 
 export const default_event: Event = {
   name: "Sunday Service",
@@ -29,27 +30,6 @@ export const saveEvent = async (event: Event) => {
     throw (new Error("Attempted to save an event with no assigned id"));
   }
   await setDoc(doc(db, "events", event.id ?? undefined), event);
-}
-
-export const docToEvent = (doc: DocumentData) => {
-  const data = doc.data();
-  if (data) {
-    const event = {
-      ...data,
-      id: doc.ref.id,
-      start_datetime: data.start_datetime.toDate(),
-      end_datetime: data.end_datetime?.toDate(),
-      // Any is used here because we literally aren't sure of the shape that's stored in the db.
-      // To address this, we will need to use a converter on the doc where we have our snapshot coming in
-      // https://firebase.google.com/docs/reference/node/firebase.firestore.FirestoreDataConverter
-      // Issue #59
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      slots: data.slots.map((slot: any) => ({ ...slot, start_time: slot.start_time.toDate() }) as Slot)
-    } as Event;
-
-    return setDjPlays(event);
-  }
-  return null;
 }
 
 export const calcSlotTimes = (event: Event): Event => {
@@ -81,15 +61,16 @@ const setDjPlays = (event: Event) => {
     ...event,
     dj_plays: event.slots.map(slot => slot.dj_ref) ?? []
   } as Event
-
 }
+
 export const getNextEvent = async () => {
   const q = query(collection(db, "events"), where("end_datetime", ">", Timestamp.now()), orderBy("start_datetime", "asc"));
   const querySnapshot = await getDocs(q);
 
   const events: Event[] = querySnapshot.docs
       .map((doc) => docToEvent(doc))
-      .filter((event): event is Exclude<typeof event, null> => event !== null);
+      .filter((event): event is Exclude<typeof event, null> => event !== null)
+      .map(event => setDjPlays(event));
 
   return events[0] ?? null;
 }
@@ -105,7 +86,8 @@ export const getCurrentEvent = async () => {
 
   const events: Event[] = querySnapshot.docs
       .map((doc) => docToEvent(doc))
-      .filter((event): event is Exclude<typeof event, null> => event !== null);
+      .filter((event): event is Exclude<typeof event, null> => event !== null)
+      .map(event => setDjPlays(event));;
 
   return events[0] ?? null;
 }
