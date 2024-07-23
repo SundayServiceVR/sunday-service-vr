@@ -13,6 +13,7 @@ export const default_event: Event = {
   message: "Come by to chill and wiggle to some Sunday Service tunes!",
   slots: [],
   footer: "https://discord.s4vr.net/\nhttps://twitch.s4vr.net/",
+  dj_plays: [],
 }
 
 export const createEvent = async (event: Event) => {
@@ -23,6 +24,8 @@ export const createEvent = async (event: Event) => {
 
 export const saveEvent = async (event: Event) => {
   event = calcSlotTimes(event);
+  event = setDjPlays(event);
+
   if (!event.id) {
     throw (new Error("Attempted to save an event with no assigned id"));
   }
@@ -53,13 +56,21 @@ export const updateBoards = async (event: Event) => {
   });
 }
 
+const setDjPlays = (event: Event) => {
+  return {
+    ...event,
+    dj_plays: event.slots.map(slot => slot.dj_ref) ?? []
+  } as Event
+}
+
 export const getNextEvent = async () => {
   const q = query(collection(db, "events"), where("end_datetime", ">", Timestamp.now()), orderBy("start_datetime", "asc"));
   const querySnapshot = await getDocs(q);
 
   const events: Event[] = querySnapshot.docs
       .map((doc) => docToEvent(doc))
-      .filter((event): event is Exclude<typeof event, null> => event !== null);
+      .filter((event): event is Exclude<typeof event, null> => event !== null)
+      .map(event => setDjPlays(event));
 
   return events[0] ?? null;
 }
@@ -75,7 +86,8 @@ export const getCurrentEvent = async () => {
 
   const events: Event[] = querySnapshot.docs
       .map((doc) => docToEvent(doc))
-      .filter((event): event is Exclude<typeof event, null> => event !== null);
+      .filter((event): event is Exclude<typeof event, null> => event !== null)
+      .map(event => setDjPlays(event));
 
   return events[0] ?? null;
 }

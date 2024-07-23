@@ -46,4 +46,5 @@ export type Event = {
     host: string;
     slots: Slot[];
     footer: string;
+    dj_plays: DocumentReference[],
 }
