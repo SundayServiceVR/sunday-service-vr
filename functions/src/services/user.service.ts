@@ -1,4 +1,4 @@
-import { getFirestore } from "firebase-admin/firestore";
+import { getFirestore, Filter } from "firebase-admin/firestore";
 import { DJ, NewDJ } from "../interfaces/dj.interface";
 
 const db = getFirestore();
@@ -6,16 +6,34 @@ db.settings({ "ignoreUndefinedProperties": true });
 
 export const findUser = async (userId: string): Promise<DJ | null> => {
     try {
-        const user = await db.collection("djs")
+        if (/^\d+$/.test(userId)) { // if the userId is numeric, it's likely a discord id
+            return await findUserByDiscordId(userId);
+        }
+        // try to get the user by doc ref first since it's more commonly used
+        let user;
+        user = await db.collection("djs")
             .doc(userId)
             .get();
+        // if the user by docRef fails, check for usernames
         if (!user.exists) {
-            return null;
+            const querySnapshot = await db.collection("djs")
+                .where(Filter.or(
+                    Filter.where("discordUsername", "==", userId),
+                    Filter.where("djName", "==", userId)))
+                .get();
+            if (querySnapshot.empty) {
+                return null;
+            }
+            user = querySnapshot.docs[0];
         }
-        return {
-            id: user.id,
-            ...user.data(),
-        } as DJ;
+        if (user) {
+            return {
+                id: user.id,
+                ...user.data(),
+            } as DJ;
+        } else {
+            return Promise.reject(new Error(`Failed to find user when supplied input: ${userId}`));
+        }
     } catch (error) {
         if (error instanceof Error) {
             console.log(`SEARCH USER ERROR: ${error.message}`);
