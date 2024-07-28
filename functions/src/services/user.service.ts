@@ -105,3 +105,28 @@ export const newUser = async (profile: NewDJ): Promise<DJ> => {
         }
     }
 };
+
+export const updateUser = async (profile: Partial<DJ>): Promise<DJ> => {
+    try {
+        const { id, ...newUserData } = profile;
+        if (id === undefined) {
+            return Promise.reject(new Error("User ID missing from object in updateUser"));
+        }
+        await db.collection("djs").doc(id).update(newUserData);
+        const userDoc = await db.collection("djs").doc(id).get();
+        if (!userDoc.exists) {
+            return Promise.reject(new Error(`User does not exist with id ${id}`));
+        }
+        return {
+            id: id,
+            ...userDoc.data(),
+        } as DJ;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error(`Error updating a user: ${error}`);
+            throw new Error(error.message);
+        } else {
+            throw new Error(error as string);
+        }
+    }
+};
