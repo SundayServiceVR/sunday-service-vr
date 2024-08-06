@@ -8,6 +8,7 @@ import { db } from "../../util/firebase";
 import FloatingActionBar from "../../components/FloatingActionBar";
 import { Outlet, useLocation, useParams } from "react-router";
 import { Link } from "react-router-dom";
+import { EventVisibilityBadge } from "./EventVisibilityBadge";
 
 
 const EventRoot = () => {
@@ -65,13 +66,33 @@ const EventRoot = () => {
         setEventScratchpad(event);
     }
 
+    const publishEvent = async () => {
+        if(hasChanges) {
+            alert("Please save changes before publishing this event.\nUwU");
+            return;
+        }
+
+        const newEvent = { ...event, published: true };
+
+        await saveEvent(newEvent);
+        setEventScratchpad(newEvent);
+    }
+
     return <>
         <Breadcrumb className="px-2">
             <Breadcrumb.Item><Link to="/events">Events</Link></Breadcrumb.Item>
             <Breadcrumb.Item><Link to={`/events/${event.id}`}>{event.id}</Link></Breadcrumb.Item>
         </Breadcrumb>
 
-        <h1 className="display-5">Event: {event.name}, {event.start_datetime.toLocaleDateString()}</h1>
+        <h2 className="fw-normal">
+            {event.name} ({event.start_datetime.toLocaleDateString()})<br />
+        </h2>
+
+        <Stack direction="horizontal" gap={3}>
+                <EventVisibilityBadge event={event} />
+                <div className="ms-auto" />
+                { !event.published  && <Button size="lg" onClick={publishEvent}>Publish Event</Button> }
+        </Stack>
 
         <Nav defaultActiveKey="/events/setup" variant="tabs"  as="ul" activeKey={location.pathname}>
             <Nav.Item as="li">
