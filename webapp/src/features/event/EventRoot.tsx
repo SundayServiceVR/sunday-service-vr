@@ -8,7 +8,7 @@ import { db } from "../../util/firebase";
 import FloatingActionBar from "../../components/FloatingActionBar";
 import { Outlet, useLocation, useParams } from "react-router";
 import { Link } from "react-router-dom";
-import { EventVisibilityBadge } from "./EventVisibilityBadge";
+import { EventPublishedStatusBadge } from "./EventPublishedStatusBadge";
 
 
 const EventRoot = () => {
@@ -89,7 +89,7 @@ const EventRoot = () => {
         </h2>
 
         <Stack direction="horizontal" gap={3}>
-                <EventVisibilityBadge event={event} />
+                <EventPublishedStatusBadge event={event} />
                 <div className="ms-auto" />
                 { !event.published  && <Button size="lg" onClick={publishEvent}>Publish Event</Button> }
         </Stack>

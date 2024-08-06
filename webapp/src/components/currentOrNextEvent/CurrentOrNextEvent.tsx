@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { Event } from "../../util/types";
 import { getCurrentEvent, getNextEvent } from "../../store/events";
-import { Alert, AlertHeading, Badge, Button, Card, Col, Container, ListGroup, ListGroupItem, Row, Spinner } from "react-bootstrap";
+import { Alert, AlertHeading, Button, Card, Col, Container, ListGroup, ListGroupItem, Row, Spinner } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
-import { EventVisibilityBadge } from "../../features/event/EventVisibilityBadge";
+import { EventPublishedStatusBadge } from "../../features/event/EventPublishedStatusBadge";
 
 export const CurrentOrNextEvent = () => {
 
@@ -65,7 +65,7 @@ export const CurrentOrNextEvent = () => {
                         <Card.Text>
                             <Row className="justify-content-md-center">
                                 <Col xs={12} sm={6}>
-                                    <EventVisibilityBadge event={event} />
+                                    <EventPublishedStatusBadge event={event} />
                                     <dl className="mx-2 mt-2">
                                         <dt>Date</dt>
                                         <dd>{event.start_datetime.toDateString()}</dd>

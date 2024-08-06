@@ -19,7 +19,7 @@ const renderPublishedStatusTooltip = (event: Event) => event.published
         </Popover.Body>
     </Popover>;
 
-export const EventVisibilityBadge = ({ event }: Props) =>
+export const EventPublishedStatusBadge = ({ event }: Props) =>
     <OverlayTrigger overlay={renderPublishedStatusTooltip(event)} placement="right">
         <Badge pill bg={ event.published ? "success" : "secondary" } className="mx-2">{ event.published ? "Published" : "Unpublished" } </Badge>
     </OverlayTrigger>
