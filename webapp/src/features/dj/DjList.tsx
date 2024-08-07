@@ -88,20 +88,20 @@ const DjList = ({ past = false}: Props) => {
                     <tr>
                         <th>Dj Name</th>
                         <th>Discord Name</th>
-                        <th>VRCDN/RTMP</th>
-                        <th>Twitch Username</th>
                         <th>Total Plays</th>
                         <th>Most Recent Play</th>
+                        <th>VRCDN/RTMP</th>
+                        <th>Twitch Username</th>
                     </tr>
                 </thead>
                 <tbody>
                     {Array.from(djs.values()).map((entry) => <tr key={entry.reference.id}>
                         <td><Link to={`/djs/${entry.reference.id}`}>{entry.dj.dj_name ?? "(No Dj Name)"}</Link></td>
                         <td>{entry.dj.public_name}</td>
-                        <td>{entry.dj.rtmp_url}</td>
-                        <td>{entry.dj.twitch_username}</td>
                         <td>{entry.events.length}</td>
                         <td>{entry.events[0]?.start_datetime.toLocaleDateString() ?? "-"}</td>
+                        <td>{entry.dj.rtmp_url}</td>
+                        <td>{entry.dj.twitch_username}</td>
                     </tr>)}
                 </tbody>
             </Table>
