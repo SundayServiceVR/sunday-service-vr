@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Alert, Breadcrumb, Button, Container, Nav, Stack, } from 'react-bootstrap';
+import { Alert, Breadcrumb, Button, Container, Nav, Stack, Toast } from 'react-bootstrap';
 import { calcSlotTimes, default_event, saveEvent } from "../../store/events";
 import { docToEvent } from "../../store/converters";
 import { onSnapshot, doc } from "firebase/firestore";
@@ -9,6 +9,7 @@ import FloatingActionBar from "../../components/FloatingActionBar";
 import { Outlet, useLocation, useParams } from "react-router";
 import { Link } from "react-router-dom";
 import { EventPublishedStatusBadge } from "./EventPublishedStatusBadge";
+import toast from "react-hot-toast";
 
 
 const EventRoot = () => {
@@ -41,7 +42,7 @@ const EventRoot = () => {
     useEffect(() => {
         if (!event) return;
         if (hasChanges) {
-            alert("Changes were made outside of this window.");
+            toast("Changes were made outside of this window.");
         } else {
             setEventScratchpad(event);
         }
@@ -68,7 +69,26 @@ const EventRoot = () => {
 
     const publishEvent = async () => {
         if(hasChanges) {
-            alert("Please save changes before publishing this event.\nUwU");
+            toast.custom( <Toast
+                className="d-inline-block m-1"
+                bg="warning"
+              >
+                <Toast.Header closeButton={false}>
+                  {/* <img
+                    src="holder.js/20x20?text=%20"
+                    className="rounded me-2"
+                    alt=""
+                  /> */}
+                  {/* <strong className="me-auto">Bootstrap</strong>
+                  <small>11 mins ago</small> */}
+                  UwU
+                </Toast.Header>
+                <Toast.Body>
+                    Please save changes before publishing this event.
+                </Toast.Body>
+              </Toast>
+            );
+
             return;
         }
 

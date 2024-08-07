@@ -21,6 +21,7 @@ import DjDetails from './features/dj/DjDetails';
 import DjList from './features/dj/DjList';
 import EventDetails from './features/event/basic/EventDetails';
 import EventVerifyDJs from './features/event/lineup/EventVerifyDJs';
+import { Toaster } from 'react-hot-toast';
 
 function App() {
   // 
@@ -113,7 +114,10 @@ function App() {
     }
   ]);
 
-  return <RouterProvider router={router} />;
+  return <>
+    <RouterProvider router={router} />
+    <Toaster />
+  </>;
 }
 
 export default App;
