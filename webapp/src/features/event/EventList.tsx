@@ -1,13 +1,11 @@
 import { useEffect, useState } from "react";
-import { docToEvent } from "../../store/converters";
-import { Timestamp, collection, getDocs, orderBy, query, where } from "firebase/firestore";
 import { Event } from "../../util/types";
-import { db } from "../../util/firebase";
 import { Alert, AlertHeading, Breadcrumb, Button, Nav, Stack, Table } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 
 import Spinner from "../../components/spinner";
 import { CurrentOrNextEvent } from "../../components/currentOrNextEvent/CurrentOrNextEvent";
+import { getAllEvents } from "../../store/events";
 
 type Props = {
     past?: boolean;
@@ -22,12 +20,10 @@ const EventList = ({ past = false}: Props) => {
     useEffect(() => {
         setLoading(true);
         (async () => {
-            const q = query(collection(db, "events"), where("start_datetime", past ? "<" : ">=", Timestamp.now()), orderBy("start_datetime", past ? "desc" : "asc"));
-            const querySnapshot = await getDocs(q);
-
-            const events: Event[] = querySnapshot.docs
-                .map((doc) => docToEvent(doc))
-                .filter((event): event is Exclude<typeof event, null> => event !== null);
+            const events = await getAllEvents(
+                past ? "desc" : "asc",
+                past ? "past" : "future"
+            );
             setEvents(events ?? []);
             setLoading(false);
         })()

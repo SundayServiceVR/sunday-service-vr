@@ -91,3 +91,23 @@ export const getCurrentEvent = async () => {
 
   return events[0] ?? null;
 }
+
+export const  getAllEvents = async (order: "desc" | "asc", when?: "past" | "future") => {
+  let q = query(collection(db, "events"), orderBy("start_datetime", order));
+
+  if(when === "past") {
+    q = query(collection(db, "events"), where("start_datetime", "<" , Timestamp.now()), orderBy("start_datetime", order));
+  }
+
+  if(when === "future") {
+    q = query(collection(db, "events"), where("start_datetime", ">=", Timestamp.now()), orderBy("start_datetime", order));
+  }
+
+  const querySnapshot = await getDocs(q);
+
+  const events: Event[] = querySnapshot.docs
+      .map((doc) => docToEvent(doc))
+      .filter((event): event is Exclude<typeof event, null> => event !== null);
+
+  return events;
+}
