@@ -76,7 +76,11 @@ const DjList = ({ past = false}: Props) => {
 
         { djs.size <= 0 && <Alert variant="warning"><AlertHeading>No Djs Found</AlertHeading>Should we add a dj?</Alert> }
 
-        { djs.size > 0 &&
+        { djs.size > 0 && <>
+            <Stack>
+                <div className="p-2 ms-auto" />
+                <small>{djs.size} Djs</small>
+            </Stack>
             <Table responsive="sm">
                 <thead>
                     <tr>
@@ -99,6 +103,7 @@ const DjList = ({ past = false}: Props) => {
                     </tr>)}
                 </tbody>
             </Table>
+            </>
         }
     </section>
 }
