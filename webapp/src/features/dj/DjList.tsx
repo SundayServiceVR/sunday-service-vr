@@ -43,6 +43,7 @@ async function fetchData() {
 
 const DjList = ({ past = false}: Props) => {
     const [djs, setDjs] = useState<DjMap>( new Map());
+    const [earliestEvent, setEarliestEvent] = useState<Event>();
     const [loading, setLoading] = useState<boolean>(false);
     const navigate = useNavigate();
 
@@ -50,12 +51,13 @@ const DjList = ({ past = false}: Props) => {
         setLoading(true);
         (async () => {
             const { djs: djMap, events } = await fetchData();
+            
             events.forEach(event => {
                 event.dj_plays.forEach(djRef => {
                     djMap.get(djRef.id)?.events.push(event);
                 })
             });
-
+            setEarliestEvent(events[events.length - 1] ?? null);
             setDjs(djMap);
             setLoading(false);
         })()
@@ -71,15 +73,15 @@ const DjList = ({ past = false}: Props) => {
         </Breadcrumb>
         <Stack direction="horizontal" gap={3}>
             <span className="me-auto" />
-            <Button variant="primary" onClick={()=>navigate("/djs/create")}>Create Dj</Button>
+            <Button  className="my-3" variant="primary" onClick={()=>navigate("/djs/create")}>Create Dj</Button>
         </Stack>
 
         { djs.size <= 0 && <Alert variant="warning"><AlertHeading>No Djs Found</AlertHeading>Should we add a dj?</Alert> }
 
         { djs.size > 0 && <>
             <Stack>
-                <div className="p-2 ms-auto" />
                 <small>{djs.size} Djs</small>
+                <small>Earliest Recorded Event: {earliestEvent?.start_datetime.toLocaleDateString() ?? "None"}</small>
             </Stack>
             <Table responsive="sm">
                 <thead>
