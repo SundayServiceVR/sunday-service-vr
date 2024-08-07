@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { DocumentReference, collection, getDocs, query } from "firebase/firestore";
+import { DocumentReference, collection, getDocs, orderBy, query } from "firebase/firestore";
 import { Dj } from "../../util/types";
 import { db } from "../../util/firebase";
 import { Alert, AlertHeading, Breadcrumb, Button, Stack, Table } from "react-bootstrap";
@@ -20,7 +20,7 @@ const DjList = ({ past = false}: Props) => {
     useEffect(() => {
         setLoading(true);
         (async () => {
-            const q = query(collection(db, "djs"));
+            const q = query(collection(db, "djs"), orderBy("dj_name", "asc"));
             const querySnapshot = await getDocs(q);
 
             const djs: { dj: Dj, reference: DocumentReference}[] = querySnapshot.docs
