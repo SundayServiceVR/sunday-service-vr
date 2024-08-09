@@ -4,6 +4,7 @@ import { getCurrentEvent, getNextEvent } from "../../store/events";
 import { Alert, AlertHeading, Button, Card, Col, Container, ListGroup, ListGroupItem, Row, Spinner } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
+import { EventPublishedStatusBadge } from "../../features/event/EventPublishedStatusBadge";
 
 export const CurrentOrNextEvent = () => {
 
@@ -58,16 +59,20 @@ export const CurrentOrNextEvent = () => {
                     <Card.Header>{isCurrentEvent ? "Current Event" : "Next Event"}</Card.Header>
                     <Card.Body>
     
-                        <Card.Title>{event.name}</Card.Title>
+                        <Card.Title>
+                            {event.name}
+                        </Card.Title>
                         <Card.Text>
                             <Row className="justify-content-md-center">
-                                <Col className="d-flex align-items-center" xs={12} sm={6}>
-                                    <dl className="mx-2">
+                                <Col xs={12} sm={6}>
+                                    <EventPublishedStatusBadge event={event} />
+                                    <dl className="mx-2 mt-2">
                                         <dt>Date</dt>
                                         <dd>{event.start_datetime.toDateString()}</dd>
                                         <dt>Host</dt>
                                         <dd>{event.host}</dd>
                                     </dl>
+                                    <div className="flex-grow-1"></div>
                                 </Col>
                                 <Col xs={12} sm={6}>
                                     <ListGroup>

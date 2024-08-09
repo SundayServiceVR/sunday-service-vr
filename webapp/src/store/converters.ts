@@ -37,6 +37,7 @@ export const docToEventRaw = (data: any) => {
           ...data,
           start_datetime: data.start_datetime.toDate(),
           end_datetime: data.end_datetime?.toDate(),
+          published: data.published ?? false,
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           slots: data.slots.map((slot: any) => ({ ...slot, start_time: slot.start_time.toDate() }) as Slot),
       } as Event;

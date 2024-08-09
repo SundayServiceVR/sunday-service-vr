@@ -26,6 +26,9 @@ Every Sunday
 Noon - 5pm-ish PST/PDT
 8pm - 1am-ish BST/BDT`;
 
+/**
+ * Experimental endpoint that can convert to arbitrary timezones
+ */
 export const nextEventBoardAnyTz = onRequest(async (request, response) => {
     logger.info(`Request from ${request.ip}`, { structuredData: true });
 
@@ -45,9 +48,11 @@ export const nextEventBoardAnyTz = onRequest(async (request, response) => {
     response.send(result);
 });
 
+/**
+ * Returns text for the in-world board
+ */
 export const nextEventWhiteboard = onRequest(async (request, response) => {
     logger.info(`Request from ${request.ip}`, { structuredData: true });
-
 
     const event = await getNextEvent();
 
@@ -59,10 +64,12 @@ export const nextEventWhiteboard = onRequest(async (request, response) => {
     response.send(result);
 });
 
-
+/**
+ * Returns data for other tools, like our OBS Scene Generator
+ */
 export const nextEvent = onRequest(async (request, response) => {
     logger.info(`Request from ${request.ip}`, { structuredData: true });
-    response.send(JSON.stringify(await getNextEvent()));
+    response.send(JSON.stringify(await getNextEvent(true)));
 });
 
 // Legacy Endpoint

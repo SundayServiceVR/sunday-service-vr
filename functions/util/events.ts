@@ -2,11 +2,20 @@
 import { Timestamp, getFirestore } from "firebase-admin/firestore";
 import { docToEventRaw } from "../../webapp/src/store/converters";
 
-export const getNextEvent = async () => {
-    const docRef = await getFirestore()
+/**
+ * Fetches the next event.
+ * @param {boolean} includeNonPublished If true, the published field will be ignored.  Defaults to `false`
+ * @return {event}
+ */
+export const getNextEvent = async (includeNonPublished = false) => {
+    let docRef = await getFirestore()
         .collection("events")
         .where("end_datetime", ">", Timestamp.now())
         .orderBy("start_datetime", "asc");
+
+    if (!includeNonPublished) {
+        docRef = docRef.where("published", "==", true);
+    }
 
     const snapshot = await docRef.get();
 
