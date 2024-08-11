@@ -16,6 +16,7 @@ const EventCreate = () => {
         formEvent.preventDefault();
         (async () => {
             setBusy(true);
+            event.end_datetime = event.start_datetime;
             const result = await createEvent(event);
             navigate(`/events/${result.id}`)
         })();
