@@ -1,8 +1,7 @@
 import { nextSundayServiceDefaultDateTime } from '../util/util';
 import { Event } from '../util/types';
-import { Timestamp, addDoc, collection, doc, getDocs, orderBy, query, setDoc, updateDoc, where } from 'firebase/firestore';
+import { Timestamp, addDoc, collection, doc, getDocs, orderBy, query, setDoc, where } from 'firebase/firestore';
 import { db } from '../util/firebase';
-import { getAusPasteMessage, getUkPasteMessage } from '../util/messageWriters';
 import { docToEvent } from './converters';
 
 export const default_event: Event = {
@@ -47,14 +46,6 @@ export const calcSlotTimes = (event: Event): Event => {
   newEvent.end_datetime = new Date(time_counter);
 
   return newEvent;
-}
-
-export const updateBoards = async (event: Event) => {
-  await updateDoc(doc(db, "whiteboards", "current"), {
-    event,
-    au: getAusPasteMessage(event),
-    gmt: getUkPasteMessage(event),
-  });
 }
 
 const setDjPlays = (event: Event) => {

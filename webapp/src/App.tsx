@@ -12,7 +12,6 @@ import EventAnnouncements from './features/event/EventAnnouncements';
 import Home from './features/home/Home';
 import EventList from './features/event/EventList';
 import EventCreate from './features/event/basic/EventCreate';
-import EventWhiteboard from './features/event/EventWhiteboard';
 import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 
 import './App.css';
@@ -92,11 +91,6 @@ function App() {
                   path: "announcements",
                   element: <EventAnnouncements />,
                   handle: { crumb: () => <Link to="announcements">Announcements</Link>},
-                },
-                {
-                  path: "whiteboard",
-                  element: <EventWhiteboard />,
-                  handle: { crumb: () => <Link to="whiteboard">Frontboard Preview</Link>},
                 },
               ]
             }
