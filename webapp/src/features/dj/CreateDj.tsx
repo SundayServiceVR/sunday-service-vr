@@ -8,6 +8,7 @@ import { Dj } from "../../util/types";
 
 const CreateDj = () => {
     const defaultDj: Dj = { 
+        discord_id: "",
         public_name: "",
         dj_name: "",
         rtmp_url: "",
