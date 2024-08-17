@@ -2,8 +2,8 @@ import { Button, Form, Modal } from "react-bootstrap"
 import { Dj } from "../../util/types"
 import { FormEvent, useState } from "react"
 import DjForm from "./DjForm"
-import { DocumentReference, addDoc, collection } from "firebase/firestore"
-import { db } from "../../util/firebase"
+import { DocumentReference } from "firebase/firestore"
+import { createDj } from "../../store/dj"
 
 type Props = {
     show: boolean,
@@ -13,24 +13,22 @@ type Props = {
 
 export const CreateDjModal = ({ show, handleClose, onDjCreated }: Props) => {
     const defaultDj: Dj = {
+        dj_name: "",
         public_name: "",
+        sort_name: "",
     }
     const [dj, setDj] = useState<Dj>(defaultDj);
 
     const [busy, setBusy] = useState<boolean>(false);
 
-    const createDj = () => {
+    const onFormSubmit = (event: FormEvent) => {
+        event.preventDefault();
         setBusy(true);
         (async () => {
-            const documentRef = await addDoc(collection(db, "djs"), dj);
+            const documentRef = await createDj(dj);
             onDjCreated(dj, documentRef);
             setBusy(false);
         })();
-    }
-
-    const onFormSubmit = (event: FormEvent) => {
-        event.preventDefault();
-        createDj();
         setDj(defaultDj);
     }
 

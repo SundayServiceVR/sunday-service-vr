@@ -1,7 +1,7 @@
 import { FormEvent, useEffect, useState } from "react";
 import { Alert, Breadcrumb, Button, Col, Container, Form, ListGroup, ListGroupItem, Row, Stack } from "react-bootstrap";
 import { useParams } from "react-router";
-import { collection, doc, getDoc, getDocs, orderBy, query, setDoc, where } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, orderBy, query, where } from "firebase/firestore";
 import { db } from "../../util/firebase";
 import { Dj, Event } from "../../util/types";
 import DjForm from "./DjForm";
@@ -10,6 +10,7 @@ import { docToRawType } from "../../store/util";
 
 import Spinner from "../../components/spinner";
 import { docToEvent } from "../../store/converters";
+import { updateDj } from "../../store/dj";
 
 const DjDetails = () => {
     
@@ -20,6 +21,7 @@ const DjDetails = () => {
     const [ dj, setDj ] = useState<Dj>({ 
         public_name: "",
         dj_name: "",
+        sort_name: "",
      });
 
     const [ playedEvents, setPlayedEvents ] = useState<Event[]>([]);
@@ -51,8 +53,7 @@ const DjDetails = () => {
             if(!djId) {
                 throw(new Error("Attempted to update a dj with no id"))
             }
-            const newDoc = doc(db, "djs", djId);
-            await setDoc(newDoc, djScratchpad);
+            await updateDj(djId, dj);
             setDj(djScratchpad);
             setBusy(false);
             setIsEditing(false);
