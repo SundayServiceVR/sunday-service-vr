@@ -16,7 +16,6 @@ const EventLineup = () => {
         const slot: Slot = {
             name: newDj.dj_name,
             dj_ref: documentRef,
-            dj_name: newDj.dj_name,
             djs: [{
                 name: newDj.dj_name,
                 ref: documentRef,

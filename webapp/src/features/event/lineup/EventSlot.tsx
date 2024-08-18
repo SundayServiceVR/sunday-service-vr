@@ -112,17 +112,25 @@ const EventSlot = ({
                         slot.djs?.map(slotDj =>
                             <ListGroup.Item>
                                 {slotDj.name}
-                                <Button onClick={() => removeDj(slotDj.ref)}>X</Button>
+                                <Button
+                                    className="float-end"
+                                    variant="outline-danger"
+                                    onClick={() => removeDj(slotDj.ref)}
+                                >X</Button>
                             </ListGroup.Item>
                         )
                     }
-                    <Button onClick={
-                        onAddDjFactory(
-                            (addedDj: Dj, ref: DocumentReference) => {
-                                addDj(addedDj.dj_name, ref);
-                                setShowAddDjModal(false);
-                            })
-                    }>Add B2B Dj</Button>
+                    <Button 
+                        variant="outline-primary"
+                        onClick={
+                            onAddDjFactory(
+                                (addedDj: Dj, ref: DocumentReference) => {
+                                    addDj(addedDj.dj_name, ref);
+                                    setShowAddDjModal(false);
+                                })
+                        }>
+                            Add B2B Dj
+                        </Button>
                 </ListGroup>
             </Col>
         </Row>
