@@ -19,7 +19,7 @@ const DjForm = ({dj, setDj, busy}: Props) => {
         <Form.Group className="mt-3">
             <Form.Label>Discord ID</Form.Label>
             <Form.Control
-                required
+                // required // Will be reset to required when we have instructions and potially more info in our signup sheets to support this.
                 name="discord_id"
                 value={dj.discord_id}
                 type="input"
