@@ -20,6 +20,8 @@ const EventLineup = () => {
                 name: newDj.dj_name,
                 ref: documentRef,
             }],
+            //TODO: We probably shouldn't HAVE to save the discordId to the event.
+            discord_id: newDj.discord_id ?? "",
             rtmp_url: newDj.rtmp_url ?? "",
             twitch_username: newDj.twitch_username ?? "",
             prerecord_url: "",

@@ -17,6 +17,15 @@ const DjForm = ({dj, setDj, busy}: Props) => {
 
     return <>
         <Form.Group className="mt-3">
+            <Form.Label>Discord ID</Form.Label>
+            <Form.Control
+                required
+                name="discord_id"
+                value={dj.discord_id}
+                type="input"
+                onChange={(e) => setDj({...dj, "discord_id": e.target.value})} />
+        </Form.Group>
+        <Form.Group className="mt-3">
             <Form.Label>Name (Furname, Username, Etc...)</Form.Label>
             <Form.Control
                 required

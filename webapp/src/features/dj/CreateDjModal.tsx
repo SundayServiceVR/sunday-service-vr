@@ -13,6 +13,7 @@ type Props = {
 
 export const CreateDjModal = ({ show, handleClose, onDjCreated }: Props) => {
     const defaultDj: Dj = {
+        discord_id: "",
         public_name: "",
         dj_name: "",
     }

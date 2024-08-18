@@ -120,7 +120,7 @@ const EventSlot = ({
                             </ListGroup.Item>
                         )
                     }
-                    <Button 
+                    <Button
                         variant="outline-primary"
                         onClick={
                             onAddDjFactory(
@@ -129,16 +129,16 @@ const EventSlot = ({
                                     setShowAddDjModal(false);
                                 })
                         }>
-                            Add B2B Dj
-                        </Button>
+                        Add B2B Dj
+                    </Button>
                 </ListGroup>
             </Col>
         </Row>
 
-        <Row>
-            <Col>
+        <Row className="pt-3">
+            <Col md={4}>
                 <Form.Group as={Row} className="mb-3">
-                    <Form.Label column sm={4} className="text-right">Set Type</Form.Label>
+                    <Form.Label className="text-right">Source</Form.Label>
                     <ButtonGroup className="mb-2">
                         <ToggleButton
                             id={`slot-${index}-rtmp`}
@@ -177,35 +177,38 @@ const EventSlot = ({
                             PreRecord
                         </ToggleButton>
                     </ButtonGroup>
-
-                    <Form.Control
-                        type={"input"}
-                        value={slot.rtmp_url}
-                        onChange={(event) => { onUpdateSlot({ ...slot, rtmp_url: event.target.value }) }}
-                        placeholder="RTMP URL"
-                        hidden={slot.slot_type !== SlotType.RTMP}
-                    />
-                    <Form.Control
-                        type={"input"}
-                        value={slot.prerecord_url}
-                        onChange={(event) => { onUpdateSlot({ ...slot, prerecord_url: event.target.value }) }}
-                        placeholder="PreRecord URL"
-                        hidden={slot.slot_type !== SlotType.PRERECORD}
-                    />
-
-                    <InputGroup className="mb-2" hidden={slot.slot_type !== SlotType.TWITCH}>
-                        <InputGroup.Text>https://www.twitch.tv/</InputGroup.Text>
-                        <Form.Control
-                            type={"input"}
-                            value={slot.twitch_username}
-                            onChange={(event) => { onUpdateSlot({ ...slot, twitch_username: event.target.value }) }}
-                            placeholder="username"
-                        />
-                    </InputGroup>
                 </Form.Group>
+            </Col>
+            <Col md={6}>
+                <Form.Control
+                    type={"input"}
+                    value={slot.rtmp_url}
+                    onChange={(event) => { onUpdateSlot({ ...slot, rtmp_url: event.target.value }) }}
+                    placeholder="RTMP URL"
+                    hidden={slot.slot_type !== SlotType.RTMP}
+                />
+                <Form.Control
+                    type={"input"}
+                    value={slot.prerecord_url}
+                    onChange={(event) => { onUpdateSlot({ ...slot, prerecord_url: event.target.value }) }}
+                    placeholder="PreRecord URL"
+                    hidden={slot.slot_type !== SlotType.PRERECORD}
+                />
+
+                <InputGroup className="mb-2" hidden={slot.slot_type !== SlotType.TWITCH}>
+                    <InputGroup.Text>https://www.twitch.tv/</InputGroup.Text>
+                    <Form.Control
+                        type={"input"}
+                        value={slot.twitch_username}
+                        onChange={(event) => { onUpdateSlot({ ...slot, twitch_username: event.target.value }) }}
+                        placeholder="username"
+                    />
+                </InputGroup>
+            </Col>
+            <Col sm={12}>
                 <Form.Group as={Row} className="mb-3">
                     <Form.Label column >Is Debutt?</Form.Label>
-                    <Col>
+                    <Col sm={10}>
                         <Form.Check
                             className="mt-2"
                             type="switch"
