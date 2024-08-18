@@ -25,7 +25,7 @@ export const DjSearchSelect = ({onDjSelect}: Props) => {
 
             querySnapshot.forEach((doc) => {
                 const dj = docToRawType<Dj>(doc);
-                const record: DjRecord = {[`${doc.id}`]: {dj: dj, doc: doc.ref, label: dj.dj_name ?? "unknown"}};
+                const record: DjRecord = {[`${doc.id}`]: {dj: dj, doc: doc.ref, label: dj.dj_name}};
                 suggestionResults.push(record)
             });
             setMatchedDjs(suggestionResults);

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Alert, Breadcrumb, Button, Container, Nav, Stack, Toast } from 'react-bootstrap';
-import { calcSlotTimes, default_event, saveEvent } from "../../store/events";
+import { augmentDjData, calcSlotTimes, default_event, saveEvent } from "../../store/events";
 import { docToEvent } from "../../store/converters";
 import { onSnapshot, doc } from "firebase/firestore";
 import { Event } from "../../util/types";
@@ -34,7 +34,7 @@ const EventRoot = () => {
                 console.error("Null event returned from current event snapshot listener");
                 return;
             }
-            setEvent(event);
+            setEvent(augmentDjData(event));
         });
     }, [eventId]);
 

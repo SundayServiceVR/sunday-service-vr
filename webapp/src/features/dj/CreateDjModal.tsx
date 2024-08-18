@@ -14,6 +14,7 @@ type Props = {
 export const CreateDjModal = ({ show, handleClose, onDjCreated }: Props) => {
     const defaultDj: Dj = {
         public_name: "",
+        dj_name: "",
     }
     const [dj, setDj] = useState<Dj>(defaultDj);
 

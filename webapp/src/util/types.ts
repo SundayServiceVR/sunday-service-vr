@@ -2,18 +2,23 @@ import { DocumentReference } from "firebase/firestore";
 
 export type Dj = {
     public_name: string;
-    dj_name?: string;
+    dj_name: string;
     twitch_username?: string;
     rtmp_url?: string;
 }
 
 export type Slot = {
-    dj_ref: DocumentReference;
+    dj_ref: DocumentReference; //To Be Deprecated
+    djs: {
+        name: string,
+        ref: DocumentReference,
+    }[],
+    name: string,
     start_time?: Date | undefined;
     duration: SlotDuration;
     slot_type?: SlotType;
 
-    dj_name: string,
+    dj_name: string, //To Be Deprecated
     rtmp_url: string;
     twitch_username: string;
     prerecord_url: string;

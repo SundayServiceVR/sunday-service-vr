@@ -1,7 +1,7 @@
 import { ListGroup, ListGroupItem } from "react-bootstrap";
 import { Slot } from "../../../util/types";
 import { useEventOperations } from "../outletContext";
-import SortableDj from "./SortableDj";
+import EventSlot from "./EventSlot";
 
 const SortableDjList = () => {
 
@@ -31,7 +31,7 @@ const SortableDjList = () => {
     return <ListGroup variant="flush" >
         {eventScratchpad.slots.map(
             (slot: Slot, index: number) => <ListGroupItem key={`slot-${index}`} className="py-0">
-                <SortableDj
+                <EventSlot
                     index={index}
                     slot={slot}
                     onSlotMoveLater={() => { swapSlots(index, index + 1); }}

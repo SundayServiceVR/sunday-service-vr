@@ -14,8 +14,13 @@ const EventLineup = () => {
 
     const addNewDjAsSlot = (newDj: Dj, documentRef: DocumentReference) => {
         const slot: Slot = {
+            name: newDj.dj_name,
             dj_ref: documentRef,
-            dj_name: newDj.dj_name ?? "",
+            dj_name: newDj.dj_name,
+            djs: [{
+                name: newDj.dj_name,
+                ref: documentRef,
+            }],
             rtmp_url: newDj.rtmp_url ?? "",
             twitch_username: newDj.twitch_username ?? "",
             prerecord_url: "",

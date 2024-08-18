@@ -1,5 +1,5 @@
 import { nextSundayServiceDefaultDateTime } from '../util/util';
-import { Event } from '../util/types';
+import { Event, Slot } from '../util/types';
 import { Timestamp, addDoc, collection, doc, getDocs, orderBy, query, setDoc, updateDoc, where } from 'firebase/firestore';
 import { db } from '../util/firebase';
 import { getAusPasteMessage, getUkPasteMessage } from '../util/messageWriters';
@@ -25,7 +25,7 @@ export const createEvent = async (event: Event) => {
 
 export const saveEvent = async (event: Event) => {
   event = calcSlotTimes(event);
-  event = setDjPlays(event);
+  event = augmentDjData(event);
 
   if (!event.id) {
     throw (new Error("Attempted to save an event with no assigned id"));
@@ -57,11 +57,26 @@ export const updateBoards = async (event: Event) => {
   });
 }
 
-const setDjPlays = (event: Event) => {
+export const augmentDjData = (event: Event) => {
   return {
     ...event,
+    slots: event.slots.map(augmentSlot),
     dj_plays: event.slots.map(slot => slot.dj_ref) ?? []
   } as Event
+}
+
+/**
+ * Backwards Compatability for slots
+ * 
+ * @param slot 
+ * @returns 
+ */
+const augmentSlot = (slot: Slot) => {
+  return {
+    ...slot,
+    name: slot.name ?? slot.dj_name,
+    djs: slot.djs ?? [{name: slot.dj_name, ref: slot.dj_ref}]
+  }
 }
 
 /**
@@ -77,7 +92,7 @@ export const getNextEvent = async () => {
   const events: Event[] = querySnapshot.docs
       .map((doc) => docToEvent(doc))
       .filter((event): event is Exclude<typeof event, null> => event !== null)
-      .map(event => setDjPlays(event));
+      .map(event => augmentDjData(event));
 
   return events[0] ?? null;
 }
@@ -94,7 +109,7 @@ export const getCurrentEvent = async () => {
   const events: Event[] = querySnapshot.docs
       .map((doc) => docToEvent(doc))
       .filter((event): event is Exclude<typeof event, null> => event !== null)
-      .map(event => setDjPlays(event));
+      .map(event => augmentDjData(event));
 
   return events[0] ?? null;
 }
