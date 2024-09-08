@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Alert, Breadcrumb, Button, Container, Nav, Stack, } from 'react-bootstrap';
+import { Alert, Breadcrumb, Button, Container, Nav, Stack, Toast } from 'react-bootstrap';
 import { calcSlotTimes, default_event, saveEvent } from "../../store/events";
 import { docToEvent } from "../../store/converters";
 import { onSnapshot, doc } from "firebase/firestore";
@@ -8,6 +8,8 @@ import { db } from "../../util/firebase";
 import FloatingActionBar from "../../components/FloatingActionBar";
 import { Outlet, useLocation, useParams } from "react-router";
 import { Link } from "react-router-dom";
+import { EventPublishedStatusBadge } from "./EventPublishedStatusBadge";
+import toast from "react-hot-toast";
 
 
 const EventRoot = () => {
@@ -40,7 +42,7 @@ const EventRoot = () => {
     useEffect(() => {
         if (!event) return;
         if (hasChanges) {
-            alert("Changes were made outside of this window.");
+            toast("Changes were made outside of this window.");
         } else {
             setEventScratchpad(event);
         }
@@ -65,13 +67,45 @@ const EventRoot = () => {
         setEventScratchpad(event);
     }
 
+    const publishEvent = async () => {
+        if(hasChanges) {
+            toast.custom( <Toast
+                className="d-inline-block m-1"
+                bg="warning"
+              >
+                <Toast.Header closeButton={false}>
+                  UwU
+                </Toast.Header>
+                <Toast.Body>
+                    Please save changes before publishing this event.
+                </Toast.Body>
+              </Toast>
+            );
+
+            return;
+        }
+
+        const newEvent = { ...event, published: true };
+
+        await saveEvent(newEvent);
+        setEventScratchpad(newEvent);
+    }
+
     return <>
         <Breadcrumb className="px-2">
             <Breadcrumb.Item><Link to="/events">Events</Link></Breadcrumb.Item>
             <Breadcrumb.Item><Link to={`/events/${event.id}`}>{event.id}</Link></Breadcrumb.Item>
         </Breadcrumb>
 
-        <h1 className="display-5">Event: {event.name}, {event.start_datetime.toLocaleDateString()}</h1>
+        <h2 className="fw-normal">
+            {event.name} ({event.start_datetime.toLocaleDateString()})<br />
+        </h2>
+
+        <Stack direction="horizontal" gap={3}>
+                <EventPublishedStatusBadge event={event} />
+                <div className="ms-auto" />
+                { !event.published  && <Button size="lg" onClick={publishEvent}>Publish Event</Button> }
+        </Stack>
 
         <Nav defaultActiveKey="/events/setup" variant="tabs"  as="ul" activeKey={location.pathname}>
             <Nav.Item as="li">

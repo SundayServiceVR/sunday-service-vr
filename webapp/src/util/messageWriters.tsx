@@ -12,7 +12,7 @@ Event start: ${dateToDiscordTime(event.start_datetime).replace(">",":F>")}
 Host: ${event.host || "TBA"}
 
 DJs:
-${event.slots.map(getDiscordSlotText).join("\n")}
+${event.slots.map(s => getDiscordSlotText(s)).join("\n")}
 
 https://discord.s4vr.net/
 https://twitch.s4vr.net/
@@ -65,7 +65,7 @@ ${event.slots.map(getAusSlotText).join("\n")}
 export const getProposedLineupMessage = (event: Event): string => 
 `**Proposed Lineup for ${dateToDiscordTime(event.start_datetime).replace(">",":F>")}**
 
-${event.slots.map(getDiscordSlotText).join("\n")}
+${event.slots.map(s => getDiscordSlotText(s, true)).join("\n")}
 
 Host: ${event.host || "TBA"}
 
@@ -96,10 +96,13 @@ const dateToLineupTime = (date: Date, timezone : string): string => {
 }
 
 
-const getDiscordSlotText = (slot: Slot): string => {
+const getDiscordSlotText = (slot: Slot, pingDj: boolean = false): string => {
     const debuttText = `${slot.is_debut? " (DEBUTT!)" : ""}`
-    const slotText = `${slot.start_time ? dateToDiscordTime(slot.start_time) : ""} : ${slot.dj_name}${debuttText}`;
-    return slotText;
+    if (pingDj) {
+        return `${slot.start_time ? dateToDiscordTime(slot.start_time) : ""} : <@${slot.discord_id}> [${slot.dj_name}]${debuttText}`;
+    } else {
+        return `${slot.start_time ? dateToDiscordTime(slot.start_time) : ""} : ${slot.dj_name}${debuttText}`;
+    }
 }
 
 

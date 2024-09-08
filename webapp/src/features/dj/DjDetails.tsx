@@ -18,7 +18,8 @@ const DjDetails = () => {
     const [ busy, setBusy ] = useState<boolean>(false);
     const [ isEditing, setIsEditing ] = useState<boolean>(false);
 
-    const [ dj, setDj ] = useState<Dj>({ 
+    const [ dj, setDj ] = useState<Dj>({
+        discord_id: "",
         public_name: "",
         dj_name: "",
         sort_name: "",
@@ -97,6 +98,8 @@ const DjDetails = () => {
                             </>
                         : <div>
                             <dl>
+                                <dt>Discord ID</dt>
+                                <dd>{ dj.discord_id }</dd>
                                 <dt>Name</dt>
                                 <dd>{ dj.public_name }</dd>
                                 <dt>Dj Name</dt>

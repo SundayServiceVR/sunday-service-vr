@@ -9,6 +9,7 @@ export const default_event: Event = {
   name: "Sunday Service",
   start_datetime: nextSundayServiceDefaultDateTime(),
   end_datetime: nextSundayServiceDefaultDateTime(),
+  published: false,
   host: "",
   message: "Come by to chill and wiggle to some Sunday Service tunes!",
   slots: [],
@@ -63,8 +64,14 @@ const setDjPlays = (event: Event) => {
   } as Event
 }
 
+/**
+ * Fetches the next event (whether or not it was published)
+ * 
+ * @returns 
+ */
 export const getNextEvent = async () => {
   const q = query(collection(db, "events"), where("end_datetime", ">", Timestamp.now()), orderBy("start_datetime", "asc"));
+  
   const querySnapshot = await getDocs(q);
 
   const events: Event[] = querySnapshot.docs

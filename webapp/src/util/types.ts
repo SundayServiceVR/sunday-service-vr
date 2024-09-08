@@ -1,11 +1,11 @@
 import { DocumentReference } from "firebase/firestore";
 
 export type Dj = {
+    discord_id: string;
     public_name: string;
     dj_name: string;
     twitch_username?: string;
     rtmp_url?: string;
-    sort_name: string;
 }
 
 export type Slot = {
@@ -14,6 +14,7 @@ export type Slot = {
     duration: SlotDuration;
     slot_type?: SlotType;
 
+    discord_id: string,
     dj_name: string,
     rtmp_url: string;
     twitch_username: string;
@@ -41,6 +42,7 @@ export type SlotDuration = (0.5 | 1 | 1.5 | 2 | 2.5 | 3 | 3.5 | 4);
 export type Event = {
     id?: string;
     name: string;
+    published: boolean,
     message: string;
     start_datetime: Date;
     end_datetime?: Date;

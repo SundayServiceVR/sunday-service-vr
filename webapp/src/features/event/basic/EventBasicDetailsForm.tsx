@@ -31,7 +31,10 @@ const EventBasicDetailsForm = ({ event: eventScratchpad, onEventChange: proposeE
                 value={new Date(eventScratchpad.start_datetime.getTime() - eventScratchpad.start_datetime.getTimezoneOffset() * 60 * 1000).toISOString().slice(0, 16)}
                 required
                 onChange={(formEvent) => {
-                    proposeEventChange({ ...eventScratchpad, start_datetime: new Date(formEvent.target.value) })
+                    const start_datetime = Date.parse(formEvent.target.value);
+                    if(!isNaN(start_datetime)) {
+                        proposeEventChange({ ...eventScratchpad, start_datetime: new Date(start_datetime) })
+                    }
                 }}
                 className="input" />
         </Form.Group>
@@ -45,6 +48,16 @@ const EventBasicDetailsForm = ({ event: eventScratchpad, onEventChange: proposeE
                 value={eventScratchpad.host}
                 required
                 onChange={(formEvent) => { proposeEventChange({ ...eventScratchpad, host: formEvent.target.value }); }}
+            />
+        </Form.Group>
+        <Form.Group className="mt-2">
+            <Form.Label>
+                Published
+            </Form.Label>
+            <Form.Check // prettier-ignore
+                type="switch"
+                checked={eventScratchpad.published}
+                onChange={(formEvent) => { proposeEventChange({ ...eventScratchpad, published: formEvent.target.checked }); }}
             />
         </Form.Group>
     </Form>
