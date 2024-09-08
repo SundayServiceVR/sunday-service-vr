@@ -88,7 +88,7 @@ const DjList = ({ past = false}: Props) => {
         { djs.size <= 0 && <Alert variant="warning"><AlertHeading>No Djs Found</AlertHeading>Should we add a dj?</Alert> }
 
         { djs.size > 0 && <>
-            <p>TODO: Sort, Search</p>
+            <p>TODO: Sort</p>
             <input onChange={event => debounce(() => setSearchTerm(event.target.value), 200)} />
             <Stack>
                 <small>{djs.size} Djs</small>

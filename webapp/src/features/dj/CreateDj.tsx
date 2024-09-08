@@ -12,7 +12,6 @@ const CreateDj = () => {
         dj_name: "",
         rtmp_url: "",
         twitch_username: "",
-        sort_name: "",
      };
 
     const [dj, setDj] = useState<Dj>(defaultDj);
