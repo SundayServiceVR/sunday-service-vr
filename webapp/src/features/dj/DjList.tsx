@@ -8,12 +8,15 @@ import { docToRawType } from "../../store/util";
 
 import Spinner from "../../components/spinner";
 import { getAllEvents } from "../../store/events";
+import debounce from "debounce";
 
 type Props = {
     past?: boolean;
 }
 
-type DjMap = Map<string, { dj: Dj, reference: DocumentReference, events: Event[]}>;
+type DjMapEntry = { dj: Dj, reference: DocumentReference, events: Event[]}
+
+type DjMap = Map<string, DjMapEntry>;
 
 async function fetchDjs() {
     const q = query(collection(db, "djs"), orderBy("dj_name"));
@@ -43,6 +46,7 @@ async function fetchData() {
 
 const DjList = ({ past = false}: Props) => {
     const [djs, setDjs] = useState<DjMap>( new Map());
+    const [searchTerm, setSearchTerm] = useState<string>("");
     const [earliestEvent, setEarliestEvent] = useState<Event>();
     const [loading, setLoading] = useState<boolean>(false);
     const navigate = useNavigate();
@@ -67,6 +71,11 @@ const DjList = ({ past = false}: Props) => {
         return <Spinner type="logo" />
     }
 
+    const djSearchFilter = ((entry: DjMapEntry) => {
+        console.log(searchTerm)
+        return entry.dj.dj_name.includes(searchTerm) || entry.dj.public_name.includes(searchTerm)
+    })
+
     return <section>
         <Breadcrumb className="px-2">
             <Breadcrumb.Item><Link to="/djs">Djs</Link></Breadcrumb.Item>
@@ -79,15 +88,18 @@ const DjList = ({ past = false}: Props) => {
         { djs.size <= 0 && <Alert variant="warning"><AlertHeading>No Djs Found</AlertHeading>Should we add a dj?</Alert> }
 
         { djs.size > 0 && <>
+            <p>TODO: Sort, Search</p>
+            <input onChange={event => debounce(() => setSearchTerm(event.target.value), 200)} />
             <Stack>
                 <small>{djs.size} Djs</small>
                 <small>Earliest Recorded Event: {earliestEvent?.start_datetime.toLocaleDateString() ?? "None"}</small>
             </Stack>
-            <Table responsive="sm">
+            <Table responsive="sm" striped>
                 <thead>
                     <tr>
                         <th>Dj Name</th>
-                        <th>Discord Name</th>
+                        <th>Alt Name</th>
+                        <th>Discord ID</th>
                         <th>Total Plays</th>
                         <th>Most Recent Play</th>
                         <th>VRCDN/RTMP</th>
@@ -95,9 +107,10 @@ const DjList = ({ past = false}: Props) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {Array.from(djs.values()).map((entry) => <tr key={entry.reference.id}>
+                    {Array.from(djs.values()).filter(dj => djSearchFilter(dj)).map((entry) => <tr key={entry.reference.id}>
                         <td><Link to={`/djs/${entry.reference.id}`}>{entry.dj.dj_name ?? "(No Dj Name)"}</Link></td>
                         <td>{entry.dj.public_name}</td>
+                        <td>{entry.dj.discord_id}</td>
                         <td>{entry.events.length}</td>
                         <td>{entry.events[0]?.start_datetime.toLocaleDateString() ?? "-"}</td>
                         <td>{entry.dj.rtmp_url}</td>
