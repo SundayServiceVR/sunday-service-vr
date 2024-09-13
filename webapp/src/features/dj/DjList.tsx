@@ -2,19 +2,18 @@ import { useEffect, useState } from "react";
 import { DocumentReference, collection, getDocs, orderBy, query } from "firebase/firestore";
 import { Dj, Event } from "../../util/types";
 import { db } from "../../util/firebase";
-import { Alert, AlertHeading, Breadcrumb, Button, Stack, Table } from "react-bootstrap";
+import { Alert, AlertHeading, Breadcrumb, Button, Form, InputGroup, Stack, Table } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { docToRawType } from "../../store/util";
 
 import Spinner from "../../components/spinner";
 import { getAllEvents } from "../../store/events";
-import debounce from "debounce";
 
 type Props = {
     past?: boolean;
 }
 
-type DjMapEntry = { dj: Dj, reference: DocumentReference, events: Event[]}
+type DjMapEntry = { dj: Dj, reference: DocumentReference, events: Event[] }
 
 type DjMap = Map<string, DjMapEntry>;
 
@@ -37,15 +36,15 @@ async function fetchDjs() {
 async function fetchData() {
     const fetchDjsTask = fetchDjs();
     const fetchEventsTask = getAllEvents("desc");
-  
+
     return {
-      djs: await fetchDjsTask,
-      events: await fetchEventsTask,
+        djs: await fetchDjsTask,
+        events: await fetchEventsTask,
     }
 }
 
-const DjList = ({ past = false}: Props) => {
-    const [djs, setDjs] = useState<DjMap>( new Map());
+const DjList = ({ past = false }: Props) => {
+    const [djs, setDjs] = useState<DjMap>(new Map());
     const [searchTerm, setSearchTerm] = useState<string>("");
     const [earliestEvent, setEarliestEvent] = useState<Event>();
     const [loading, setLoading] = useState<boolean>(false);
@@ -55,7 +54,7 @@ const DjList = ({ past = false}: Props) => {
         setLoading(true);
         (async () => {
             const { djs: djMap, events } = await fetchData();
-            
+
             events.forEach(event => {
                 event.dj_plays.forEach(djRef => {
                     djMap.get(djRef.id)?.events.push(event);
@@ -72,7 +71,6 @@ const DjList = ({ past = false}: Props) => {
     }
 
     const djSearchFilter = ((entry: DjMapEntry) => {
-        console.log(searchTerm)
         return entry.dj.dj_name.includes(searchTerm) || entry.dj.public_name.includes(searchTerm)
     })
 
@@ -80,20 +78,27 @@ const DjList = ({ past = false}: Props) => {
         <Breadcrumb className="px-2">
             <Breadcrumb.Item><Link to="/djs">Djs</Link></Breadcrumb.Item>
         </Breadcrumb>
-        <Stack direction="horizontal" gap={3}>
-            <span className="me-auto" />
-            <Button  className="my-3" variant="primary" onClick={()=>navigate("/djs/create")}>Create Dj</Button>
-        </Stack>
+        <h2>Sunday Serice DJs</h2>
 
-        { djs.size <= 0 && <Alert variant="warning"><AlertHeading>No Djs Found</AlertHeading>Should we add a dj?</Alert> }
 
-        { djs.size > 0 && <>
-            <p>TODO: Sort</p>
-            <input onChange={event => debounce(() => setSearchTerm(event.target.value), 200)} />
-            <Stack>
-                <small>{djs.size} Djs</small>
-                <small>Earliest Recorded Event: {earliestEvent?.start_datetime.toLocaleDateString() ?? "None"}</small>
+        {djs.size <= 0 && <Alert variant="warning"><AlertHeading>No Djs Found</AlertHeading>Should we add a dj?</Alert>}
+
+        {djs.size > 0 && <>
+            <Stack className="text-end">
+                    <small>{djs.size} Total Djs</small>
+                    <small>Earliest Recorded Event: {earliestEvent?.start_datetime.toLocaleDateString() ?? "None"}</small>
             </Stack>
+            {/* <p>TODO: Sort</p> */}
+            <Stack direction="horizontal" gap={3}>
+                <Form>
+                    <InputGroup className="mb-3">
+                        <Form.Control aria-label="Search DJ" placeholder="Search DJ" onChange={event => setSearchTerm(event.target.value)} />
+                    </InputGroup>
+                </Form>
+                <span className="me-auto" />
+                <Button className="my-3" variant="primary" onClick={() => navigate("/djs/create")}>Create Dj</Button>
+            </Stack>
+
             <Table responsive="sm" striped>
                 <thead>
                     <tr>
@@ -117,8 +122,8 @@ const DjList = ({ past = false}: Props) => {
                         <td>{entry.dj.twitch_username}</td>
                     </tr>)}
                 </tbody>
-            </Table>
-            </>
+            </Table> 
+        </>
         }
     </section>
 }
