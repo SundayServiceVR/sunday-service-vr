@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { DocumentReference, collection, getDocs, orderBy, query } from "firebase/firestore";
 import { Dj, Event } from "../../util/types";
 import { db } from "../../util/firebase";
-import { Alert, AlertHeading, Breadcrumb, Button, Form, InputGroup, Stack, Table } from "react-bootstrap";
+import { Alert, AlertHeading, Breadcrumb, Button, Col, Container, Form, InputGroup, Row, Stack, Table } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { docToRawType } from "../../store/util";
 
@@ -84,20 +84,30 @@ const DjList = ({ past = false }: Props) => {
         {djs.size <= 0 && <Alert variant="warning"><AlertHeading>No Djs Found</AlertHeading>Should we add a dj?</Alert>}
 
         {djs.size > 0 && <>
-            <Stack className="text-end">
-                    <small>{djs.size} Total Djs</small>
-                    <small>Earliest Recorded Event: {earliestEvent?.start_datetime.toLocaleDateString() ?? "None"}</small>
-            </Stack>
-            {/* <p>TODO: Sort</p> */}
-            <Stack direction="horizontal" gap={3}>
-                <Form>
-                    <InputGroup className="mb-3">
-                        <Form.Control aria-label="Search DJ" placeholder="Search DJ" onChange={event => setSearchTerm(event.target.value)} />
-                    </InputGroup>
-                </Form>
-                <span className="me-auto" />
-                <Button className="my-3" variant="primary" onClick={() => navigate("/djs/create")}>Create Dj</Button>
-            </Stack>
+            <Container>
+                <Row>
+                    <Col className="text-right mb-2">
+                        <small>{djs.size} Total Djs</small>
+                        <br />
+                        <small>Earliest Recorded Event: {earliestEvent?.start_datetime.toLocaleDateString() ?? "None"}</small>
+                    </Col>
+                </Row>
+                <Row className="text-end">
+
+                <Col md={{span: 6, order: 1}} className="py-1 d-grid d-md-inline">
+                        <span className="me-auto" />
+                        <Button variant="primary" onClick={() => navigate("/djs/create")}>Create Dj</Button>
+                    </Col>
+                    <Col md={{span: 6, order: 0}} className="py-1">
+                        <Form>
+                            <InputGroup>
+                                <Form.Control aria-label="Search DJ" placeholder="Search DJ" onChange={event => setSearchTerm(event.target.value)} />
+                            </InputGroup>
+                        </Form>
+                    </Col>
+
+                </Row>
+            </Container>
 
             <Table responsive="sm" striped>
                 <thead>
