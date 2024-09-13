@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { DocumentReference, collection, getDocs, orderBy, query } from "firebase/firestore";
 import { Dj, Event } from "../../util/types";
 import { db } from "../../util/firebase";
-import { Alert, AlertHeading, Breadcrumb, Button, Col, Container, Form, InputGroup, Row, Stack, Table } from "react-bootstrap";
+import { Alert, AlertHeading, Breadcrumb, Button, Col, Container, Form, InputGroup, Row, Table } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { docToRawType } from "../../store/util";
 
