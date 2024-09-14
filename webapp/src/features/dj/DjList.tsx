@@ -71,7 +71,8 @@ const DjList = ({ past = false }: Props) => {
     }
 
     const djSearchFilter = ((entry: DjMapEntry) => {
-        return entry.dj.dj_name.includes(searchTerm) || entry.dj.public_name.includes(searchTerm)
+        return entry.dj.dj_name.toLowerCase().includes(searchTerm.toLowerCase()) 
+            || entry.dj.public_name.toLowerCase().includes(searchTerm.toLowerCase())
     })
 
     return <section>
