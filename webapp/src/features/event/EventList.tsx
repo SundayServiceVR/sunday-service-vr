@@ -62,6 +62,7 @@ const EventList = ({ past = false}: Props) => {
                         <th>Date</th>
                         <th>Name</th>
                         <th>Host</th>
+                        <th>Number of Slots</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -69,6 +70,7 @@ const EventList = ({ past = false}: Props) => {
                         <td><Link to={`/events/${event.id}`}>{event.start_datetime.toLocaleDateString()}</Link></td>
                         <td>{event.name}</td>
                         <td>{event.host}</td>
+                        <td>{event.slots.length}</td>
                     </tr>)}
                 </tbody>
             </Table>
