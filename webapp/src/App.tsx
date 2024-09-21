@@ -21,6 +21,7 @@ import DjList from './features/dj/DjList';
 import EventDetails from './features/event/basic/EventDetails';
 import EventVerifyDJs from './features/event/lineup/EventVerifyDJs';
 import { Toaster } from 'react-hot-toast';
+import { DiscordIdInfo } from './features/dj/discordIdInfo/DiscordIdInfo';
 
 function App() {
   // 
@@ -95,6 +96,10 @@ function App() {
               ]
             }
           ]
+        },
+        {
+          path: "discordIdInfo",
+          element: <DiscordIdInfo />
         },
       ],
     },
