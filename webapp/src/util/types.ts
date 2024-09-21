@@ -3,7 +3,7 @@ import { DocumentReference } from "firebase/firestore";
 export type Dj = {
     discord_id: string;
     public_name: string;
-    dj_name?: string;
+    dj_name: string;
     twitch_username?: string;
     rtmp_url?: string;
 }

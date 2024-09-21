@@ -2,9 +2,8 @@ import { FormEvent, useState } from "react";
 import DjForm from "./DjForm";
 import { Breadcrumb, Button, Form, Stack } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
-import { addDoc, collection } from "firebase/firestore";
-import { db } from "../../util/firebase";
 import { Dj } from "../../util/types";
+import { createDj } from "../../store/dj";
 
 const CreateDj = () => {
     const defaultDj: Dj = { 
@@ -24,7 +23,7 @@ const CreateDj = () => {
         event.preventDefault();
         setBusy(true);
         (async () => {
-            const result = await addDoc(collection(db, "djs"), dj);
+            const result = await createDj(dj);
             navigate(`/djs/${result.id}`);
             setBusy(false);
         })();
