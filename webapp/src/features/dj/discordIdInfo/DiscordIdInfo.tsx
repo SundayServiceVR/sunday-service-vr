@@ -19,17 +19,16 @@ export const DiscordIdInfo = () => <>
                     information in menus, and it doesn't affect the performance of the app.
                 </p>
             </Col>
-            <Col md={4}>
-                <div className='lead'>
-                    <p>To enable developer mode in the discord desktop app:</p>
-                    <ol>
-                        <li>Open the settings panel</li>
-                        <li>Open the "Advanced" tab</li>
-                        <li>Toggle Developer Mode</li>
-                    </ol>
-                </div>
+            <hr />
+            <Col md={4} className='py-3 lead d-flex flex-column align-items-center justify-content-center'>
+                <p className='text-center'>To enable developer mode in the discord desktop app:</p>
+                <ol>
+                    <li>Open the settings panel</li>
+                    <li>Open the "Advanced" tab</li>
+                    <li>Toggle Developer Mode</li>
+                </ol>
             </Col>
-            <Col md={8} className='py-3'>
+            <Col md={8} className='py-3 text-center'>
                 <Figure>
                     <Figure.Image
                         alt={`Example of the "Developer Mode" toggle enabled.`}
@@ -37,7 +36,7 @@ export const DiscordIdInfo = () => <>
                     />
                 </Figure>
             </Col>
-            <Col xs={12} className='py-3'>
+            <Col xs={12} className='py-4 lead text-center'>
                 <p>Now, when you right click users, messages, servers, etc. you'll be provided an option to copy the ID.</p>
             </Col>
             <Col md={6} className='py-3'>
