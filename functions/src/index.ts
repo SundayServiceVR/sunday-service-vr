@@ -9,7 +9,6 @@
 
 import { onRequest } from "firebase-functions/v2/https";
 import { initializeApp } from "firebase-admin/app";
-import { getFirestore } from "firebase-admin/firestore";
 
 import * as logger from "firebase-functions/logger";
 
@@ -70,18 +69,4 @@ export const nextEventWhiteboard = onRequest(async (request, response) => {
 export const nextEvent = onRequest(async (request, response) => {
     logger.info(`Request from ${request.ip}`, { structuredData: true });
     response.send(JSON.stringify(await getNextEvent(true)));
-});
-
-// Legacy Endpoint
-export const whiteboard = onRequest(async (request, response) => {
-    const docRef = await getFirestore()
-        .collection("whiteboards")
-        .doc("current");
-    const document = await docRef.get();
-    const whiteboard = document.data();
-
-    const responseText = JSON.stringify(whiteboard);
-
-    logger.info(`Request from ${request.ip}`, { structuredData: true });
-    response.send(responseText);
 });
