@@ -8,6 +8,7 @@ export type Dj = {
     rtmp_url?: string;
 }
 
+
 export type Slot = {
     dj_ref: DocumentReference;
     start_time?: Date | undefined;

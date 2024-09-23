@@ -70,3 +70,5 @@ export const nextEvent = onRequest(async (request, response) => {
     logger.info(`Request from ${request.ip}`, { structuredData: true });
     response.send(JSON.stringify(await getNextEvent(true)));
 });
+
+export * from "./sheetsBackup";
