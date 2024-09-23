@@ -6,27 +6,29 @@ import { GoogleSpreadsheet } from "google-spreadsheet";
 import { DocumentReference, getFirestore, QuerySnapshot, Timestamp } from "firebase-admin/firestore";
 import { defineString } from "firebase-functions/params";
 import { Dj, Slot } from "../../webapp/src/util/types";
+import { logger } from "firebase-functions/v2";
 
 const backupSheetId = process.env.FUNCTIONS_EMULATOR === "true" ?
     "11jLcYOy1YryYb8PIFpwAMzcO928nFYskKKmigMQcvj0": // Nonoprod
     "1k-WANG5zbwaLeEEMpGy81b0Itd-AWd03Lotdff9B2aQ"; // Prod
 
 /**
- * Returns text for the in-world board
+ * Test endpoint for backing up the schedule
  */
-export const backupData = onRequest({ secrets: ["BACKUPS_SERVICE_ACCOUNT_KEY"] }, async () => {
-    backupDataCommon();
+export const backupData = onRequest({ secrets: ["BACKUPS_SERVICE_ACCOUNT_KEY"] }, async (request, response) => {
+    await backupDataCommon();
+    response.send("Done.");
 });
 
 
 /**
- * Returns text for the in-world board
+ * Scheduled task
  */
 export const backupDataScheduled = onSchedule({
     schedule: "every tuesday 09:00",
     secrets: ["BACKUPS_SERVICE_ACCOUNT_KEY"],
 }, async () => {
-    backupDataCommon();
+    await backupDataCommon();
 });
 
 /**
@@ -43,11 +45,36 @@ async function backupDataCommon() {
         throw new Error("No Events found, aborting backup.");
     }
 
+    logger.info(`Backing up ${djQuerySnapshot.size} Djs and ${eventQuerySnapshot.size} Events.`);
+
     const backupDoc = await getBackupDoc();
 
     await backupDjs(backupDoc, djQuerySnapshot);
     await backupEvents(backupDoc, eventQuerySnapshot);
     await backupGrid(backupDoc, djQuerySnapshot, eventQuerySnapshot);
+}
+
+
+/**
+ * Returns the backup google doc
+ *
+ * @return {GoogleSpreadsheet} backupDoc
+ */
+async function getBackupDoc() {
+    const serviceAccountKey = defineString("BACKUPS_SERVICE_ACCOUNT_KEY").value();
+    const jwt = new JWT({
+        email: "sheets-auto-backup@sunday-service-vr.iam.gserviceaccount.com",
+        key: serviceAccountKey.split(String.raw`\n`).join("\n"),
+        scopes: [
+            "https://www.googleapis.com/auth/spreadsheets",
+            "https://www.googleapis.com/auth/drive.file",
+        ],
+    });
+
+    const backupDoc = new GoogleSpreadsheet(backupSheetId, jwt);
+    await backupDoc.loadInfo();
+
+    return backupDoc;
 }
 
 /**
@@ -142,26 +169,4 @@ async function backupGrid(
 
         return bigAssGridRow;
     }));
-}
-
-/**
- * Returns the backup google doc
- *
- * @return {GoogleSpreadsheet} backupDoc
- */
-async function getBackupDoc() {
-    const serviceAccountKey = defineString("BACKUPS_SERVICE_ACCOUNT_KEY").value();
-    const jwt = new JWT({
-        email: "sheets-auto-backup@sunday-service-vr.iam.gserviceaccount.com",
-        key: serviceAccountKey.split(String.raw`\n`).join("\n"),
-        scopes: [
-            "https://www.googleapis.com/auth/spreadsheets",
-            "https://www.googleapis.com/auth/drive.file",
-        ],
-    });
-
-    const backupDoc = new GoogleSpreadsheet(backupSheetId, jwt);
-    await backupDoc.loadInfo();
-
-    return backupDoc;
 }
