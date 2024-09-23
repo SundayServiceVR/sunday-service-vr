@@ -1,5 +1,6 @@
 // import { logger } from "firebase-functions/v2";
 import { onRequest } from "firebase-functions/v2/https";
+import { onSchedule } from "firebase-functions/v2/scheduler";
 import { JWT } from "google-auth-library";
 import { GoogleSpreadsheet } from "google-spreadsheet";
 import { DocumentReference, getFirestore, QuerySnapshot, Timestamp } from "firebase-admin/firestore";
@@ -13,7 +14,25 @@ const backupSheetId = process.env.FUNCTIONS_EMULATOR === "true" ?
 /**
  * Returns text for the in-world board
  */
-export const saveSpredsheet = onRequest({ secrets: ["BACKUPS_SERVICE_ACCOUNT_KEY"] }, async (request, response) => {
+export const backupData = onRequest({ secrets: ["BACKUPS_SERVICE_ACCOUNT_KEY"] }, async () => {
+    backupDataCommon();
+});
+
+
+/**
+ * Returns text for the in-world board
+ */
+export const backupDataScheduled = onSchedule({
+    schedule: "every tuesday 09:00",
+    secrets: ["BACKUPS_SERVICE_ACCOUNT_KEY"],
+}, async () => {
+    backupDataCommon();
+});
+
+/**
+ * Common backupData entrypoint
+ */
+async function backupDataCommon() {
     const djQuerySnapshot = await getFirestore().collection("djs").get();
     if (djQuerySnapshot.size <= 0) {
         throw new Error("No DJs found, aborting backup.");
@@ -29,9 +48,7 @@ export const saveSpredsheet = onRequest({ secrets: ["BACKUPS_SERVICE_ACCOUNT_KEY
     await backupDjs(backupDoc, djQuerySnapshot);
     await backupEvents(backupDoc, eventQuerySnapshot);
     await backupGrid(backupDoc, djQuerySnapshot, eventQuerySnapshot);
-
-    response.send(`${eventQuerySnapshot.size}`);
-});
+}
 
 /**
  * Backs up djs to the djs sheet
