@@ -3,6 +3,8 @@ import { Dj } from "../../util/types";
 
 import Spinner from "../../components/spinner";
 
+import { Link } from "react-router-dom";
+
 type Props = {
     dj: Dj,
     setDj: React.Dispatch<React.SetStateAction<Dj>>,
@@ -17,16 +19,19 @@ const DjForm = ({dj, setDj, busy}: Props) => {
 
     return <>
         <Form.Group className="mt-3">
-            <Form.Label>Discord ID</Form.Label>
+            <Form.Label className="required">Discord ID</Form.Label>
+            <small><Link className="mx-2" to="/discordIdInfo" target="_blank" rel="noopener noreferrer">(How do I find a Discord User Id?)</Link></small>
             <Form.Control
-                // required // Will be reset to required when we have instructions and potially more info in our signup sheets to support this.
+                required
                 name="discord_id"
                 value={dj.discord_id}
                 type="input"
+                pattern= "[0-9]{17,18}"
+                title="A Discord ID is a 17 or 18 digit user identification number (UID)."
                 onChange={(e) => setDj({...dj, "discord_id": e.target.value})} />
         </Form.Group>
         <Form.Group className="mt-3">
-            <Form.Label>Name (Furname, Username, Etc...)</Form.Label>
+            <Form.Label className="required">Name (Furname, Username, Etc...)</Form.Label>
             <Form.Control
                 required
                 name="public_name"
@@ -35,7 +40,7 @@ const DjForm = ({dj, setDj, busy}: Props) => {
                 onChange={(e) => setDj({...dj, "public_name": e.target.value})} />
         </Form.Group>
         <Form.Group className="mt-3">
-            <Form.Label>Dj Name</Form.Label>
+            <Form.Label className="required">Dj Name</Form.Label>
             <Form.Control
                 required
                 name="dj_name"
