@@ -1,15 +1,7 @@
 import { defineSecret } from "firebase-functions/params";
 import { onRequest } from "firebase-functions/v2/https";
-// import { Client, GatewayIntentBits } from "discord.js";
 
-// const fetch = require("node-fetch");
-
-// You might want to store this in an environment variable or something
-// const token = "YOUR_TOKEN";
-
-
-const fetchUser = async (discordId: string) => {
-    const discordApiKey = defineSecret("DISCORD_API_KEY").value();
+const fetchUser = async (discordId: string, discordApiKey: string) => {
     const url = `https://discord.com/api/v9/users/${discordId}`;
     const response = await fetch(url, {
         headers: {
@@ -24,12 +16,14 @@ const fetchUser = async (discordId: string) => {
         discordResponse: response,
     };
 };
+
 /**
  * Experimental endpoint that can convert to arbitrary timezones
  */
-export const getDiscordUserInfo = onRequest(async (request, response) => {
+export const getDiscordUserInfo = onRequest({ secrets: ["DISCORD_API_KEY"] }, async (request, response) => {
+    const discordApiKey = defineSecret("DISCORD_API_KEY").value();
     const { discordId } = request.query;
     const userId = discordId?.toString();
-    const { data } = await fetchUser(userId ?? "");
+    const { data } = await fetchUser(userId ?? "", discordApiKey);
     response.json(data);
 });
