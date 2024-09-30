@@ -53,7 +53,7 @@ const DjDetails = () => {
             if(!djId) {
                 throw(new Error("Attempted to update a dj with no id"))
             }
-            await updateDj(djId, dj);
+            await updateDj(djId, djScratchpad);
             setDj(djScratchpad);
             setBusy(false);
             setIsEditing(false);
