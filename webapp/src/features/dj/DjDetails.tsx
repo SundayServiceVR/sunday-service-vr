@@ -99,6 +99,7 @@ const DjDetails = () => {
                             <dl>
                                 <dt>Discord ID</dt>
                                 <dd>{ dj.discord_id }</dd>
+
                                 <dt>Name</dt>
                                 <dd>{ dj.public_name }</dd>
                                 <dt>Dj Name</dt>
@@ -109,6 +110,8 @@ const DjDetails = () => {
                                 <dd>{ dj.twitch_username }</dd>
                                 <Button onClick={() => { setDjScratchpad({...dj}); setIsEditing(true); }}>Edit</Button>
                             </dl>
+
+                            <a href={`https://discord.com/users/${dj.discord_id}`} target="_blank" rel="noreferrer">View Discord Profile</a>
                         </div>
                     }
                 </Col>
