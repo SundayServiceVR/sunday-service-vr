@@ -1,0 +1,5 @@
+label.required:before {
+    content: "*"; 
+    color: red;
+    margin-right: 0.2em;
+}
