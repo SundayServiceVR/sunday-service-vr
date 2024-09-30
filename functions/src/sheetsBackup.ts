@@ -16,6 +16,10 @@ const backupSheetId = process.env.FUNCTIONS_EMULATOR === "true" ?
  * Test endpoint for backing up the schedule
  */
 export const backupData = onRequest({ secrets: ["BACKUPS_SERVICE_ACCOUNT_KEY"] }, async (request, response) => {
+    if (process.env.FUNCTIONS_EMULATOR !== "true") {
+        response.sendStatus(403);
+        return;
+    }
     await backupDataCommon();
     response.send("Done.");
 });
