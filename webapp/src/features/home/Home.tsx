@@ -23,15 +23,15 @@ const helpfulLinks = [
                 url: "https://docs.google.com/spreadsheets/d/1nsAQAiOsuZQcpBBg44SZ8jUvFtXI6WNKE8-WSo9_kiE/edit?usp=drive_link"
             },
             {
-                title: "Performer Tracking Sheet",
-                url: "https://docs.google.com/spreadsheets/d/1x3o6jmxjimZzlY7kRNVyiCG-A5yQ2XHvQlokeeJd8iI/edit?usp=drive_link"
+                title: "Fallback Tracking Sheet",
+                url: "https://docs.google.com/spreadsheets/d/1k-WANG5zbwaLeEEMpGy81b0Itd-AWd03Lotdff9B2aQ/edit?gid=350139617#gid=350139617"
             }
         ]
     },
     {
-        title: "Whiteboard Endpoint",
-        text: "Just some under-the-hood stuff",
-        url: "https://whiteboard-diczrrhb6a-uc.a.run.app/",
+        title: "Discord",
+        text: "S4 Discord",
+        url: "https://discord.com/channels/1004489038159413248",
     },
 ];
 
