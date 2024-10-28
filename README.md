@@ -1,4 +1,4 @@
-# Sunday Service Webb App
+# Sunday Service Web App
 
 Production: https://sunday-service-vr.web.app/
 
