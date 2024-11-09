@@ -26,7 +26,7 @@ const DjForm = ({dj, setDj, busy}: Props) => {
                 name="discord_id"
                 value={dj.discord_id}
                 type="input"
-                pattern= "[0-9]{17,18}"
+                pattern= "[0-9]{17,}"
                 title="A Discord ID is a 17 or 18 digit user identification number (UID)."
                 onChange={(e) => setDj({...dj, "discord_id": e.target.value})} />
         </Form.Group>
