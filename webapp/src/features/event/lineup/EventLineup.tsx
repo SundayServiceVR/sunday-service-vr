@@ -39,6 +39,11 @@ const EventLineup = () => {
         proposeEventChange({ ...eventScratchpad, dj_signups: signups_copy });
     }
 
+    const removeDjFromLineup = (deleted_dj_ref: DocumentReference) => {
+        const slots_copy = eventScratchpad.slots.filter(slot => slot.dj_ref.id !== deleted_dj_ref.id);
+        proposeEventChange({ ...eventScratchpad, slots: slots_copy });
+    }
+
     return <Container>
         <Container>
             <Row>
@@ -58,7 +63,7 @@ const EventLineup = () => {
                             </Col>
                         </Row>
                         <Row>
-                            <EventDjSignups dj_refs={eventScratchpad.dj_signups ?? []} event={eventScratchpad} onAddDjToLineup={addNewDjAsSlot} onRemoveDj={removeDjFromSignups} />
+                            <EventDjSignups dj_refs={eventScratchpad.dj_signups ?? []} event={eventScratchpad} onAddDjToLineup={addNewDjAsSlot} onRemoveDjFromLineup={removeDjFromLineup} onRemoveDjFromSignups={removeDjFromSignups} />
                         </Row>
                     </Container>
                 </Col>
@@ -69,7 +74,6 @@ const EventLineup = () => {
             </Row>
         </Container>
         <CreateDjModal show={addDjModalShow} handleClose={() => setAddDjModalShow(false)} onDjCreated={addDjToSignups} />
-
     </Container>;
 };
 
