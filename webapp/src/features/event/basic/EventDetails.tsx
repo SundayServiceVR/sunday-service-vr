@@ -13,7 +13,7 @@ const EventDetails = () => {
     return <>
         <Card>
             <CardBody>
-                <h2 className="display-6">Event Setup</h2>
+                <h2 className="display-6">Init Event</h2>
                 <EventBasicDetailsForm event={eventScratchpad} onEventChange={proposeEventChange} />
             </CardBody>
         </Card>

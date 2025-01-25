@@ -14,6 +14,7 @@ export const default_event: Event = {
   slots: [],
   footer: "https://discord.s4vr.net/\nhttps://twitch.s4vr.net/",
   dj_plays: [],
+  dj_signups: [],
 }
 
 export const createEvent = async (event: Event) => {

@@ -118,8 +118,12 @@ const EventRoot = () => {
                 <Link to={`/events/${event.id}/verifyDJs`} className="nav-link">Verify DJs</Link>
             </Nav.Item>
             <Nav.Item as="li">
-                <Link to={`/events/${event.id}/announcements`} className="nav-link">Public Announcements</Link>
+                <Link to={`/events/${event.id}/technicalDetails`} className="nav-link">Technical Details</Link>
             </Nav.Item>
+            <Nav.Item as="li">
+                <Link to={`/events/${event.id}/announcements`} className="nav-link">Messaging</Link>
+            </Nav.Item>
+
         </Nav>
         
         <Container className="mt-3">

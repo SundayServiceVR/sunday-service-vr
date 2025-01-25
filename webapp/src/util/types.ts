@@ -10,23 +10,37 @@ export type Dj = {
 
 export type Slot = {
     dj_ref: DocumentReference;
-    start_time?: Date | undefined;
+    start_time: Date | undefined;
     duration: SlotDuration;
-    slot_type?: SlotType;
+    is_live?: boolean;
 
-    discord_id: string,
-    dj_name: string,
+    stream_source_type?: StreamSourceType;
+
+    prerecord_url?: string;
+
+    //Depricated
+    slot_type?: SlotType;
+    is_debut?: boolean;
+    discord_id?: string,
+    dj_name?: string,
     rtmp_url: string;
     twitch_username: string;
-    prerecord_url: string;
-
-    is_debut: boolean;
 }
 
 export enum SlotType {
+    LIVE = "LIVE",
+    PRERECORD = "PRERECORD",
+
+    //Depricated
     RTMP = "RTMP",
     TWITCH = "TWITCH",
+}
+
+export enum StreamSourceType {
+    VRCDN = "VRCDN",
+    TWITCH = "TWITCH",
     PRERECORD = "PRERECORD",
+    RTMP = "RTMP",
 }
 
 export const SlotTypes = 
@@ -49,5 +63,6 @@ export type Event = {
     host: string;
     slots: Slot[];
     footer: string;
+    dj_signups: DocumentReference[],
     dj_plays: DocumentReference[],
 }

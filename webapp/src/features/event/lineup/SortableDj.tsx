@@ -1,5 +1,9 @@
-import { Stack, Button, Form, Container, Row, Col, ButtonGroup, ToggleButton, InputGroup } from "react-bootstrap";
+import { Stack, Button, Form, Container, Row, Col, ButtonGroup, ToggleButton } from "react-bootstrap";
 import { Slot, SlotDuration, SlotType } from "../../../util/types";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowUp, faArrowDown } from "@fortawesome/free-solid-svg-icons";
+import { ActionMenu } from "../../../components/actionMenu/ActionMenu";
+
 
 type Props = {
     index: number,
@@ -18,133 +22,117 @@ const SortableDj = ({
     onRemoveSlot,
     onUpdateSlot,
 }: Props) => {
-        return <Container className="my-2">
-            <Row>
-                <Col xs={3} sm={1}>
-                    <span style={{ "width": "30px" }}>
-                        <Stack gap={1}>
-                            <Button variant={"outline-secondary"} size={"sm"} onClick={() => onSlotMoveSooner()}>
-                                <i><span>-</span></i>
-                            </Button>
-                            <Button variant={"outline-secondary"} color={"primary"} size={"sm"} onClick={() => onSlotMoveLater()}>
-                                <i><span>+</span></i>
-                            </Button>
-                        </Stack>
-                    </span>
-                </Col>
-                <Col xs={6} sm={10}>
-                    <Row className="mb-3">
-                        <Col>
-                            <Stack gap={3} direction="horizontal">
-                                <span className="lead">{slot.dj_name}</span>
-                                <span className="lead text-muted">({slot.start_time?.toLocaleTimeString()})</span>
-                            </Stack>
-                        </Col>
-                    </Row>
-                </Col>
-                <Col xs={3} sm={1}>
-                    <div className="display-flex justify-content-center">
-                        <Button onClick={() => { onRemoveSlot(); }} variant="outline-danger">x</Button>
-                    </div>
-                </Col>
-            </Row>
-            <Row>
-                <Col sm={12} md={{ span: 10, offset: 1}} lg={{span: 8, offset: 2}} lg-skip>
-                    <Form.Group as={Row}  className="mb-3">
-                        <Form.Label column sm={4}>Slot Length (In Hours)</Form.Label>
-                        <Col>
-                            <Form.Control
-                                type={"number"}
-                                step={0.5}
-                                value={slot.duration}
-                                onChange={(event) => { onUpdateSlot({...slot, duration: parseFloat(event.target.value) as SlotDuration})}}
-                                min={0}
-                                max={4}
-                            />
-                        </Col>
-                    </Form.Group>
-                    <Form.Group as={Row}  className="mb-3">
-                        <Form.Label column sm={4} className="text-right">Set Type</Form.Label>
-                        <ButtonGroup className="mb-2">
+
+    return <Container className="my-2">
+        <Row>
+            <Col xs={{ order: 1, span: 6 }} md={{ order: 1, span: "auto" }}>
+                <span style={{ "width": "30px" }}>
+                    <Stack gap={1}>
+                        <span className="lead text-muted mb-1">
+                            {slot.start_time?.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        </span>
+                        <Button variant={"outline-secondary"} color={"primary"} size={"sm"} onClick={() => onSlotMoveSooner()}>
+                            <FontAwesomeIcon icon={faArrowUp} />
+                        </Button>
+                        <Button variant={"outline-secondary"} size={"sm"} onClick={() => onSlotMoveLater()}>
+                            <FontAwesomeIcon icon={faArrowDown} />
+                        </Button>
+
+                    </Stack>
+                </span>
+            </Col>
+            <Col xs={{ order: 1, span: 6 }} md={{ order: 3, span: 2 }} lg={1}>
+                <ActionMenu
+                    className="mb-1 d-flex justify-content-end"
+                    options={[
+                        {
+                            label: "Edit DJ",
+                            onClick: () => { 
+                                window.open(`/djs/${slot.dj_ref.id}`,'_blank', 'noreferrer')?.focus();
+                                // navigate(`/djs/${slot.dj_ref.id}`);
+                            }
+                        },
+                        {
+                        label: "Remove Slot",
+                        onClick: () => { onRemoveSlot(); }
+                    }]} />
+            </Col>
+            <Col xs={{ order: 2, span: 12 }} md={{ order: 2, span: true }} className="pt-3">
+                <Form.Group as={Row} className="mb-1">
+                    <Form.Label column="sm" sm={3} className="text-md-end">Name</Form.Label>
+                    <Col sm={8}>
+                        <Form.Label column="sm">{slot.dj_name}</Form.Label>
+                        {/* <Form.Control
+                            size="sm"
+                            value={slot.dj_name}
+                            defaultValue={1}
+                            onChange={(event) => { onUpdateSlot({ ...slot, dj_name: event.target.value }) }}
+                        /> */}
+                    </Col>
+                </Form.Group>
+                <Form.Group as={Row}>
+                    <Form.Label column="sm" sm={3} className="text-md-end">Type</Form.Label>
+                    <Col sm={8}>
+                        <ButtonGroup className="mb-1">
                             <ToggleButton
                                 id={`slot-${index}-rtmp`}
                                 key={`slot-${index}-rtmp`}
                                 type="radio"
                                 variant="outline-dark"
+                                size="sm"
                                 name={`slot-${index}-slotType`}
                                 value={SlotType.RTMP}
                                 checked={slot.slot_type === SlotType.RTMP}
-                                onChange={() => onUpdateSlot({...slot, slot_type: SlotType.RTMP})}
+                                onChange={() => onUpdateSlot({ ...slot, slot_type: SlotType.RTMP })}
                             >
-                                VRCDN/RTMP
+                                Live
                             </ToggleButton>
                             <ToggleButton
                                 id={`slot-${index}-twitch`}
                                 key={`slot-${index}-twitch`}
                                 type="radio"
                                 variant="outline-dark"
+                                size="sm"
                                 name={`slot-${index}-slotType`}
                                 value={SlotType.TWITCH}
                                 checked={slot.slot_type === SlotType.TWITCH}
-                                onChange={() => onUpdateSlot({...slot, slot_type: SlotType.TWITCH})}
+                                onChange={() => onUpdateSlot({ ...slot, slot_type: SlotType.TWITCH })}
                             >
-                                Twitch
-                            </ToggleButton>
-                            <ToggleButton
-                                id={`slot-${index}-prerecord`}
-                                key={`slot-${index}-prerecord`}
-                                type="radio"
-                                variant="outline-dark"
-                                name={`slot-${index}-slotType`}
-                                value={SlotType.PRERECORD}
-                                checked={slot.slot_type === SlotType.PRERECORD}
-                                onChange={() => onUpdateSlot({...slot, slot_type: SlotType.PRERECORD})}
-                            >
-                                PreRecord
+                                Prerecord
                             </ToggleButton>
                         </ButtonGroup>
-                    
-                        <Form.Control
-                            type={"input"}
-                            value={slot.rtmp_url}
-                            onChange={(event) => { onUpdateSlot({...slot, rtmp_url: event.target.value})}}
-                            placeholder="RTMP URL"
-                            hidden={slot.slot_type !== SlotType.RTMP}
+                    </Col>
+                </Form.Group>
+                <Form.Group as={Row} className="mb-1">
+                    <Form.Label column="sm" sm={3} className="text-md-end">Length</Form.Label>
+                    <Col sm={8}>
+                        <Form.Select
+                            size="sm"
+                            value={slot.duration}
+                            defaultValue={1}
+                            onChange={(event) => { onUpdateSlot({ ...slot, duration: parseFloat(event.target.value) as SlotDuration }) }}
+                        >
+                            <option value={0}>None</option>
+                            <option value={0.5}>Half Hour</option>
+                            <option value={1}>1 Hour</option>
+                            <option value={1.5}>1.5 Hours</option>
+                            <option value={2}>2 Hours</option>
+                        </Form.Select>
+                    </Col>
+                </Form.Group>
+                {/* <Form.Group as={Row}>
+                    <Form.Label column="sm" sm={4} className="text-md-end">Is Debutt?</Form.Label>
+                    <Col sm={8}>
+                        <Form.Check
+                            type="switch"
+                            checked={slot.is_debut}
+                            onChange={(event) => { onUpdateSlot({ ...slot, is_debut: event.target.checked }) }}
                         />
-                        <Form.Control
-                            type={"input"}
-                            value={slot.prerecord_url}
-                            onChange={(event) => { onUpdateSlot({...slot, prerecord_url: event.target.value})}}
-                            placeholder="PreRecord URL"
-                            hidden={slot.slot_type !== SlotType.PRERECORD}
-                        />
-
-                        <InputGroup className="mb-2"  hidden={slot.slot_type !== SlotType.TWITCH}>
-                            <InputGroup.Text>https://www.twitch.tv/</InputGroup.Text>
-                            <Form.Control
-                                type={"input"}
-                                value={slot.twitch_username}
-                                onChange={(event) => { onUpdateSlot({...slot, twitch_username: event.target.value})}}
-                                placeholder="username"
-                            />
-                        </InputGroup>
-            
-                    </Form.Group>
-
-                    <Form.Group as={Row} className="mb-3">
-                        <Form.Label  column >Is Debutt?</Form.Label>
-                        <Col>
-                            <Form.Check
-                                className="mt-2" 
-                                type="switch" 
-                                checked={slot.is_debut} 
-                                onChange={(event) => { onUpdateSlot({...slot, is_debut: event.target.checked})}}
-                            /> 
-                        </Col>
-                    </Form.Group>
-                </Col>
-            </Row>
-        </Container>;
-    }
+                    </Col>
+                </Form.Group> */}
+            </Col>
+        </Row>
+    </Container>;
+}
 
 export default SortableDj;
