@@ -1,11 +1,8 @@
-import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import { faEllipsis } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Dropdown } from "react-bootstrap";
 
 export type ActionMenuOption = {
   label: string,
-  icon?: IconProp
+  // icon?: IconProp
   onClick: () => void,
 } | "divider";
 
@@ -18,7 +15,7 @@ const ActionMenu = ({ options, className }: Props) => {
   return <div className={className}>
     <Dropdown>
       <Dropdown.Toggle variant="outline-secondary">
-        <FontAwesomeIcon icon={faEllipsis} />
+        {/* <FontAwesomeIcon icon={faEllipsis} /> */}
       </Dropdown.Toggle>
       <Dropdown.Menu>
         {options.map((option, index) => {
@@ -26,7 +23,7 @@ const ActionMenu = ({ options, className }: Props) => {
             return <Dropdown.Divider key={index} />
           }
           return <Dropdown.Item onClick={option.onClick} key={index}>
-            {option.icon && <FontAwesomeIcon icon={option.icon} />} {option.label}
+            {option.label}
           </Dropdown.Item>
         })}
       </Dropdown.Menu>

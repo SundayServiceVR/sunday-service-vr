@@ -1,7 +1,5 @@
 import { Stack, Button, Form, Container, Row, Col, ButtonGroup, ToggleButton } from "react-bootstrap";
 import { Slot, SlotDuration, SlotType } from "../../../util/types";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowUp, faArrowDown } from "@fortawesome/free-solid-svg-icons";
 import { ActionMenu } from "../../../components/actionMenu/ActionMenu";
 
 
@@ -32,10 +30,10 @@ const SortableDj = ({
                             {slot.start_time?.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                         </span>
                         <Button variant={"outline-secondary"} color={"primary"} size={"sm"} onClick={() => onSlotMoveSooner()}>
-                            <FontAwesomeIcon icon={faArrowUp} />
+                            +
                         </Button>
                         <Button variant={"outline-secondary"} size={"sm"} onClick={() => onSlotMoveLater()}>
-                            <FontAwesomeIcon icon={faArrowDown} />
+                            -
                         </Button>
 
                     </Stack>

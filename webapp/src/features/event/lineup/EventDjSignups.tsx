@@ -1,7 +1,5 @@
 import { collection, documentId, DocumentReference, getDocs, query, where } from "firebase/firestore";
 import { Button, Container, Card, Stack, Row, Col, ListGroup } from "react-bootstrap"
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCalendarPlus, faX, faIdCard, faEyeSlash, faCalendarXmark, faCalendar } from '@fortawesome/free-solid-svg-icons'
 import { Dj, Event } from "../../../util/types";
 import { useEffect, useState } from "react";
 import { docToRawType } from "../../../store/util";
@@ -66,22 +64,22 @@ const EventDjSignups = ({ event, onAddDjToLineup, onRemoveDjFromSignups, onRemov
             <Card.Header>
               <Stack direction="horizontal" gap={1}>
                 <div className="lead">
-                  { hiddenDjs.includes(signup.dj_ref.id) && <FontAwesomeIcon icon={faEyeSlash} className="me-2" />}
-                  { event.slots.map(slot => slot.dj_ref.id).includes(signup.dj_ref.id) && <FontAwesomeIcon icon={faCalendar} className="me-2" />}
+                  ({ hiddenDjs.includes(signup.dj_ref.id) && "(hidden)"})
+                  { event.slots.map(slot => slot.dj_ref.id).includes(signup.dj_ref.id) && "(in lineup)"}
                   {djCache[signup.dj_ref?.id]?.dj.dj_name ?? signup.dj_ref?.id}
                   </div>
                 <div className="ms-auto"></div>
                 <ActionMenu options={[
                   {
                     label: "Edit DJ",
-                    icon: faIdCard,
+                    // icon: faIdCard,
                     onClick: () => {
                       window.open(`/djs/${signup.dj_ref.id}`, '_blank', 'noreferrer')?.focus();
                     },
                   },
                   {
                     label: "Remove Signup",
-                    icon: faX,
+                    // icon: faX,
                     onClick: () => {
                       onRemoveDjFromSignups(signup.dj_ref);
                     }
@@ -114,8 +112,8 @@ const EventDjSignups = ({ event, onAddDjToLineup, onRemoveDjFromSignups, onRemov
                 <Row>
                   <Col className="text-center">
                     {event.slots.map(slot => slot.dj_ref?.id).includes(signup.dj_ref?.id)
-                      ? <Button variant="tertiary" onClick={() => onRemoveDjFromLineup(signup.dj_ref)}><FontAwesomeIcon icon={faCalendarXmark} /> Remove from Lineup</Button>
-                      : <Button variant="tertiary" onClick={() => onAddDjToLineup(signup.dj_ref, djCache[signup.dj_ref.id]?.dj.dj_name ?? "Unknown Name", true)}><FontAwesomeIcon icon={faCalendarPlus} /> Add to Lineup</Button>}
+                      ? <Button variant="tertiary" onClick={() => onRemoveDjFromLineup(signup.dj_ref)}>"(Rmv)" Remove from Lineup</Button>
+                      : <Button variant="tertiary" onClick={() => onAddDjToLineup(signup.dj_ref, djCache[signup.dj_ref.id]?.dj.dj_name ?? "Unknown Name", true)}>"(add)" Add to Lineup</Button>}
 
                   </Col>
                   {
