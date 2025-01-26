@@ -58,8 +58,10 @@ const SortableDj = ({
             </Col>
             <Col xs={{ order: 2, span: 12 }} md={{ order: 2, span: true }} className="pt-3">
                 <Form.Group as={Row} className="mb-1">
-                    <Form.Label column="sm" sm={3} className="text-md-end">Name</Form.Label>
-                    <Col sm={8}>
+                    <Form.Label column="sm" sm={2} className="text-md-end">
+                        <strong>Name</strong>
+                    </Form.Label>
+                    <Col sm={10}>
                         <Form.Label column="sm">{slot.dj_name}</Form.Label>
                         {/* <Form.Control
                             size="sm"
@@ -70,50 +72,51 @@ const SortableDj = ({
                     </Col>
                 </Form.Group>
                 <Form.Group as={Row}>
-                    <Form.Label column="sm" sm={3} className="text-md-end">Set</Form.Label>
-                    <Col sm={8}>
-             
-                    <InputGroup>
-                        <ToggleButton
-                            id={`slot-${index}-rtmp`}
-                            key={`slot-${index}-rtmp`}
-                            type="radio"
-                            variant="outline-dark"
-                            size="sm"
-                            name={`slot-${index}-slotType`}
-                            value={SlotType.RTMP}
-                            checked={slot.slot_type === SlotType.RTMP}
-                            onChange={() => onUpdateSlot({ ...slot, slot_type: SlotType.RTMP })}
-                        >
-                            Live
-                        </ToggleButton>
-                        <ToggleButton
-                            id={`slot-${index}-twitch`}
-                            key={`slot-${index}-twitch`}
-                            type="radio"
-                            variant="outline-dark"
-                            size="sm"
-                            name={`slot-${index}-slotType`}
-                            value={SlotType.TWITCH}
-                            checked={slot.slot_type === SlotType.TWITCH}
-                            onChange={() => onUpdateSlot({ ...slot, slot_type: SlotType.TWITCH })}
-                        >
-                            Prerecord
-                        </ToggleButton>
+                    <Form.Label column="sm" xs={12} md={2} className="text-md-end">
+                        <strong>Type</strong>
+                    </Form.Label>
+                    <Col sx={12} md={10}>
+                        <InputGroup>
+                            <ToggleButton
+                                id={`slot-${index}-live`}
+                                key={`slot-${index}-live`}
+                                type="radio"
+                                variant="outline-dark"
+                                size="sm"
+                                name={`slot-${index}-slotType`}
+                                value={SlotType.LIVE}
+                                checked={slot.slot_type === SlotType.LIVE}
+                                onChange={() => onUpdateSlot({ ...slot, slot_type: SlotType.LIVE })}
+                            >
+                                Live
+                            </ToggleButton>
+                            <ToggleButton
+                                id={`slot-${index}-prerecord`}
+                                key={`slot-${index}-prerecord`}
+                                type="radio"
+                                variant="outline-dark"
+                                size="sm"
+                                name={`slot-${index}-slotType`}
+                                value={SlotType.PRERECORD}
+                                checked={slot.slot_type === SlotType.PRERECORD}
+                                onChange={() => onUpdateSlot({ ...slot, slot_type: SlotType.PRERECORD })}
+                            >
+                                Prerecord
+                            </ToggleButton>
 
-                        <Form.Select
-                            size="sm"
-                            value={slot.duration}
-                            defaultValue={1}
-                            onChange={(event) => { onUpdateSlot({ ...slot, duration: parseFloat(event.target.value) as SlotDuration }) }}
-                        >
-                            <option value={0}>None</option>
-                            <option value={0.5}>Half Hour</option>
-                            <option value={1}>1 Hour</option>
-                            <option value={1.5}>1.5 Hours</option>
-                            <option value={2}>2 Hours</option>
-                        </Form.Select>
-                    </InputGroup>
+                            <Form.Select
+                                size="sm"
+                                value={slot.duration}
+                                defaultValue={1}
+                                onChange={(event) => { onUpdateSlot({ ...slot, duration: parseFloat(event.target.value) as SlotDuration }) }}
+                            >
+                                <option value={0}>None</option>
+                                <option value={0.5}>Half Hour</option>
+                                <option value={1}>1 Hour</option>
+                                <option value={1.5}>1.5 Hours</option>
+                                <option value={2}>2 Hours</option>
+                            </Form.Select>
+                        </InputGroup>
                     </Col>
                 </Form.Group>
                 {/* <Form.Group as={Row}>
