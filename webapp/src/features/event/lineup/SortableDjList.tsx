@@ -2,6 +2,7 @@ import { ListGroup, ListGroupItem } from "react-bootstrap";
 import { Slot } from "../../../util/types";
 import { useEventOperations } from "../outletContext";
 import SortableDj from "./SortableDj";
+import { setEventSlotByIndex } from "../util";
 
 const SortableDjList = () => {
 
@@ -22,15 +23,15 @@ const SortableDjList = () => {
         proposeEventChange({...eventScratchpad, slots: slots_copy});
     }
 
-    const updateSlot = (slot_index: number, newSlot: Slot) => {
-        const slots_copy = [...eventScratchpad.slots];
-        slots_copy[slot_index] = newSlot;
-        proposeEventChange({...eventScratchpad, slots: slots_copy});
-    }
+    const updateSlot = (slot_index: number, newSlot: Slot) => 
+        proposeEventChange(
+            setEventSlotByIndex(eventScratchpad, slot_index, newSlot)
+        );
+    
 
-    return <ListGroup variant="flush" >
+    return <ListGroup >
         {eventScratchpad.slots.map(
-            (slot: Slot, index: number) => <ListGroupItem key={`slot-${index}`} className="py-0">
+            (slot: Slot, index: number) => <ListGroupItem key={`slot-${index}`} className="p-1">
                 <SortableDj
                     index={index}
                     slot={slot}
