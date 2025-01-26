@@ -71,6 +71,12 @@ const EventDjSignups = ({ event, onAddDjToLineup, onRemoveDjFromSignups, onRemov
                 <div className="ms-auto"></div>
                 <ActionMenu options={[
                   {
+                    label: "Add To Lineup",
+                    onClick: () => {
+                      onAddDjToLineup(signup.dj_ref, djCache[signup.dj_ref.id]?.dj.dj_name ?? "Unknown Name", true)
+                    }
+                  },
+                  {
                     label: "Edit DJ",
                     // icon: faIdCard,
                     onClick: () => {
@@ -96,24 +102,28 @@ const EventDjSignups = ({ event, onAddDjToLineup, onRemoveDjFromSignups, onRemov
                     <div>Notes: They don't use the low pass on the mic</div>
                   </Col>
                   <Col>
-                    <div>Recent Events (13)</div>
+                      <Stack direction="horizontal">
+                      <span>Recent Events (13 total)</span>
+                      {/* <span className="ms-auto" />
+                      <a>(See All)</a> */}
+                      </Stack>
                     <ListGroup>
-                      <ListGroup.Item>date-1</ListGroup.Item>
-                      <ListGroup.Item>date-2</ListGroup.Item>
-                      <ListGroup.Item>date-3</ListGroup.Item>
-                      <ListGroup.Item>See 10 More...</ListGroup.Item>
+                      {["date-1", "date-2", "date-3"].map(date => 
+                        <ListGroup.Item key={date} className="px-3 py-1">{date}</ListGroup.Item>
+                      )}
+
                     </ListGroup>
                   </Col>
                 </Row>
               </Container>
             </Card.Body>
-            <Card.Footer>
+            {/* <Card.Footer>
               <Container>
                 <Row>
                   <Col className="text-center">
                     {event.slots.map(slot => slot.dj_ref?.id).includes(signup.dj_ref?.id)
                       ? <Button variant="tertiary" onClick={() => onRemoveDjFromLineup(signup.dj_ref)}>"(Rmv)" Remove from Lineup</Button>
-                      : <Button variant="tertiary" onClick={() => onAddDjToLineup(signup.dj_ref, djCache[signup.dj_ref.id]?.dj.dj_name ?? "Unknown Name", true)}>"(add)" Add to Lineup</Button>}
+                      : <Button variant="tertiary" onClick={() => onAddDjToLineup(signup.dj_ref, djCache[signup.dj_ref.id]?.dj.dj_name ?? "Unknown Name", true)}>Add to Lineup</Button>}
 
                   </Col>
                   {
@@ -126,7 +136,7 @@ const EventDjSignups = ({ event, onAddDjToLineup, onRemoveDjFromSignups, onRemov
 
                 </Row>
               </Container>
-            </Card.Footer>
+            </Card.Footer> */}
           </Card>
         )
       ).filter((_, index) => showHiddenDjs || !isHidableSubmission(event.signups[index]))
