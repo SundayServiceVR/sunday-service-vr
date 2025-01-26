@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { Navbar } from "react-bootstrap";
+import { Collapse, Navbar } from "react-bootstrap";
 import { createPortal } from "react-dom";
 import "./FloatingActionBar.css";
 type Props = {
@@ -9,7 +9,13 @@ type Props = {
 
 const FloatingActionBar = ({hidden = false, children}: Props) => {
     return createPortal(
-        <Navbar hidden={hidden} sticky="bottom" className="floatingActionBar py-0">{ children }</Navbar>,
+        <Navbar sticky="bottom" className="floatingActionBar py-0">
+            <Collapse in={!hidden}>
+            <div className="w-100">
+                { children }
+            </div>
+            </Collapse>
+        </Navbar>,
       document.body
     )
 };
