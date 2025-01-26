@@ -64,7 +64,7 @@ const EventDjSignups = ({ event, onAddDjToLineup, onRemoveDjFromSignups }: Props
             <Card.Header>
               <Stack direction="horizontal" gap={1}>
                 <div className="lead">
-                  ({ hiddenDjs.includes(signup.dj_ref.id) && "(hidden)"})
+                  { hiddenDjs.includes(signup.dj_ref.id) && "(hidden)"}
                   { event.slots.map(slot => slot.dj_ref.id).includes(signup.dj_ref.id) && "(in lineup)"}
                   {djCache[signup.dj_ref?.id]?.dj.dj_name ?? signup.dj_ref?.id}
                   </div>
