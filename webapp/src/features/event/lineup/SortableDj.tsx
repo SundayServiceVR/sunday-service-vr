@@ -1,6 +1,7 @@
-import { Stack, Button, Form, Container, Row, Col, ButtonGroup, ToggleButton } from "react-bootstrap";
+import { Stack, Button, Form, Container, Row, Col, ToggleButton, InputGroup } from "react-bootstrap";
 import { Slot, SlotDuration, SlotType } from "../../../util/types";
 import { ActionMenu } from "../../../components/actionMenu/ActionMenu";
+import { ArrowDown, ArrowUp } from "react-feather";
 
 
 type Props = {
@@ -30,10 +31,10 @@ const SortableDj = ({
                             {slot.start_time?.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                         </span>
                         <Button variant={"outline-secondary"} color={"primary"} size={"sm"} onClick={() => onSlotMoveSooner()}>
-                            +
+                            <ArrowUp />
                         </Button>
                         <Button variant={"outline-secondary"} size={"sm"} onClick={() => onSlotMoveLater()}>
-                            -
+                            <ArrowDown />
                         </Button>
 
                     </Stack>
@@ -45,15 +46,15 @@ const SortableDj = ({
                     options={[
                         {
                             label: "Edit DJ",
-                            onClick: () => { 
-                                window.open(`/djs/${slot.dj_ref.id}`,'_blank', 'noreferrer')?.focus();
+                            onClick: () => {
+                                window.open(`/djs/${slot.dj_ref.id}`, '_blank', 'noreferrer')?.focus();
                                 // navigate(`/djs/${slot.dj_ref.id}`);
                             }
                         },
                         {
-                        label: "Remove Slot",
-                        onClick: () => { onRemoveSlot(); }
-                    }]} />
+                            label: "Remove Slot",
+                            onClick: () => { onRemoveSlot(); }
+                        }]} />
             </Col>
             <Col xs={{ order: 2, span: 12 }} md={{ order: 2, span: true }} className="pt-3">
                 <Form.Group as={Row} className="mb-1">
@@ -69,41 +70,37 @@ const SortableDj = ({
                     </Col>
                 </Form.Group>
                 <Form.Group as={Row}>
-                    <Form.Label column="sm" sm={3} className="text-md-end">Type</Form.Label>
+                    <Form.Label column="sm" sm={3} className="text-md-end">Set</Form.Label>
                     <Col sm={8}>
-                        <ButtonGroup className="mb-1">
-                            <ToggleButton
-                                id={`slot-${index}-rtmp`}
-                                key={`slot-${index}-rtmp`}
-                                type="radio"
-                                variant="outline-dark"
-                                size="sm"
-                                name={`slot-${index}-slotType`}
-                                value={SlotType.RTMP}
-                                checked={slot.slot_type === SlotType.RTMP}
-                                onChange={() => onUpdateSlot({ ...slot, slot_type: SlotType.RTMP })}
-                            >
-                                Live
-                            </ToggleButton>
-                            <ToggleButton
-                                id={`slot-${index}-twitch`}
-                                key={`slot-${index}-twitch`}
-                                type="radio"
-                                variant="outline-dark"
-                                size="sm"
-                                name={`slot-${index}-slotType`}
-                                value={SlotType.TWITCH}
-                                checked={slot.slot_type === SlotType.TWITCH}
-                                onChange={() => onUpdateSlot({ ...slot, slot_type: SlotType.TWITCH })}
-                            >
-                                Prerecord
-                            </ToggleButton>
-                        </ButtonGroup>
-                    </Col>
-                </Form.Group>
-                <Form.Group as={Row} className="mb-1">
-                    <Form.Label column="sm" sm={3} className="text-md-end">Length</Form.Label>
-                    <Col sm={8}>
+             
+                    <InputGroup>
+                        <ToggleButton
+                            id={`slot-${index}-rtmp`}
+                            key={`slot-${index}-rtmp`}
+                            type="radio"
+                            variant="outline-dark"
+                            size="sm"
+                            name={`slot-${index}-slotType`}
+                            value={SlotType.RTMP}
+                            checked={slot.slot_type === SlotType.RTMP}
+                            onChange={() => onUpdateSlot({ ...slot, slot_type: SlotType.RTMP })}
+                        >
+                            Live
+                        </ToggleButton>
+                        <ToggleButton
+                            id={`slot-${index}-twitch`}
+                            key={`slot-${index}-twitch`}
+                            type="radio"
+                            variant="outline-dark"
+                            size="sm"
+                            name={`slot-${index}-slotType`}
+                            value={SlotType.TWITCH}
+                            checked={slot.slot_type === SlotType.TWITCH}
+                            onChange={() => onUpdateSlot({ ...slot, slot_type: SlotType.TWITCH })}
+                        >
+                            Prerecord
+                        </ToggleButton>
+
                         <Form.Select
                             size="sm"
                             value={slot.duration}
@@ -116,6 +113,7 @@ const SortableDj = ({
                             <option value={1.5}>1.5 Hours</option>
                             <option value={2}>2 Hours</option>
                         </Form.Select>
+                    </InputGroup>
                     </Col>
                 </Form.Group>
                 {/* <Form.Group as={Row}>
