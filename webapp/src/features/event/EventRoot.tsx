@@ -127,18 +127,13 @@ const EventRoot = () => {
         </Container>
 
         <FloatingActionBar hidden={!hasChanges}>
-            <Alert variant="primary">
-                <div className="mx-auto" />
-                <Alert.Heading>You have unsaved changes</Alert.Heading>
-                <p>Save your changes to update this event.</p>
-                <hr />
-                <div className="d-flex justify-content-center">
-                    <Stack gap={3} direction="horizontal">
-                        <Button onClick={onSaveEvent} color="confirm">Save</Button>
-                        <Button onClick={onCancelChanges} color="confirm">Cancel</Button>
-                    </Stack>
-                </div>
-            </Alert>
+            <Stack direction="horizontal" gap={3} className=" justify-content-end w-100 bg-light bg-gradient p-2 border-top border-secondary">
+            <div className="d-flex align-items-center text-secondary">Save your Changes</div>
+                <Stack gap={3} direction="horizontal">
+                    <Button onClick={onSaveEvent} variant="primary">Save</Button>
+                    <Button onClick={onCancelChanges} variant="secondary">Discard</Button>
+                </Stack>
+            </Stack>
         </FloatingActionBar>
     </>
 }
