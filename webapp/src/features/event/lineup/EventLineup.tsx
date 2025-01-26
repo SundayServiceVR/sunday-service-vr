@@ -30,15 +30,15 @@ const EventLineup = () => {
 
     const addDjToSignups = (_: Dj, documentRef: DocumentReference) => {
         setAddDjModalShow(false);
-        const currentSignups = eventScratchpad.dj_signups ?? [];
+        const currentSignups = eventScratchpad.signups ?? [];
         const otherSignups = currentSignups.filter(dj_signup => dj_signup.dj_ref.id !== documentRef.id);
         const signups_copy = [...otherSignups, { dj_ref: documentRef }];
-        proposeEventChange({ ...eventScratchpad, dj_signups: signups_copy });
+        proposeEventChange({ ...eventScratchpad, signups: signups_copy });
     }
 
     const removeDjFromSignups = (deleted_dj_ref: DocumentReference) => {
-        const signups_copy = eventScratchpad.dj_signups.filter(dj_signup => dj_signup.dj_ref.id !== deleted_dj_ref.id); 
-        proposeEventChange({ ...eventScratchpad, dj_signups: signups_copy });
+        const signups_copy = eventScratchpad.signups.filter(dj_signup => dj_signup.dj_ref.id !== deleted_dj_ref.id); 
+        proposeEventChange({ ...eventScratchpad, signups: signups_copy });
     }
 
     const removeDjFromLineup = (deleted_dj_ref: DocumentReference) => {

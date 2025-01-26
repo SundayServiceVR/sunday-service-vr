@@ -63,9 +63,10 @@ export type Event = {
     host: string;
     slots: Slot[];
     footer: string;
-    dj_signups: {
-        dj_ref: DocumentReference;
-        // hidden?: boolean;
-    }[]
+    signups: EventSignup[]
     dj_plays: DocumentReference[],
+}
+
+export type EventSignup = {
+    dj_ref: DocumentReference;
 }

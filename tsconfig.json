@@ -6,7 +6,8 @@
     "outDir": "lib",
     "sourceMap": true,
     "strict": true,
-    "target": "es2017"
+    "target": "es2017",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
   },
   "compileOnSave": true,
   "include": [

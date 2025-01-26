@@ -35,14 +35,14 @@ const EventDjSignups = ({ event, onAddDjToLineup, onRemoveDjFromSignups, onRemov
 
   useEffect(() => {
 
-    if (event.dj_signups.length === 0) {
+    if (event.signups.length === 0) {
       setDjCache({});
       return;
     }
 
     (async () => {
       // I'd bank there's a better way to fetch these
-      const q = query(collection(db, "djs"), where(documentId(), "in", event.dj_signups.map(signup => signup.dj_ref.id)));
+      const q = query(collection(db, "djs"), where(documentId(), "in", event.signups.map(signup => signup.dj_ref.id)));
       const querySnapshot = await getDocs(q);
       const newDjCache: DjInfoCache = {};
 
@@ -54,11 +54,11 @@ const EventDjSignups = ({ event, onAddDjToLineup, onRemoveDjFromSignups, onRemov
         });
       setDjCache(newDjCache);
     })()
-  }, [event.dj_signups])
+  }, [event.signups])
 
   return <Container className="px-0 pb-3">
     <Stack gap={3}>
-      {event.dj_signups.map(
+      {event.signups.map(
         (signup) => (
           <Card key={signup.dj_ref?.id}>
             <Card.Header>
@@ -129,7 +129,7 @@ const EventDjSignups = ({ event, onAddDjToLineup, onRemoveDjFromSignups, onRemov
             </Card.Footer>
           </Card>
         )
-      ).filter((_, index) => showHiddenDjs || !isHidableSubmission(event.dj_signups[index]))
+      ).filter((_, index) => showHiddenDjs || !isHidableSubmission(event.signups[index]))
 
       }
 
@@ -139,7 +139,7 @@ const EventDjSignups = ({ event, onAddDjToLineup, onRemoveDjFromSignups, onRemov
             Hide Submissions
           </Button>
           : <Button variant="secondary" onClick={() => setShowHiddenDjs(true)}>
-            Show Hidden Submissions ({event.dj_signups.filter(isHidableSubmission).length})
+            Show Hidden Submissions ({event.signups.filter(isHidableSubmission).length})
           </Button>
       }
 
