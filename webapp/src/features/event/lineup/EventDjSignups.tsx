@@ -23,13 +23,13 @@ type DjInfoCache = {
   },
 };
 
-const EventDjSignups = ({ event, onAddDjToLineup, onRemoveDjFromSignups, onRemoveDjFromLineup }: Props) => {
+const EventDjSignups = ({ event, onAddDjToLineup, onRemoveDjFromSignups }: Props) => {
 
   const [djCache, setDjCache] = useState<DjInfoCache>({});
 
   const [showHiddenDjs, setShowHiddenDjs] = useState(false);
 
-  const [hiddenDjs, setHiddenDjs] = useState<string[]>([]);
+  const [hiddenDjs] = useState<string[]>([]);
 
   const isHidableSubmission = (signup: { dj_ref: DocumentReference }) => hiddenDjs.includes(signup.dj_ref.id) || event.slots.map(slot => slot.dj_ref.id).includes(signup.dj_ref.id);
 
