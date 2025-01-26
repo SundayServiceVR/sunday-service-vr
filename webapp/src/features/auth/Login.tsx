@@ -20,7 +20,8 @@ const Login = () => {
         .then((userCredential) => {
             // Signed in
             const user = userCredential.user;
-            navigate("/")
+            const redirectRoute = localStorage.getItem("loginRedirectRoute") ?? "/";
+            navigate(redirectRoute);
             console.log(user);
         })
         .catch((error) => {
