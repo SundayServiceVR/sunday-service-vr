@@ -127,16 +127,13 @@ const EventRoot = () => {
         </Container>
 
         <FloatingActionBar hidden={!hasChanges}>
-            <div className="w-100 bg-light bg-gradient p-2 border-top border-secondary">
-                <Container>
+            <Container>
                 <Stack direction="horizontal" gap={3} className="justify-content-end">
-                        <div className="d-flex align-items-center text-secondary">Save your Changes</div>
-                        <Button onClick={onSaveEvent} variant="primary">Save</Button>
-                        <Button onClick={onCancelChanges} variant="secondary">Discard</Button>
-                    </Stack>
-                </Container>
-            </div>
-
+                    <div className="d-flex align-items-center text-secondary">Save your Changes</div>
+                    <Button onClick={onSaveEvent} variant="primary">Save</Button>
+                    <Button onClick={onCancelChanges} variant="secondary">Discard</Button>
+                </Stack>
+            </Container>
         </FloatingActionBar >
     </>
 }

@@ -9,9 +9,9 @@ type Props = {
 
 const FloatingActionBar = ({hidden = false, children}: Props) => {
     return createPortal(
-        <Navbar sticky="bottom" className="floatingActionBar py-0">
+        <Navbar sticky="bottom" className="floatingActionBar py-0 w-100 bg-light bg-gradient">
             <Collapse in={!hidden}>
-            <div className="w-100">
+            <div className="w-100 p-2">
                 { children }
             </div>
             </Collapse>
