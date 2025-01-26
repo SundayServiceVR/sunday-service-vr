@@ -20,6 +20,8 @@ const EventLineup = () => {
             prerecord_url: "",
             duration: 1,
             is_debut,
+            rtmp_url: "",
+            twitch_username: "",
         }
         setAddDjModalShow(false);
         const slots_copy = [...eventScratchpad.slots, slot];

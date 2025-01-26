@@ -10,7 +10,7 @@ export type Dj = {
 
 export type Slot = {
     dj_ref: DocumentReference;
-    start_time: Date | undefined;
+    start_time?: Date;
     duration: SlotDuration;
     is_live?: boolean;
 
