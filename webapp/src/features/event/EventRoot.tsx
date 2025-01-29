@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Alert, Breadcrumb, Button, Container, Nav, Stack, Toast } from 'react-bootstrap';
+import { Breadcrumb, Button, Container, Nav, Stack, Toast } from 'react-bootstrap';
 import { calcSlotTimes, default_event, saveEvent } from "../../store/events";
 import { docToEvent } from "../../store/converters";
 import { onSnapshot, doc } from "firebase/firestore";
@@ -24,7 +24,7 @@ const EventRoot = () => {
 
     // Listen for changes to the event and reset our actual event when they change.
     useEffect(() => {
-        if(!eventId) {
+        if (!eventId) {
             return;
         }
 
@@ -68,18 +68,18 @@ const EventRoot = () => {
     }
 
     const publishEvent = async () => {
-        if(hasChanges) {
-            toast.custom( <Toast
+        if (hasChanges) {
+            toast.custom(<Toast
                 className="d-inline-block m-1"
                 bg="warning"
-              >
+            >
                 <Toast.Header closeButton={false}>
-                  UwU
+                    UwU
                 </Toast.Header>
                 <Toast.Body>
                     Please save changes before publishing this event.
                 </Toast.Body>
-              </Toast>
+            </Toast>
             );
 
             return;
@@ -102,14 +102,14 @@ const EventRoot = () => {
         </h2>
 
         <Stack direction="horizontal" gap={3}>
-                <EventPublishedStatusBadge event={event} />
-                <div className="ms-auto" />
-                { !event.published  && <Button size="lg" onClick={publishEvent}>Publish Event</Button> }
+            <EventPublishedStatusBadge event={event} />
+            <div className="ms-auto" />
+            {!event.published && <Button size="lg" onClick={publishEvent}>Publish Event</Button>}
         </Stack>
 
-        <Nav defaultActiveKey="/events/setup" variant="tabs"  as="ul" activeKey={location.pathname}>
+        <Nav defaultActiveKey="/events/setup" variant="tabs" as="ul" activeKey={location.pathname}>
             <Nav.Item as="li">
-                <Link to={`/events/${event.id}/setup`}className="nav-link">Setup</Link>
+                <Link to={`/events/${event.id}/setup`} className="nav-link">Setup</Link>
             </Nav.Item>
             <Nav.Item as="li">
                 <Link to={`/events/${event.id}/lineup`} className="nav-link">Lineup</Link>
@@ -121,25 +121,20 @@ const EventRoot = () => {
                 <Link to={`/events/${event.id}/announcements`} className="nav-link">Public Announcements</Link>
             </Nav.Item>
         </Nav>
-        
+
         <Container className="mt-3">
             <Outlet context={[eventScratchpad, proposeEventChange]} />
         </Container>
 
         <FloatingActionBar hidden={!hasChanges}>
-            <Alert variant="primary">
-                <div className="mx-auto" />
-                <Alert.Heading>You have unsaved changes</Alert.Heading>
-                <p>Save your changes to update this event.</p>
-                <hr />
-                <div className="d-flex justify-content-center">
-                    <Stack gap={3} direction="horizontal">
-                        <Button onClick={onSaveEvent} color="confirm">Save</Button>
-                        <Button onClick={onCancelChanges} color="confirm">Cancel</Button>
-                    </Stack>
-                </div>
-            </Alert>
-        </FloatingActionBar>
+            <Container>
+                <Stack direction="horizontal" gap={3} className="justify-content-end">
+                    <div className="d-flex align-items-center text-secondary">Save your Changes</div>
+                    <Button onClick={onSaveEvent} variant="primary">Save</Button>
+                    <Button onClick={onCancelChanges} variant="secondary">Discard</Button>
+                </Stack>
+            </Container>
+        </FloatingActionBar >
     </>
 }
 export default EventRoot;
