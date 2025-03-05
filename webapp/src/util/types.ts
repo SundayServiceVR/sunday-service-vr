@@ -6,8 +6,8 @@ export type Dj = {
     dj_name: string;
     twitch_username?: string;
     rtmp_url?: string;
-    events: DocumentReference[];
-    notes: string[];
+    events?: DocumentReference[];
+    notes?: string[];
 }
 
 export type Slot = {

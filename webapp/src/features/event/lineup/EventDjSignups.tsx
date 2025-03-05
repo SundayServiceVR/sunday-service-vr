@@ -59,6 +59,10 @@ const EventDjSignups = ({ event, onAddDjToLineup, onRemoveDjFromSignups }: Props
 
           newDjCache[doc.ref.id] = {dj};
           
+          if(!dj.events) {
+            return;
+          }
+
           // Fetch the related events throught he eventCache
           fetchEvents(dj.events);
         });
