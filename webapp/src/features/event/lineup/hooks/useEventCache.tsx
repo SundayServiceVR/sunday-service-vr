@@ -46,7 +46,7 @@ export const useEventCache = () => {
         });
       }
     },
-    []);
+    [eventCache]);
 
   return { fetchEvents, eventCache };
 }
