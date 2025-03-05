@@ -1,10 +1,13 @@
 import { collection, documentId, DocumentReference, getDocs, query, where } from "firebase/firestore";
-import { Button, Container, Card, Stack, Row, Col, ListGroup } from "react-bootstrap"
+import { Button, Container, Card, Stack, Row, Col, ListGroup, Spinner } from "react-bootstrap"
 import { Dj, Event } from "../../../util/types";
 import { useEffect, useState } from "react";
 import { docToRawType } from "../../../store/util";
 import { db } from "../../../util/firebase";
 import { ActionMenu } from "../../../components/actionMenu/ActionMenu";
+import { useEventCache } from "./hooks/useEventCache";
+import { Link } from "react-router-dom";
+import { XSquare } from "react-feather";
 
 type Props = {
   event: Event,
@@ -33,6 +36,10 @@ const EventDjSignups = ({ event, onAddDjToLineup, onRemoveDjFromSignups }: Props
 
   const isHidableSubmission = (signup: { dj_ref: DocumentReference }) => hiddenDjs.includes(signup.dj_ref.id) || event.slots.map(slot => slot.dj_ref.id).includes(signup.dj_ref.id);
 
+  const { eventCache, fetchEvents } = useEventCache();
+  
+
+
   useEffect(() => {
 
     if (event.signups.length === 0) {
@@ -48,13 +55,30 @@ const EventDjSignups = ({ event, onAddDjToLineup, onRemoveDjFromSignups }: Props
 
       querySnapshot.docs
         .forEach((doc) => {
-          newDjCache[doc.ref.id] = {
-            dj: docToRawType<Dj>(doc),
-          }
+          const dj = docToRawType<Dj>(doc);
+
+          newDjCache[doc.ref.id] = {dj};
+          
+          // Fetch the related events throught he eventCache
+          fetchEvents(dj.events);
         });
       setDjCache(newDjCache);
     })()
-  }, [event.signups])
+  }, [event.signups, fetchEvents]);
+
+  
+  const getDateFromCachedEvent = (eventRef: DocumentReference) => {
+    const event = eventCache.get(eventRef.id);
+    if (event === "PENDING" ) {
+      return <Spinner size="sm" variant="secondary"/>;
+    }
+
+    if (!event) {
+      return <XSquare />
+    }
+
+    return <span><Link to={`/events/${event.id}/lineup`} target="_blank">{event.name}: {event.start_datetime.toLocaleDateString()}</Link></span>;
+  }
 
   return <Container className="px-0 pb-3">
     <Stack gap={3}>
@@ -115,8 +139,10 @@ const EventDjSignups = ({ event, onAddDjToLineup, onRemoveDjFromSignups }: Props
                       <a>(See All)</a> */}
                       </Stack>
                     <ListGroup>
-                      {["date-1", "date-2", "date-3"].map(date => 
-                        <ListGroup.Item key={date} className="px-3 py-1">{date}</ListGroup.Item>
+                      {dj?.events?.map((eventRef) => 
+                        <ListGroup.Item key={eventRef.id} className="px-3 py-1">
+                          { getDateFromCachedEvent(eventRef) }
+                        </ListGroup.Item>
                       )}
 
                     </ListGroup>
@@ -143,6 +169,7 @@ const EventDjSignups = ({ event, onAddDjToLineup, onRemoveDjFromSignups }: Props
     </Stack>
   </Container>
 }
+
 
 export { EventDjSignups }
 

@@ -3,12 +3,11 @@ import { useEventOperations } from "../outletContext";
 import EventSlotTechnicalDetails from "./EventSlotTechnicalDetails";
 import { setEventSlotByIndex } from "../util";
 
-
 const EventTechnicalDetails = () => {
   const [eventScratchpad, updateEventScratchpad] = useEventOperations();
 
   return <Container>
-    <h1 className="display-6">Event Technical</h1>
+    <h1 className="display-6">Stream Details</h1>
     <Form.Group className="mt-2">
       <Form.Label>
         Published
@@ -20,7 +19,6 @@ const EventTechnicalDetails = () => {
       />
     </Form.Group>
 
-
     <ListGroup>
       {eventScratchpad.slots.map((slot, index) => (
         <ListGroup.Item key={`${eventScratchpad.id}-slot-${index}`}>
@@ -28,8 +26,7 @@ const EventTechnicalDetails = () => {
             updateEventScratchpad(
               setEventSlotByIndex(eventScratchpad, index, newSlot)
             )
-          }
-          }
+          }}
           />
         </ListGroup.Item>
       ))}

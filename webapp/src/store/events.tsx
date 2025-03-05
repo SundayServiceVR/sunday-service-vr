@@ -46,7 +46,9 @@ export const saveEvent = async (event: Event, previousEvent?: Event) => {
     for (const dj of djsAdded) {
       const djRef = doc(db, "djs", dj.id);
       transaction.update(djRef, {
-        events: arrayUnion(event.id)
+        events: arrayUnion(
+          doc(db, "events", eventId)
+        )
       });
     }
 
@@ -54,7 +56,9 @@ export const saveEvent = async (event: Event, previousEvent?: Event) => {
     for (const dj of djsRemoved) {
       const djRef = doc(db, "djs", dj.id);
       transaction.update(djRef, {
-        events: arrayRemove(event.id)
+        events: arrayRemove(
+          doc(db, "events", eventId)
+        )
       });
     }
   });
