@@ -59,21 +59,24 @@ const EventDjSignups = ({ event, onAddDjToLineup, onRemoveDjFromSignups }: Props
   return <Container className="px-0 pb-3">
     <Stack gap={3}>
       {event.signups.map(
-        (signup) => (
-          <Card key={signup.dj_ref?.id}>
+        (signup) => {
+
+          const dj: Dj | null = djCache[signup.dj_ref.id]?.dj ?? null;
+
+          return <Card key={signup.dj_ref?.id}>
             <Card.Header>
               <Stack direction="horizontal" gap={1}>
                 <div className="lead">
                   { hiddenDjs.includes(signup.dj_ref.id) && "(hidden)"}
                   { event.slots.map(slot => slot.dj_ref.id).includes(signup.dj_ref.id) && "(in lineup)"}
-                  {djCache[signup.dj_ref?.id]?.dj.dj_name ?? signup.dj_ref?.id}
+                  {dj?.dj_name ?? signup.dj_ref?.id}
                   </div>
                 <div className="ms-auto"></div>
                 <ActionMenu options={[
                   {
                     label: "Add To Lineup",
                     onClick: () => {
-                      onAddDjToLineup(signup.dj_ref, djCache[signup.dj_ref.id]?.dj.dj_name ?? "Unknown Name", true)
+                      onAddDjToLineup(signup.dj_ref, dj.dj_name ?? "Unknown Name", true)
                     }
                   },
                   {
@@ -99,11 +102,15 @@ const EventDjSignups = ({ event, onAddDjToLineup, onRemoveDjFromSignups }: Props
                   <Col>
                     {/* <div>Availability: Blarg</div>
                   <div>Type: Live</div> */}
-                    <div>Notes: They don't use the low pass on the mic</div>
+                    <div>Notes:
+                      <ul>
+                        { dj?.notes?.map((note, index) => <li key={`dj-note-${index}`}>{note}</li>)}
+                      </ul>
+                    </div>
                   </Col>
                   <Col>
                       <Stack direction="horizontal">
-                      <span>Recent Events (13 total)</span>
+                      <span>Recent Events ({ dj?.events?.length ?? "?" } total)</span>
                       {/* <span className="ms-auto" />
                       <a>(See All)</a> */}
                       </Stack>
@@ -117,28 +124,8 @@ const EventDjSignups = ({ event, onAddDjToLineup, onRemoveDjFromSignups }: Props
                 </Row>
               </Container>
             </Card.Body>
-            {/* <Card.Footer>
-              <Container>
-                <Row>
-                  <Col className="text-center">
-                    {event.slots.map(slot => slot.dj_ref?.id).includes(signup.dj_ref?.id)
-                      ? <Button variant="tertiary" onClick={() => onRemoveDjFromLineup(signup.dj_ref)}>"(Rmv)" Remove from Lineup</Button>
-                      : <Button variant="tertiary" onClick={() => onAddDjToLineup(signup.dj_ref, djCache[signup.dj_ref.id]?.dj.dj_name ?? "Unknown Name", true)}>Add to Lineup</Button>}
-
-                  </Col>
-                  {
-                    !event.slots.map(slot => slot.dj_ref.id).includes(signup.dj_ref?.id) && <Col className="text-center">
-                      {!hiddenDjs.includes(signup.dj_ref?.id)
-                        ? <Button variant="tertiary" onClick={() => { setHiddenDjs([...hiddenDjs, signup.dj_ref.id]) }}>Hide</Button>
-                        : <Button variant="tertiary" onClick={() => { setHiddenDjs(hiddenDjs.filter(existingId => existingId !== signup.dj_ref.id)) }}>Unhide</Button>}
-                    </Col>
-                  }
-
-                </Row>
-              </Container>
-            </Card.Footer> */}
           </Card>
-        )
+        }
       ).filter((_, index) => showHiddenDjs || !isHidableSubmission(event.signups[index]))
 
       }

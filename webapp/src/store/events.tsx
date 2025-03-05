@@ -1,6 +1,6 @@
 import { nextSundayServiceDefaultDateTime } from '../util/util';
 import { Event } from '../util/types';
-import { Timestamp, addDoc, collection, doc, getDocs, orderBy, query, setDoc, where } from 'firebase/firestore';
+import { Timestamp, addDoc, collection, doc, getDocs, orderBy, query, arrayUnion, arrayRemove, where, runTransaction } from 'firebase/firestore';
 import { db } from '../util/firebase';
 import { docToEvent } from './converters';
 
@@ -23,14 +23,41 @@ export const createEvent = async (event: Event) => {
   return result;
 }
 
-export const saveEvent = async (event: Event) => {
+export const saveEvent = async (event: Event, previousEvent?: Event) => {
   event = calcSlotTimes(event);
   event = setDjPlays(event);
 
-  if (!event.id) {
+  const eventId = event.id;
+
+  if (!eventId) {
     throw (new Error("Attempted to save an event with no assigned id"));
   }
-  await setDoc(doc(db, "events", event.id ?? undefined), event);
+
+  const djsAdded = event.dj_plays.filter(dj => !previousEvent?.dj_plays.includes(dj));
+  const djsRemoved = previousEvent?.dj_plays.filter(dj => !event?.dj_plays.includes(dj)) ?? [];
+
+  // await setDoc(doc(db, "events", event.id ?? undefined), event);
+
+  await runTransaction(db, async (transaction) => {
+    const eventRef = doc(db, "events", eventId);
+    transaction.set(eventRef, event);
+
+    // Add event to each DJ in djsAdded
+    for (const dj of djsAdded) {
+      const djRef = doc(db, "djs", dj.id);
+      transaction.update(djRef, {
+        events: arrayUnion(event.id)
+      });
+    }
+
+    // Remove event from each DJ in djsRemoved
+    for (const dj of djsRemoved) {
+      const djRef = doc(db, "djs", dj.id);
+      transaction.update(djRef, {
+        events: arrayRemove(event.id)
+      });
+    }
+  });
 }
 
 export const calcSlotTimes = (event: Event): Event => {

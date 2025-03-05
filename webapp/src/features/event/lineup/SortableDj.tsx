@@ -62,7 +62,7 @@ const SortableDj = ({
                         <strong>Name</strong>
                     </Form.Label>
                     <Col sm={10}>
-                        <Form.Label column="sm">{slot.dj_name}</Form.Label>
+                        <Form.Label column="sm">{slot.name}</Form.Label>
                         {/* <Form.Control
                             size="sm"
                             value={slot.dj_name}

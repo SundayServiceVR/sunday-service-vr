@@ -6,6 +6,8 @@ export type Dj = {
     dj_name: string;
     twitch_username?: string;
     rtmp_url?: string;
+    events: DocumentReference[];
+    notes: string[];
 }
 
 export type Slot = {
@@ -13,6 +15,7 @@ export type Slot = {
     start_time?: Date;
     duration: SlotDuration;
     is_live?: boolean;
+    name: string;
 
     stream_source_type?: StreamSourceType;
 

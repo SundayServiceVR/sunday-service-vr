@@ -16,7 +16,7 @@ const EventLineup = () => {
     const addNewDjAsSlot = (documentRef: DocumentReference, slot_name: string, is_debut: boolean) => {
         const slot: Slot = {
             dj_ref: documentRef,
-            dj_name: slot_name,
+            name: slot_name,
             prerecord_url: "",
             duration: 1,
             is_debut,

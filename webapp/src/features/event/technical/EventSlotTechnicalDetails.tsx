@@ -26,7 +26,7 @@ const EventSlotTechnicalDetails = ({
             <Col sm={12}>
                 <Form.Group>
                     <Form.Label>Slot Name</Form.Label>
-                    <Form.Control />
+                    <Form.Control value={slot.name} onChange={(event) => onUpdateSlot({...slot, name: event.target.value})} />
                 </Form.Group>
 
                 <Form.Group as={Row} className="mb-3">
