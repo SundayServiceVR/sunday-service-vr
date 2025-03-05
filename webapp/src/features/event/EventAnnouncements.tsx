@@ -22,7 +22,7 @@ const EventAnnouncements = () => {
     const twitterFooterInstructions = <p className="my-2">Paste this text to Twitter and Bluesky.</p>
     
     return <section>
-        <h1 className="display-5">Public Announcements</h1>
+        <h1 className="display-6">Public Announcements</h1>
         <Form>
             <Form.Group>
                 <Form.Label>

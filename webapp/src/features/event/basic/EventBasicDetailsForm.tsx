@@ -43,7 +43,7 @@ const EventBasicDetailsForm = ({ event: eventScratchpad, onEventChange: proposeE
                 Host
             </Form.Label>
             <Form.Control
-                placeholder="Strawbs"
+                placeholder="TBD"
                 type="text"
                 value={eventScratchpad.host}
                 required

@@ -97,11 +97,12 @@ const EventRoot = () => {
             <Breadcrumb.Item><Link to={`/events/${event.id}`}>{event.id}</Link></Breadcrumb.Item>
         </Breadcrumb>
 
-        <h2 className="fw-normal">
-            {event.name} ({event.start_datetime.toLocaleDateString()})<br />
-        </h2>
-
         <Stack direction="horizontal" gap={3}>
+            <h2 className="display-4">
+                {event.name} ({event.start_datetime.toLocaleDateString()})
+            </h2>
+
+
             <EventPublishedStatusBadge event={event} />
             <div className="ms-auto" />
             {!event.published && <Button size="lg" onClick={publishEvent}>Publish Event</Button>}

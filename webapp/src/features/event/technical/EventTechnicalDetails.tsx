@@ -8,6 +8,7 @@ const EventTechnicalDetails = () => {
   const [eventScratchpad, updateEventScratchpad] = useEventOperations();
 
   return <Container>
+    <h1 className="display-6">Event Technical</h1>
     <Form.Group className="mt-2">
       <Form.Label>
         Published
