@@ -12,6 +12,8 @@ const CreateDj = () => {
         dj_name: "",
         rtmp_url: "",
         twitch_username: "",
+        events: [],
+        notes: [],
      };
 
     const [dj, setDj] = useState<Dj>(defaultDj);
