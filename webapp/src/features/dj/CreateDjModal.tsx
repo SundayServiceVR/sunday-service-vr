@@ -16,6 +16,8 @@ export const CreateDjModal = ({ show, handleClose, onDjCreated }: Props) => {
         dj_name: "",
         discord_id: "",
         public_name: "",
+        events: [],
+        notes: [],
     }
     const [dj, setDj] = useState<Dj>(defaultDj);
 
