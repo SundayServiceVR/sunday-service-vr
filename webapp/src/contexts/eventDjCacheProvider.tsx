@@ -1,0 +1,23 @@
+
+import { useContext, createContext } from "react"
+import { Dj, Event } from '../util/types';
+
+type EventDjCacheContextType = {
+  eventCache: Map<string, Event>;
+  djCache: Map<string, Dj>;
+  loading: boolean;
+  getEventWithDjs: (id: string) => {
+      event: Event;
+      djs: (Dj | "PENDING")[];
+  } | null;
+};
+
+export const EventDjPlayMapperContext = createContext<EventDjCacheContextType | undefined>(undefined);
+
+export const useEventDjCache = () => {
+  const context = useContext(EventDjPlayMapperContext);
+  if (context === undefined) {
+    throw new Error('useEventDjPlayMapper must be used within an EventDjPlayMapperProvider');
+  }
+  return context;
+};

@@ -10,24 +10,54 @@ export type Dj = {
     notes?: string[];
 }
 
-export type Slot = {
-    dj_ref: DocumentReference;
-    start_time?: Date;
-    duration: SlotDuration;
-    is_live?: boolean;
+export type Event = {
+    id?: string;
     name: string;
+    published: boolean,
+    message: string;
+    start_datetime: Date;
+    end_datetime?: Date;
+    host: string;
+    slots: Slot[];
+    footer: string;
+    signups: EventSignup[]
+    dj_plays: DocumentReference[],
+}
 
+export type EventSignup = {
+    uuid: string;
+    name: string;
+    dj_refs: DocumentReference[];
+    debut: boolean;
+    requested_duration: SlotDuration;
+    type: SlotType;
+}
+
+export type Slot = {
+
+    signup_uuid?: string;
     stream_source_type?: StreamSourceType;
 
-    prerecord_url?: string;
+    // By default, we want to pull this from the dj object.
+    // However, in some cases (b2bs, borrowed stream keys, etc), we
+    // want to override this via this prop on the slot itself.
+    stream_source_url?: string;
+
+    start_time: Date;
+    duration: SlotDuration;
 
     //Depricated
+    is_live?: boolean;
+    name?: string;
+    dj_ref: DocumentReference;
+    prerecord_url?: string;
     slot_type?: SlotType;
     is_debut?: boolean;
     discord_id?: string,
     dj_name?: string,
-    rtmp_url: string;
-    twitch_username: string;
+    rtmp_url?: string;
+    twitch_username?: string;
+
 }
 
 export enum SlotType {
@@ -55,21 +85,3 @@ export const SlotTypes =
 
 
 export type SlotDuration = (0.5 | 1 | 1.5 | 2 | 2.5 | 3 | 3.5 | 4);
-
-export type Event = {
-    id?: string;
-    name: string;
-    published: boolean,
-    message: string;
-    start_datetime: Date;
-    end_datetime?: Date;
-    host: string;
-    slots: Slot[];
-    footer: string;
-    signups: EventSignup[]
-    dj_plays: DocumentReference[],
-}
-
-export type EventSignup = {
-    dj_ref: DocumentReference;
-}

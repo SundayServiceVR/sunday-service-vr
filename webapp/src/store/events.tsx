@@ -33,10 +33,10 @@ export const saveEvent = async (event: Event, previousEvent?: Event) => {
     throw (new Error("Attempted to save an event with no assigned id"));
   }
 
+  // Reconcile dj.events
+
   const djsAdded = event.dj_plays.filter(dj => !previousEvent?.dj_plays.includes(dj));
   const djsRemoved = previousEvent?.dj_plays.filter(dj => !event?.dj_plays.includes(dj)) ?? [];
-
-  // await setDoc(doc(db, "events", event.id ?? undefined), event);
 
   await runTransaction(db, async (transaction) => {
     const eventRef = doc(db, "events", eventId);

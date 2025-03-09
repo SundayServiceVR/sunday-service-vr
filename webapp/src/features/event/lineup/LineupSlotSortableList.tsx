@@ -1,10 +1,14 @@
-import { ListGroup, ListGroupItem } from "react-bootstrap";
-import { Slot } from "../../../util/types";
+import { Alert, ListGroup, ListGroupItem } from "react-bootstrap";
+import { EventSignup, Slot } from "../../../util/types";
 import { useEventOperations } from "../outletContext";
-import SortableDj from "./SortableDj";
+import LineupEventSlot from "./LineupEventSlot";
 import { setEventSlotByIndex } from "../util";
 
-const SortableDjList = () => {
+type Props = {
+    onUpdateSignup: (newSignup: EventSignup) => void;
+}
+
+const LineupSlotSortableList = ({ onUpdateSignup }: Props) => {
 
     const [eventScratchpad, proposeEventChange] = useEventOperations();
 
@@ -27,22 +31,33 @@ const SortableDjList = () => {
         proposeEventChange(
             setEventSlotByIndex(eventScratchpad, slot_index, newSlot)
         );
-    
 
     return <ListGroup >
         {eventScratchpad.slots.map(
-            (slot: Slot, index: number) => <ListGroupItem key={`slot-${index}`} className="p-1">
-                <SortableDj
+            (slot: Slot, index: number) => {
+
+            const signupForSlot = eventScratchpad.signups.find(signup => signup.uuid === slot.signup_uuid);
+
+            if(!signupForSlot) {
+                // TODO: Error boundary and such
+                return <Alert>Unable to find signup for slot: Signup with {slot.signup_uuid} should exist but wasn't found.</Alert>
+            }
+
+            return <ListGroupItem key={`slot-${index}`} className="p-1">
+                <LineupEventSlot
                     index={index}
                     slot={slot}
                     onSlotMoveLater={() => { swapSlots(index, index + 1); }}
                     onSlotMoveSooner={() => { swapSlots(index, index - 1); }}
                     onRemoveSlot={() => { removeSlot(index); }}
                     onUpdateSlot={(newSlot: Slot) => {updateSlot(index, newSlot)}}
+                    onUpdateSignup={onUpdateSignup}
+                    event={eventScratchpad}
+                    signup={signupForSlot}
                 />
             </ListGroupItem>
-        )}
+})}
     </ListGroup>
 }
 
-export default SortableDjList;
+export default LineupSlotSortableList;

@@ -15,13 +15,10 @@ import { Slot, Event } from "../util/types";
  */
 export const docToEvent = (doc: DocumentData) => {
     const data = doc.data();
-    if (data) {
-      return {
-        ...docToEventRaw(data),
-        id: doc.ref.id,
-      } as Event;
-    }
-    return null;
+    return {
+      ...docToEventRaw(data),
+      id: doc.ref.id,
+    } as Event;
   }
   
 /**

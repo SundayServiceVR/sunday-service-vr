@@ -2,7 +2,7 @@ import { Link, RouteObject } from "react-router-dom";
 import EventDetails from "./basic/EventDetails";
 import EventAnnouncements from "./EventAnnouncements";
 import EventLineup from "./lineup/EventLineup";
-import EventVerifyDJs from "./lineup/EventVerifyDJs";
+import EventVerifyDJs from "./linupVerification/EventVerifyDJs";
 import EventTechnicalDetails from "./technical/EventTechnicalDetails";
 
 export const eventRoutes: RouteObject[] = [

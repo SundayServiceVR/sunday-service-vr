@@ -1,50 +1,61 @@
 import { useState } from "react";
 import { Button, Col, Container, Row, Stack } from "react-bootstrap";
-import { Dj, Slot } from "../../../util/types";
+import { Dj, EventSignup, Slot, SlotDuration, SlotType } from "../../../util/types";
 import { useEventOperations } from "../outletContext";
-import SortableDjList from "./SortableDjList";
+import LineupSlotSortableList from "./LineupSlotSortableList";
 import { DjSearchSelect } from "../../dj/DjSearchSelect";
 import { CreateDjModal } from "../../dj/CreateDjModal";
 import { DocumentReference } from "firebase/firestore";
-import { EventDjSignups } from "./EventDjSignups";
+import { EventDjSignups } from "./EventSignupList";
+import {v4 as uuidv4} from 'uuid';
+import { useEventDjCache } from "../../../contexts/eventDjCacheProvider";
 
 const EventLineup = () => {
 
     const [eventScratchpad, proposeEventChange] = useEventOperations();
     const [addDjModalShow, setAddDjModalShow] = useState<boolean>(false);
 
-    const addNewDjAsSlot = (documentRef: DocumentReference, slot_name: string, is_debut: boolean) => {
+    const { djCache } = useEventDjCache();
+
+    const addSlotFromSignup = (signup: EventSignup) => {
         const slot: Slot = {
-            dj_ref: documentRef,
-            name: slot_name,
-            prerecord_url: "",
-            duration: 1,
-            is_debut,
-            rtmp_url: "",
-            twitch_username: "",
+            dj_ref: signup.dj_refs[0],
+            duration: signup.requested_duration,
+            start_time: new Date(),
+            signup_uuid: signup.uuid,
         }
         setAddDjModalShow(false);
         const slots_copy = [...eventScratchpad.slots, slot];
         proposeEventChange({...eventScratchpad, slots: slots_copy});
     }
 
-    const addDjToSignups = (_: Dj, documentRef: DocumentReference) => {
+    const addSignup = (_: Dj, djRef: DocumentReference, isDebut: boolean = false) => {
         setAddDjModalShow(false);
-        const currentSignups = eventScratchpad.signups ?? [];
-        const otherSignups = currentSignups.filter(dj_signup => dj_signup.dj_ref.id !== documentRef.id);
-        const signups_copy = [...otherSignups, { dj_ref: documentRef }];
+        const signups_copy = [...eventScratchpad.signups, {
+            dj_refs: [djRef],
+            name: djCache.get(djRef.id)?.dj_name ?? "Unknown Dj",
+            debut: isDebut,
+            uuid: uuidv4(),
+            requested_duration: 1 as SlotDuration,
+            type: SlotType.LIVE,
+         } as EventSignup];
         proposeEventChange({ ...eventScratchpad, signups: signups_copy });
     }
 
-    const removeDjFromSignups = (deleted_dj_ref: DocumentReference) => {
-        const signups_copy = eventScratchpad.signups.filter(dj_signup => dj_signup.dj_ref.id !== deleted_dj_ref.id); 
+    const removeSignup = (signup: EventSignup) => {
+        const signups_copy = eventScratchpad.signups.filter(dj_signup => dj_signup.uuid !== signup.uuid); 
         proposeEventChange({ ...eventScratchpad, signups: signups_copy });
     }
 
-    const removeDjFromLineup = (deleted_dj_ref: DocumentReference) => {
-        const slots_copy = eventScratchpad.slots.filter(slot => slot.dj_ref.id !== deleted_dj_ref.id);
-        proposeEventChange({ ...eventScratchpad, slots: slots_copy });
+    const updateSignup = (signup: EventSignup) => {
+        const signups_copy = eventScratchpad.signups.filter(dj_signup => dj_signup.uuid !== signup.uuid); 
+        proposeEventChange({ ...eventScratchpad, signups: [...signups_copy, signup] });
     }
+
+    // const removeSlotFromLineup = (deleted_slot: Slot) => {
+    //     const slots_copy = eventScratchpad.slots.filter(slot => deleted_slot.dj_ref.id !== slot.dj_ref.id);
+    //     proposeEventChange({ ...eventScratchpad, slots: slots_copy });
+    // }
 
     return <Container>
         <Container>
@@ -56,7 +67,7 @@ const EventLineup = () => {
                             <Col className="d-flex flex-column align-items-center">
                                 <Stack direction="horizontal" gap={2}>
                                     <div className="flex-grow-1">
-                                        <DjSearchSelect onDjSelect={addDjToSignups}/>
+                                        <DjSearchSelect onDjSelect={addSignup}/>
                                     </div>
                                     <div className="vr" />
                                     <Button variant="primary" onClick={() => setAddDjModalShow(true)} className="flex-grow-1">Onboard a New DJ</Button>
@@ -65,17 +76,17 @@ const EventLineup = () => {
                             </Col>
                         </Row>
                         <Row>
-                            <EventDjSignups event={eventScratchpad} onAddDjToLineup={addNewDjAsSlot} onRemoveDjFromLineup={removeDjFromLineup} onRemoveDjFromSignups={removeDjFromSignups} />
+                            <EventDjSignups event={eventScratchpad}  onUpdateSignup={updateSignup} onAddSlotToLineup={addSlotFromSignup} onRemoveSignup={removeSignup} />
                         </Row>
                     </Container>
                 </Col>
                 <Col md={{ order: 1, span: 6 }}>
                     <h3 className="display-6">Lineup (Local Times)</h3>
-                    <SortableDjList />
+                    <LineupSlotSortableList onUpdateSignup={updateSignup}/>
                 </Col>
             </Row>
         </Container>
-        <CreateDjModal show={addDjModalShow} handleClose={() => setAddDjModalShow(false)} onDjCreated={addDjToSignups} />
+        <CreateDjModal show={addDjModalShow} handleClose={() => setAddDjModalShow(false)} onDjCreated={addSignup} />
     </Container>;
 };
 
