@@ -7,7 +7,7 @@ import { confirm } from "../../components/confirm";
 
 const Layout = () => {
     return <>
-        <Navbar expand="lg" className="bg-body-secondary" data-bs-theme="dark">
+        <Navbar expand="lg" className="bg-body-secondary px-3" data-bs-theme="dark">
             <Navbar.Brand className="px-3">Sunday Service</Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse className="justify-content-end">
@@ -24,6 +24,8 @@ const Layout = () => {
                     <Nav.Link href="/globalSettings">
                         Global Settings
                     </Nav.Link>
+                </Nav>
+                <Nav className="ms-auto mx-3">
                     <Nav.Link onClick={() => confirm({
                         title: "Are You sure?",
                         message: "You are about to logout",

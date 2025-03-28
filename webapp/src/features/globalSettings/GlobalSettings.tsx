@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Form, Button, Container, Spinner, Alert } from "react-bootstrap";
+import { Form, Button, Container, Spinner, Alert, Card } from "react-bootstrap";
 import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
 
 const GlobalSettings = () => {
@@ -52,31 +52,41 @@ const GlobalSettings = () => {
     };
 
     if (loading) {
-        return <Spinner animation="border" role="status">
-            <span className="visually-hidden">Loading...</span>
-        </Spinner>;
+        return (
+            <Container className="d-flex justify-content-center align-items-center" style={{ height: "100vh" }}>
+                <Spinner animation="border" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                </Spinner>
+            </Container>
+        );
     }
 
     return (
         <Container className="my-5">
-            <h2>Global Settings</h2>
-            {error && <Alert variant="danger">{error}</Alert>}
-            {success && <Alert variant="success">Settings saved successfully!</Alert>}
-            <Form onSubmit={handleSave}>
-                <Form.Group className="mb-3" controlId="signupUrl">
-                    <Form.Label>Signup URL</Form.Label>
-                    <Form.Control
-                        type="url"
-                        placeholder="Enter signup URL"
-                        value={signupUrl}
-                        onChange={(e) => setSignupUrl(e.target.value)}
-                        required
-                    />
-                </Form.Group>
-                <Button variant="primary" type="submit" disabled={saving}>
-                    {saving ? "Saving..." : "Save"}
-                </Button>
-            </Form>
+            <h1 className="text-center mb-4">Global Settings</h1>
+            <Card className="shadow-sm">
+                <Card.Body>
+                    {error && <Alert variant="danger">{error}</Alert>}
+                    {success && <Alert variant="success">Settings saved successfully!</Alert>}
+                    <Form onSubmit={handleSave}>
+                        <Form.Group className="mb-3" controlId="signupUrl">
+                            <Form.Label>Signup URL</Form.Label>
+                            <Form.Control
+                                type="url"
+                                placeholder="Enter signup URL"
+                                value={signupUrl}
+                                onChange={(e) => setSignupUrl(e.target.value)}
+                                required
+                            />
+                        </Form.Group>
+                        <div className="d-flex justify-content-end">
+                            <Button variant="primary" type="submit" disabled={saving}>
+                                {saving ? "Saving..." : "Save"}
+                            </Button>
+                        </div>
+                    </Form>
+                </Card.Body>
+            </Card>
         </Container>
     );
 };

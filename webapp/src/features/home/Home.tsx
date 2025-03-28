@@ -1,4 +1,4 @@
-import { Card, Container, Spinner } from "react-bootstrap";
+import { Card, Container, Spinner, Row, Col } from "react-bootstrap";
 import { CurrentOrNextEvent } from "../../components/currentOrNextEvent/CurrentOrNextEvent";
 import { useEffect, useState } from "react";
 import { getFirestore, doc, getDoc } from "firebase/firestore";
@@ -56,56 +56,69 @@ const Home = () => {
     }, []);
 
     if (loading) {
-        return <Spinner animation="border" role="status">
-            <span className="visually-hidden">Loading...</span>
-        </Spinner>;
+        return <div className="d-flex justify-content-center align-items-center vh-100">
+            <Spinner animation="border" role="status">
+                <span className="visually-hidden">Loading...</span>
+            </Spinner>
+        </div>;
     }
 
     return <section>
-        <CurrentOrNextEvent />
-        <Container className="my-3">
-            <h2 className="mb-3">Signup Sheet</h2>
-            <div className="linksList">
-                <Card style={{ "maxWidth": "400px" }}>
-                    <Card.Header>
-                        <Card.Title>Signup Sheet</Card.Title>
-                    </Card.Header>
-                    <Card.Body>
-                        <p><a href={signupSheetUrl} target="_blank">{signupSheetUrl}</a></p>
-                    </Card.Body>
-                </Card>
+        {/* Hero Section */}
+        <div className="hero-section text-center py-5 bg-light">
+            <h1>Welcome to Sunday Service VR</h1>
+            <p className="lead">Your one-stop platform for hosting and participating in virtual events.</p>
+            <div className="mt-4">
+                <CurrentOrNextEvent />
             </div>
+        </div>
 
-            <h2 className="mt-5 mb-3">Helpful Links</h2>
-            <div className="linksList">
+        <Container className="my-5">
+            {/* Signup Sheet Section */}
+            <h2 className="mb-4 text-center">Signup Sheet</h2>
+            <Row className="justify-content-center">
+                <Col md={6}>
+                    <Card className="shadow-sm">
+                        <Card.Header className="bg-primary text-white">
+                            <Card.Title>Signup Sheet</Card.Title>
+                        </Card.Header>
+                        <Card.Body>
+                            <p><a href={signupSheetUrl} target="_blank" rel="noopener noreferrer">{signupSheetUrl}</a></p>
+                        </Card.Body>
+                    </Card>
+                </Col>
+            </Row>
+
+            {/* Helpful Links Section */}
+            <h2 className="mt-5 mb-4 text-center">Helpful Links</h2>
+            <Row className="g-4">
                 {
                     HELPFUL_LINKS.map((entry, entryIndex) =>
-                        <Card
-                            key={`entry${entryIndex}`}
-                            style={{ "maxWidth": "400px" }}
-                        >
-                            <Card.Header>
-                                <Card.Title>{entry.title}</Card.Title>
-                            </Card.Header>
-                            <Card.Body>
-                                <p><a href={entry.url} target="_blank">{entry.url}</a></p>
-                                <p>{entry.text}</p>
-                                {entry?.extra ? (
-                                    <ul>
-                                        {entry.extra.map((extraEntry, extraIndex) =>
-                                            <li key={`entry${entryIndex}extra${extraIndex}`}>
-                                                <a href={extraEntry.url} target="_blank">
-                                                    {extraEntry.title}
-                                                </a>
-                                            </li>
-                                        )}
-                                    </ul>
-                                ) : null}
-                            </Card.Body>
-                        </Card>
+                        <Col md={6} lg={4} key={`entry${entryIndex}`}>
+                            <Card className="shadow-sm h-100">
+                                <Card.Header className="bg-secondary text-white">
+                                    <Card.Title>{entry.title}</Card.Title>
+                                </Card.Header>
+                                <Card.Body>
+                                    <p><a href={entry.url} target="_blank" rel="noopener noreferrer">{entry.url}</a></p>
+                                    <p>{entry.text}</p>
+                                    {entry?.extra ? (
+                                        <ul>
+                                            {entry.extra.map((extraEntry, extraIndex) =>
+                                                <li key={`entry${entryIndex}extra${extraIndex}`}>
+                                                    <a href={extraEntry.url} target="_blank" rel="noopener noreferrer">
+                                                        {extraEntry.title}
+                                                    </a>
+                                                </li>
+                                            )}
+                                        </ul>
+                                    ) : null}
+                                </Card.Body>
+                            </Card>
+                        </Col>
                     )
                 }
-            </div>
+            </Row>
         </Container>
     </section>;
 }
