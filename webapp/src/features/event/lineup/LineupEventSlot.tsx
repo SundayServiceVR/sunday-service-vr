@@ -1,8 +1,9 @@
-import { Stack, Button, Container, Row, Col,} from "react-bootstrap";
+import { Stack, Button, Container, Row, Col, } from "react-bootstrap";
 import { Slot, Event, EventSignup } from "../../../util/types";
 import { ActionMenu } from "../../../components/actionMenu/ActionMenu";
 import { ArrowDown, ArrowUp } from "react-feather";
-import SignupDetails from "./SignupDetails";
+import SignupDetails from "./Components/SignupDetails";
+import { useEventDjCache } from "../../../contexts/eventDjCacheProvider";
 
 
 type Props = {
@@ -21,10 +22,16 @@ const LineupEventSlot = ({
     onUpdateSignup,
     slot,
     signup,
+    event,
     onSlotMoveSooner,
     onSlotMoveLater,
     onRemoveSlot,
 }: Props) => {
+
+    const { djCache } = useEventDjCache();
+
+    const djRef = event.signups.find(signup => signup.uuid === slot.signup_uuid)?.dj_refs[0];
+    const dj = djRef ? djCache.get(djRef.id) : null;
 
     return <Container className="my-2">
         <Row>
@@ -61,7 +68,16 @@ const LineupEventSlot = ({
                         }]} />
             </Col>
             <Col xs={{ order: 2, span: 12 }} md={{ order: 2, span: true }} className="pt-3">
-                <SignupDetails signup={signup} onUpdateSignup={onUpdateSignup}/>
+                <SignupDetails signup={signup} onUpdateSignup={onUpdateSignup} />
+                {
+                    dj && <>
+                        < hr />
+                        <div>
+                            { dj.dj_name }
+                        </div>
+                    </>
+                }
+
             </Col>
         </Row>
     </Container>;

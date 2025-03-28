@@ -4,16 +4,16 @@ import { Dj, EventSignup, Slot, SlotDuration, SlotType } from "../../../util/typ
 import { useEventOperations } from "../outletContext";
 import LineupSlotSortableList from "./LineupSlotSortableList";
 import { DjSearchSelect } from "../../dj/DjSearchSelect";
-import { CreateDjModal } from "../../dj/CreateDjModal";
 import { DocumentReference } from "firebase/firestore";
 import { EventDjSignups } from "./EventSignupList";
 import {v4 as uuidv4} from 'uuid';
 import { useEventDjCache } from "../../../contexts/eventDjCacheProvider";
+import { AddOrCreateDjModal } from "./Components/AddOrCreateDjModal";
 
 const EventLineup = () => {
 
     const [eventScratchpad, proposeEventChange] = useEventOperations();
-    const [addDjModalShow, setAddDjModalShow] = useState<boolean>(false);
+    const [createDjModalShow, setcreateDjModalShow] = useState<boolean>(false);
 
     const { djCache } = useEventDjCache();
 
@@ -24,13 +24,13 @@ const EventLineup = () => {
             start_time: new Date(),
             signup_uuid: signup.uuid,
         }
-        setAddDjModalShow(false);
+        setcreateDjModalShow(false);
         const slots_copy = [...eventScratchpad.slots, slot];
         proposeEventChange({...eventScratchpad, slots: slots_copy});
     }
 
     const addSignup = (_: Dj, djRef: DocumentReference, isDebut: boolean = false) => {
-        setAddDjModalShow(false);
+        setcreateDjModalShow(false);
         const signups_copy = [...eventScratchpad.signups, {
             dj_refs: [djRef],
             name: djCache.get(djRef.id)?.dj_name ?? "Unknown Dj",
@@ -70,9 +70,8 @@ const EventLineup = () => {
                                         <DjSearchSelect onDjSelect={addSignup}/>
                                     </div>
                                     <div className="vr" />
-                                    <Button variant="primary" onClick={() => setAddDjModalShow(true)} className="flex-grow-1">Onboard a New DJ</Button>
+                                    <Button variant="primary" onClick={() => setcreateDjModalShow(true)} className="flex-grow-1">Onboard a New DJ</Button>
                                 </Stack>
-
                             </Col>
                         </Row>
                         <Row>
@@ -86,7 +85,7 @@ const EventLineup = () => {
                 </Col>
             </Row>
         </Container>
-        <CreateDjModal show={addDjModalShow} handleClose={() => setAddDjModalShow(false)} onDjCreated={addSignup} />
+        <AddOrCreateDjModal show={createDjModalShow} handleClose={() => setcreateDjModalShow(false)} onDjSelected={addSignup} />
     </Container>;
 };
 

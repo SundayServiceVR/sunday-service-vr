@@ -1,5 +1,5 @@
 import { Col, Container, Form, InputGroup, Row, ToggleButton } from "react-bootstrap"
-import { SlotType, SlotDuration, EventSignup } from "../../../util/types"
+import { SlotType, SlotDuration, EventSignup } from "../../../../util/types"
 
 type Props = {
   signup: EventSignup,

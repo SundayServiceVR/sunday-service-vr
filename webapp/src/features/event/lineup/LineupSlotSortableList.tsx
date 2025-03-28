@@ -1,4 +1,4 @@
-import { Alert, ListGroup, ListGroupItem } from "react-bootstrap";
+import { Alert, Button, ListGroup, ListGroupItem } from "react-bootstrap";
 import { EventSignup, Slot } from "../../../util/types";
 import { useEventOperations } from "../outletContext";
 import LineupEventSlot from "./LineupEventSlot";
@@ -40,7 +40,10 @@ const LineupSlotSortableList = ({ onUpdateSignup }: Props) => {
 
             if(!signupForSlot) {
                 // TODO: Error boundary and such
-                return <Alert>Unable to find signup for slot: Signup with {slot.signup_uuid} should exist but wasn't found.</Alert>
+                return <Alert>
+                    Unable to find signup for slot: Signup with {slot.signup_uuid} should exist but wasn't found.
+                    <Button onClick={() => removeSlot(index)}>Delete</Button>
+                </Alert>
             }
 
             return <ListGroupItem key={`slot-${index}`} className="p-1">

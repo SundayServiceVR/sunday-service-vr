@@ -1,6 +1,6 @@
 import { Col, Container, ListGroup, Row, Spinner, Stack } from "react-bootstrap"
-import { useEventDjCache } from "../../../contexts/eventDjCacheProvider";
-import { Dj } from "../../../util/types";
+import { useEventDjCache } from "../../../../contexts/eventDjCacheProvider";
+import { Dj } from "../../../../util/types";
 import { Link } from "react-router-dom";
 
 
@@ -21,13 +21,13 @@ const DjDetails = ({ dj }: Props) => {
   return <Container>
     <Row>
       <Col>
-        <div>Dj Name: {dj.dj_name}</div>
-        <div>
+        <p>Dj Name: {dj.dj_name}</p>
+        {/* <div>
           Notes:
           <ul>
             {dj.notes?.map((note, index) => <li key={`dj-note-${index}`}>{note}</li>)}
           </ul>
-        </div>
+        </div> */}
       </Col>
       <Col>
         <Stack direction="horizontal">

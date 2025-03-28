@@ -9,13 +9,10 @@ const Layout = () => {
     return <>
         <Navbar expand="lg" collapseOnSelect className="bg-body-secondary" data-bs-theme="dark">
             <Container>
-                <Navbar.Brand>Sunday Service</Navbar.Brand>
+                <Navbar.Brand><Nav.Link href="/">Sunday Service</Nav.Link></Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse className="justify-content-end">
                     <Nav className="me-auto">
-                        <Nav.Link href="/">
-                            Home
-                        </Nav.Link>
                         <Nav.Link href="/events">
                             Events
                         </Nav.Link>
@@ -24,19 +21,22 @@ const Layout = () => {
                         </Nav.Link>
                     </Nav>
                     <Nav>
-                        <Nav.Link onClick={() => confirm({
-                            title: "Are You sure?",
-                            message: "You are about to logout",
-                            confirmButton: {
-                                text: "Yes",
-                                action: () => {
-                                    signOut(auth);
-                                }
-                            },
-                            cancelButton: {
-                                text: "Cancel"
-                            }
-                        })}>
+                        <Nav.Link
+                            onClick={
+                                () => confirm({
+                                    title: "Are You sure?",
+                                    message: "You are about to logout",
+                                    confirmButton: {
+                                        text: "Yes",
+                                        action: () => {
+                                            signOut(auth);
+                                        }
+                                    },
+                                    cancelButton: {
+                                        text: "Cancel"
+                                    }
+                                })
+                                }>
                             Logout
                         </Nav.Link>
                     </Nav>
