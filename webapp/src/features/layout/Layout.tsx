@@ -21,6 +21,9 @@ const Layout = () => {
                     <Nav.Link href="/djs">
                         Dj Roster
                     </Nav.Link>
+                    <Nav.Link href="/globalSettings">
+                        Global Settings
+                    </Nav.Link>
                     <Nav.Link onClick={() => confirm({
                         title: "Are You sure?",
                         message: "You are about to logout",

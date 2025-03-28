@@ -1,9 +1,10 @@
-import { Card, Container } from "react-bootstrap";
-import "./Home.css";
+import { Card, Container, Spinner } from "react-bootstrap";
 import { CurrentOrNextEvent } from "../../components/currentOrNextEvent/CurrentOrNextEvent";
-import { signupSheetUrl } from "../../util/constants";
+import { useEffect, useState } from "react";
+import { getFirestore, doc, getDoc } from "firebase/firestore";
+import "./Home.css";
 
-const helpfulLinks = [
+const HELPFUL_LINKS = [
     {
         title: "Hosting Guide",
         text: "This is the best place to start if you have any questions on how to host!",
@@ -15,18 +16,14 @@ const helpfulLinks = [
         url: "https://drive.google.com/drive/u/1/folders/1LSc92ZMwD4B68Ocx0dwKJSE2Eek21SET",
         extra: [
             {
-                title: "Signup Sheet",
-                url: signupSheetUrl
-            },
-            {
                 title: "Performer Stream Links",
-                url: "https://docs.google.com/spreadsheets/d/1nsAQAiOsuZQcpBBg44SZ8jUvFtXI6WNKE8-WSo9_kiE/edit?usp=drive_link"
+                url: "https://docs.google.com/spreadsheets/d/1nsAQAiOsuZQcpBBg44SZ8jUvFtXI6WNKE8-WSo9_kiE/edit?usp=drive_link",
             },
             {
                 title: "Fallback Tracking Sheet",
-                url: "https://docs.google.com/spreadsheets/d/1k-WANG5zbwaLeEEMpGy81b0Itd-AWd03Lotdff9B2aQ/edit?gid=350139617#gid=350139617"
-            }
-        ]
+                url: "https://docs.google.com/spreadsheets/d/1k-WANG5zbwaLeEEMpGy81b0Itd-AWd03Lotdff9B2aQ/edit?gid=350139617#gid=350139617",
+            },
+        ],
     },
     {
         title: "Discord",
@@ -35,14 +32,54 @@ const helpfulLinks = [
     },
 ];
 
-const Home = () =>
-    <section>
+const Home = () => {
+    const [signupSheetUrl, setSignupSheetUrl] = useState("");
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchSignupUrl = async () => {
+            const firestore = getFirestore();
+            const docRef = doc(firestore, "/global/global_settings");
+            try {
+                const docSnap = await getDoc(docRef);
+                const url = docSnap.exists() ? docSnap.data().signup_url : "unable to find signup url";
+                setSignupSheetUrl(url);
+            } catch (error) {
+                console.error("Error fetching signup URL:", error);
+                setSignupSheetUrl("unable to find signup url");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchSignupUrl();
+    }, []);
+
+    if (loading) {
+        return <Spinner animation="border" role="status">
+            <span className="visually-hidden">Loading...</span>
+        </Spinner>;
+    }
+
+    return <section>
         <CurrentOrNextEvent />
         <Container className="my-3">
-            <h2 className="mb-3">Helpful Links</h2>
+            <h2 className="mb-3">Signup Sheet</h2>
+            <div className="linksList">
+                <Card style={{ "maxWidth": "400px" }}>
+                    <Card.Header>
+                        <Card.Title>Signup Sheet</Card.Title>
+                    </Card.Header>
+                    <Card.Body>
+                        <p><a href={signupSheetUrl} target="_blank">{signupSheetUrl}</a></p>
+                    </Card.Body>
+                </Card>
+            </div>
+
+            <h2 className="mt-5 mb-3">Helpful Links</h2>
             <div className="linksList">
                 {
-                    helpfulLinks.map((entry, entryIndex) =>
+                    HELPFUL_LINKS.map((entry, entryIndex) =>
                         <Card
                             key={`entry${entryIndex}`}
                             style={{ "maxWidth": "400px" }}
@@ -70,7 +107,7 @@ const Home = () =>
                 }
             </div>
         </Container>
-
-    </section>
+    </section>;
+}
 
 export default Home;
