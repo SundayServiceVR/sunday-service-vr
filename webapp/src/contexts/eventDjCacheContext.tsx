@@ -54,8 +54,16 @@ export const EventDjPlayMapperProvider = ({ children }: { children: ReactNode })
     }
   }
 
+  const getEventsByDjId = (djId: string) => {
+    const events = Array.from(eventCache.values()).filter(event =>
+      event.slots.some(slot => slot.dj_ref.id === djId)
+    );
+
+    return events;
+  };
+
   return (
-    <EventDjPlayMapperContext.Provider value={{ eventCache, djCache, getEventWithDjs, loading }}>
+    <EventDjPlayMapperContext.Provider value={{ eventCache, djCache, getEventWithDjs, getEventsByDjId, loading }}>
       {children}
     </EventDjPlayMapperContext.Provider>
   );

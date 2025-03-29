@@ -14,6 +14,7 @@ type Props = {
 
 const EventSignupList = ({ event, onUpdateSignup, onAddSlotToLineup, onRemoveSignup }: Props) => {
 
+  const { djCache } = useEventDjCache();
 
   const isHiddenSubmission = (signup: EventSignup) => {
 
@@ -24,14 +25,13 @@ const EventSignupList = ({ event, onUpdateSignup, onAddSlotToLineup, onRemoveSig
     return event.slots.map(slot => slot.signup_uuid).includes(signup.uuid)
   }
 
-  const { djCache } = useEventDjCache();
-
   return <Container className="px-0 pb-3">
     <Stack gap={3}>
       {event.signups.filter((signup) => !isHiddenSubmission(signup)).map(
         (signup) => {
 
-          const dj = signup.dj_refs && djCache.get(signup.dj_refs[0]?.id);
+          const djRef = signup.dj_refs[0];
+          const dj = signup.dj_refs && djCache.get(djRef.id);
 
           if(!dj) {
             throw new Error("dj is missing from 'dj_refs'")
@@ -69,7 +69,7 @@ const EventSignupList = ({ event, onUpdateSignup, onAddSlotToLineup, onRemoveSig
               </Stack>
             </Card.Header>
             <Card.Body>
-              <DjDetails dj={dj} />
+              <DjDetails dj={dj} djRef={djRef}/>
               <hr />
               <SignupDetails signup={signup} onUpdateSignup={onUpdateSignup}/>
             </Card.Body>

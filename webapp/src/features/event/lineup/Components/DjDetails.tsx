@@ -1,16 +1,24 @@
 import { Col, Container, ListGroup, Row, Spinner, Stack } from "react-bootstrap"
 import { useEventDjCache } from "../../../../contexts/eventDjCacheProvider";
-import { Dj } from "../../../../util/types";
+import { Dj, Event } from "../../../../util/types";
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { DocumentReference } from "firebase/firestore";
 
 
 type Props = {
   dj: Dj;
+  djRef: DocumentReference
 }
 
-const DjDetails = ({ dj }: Props) => {
+const DjDetails = ({ dj, djRef }: Props) => {
+  const { loading, getEventsByDjId } = useEventDjCache();
+  const [djEvents, setDjEvents] = useState<Event[]>([]);
 
-  const { eventCache, loading } = useEventDjCache();
+  useEffect(() => {
+    const events = getEventsByDjId(djRef.id);
+    setDjEvents(events);
+  }, [djRef, getEventsByDjId]);
 
   if (loading) {
     return <Container className="d-flex justify-content-around">
@@ -22,31 +30,22 @@ const DjDetails = ({ dj }: Props) => {
     <Row>
       <Col>
         <p>Dj Name: {dj.dj_name}</p>
-        {/* <div>
-          Notes:
-          <ul>
-            {dj.notes?.map((note, index) => <li key={`dj-note-${index}`}>{note}</li>)}
-          </ul>
-        </div> */}
       </Col>
       <Col>
         <Stack direction="horizontal">
-          <span>Other Events ({dj?.events?.length ?? "?"} total)</span>
+          <span>Other Events ({djEvents.length ?? "?"} total)</span>
         </Stack>
         <ListGroup>
-          {dj.events?.map((eventRef) => {
-            const event = eventCache.get(eventRef.id);
-            if(!event) {
-              return <ListGroup.Item key={eventRef.id} className="px-3 py-1">
+          {djEvents?.map((event, index) => {
+            if (!event) {
+              return <ListGroup.Item key={index} className="px-3 py-1">
                 Unknown Event
               </ListGroup.Item>
             }
-            return <ListGroup.Item key={eventRef.id} className="px-3 py-1">
+            return <ListGroup.Item key={index} className="px-3 py-1">
               <Link to={`/events/${event.id}/lineup`} target="blank">{event.name} ({event.start_datetime.toLocaleDateString()})</Link>
             </ListGroup.Item>
-          }
-          )}
-
+          })}
         </ListGroup>
       </Col>
     </Row>
