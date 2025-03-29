@@ -22,6 +22,7 @@ import EventDetails from './features/event/basic/EventDetails';
 import EventVerifyDJs from './features/event/lineup/EventVerifyDJs';
 import { Toaster } from 'react-hot-toast';
 import { DiscordIdInfo } from './features/dj/discordIdInfo/DiscordIdInfo';
+import GlobalSettings from "./features/globalSettings/GlobalSettings";
 
 function App() {
   // 
@@ -100,6 +101,10 @@ function App() {
         {
           path: "discordIdInfo",
           element: <DiscordIdInfo />
+        },
+        {
+          path: "globalSettings",
+          element: <GlobalSettings />
         },
       ],
     },
