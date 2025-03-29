@@ -16,7 +16,7 @@ const EventList = ({ past = false}: Props) => {
     const [events, setEvents] = useState<Event[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
 
-    const { djCache } = useEventDjCache();
+    const { djCache, getPlayedDjsForEvent } = useEventDjCache();
 
     const navigate = useNavigate();
 
@@ -34,17 +34,6 @@ const EventList = ({ past = false}: Props) => {
 
     if (loading) {
         return <Spinner type="logo" />
-    }
-
-    const getDjNamesForEvent = (event: Event) => {
-        return event.slots
-            .map(slot => slot.signup_uuid && 
-                event.signups
-                    .find(signup => signup.uuid === slot.signup_uuid)
-                    ?.dj_refs
-                    .map(dj_ref => djCache.get(dj_ref.id)
-                    ?.dj_name
-                ?? "Unknown DJ"))
     }
 
     return <section>
@@ -84,7 +73,7 @@ const EventList = ({ past = false}: Props) => {
                         <td><Link to={`/events/${event.id}`}>{event.start_datetime.toLocaleDateString()}</Link></td>
                         <td>{event.name}</td>
                         <td>{event.host}</td>
-                        <td>{getDjNamesForEvent(event).flat().join(", ")}</td>
+                        <td>{getPlayedDjsForEvent(event).map(dj => dj.dj_name)}</td>
                     </tr>)}
                 </tbody>
             </Table>

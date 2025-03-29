@@ -20,7 +20,7 @@ import { DiscordIdInfo } from './features/dj/discordIdInfo/DiscordIdInfo';
 import { eventRoutes } from './features/event/routes';
 import GlobalSettings from "./features/globalSettings/GlobalSettings";
 
-import { EventDjPlayMapperProvider } from './contexts/eventDjCacheContext';
+import { EventDjPlayMapperProvider } from './contexts/useEventDjCache/eventDjCacheProvider';
 
 import './App.css';
 

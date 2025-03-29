@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { EventDjPlayMapperContext } from "./eventDjCacheProvider";
+import { EventDjPlayMapperContext } from "./eventDjCacheContext";
 
 export const useEventDjCache = () => {
   const context = useContext(EventDjPlayMapperContext);

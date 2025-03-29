@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import { Event, Slot } from "./types";
 import { attendeeRoleId, performerRoleId, signupSheetUrl } from "./constants";
-import { DjCache } from "../contexts/types";
+import { DjCache } from "../contexts/useEventDjCache/types";
 
 export const getDiscordMessage = (event: Event, djCache: DjCache): string => 
 `**${event.name}**

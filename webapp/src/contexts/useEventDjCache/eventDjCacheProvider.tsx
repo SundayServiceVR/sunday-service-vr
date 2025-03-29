@@ -1,9 +1,9 @@
 import { useState, ReactNode, useEffect } from 'react';
-import { Dj, Event } from '../util/types';
-import { EventDjPlayMapperContext } from './eventDjCacheProvider';
+import { Dj, Event } from '../../util/types';
+import { EventDjPlayMapperContext } from './eventDjCacheContext';
 import { collection, getDocs, query } from 'firebase/firestore';
-import { db } from '../util/firebase';
-import { docToEvent } from '../store/converters';
+import { db } from '../../util/firebase';
+import { docToEvent } from '../../store/converters';
 import { DjCache, EventCache } from './types';
 
 export const EventDjPlayMapperProvider = ({ children }: { children: ReactNode }) => {
@@ -63,8 +63,13 @@ export const EventDjPlayMapperProvider = ({ children }: { children: ReactNode })
     return events;
   };
 
+  const getPlayedDjsForEvent = (event: Event) => {
+    const djRefs = event.slots.map(slot => event.signups.find(signup => signup.uuid === slot.signup_uuid)).filter(slot => slot != null).map(slot => slot.dj_refs).flat()
+    return djRefs.map(ref => djCache.get(ref.id));
+  }
+
   return (
-    <EventDjPlayMapperContext.Provider value={{ eventCache, djCache, getEventWithDjs, getEventsByDjId, loading }}>
+    <EventDjPlayMapperContext.Provider value={{ eventCache, djCache, getEventWithDjs, getEventsByDjId, getPlayedDjsForEvent, loading }}>
       {children}
     </EventDjPlayMapperContext.Provider>
   );
