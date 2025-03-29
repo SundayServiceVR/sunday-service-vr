@@ -1,9 +1,10 @@
 import { createContext } from "react"
 import { Dj, Event } from '../util/types';
+import { DjCache, EventCache } from "./types";
 
 type EventDjCacheContextType = {
-  eventCache: Map<string, Event>;
-  djCache: Map<string, Dj>;
+  eventCache: EventCache;
+  djCache: DjCache;
   loading: boolean;
   getEventWithDjs: (id: string) => {
       event: Event;

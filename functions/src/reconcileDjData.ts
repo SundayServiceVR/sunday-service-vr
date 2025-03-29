@@ -1,6 +1,7 @@
 import { onRequest } from "firebase-functions/v2/https";
 import { DocumentData, getFirestore } from "firebase-admin/firestore";
 import { Dj, Event } from "../../webapp/src/util/types";
+import { listOfDocsMatch } from "./lib/util";
 
 const db = getFirestore("staging");
 
@@ -37,7 +38,8 @@ const reconcileDjData = async () => {
             throw new Error(`DJ: ${dj} is unable to be reconciled because it was not found in the 'djs' collection`);
         }
 
-        if (!listOfEventsMatch(dj.events, events)) {
+        // If the expected list of events don't match, then save our new list.
+        if (!listOfDocsMatch(dj.events ?? [], events)) {
             dj.events = events.map((event) => event.ref);
             djsToUpdate.push({ dj, id: djId });
         }
@@ -63,12 +65,4 @@ const mapEventsToDjs = (events: DocumentData[]) => {
         });
     });
     return Object.fromEntries(updatedDjsToEventMap);
-};
-
-const listOfEventsMatch = (oneListOfEventIds: DocumentData[], anotherListOfEventIds: DocumentData[]) => {
-    const oneSetOfEvents = new Set(oneListOfEventIds);
-    const anotherSetOfEvents = new Set(anotherListOfEventIds);
-
-    return oneSetOfEvents.size === anotherSetOfEvents.size &&
-    [...oneSetOfEvents].every((x) => anotherSetOfEvents.has(x));
 };

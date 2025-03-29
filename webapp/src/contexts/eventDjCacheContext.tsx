@@ -4,10 +4,11 @@ import { EventDjPlayMapperContext } from './eventDjCacheProvider';
 import { collection, getDocs, query } from 'firebase/firestore';
 import { db } from '../util/firebase';
 import { docToEvent } from '../store/converters';
+import { DjCache, EventCache } from './types';
 
 export const EventDjPlayMapperProvider = ({ children }: { children: ReactNode }) => {
-  const [eventCache, setEventCache] = useState<Map<string, Event>>(new Map());
-  const [djCache, setDjCache] = useState<Map<string, Dj>>(new Map());
+  const [eventCache, setEventCache] = useState<EventCache>(new Map());
+  const [djCache, setDjCache] = useState<DjCache>(new Map());
 
   const [ loading, setLoading ] = useState<boolean>(false);
 
@@ -25,7 +26,7 @@ export const EventDjPlayMapperProvider = ({ children }: { children: ReactNode })
     const q = query(collection(db, "events"));
     const querySnapshot = await getDocs(q);
     const set = querySnapshot.docs.map(doc => ({ id: doc.id, event: docToEvent(doc) }));
-    const map = new Map<string, Event>();
+    const map: EventCache = new Map<string, Event>();
     set.forEach(entity => map.set(entity.id, entity.event))
     setEventCache(map);
 

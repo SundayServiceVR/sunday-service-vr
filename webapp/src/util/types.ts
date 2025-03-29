@@ -37,10 +37,6 @@ export type Slot = {
 
     signup_uuid?: string;
     stream_source_type?: StreamSourceType;
-
-    // By default, we want to pull this from the dj object.
-    // However, in some cases (b2bs, borrowed stream keys, etc), we
-    // want to override this via this prop on the slot itself.
     stream_source_url?: string;
 
     start_time: Date;
@@ -73,6 +69,7 @@ export enum StreamSourceType {
     VRCDN = "VRCDN",
     TWITCH = "TWITCH",
     PRERECORD = "PRERECORD",
+    MANUAL = "MANUAL",
     RTMP = "RTMP",
 }
 

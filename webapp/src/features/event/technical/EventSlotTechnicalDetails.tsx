@@ -1,22 +1,36 @@
 import { Stack, Form, Container, Row, Col, ButtonGroup, InputGroup, Dropdown, DropdownButton, Button } from "react-bootstrap";
-import { Slot, SlotType, StreamSourceType, Dj } from "../../../util/types";
+import { Slot, SlotType, StreamSourceType, Dj, Event, EventSignup } from "../../../util/types";
 
 type Props = {
     index: number,
     slot: Slot,
-    djs: Dj[], // Change to a list of DJs
+    event: Event,
+    djs: Dj[],
     onUpdateSlot: (newSlot: Slot) => void,
+    onUpdateSignup: (newSignup: EventSignup) => void,
 }
 
 const EventSlotTechnicalDetails = ({
     index,
     slot,
+    event,
     djs,
     onUpdateSlot,
 }: Props) => {
     const handleSetStreamSource = (streamSource: string, sourceType: StreamSourceType) => {
-        onUpdateSlot({ ...slot, stream_source_type: sourceType, rtmp_url: sourceType === StreamSourceType.RTMP ? streamSource : "", twitch_username: sourceType === StreamSourceType.TWITCH ? streamSource : "" });
+        onUpdateSlot({ 
+            ...slot, 
+            stream_source_url: streamSource,
+            stream_source_type: sourceType, 
+        });
     };
+
+    const signup = event.signups.find(signup => signup.uuid === slot.signup_uuid);
+
+    if(!signup) {
+        throw new Error(`Unable to find signup with a uuid of ${slot.signup_uuid}`)
+    }
+
 
     return (
         <Container className="my-2">
@@ -31,7 +45,7 @@ const EventSlotTechnicalDetails = ({
                     </Row>
                     <Form.Group>
                         <Form.Label>Slot Name</Form.Label>
-                        <Form.Control value={slot.name} onChange={(event) => onUpdateSlot({ ...slot, name: event.target.value })} />
+                        <Form.Control value={signup.name} onChange={(event) => onUpdateSlot({ ...slot, name: event.target.value })} />
                     </Form.Group>
 
                     <Form.Group as={Row} className="mb-3">
@@ -47,49 +61,16 @@ const EventSlotTechnicalDetails = ({
                                     <Dropdown.Item eventKey={StreamSourceType.TWITCH}>Twitch</Dropdown.Item>
                                     <Dropdown.Item eventKey={StreamSourceType.RTMP}>RTMP</Dropdown.Item>
                                     <Dropdown.Divider />
-                                    <Dropdown.Item>Manual Link</Dropdown.Item>
-                                    <Dropdown.Item>PreRecord</Dropdown.Item>
+                                    <Dropdown.Item eventKey={StreamSourceType.PRERECORD}>PreRecord</Dropdown.Item>
+                                    <Dropdown.Item eventKey={StreamSourceType.MANUAL}>Manual</Dropdown.Item>
                                 </DropdownButton>
-                                <Form.Control aria-label="Text input with dropdown button" />
+                                <Form.Control
+                                type={"input"}
+                                value={slot.stream_source_url}
+                                onChange={(event) => { onUpdateSlot({ ...slot, stream_source_url: event.target.value }) }}
+                                />
                             </InputGroup>
                         </ButtonGroup>
-
-                        <Form.Control
-                            type={"input"}
-                            value={slot.rtmp_url}
-                            onChange={(event) => { onUpdateSlot({ ...slot, rtmp_url: event.target.value }) }}
-                            placeholder="RTMP URL"
-                            hidden={slot.slot_type !== SlotType.RTMP}
-                        />
-                        <Form.Control
-                            type={"input"}
-                            value={slot.prerecord_url}
-                            onChange={(event) => { onUpdateSlot({ ...slot, prerecord_url: event.target.value }) }}
-                            placeholder="PreRecord URL"
-                            hidden={slot.slot_type !== SlotType.PRERECORD}
-                        />
-
-                        <InputGroup className="mb-2" hidden={slot.slot_type !== SlotType.TWITCH}>
-                            <InputGroup.Text>https://www.twitch.tv/</InputGroup.Text>
-                            <Form.Control
-                                type={"input"}
-                                value={slot.twitch_username}
-                                onChange={(event) => { onUpdateSlot({ ...slot, twitch_username: event.target.value }) }}
-                                placeholder="username"
-                            />
-                        </InputGroup>
-                    </Form.Group>
-
-                    <Form.Group as={Row} className="mb-3">
-                        <Form.Label column >Is Debutt?</Form.Label>
-                        <Col>
-                            <Form.Check
-                                className="mt-2"
-                                type="switch"
-                                checked={slot.is_debut}
-                                onChange={(event) => { onUpdateSlot({ ...slot, is_debut: event.target.checked }) }}
-                            />
-                        </Col>
                     </Form.Group>
                 </Col>
                 <Col xs={6} sm={4}>

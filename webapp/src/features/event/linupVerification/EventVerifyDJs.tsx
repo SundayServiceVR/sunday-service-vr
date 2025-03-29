@@ -2,10 +2,13 @@ import { Form } from "react-bootstrap";
 import { useEventOperations } from "../outletContext";
 import { getProposedLineupMessage } from "../../../util/messageWriters";
 import MessagePasteCard from "../messaging/MessagePasteCard";
+import { useEventDjCache } from "../../../contexts/useEventDjCache";
 
 const EventVerifyDJs = () => {
 
     const [eventScratchpad] = useEventOperations();
+
+    const { djCache } = useEventDjCache();
 
     const footerInstructions = <>
         <p className="mb-0 mt-2">Paste this message to <a target="_blank" 
@@ -25,7 +28,7 @@ const EventVerifyDJs = () => {
         <p>Before publicly announcing the event lineup, we need to verify in the scheduling channel that the DJs are all still available and are okay with their times:</p>
         <Form>
             <Form.Group>
-                <MessagePasteCard message={getProposedLineupMessage(eventScratchpad)} footerInstructions={footerInstructions}/>
+                <MessagePasteCard message={getProposedLineupMessage(eventScratchpad, djCache)} footerInstructions={footerInstructions}/>
             </Form.Group>
         </Form>
       </section>

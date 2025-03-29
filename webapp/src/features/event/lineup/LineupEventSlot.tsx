@@ -22,16 +22,13 @@ const LineupEventSlot = ({
     onUpdateSignup,
     slot,
     signup,
-    event,
+    // event, // TODO:  Remove if we don't need this.
     onSlotMoveSooner,
     onSlotMoveLater,
     onRemoveSlot,
 }: Props) => {
 
     const { djCache } = useEventDjCache();
-
-    const djRef = event.signups.find(signup => signup.uuid === slot.signup_uuid)?.dj_refs[0];
-    const dj = djRef ? djCache.get(djRef.id) : null;
 
     return <Container className="my-2">
         <Row>
@@ -63,21 +60,20 @@ const LineupEventSlot = ({
                             }
                         },
                         {
-                            label: "Remove Slot",
+                            label: "Send Back to Signups",
                             onClick: () => { onRemoveSlot(); }
                         }]} />
             </Col>
             <Col xs={{ order: 2, span: 12 }} md={{ order: 2, span: true }} className="pt-3">
                 <SignupDetails signup={signup} onUpdateSignup={onUpdateSignup} />
-                {
-                    dj && <>
-                        < hr />
-                        <div>
-                            { dj.dj_name }
-                        </div>
-                    </>
-                }
-
+                < hr />
+                <ul>
+                    {
+                        signup.dj_refs.map(dj_ref => djCache.get(dj_ref.id)).map(
+                            (dj) => <li key={dj?.dj_name ?? "unknown-dj"}>{dj?.dj_name ?? "unknown-dj"}</li>
+                        )
+                    }
+                </ul>
             </Col>
         </Row>
     </Container>;

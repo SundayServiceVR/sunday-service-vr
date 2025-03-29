@@ -1,8 +1,9 @@
 import dayjs from "dayjs";
 import { Event, Slot } from "./types";
 import { attendeeRoleId, performerRoleId, signupSheetUrl } from "./constants";
+import { DjCache } from "../contexts/types";
 
-export const getDiscordMessage = (event: Event): string => 
+export const getDiscordMessage = (event: Event, djCache: DjCache): string => 
 `**${event.name}**
 
 ${event.message}
@@ -12,7 +13,7 @@ Event start: ${dateToDiscordTime(event.start_datetime).replace(">",":F>")}
 Host: ${event.host || "TBA"}
 
 DJs:
-${event.slots.map(s => getDiscordSlotText(s)).join("\n")}
+${event.slots.map(s => getDiscordSlotText(s, event, djCache)).join("\n")}
 
 https://discord.s4vr.net/
 https://twitch.s4vr.net/
@@ -62,10 +63,10 @@ ${event.slots.map(getAusSlotText).join("\n")}
 }
 
 
-export const getProposedLineupMessage = (event: Event): string => 
+export const getProposedLineupMessage = (event: Event, djCache: DjCache): string => 
 `**Proposed Lineup for ${dateToDiscordTime(event.start_datetime).replace(">",":F>")}**
 
-${event.slots.map(s => getDiscordSlotText(s, true)).join("\n")}
+${event.slots.map(s => getDiscordSlotText(s, event, djCache, true)).join("\n")}
 
 Host: ${event.host || "TBA"}
 
@@ -96,13 +97,31 @@ const dateToLineupTime = (date: Date, timezone : string): string => {
 }
 
 
-const getDiscordSlotText = (slot: Slot, pingDj: boolean = false): string => {
-    const debuttText = `${slot.is_debut? " (DEBUTT!)" : ""}`
-    if (pingDj) {
-        return `${slot.start_time ? dateToDiscordTime(slot.start_time) : ""} : <@${slot.discord_id}> [${slot.dj_name}]${debuttText}`;
-    } else {
-        return `${slot.start_time ? dateToDiscordTime(slot.start_time) : ""} : ${slot.dj_name}${debuttText}`;
+const getDiscordSlotText = (slot: Slot, event: Event, djCache: DjCache, pingDj: boolean = false): string => {
+
+    const slotSignup = event.signups.find(signup => signup.uuid === slot.signup_uuid);
+    const djRefs = event.signups.find(signup => signup.uuid === slot.signup_uuid)?.dj_refs ?? [];
+    const djs = djRefs.map(ref => djCache.get(ref.id));
+
+    if(!slotSignup) {
+        return "Error : Unable to find signup for this slot"
     }
+
+    const text = [
+        `${slot.start_time ? dateToDiscordTime(slot.start_time) : ""} : `,
+        pingDj ? djs.map(dj => `<@${dj?.discord_id}>`).join(", ") : null,
+        `${slotSignup.name}`,
+        slotSignup?.debut ? "(DEBUTT!)" : null,
+    ].filter(seg => seg != null).join(" ")
+
+    return text;
+
+    // const debuttText = `${slot.is_debut? " (DEBUTT!)" : ""}`
+    // if (pingDj) {
+    //     return `${slot.start_time ? dateToDiscordTime(slot.start_time) : ""} : <@${slot.discord_id}> [${slot.dj_name}]${debuttText}`;
+    // } else {
+    //     return `${slot.start_time ? dateToDiscordTime(slot.start_time) : ""} : ${slot.dj_name}${debuttText}`;
+    // }
 }
 
 
