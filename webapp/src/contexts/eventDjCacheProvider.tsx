@@ -1,4 +1,4 @@
-import { useContext, createContext } from "react"
+import { createContext } from "react"
 import { Dj, Event } from '../util/types';
 
 type EventDjCacheContextType = {
@@ -14,10 +14,3 @@ type EventDjCacheContextType = {
 
 export const EventDjPlayMapperContext = createContext<EventDjCacheContextType | undefined>(undefined);
 
-export const useEventDjCache = () => {
-  const context = useContext(EventDjPlayMapperContext);
-  if (context === undefined) {
-    throw new Error('useEventDjPlayMapper must be used within an EventDjPlayMapperProvider');
-  }
-  return context;
-};
