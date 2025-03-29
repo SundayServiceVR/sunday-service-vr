@@ -18,9 +18,11 @@ import DjList from './features/dj/DjList';
 import { Toaster } from 'react-hot-toast';
 import { DiscordIdInfo } from './features/dj/discordIdInfo/DiscordIdInfo';
 import { eventRoutes } from './features/event/routes';
+import GlobalSettings from "./features/globalSettings/GlobalSettings";
+
+import { EventDjPlayMapperProvider } from './contexts/eventDjCacheContext';
 
 import './App.css';
-import { EventDjPlayMapperProvider } from './contexts/eventDjCacheContext';
 
 function App() {
   if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
@@ -76,6 +78,10 @@ function App() {
         {
           path: "discordIdInfo",
           element: <DiscordIdInfo />
+        },
+        {
+          path: "globalSettings",
+          element: <GlobalSettings />
         },
       ],
     },
