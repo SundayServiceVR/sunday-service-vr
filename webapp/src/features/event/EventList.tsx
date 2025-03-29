@@ -16,7 +16,7 @@ const EventList = ({ past = false}: Props) => {
     const [events, setEvents] = useState<Event[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
 
-    const { djCache, getPlayedDjsForEvent } = useEventDjCache();
+    const { getPlayedDjsForEvent } = useEventDjCache();
 
     const navigate = useNavigate();
 
@@ -73,7 +73,7 @@ const EventList = ({ past = false}: Props) => {
                         <td><Link to={`/events/${event.id}`}>{event.start_datetime.toLocaleDateString()}</Link></td>
                         <td>{event.name}</td>
                         <td>{event.host}</td>
-                        <td>{getPlayedDjsForEvent(event).map(dj => dj.dj_name)}</td>
+                        <td>{getPlayedDjsForEvent(event).map(dj => dj.dj_name).join(", ")}</td>
                     </tr>)}
                 </tbody>
             </Table>

@@ -64,8 +64,16 @@ export const EventDjPlayMapperProvider = ({ children }: { children: ReactNode })
   };
 
   const getPlayedDjsForEvent = (event: Event) => {
-    const djRefs = event.slots.map(slot => event.signups.find(signup => signup.uuid === slot.signup_uuid)).filter(slot => slot != null).map(slot => slot.dj_refs).flat()
-    return djRefs.map(ref => djCache.get(ref.id));
+
+    const djRefs = event.slots
+      .map(slot => event.signups.find(signup => signup.uuid === slot.signup_uuid))
+      .filter(slot => slot != undefined)
+      .map(slot => slot?.dj_refs)
+      .filter(ref => ref != undefined)
+      .flat()
+
+    const result = djRefs.filter(ref => ref != undefined).map(ref => djCache.get(ref!.id)).filter(dj => dj != undefined);
+    return result as Dj[];
   }
 
   return (
