@@ -1,5 +1,5 @@
 import { Stack, Form, Container, Row, Col, ButtonGroup, InputGroup, Dropdown, DropdownButton, Button } from "react-bootstrap";
-import { Slot, SlotType, StreamSourceType, Dj, Event, EventSignup } from "../../../util/types";
+import { Slot, StreamSourceType, Dj, Event, EventSignup } from "../../../util/types";
 
 type Props = {
     index: number,

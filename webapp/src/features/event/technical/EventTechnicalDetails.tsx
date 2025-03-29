@@ -1,7 +1,7 @@
-import { Container, Form, ListGroup } from "react-bootstrap";
+import { Container, ListGroup } from "react-bootstrap";
 import { useEventOperations } from "../outletContext";
 import EventSlotTechnicalDetails from "./EventSlotTechnicalDetails";
-import { setEventSlotByIndex } from "../util";
+import { setEventSlotByIndex, updateSignupForEvent } from "../util";
 import { useEventDjCache } from "../../../contexts/useEventDjCache";
 
 const EventTechnicalDetails = () => {
@@ -32,6 +32,11 @@ const EventTechnicalDetails = () => {
             onUpdateSlot={(newSlot) => {
               updateEventScratchpad(
                 setEventSlotByIndex(eventScratchpad, index, newSlot)
+              )
+            }}
+            onUpdateSignup={(signup) => {
+              updateEventScratchpad(
+                updateSignupForEvent(eventScratchpad, signup)
               )
             }}
           />

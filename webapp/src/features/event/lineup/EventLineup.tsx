@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button, Col, Container, Row, Stack } from "react-bootstrap";
-import { Dj, EventSignup, Slot, SlotDuration, SlotType } from "../../../util/types";
+import { Dj, Event, EventSignup, Slot, SlotDuration, SlotType } from "../../../util/types";
 import { useEventOperations } from "../outletContext";
 import LineupSlotSortableList from "./LineupSlotSortableList";
 import { DocumentReference } from "firebase/firestore";
@@ -8,6 +8,7 @@ import { EventDjSignups } from "./EventSignupList";
 import { v4 as uuidv4 } from 'uuid';
 import { useEventDjCache } from "../../../contexts/useEventDjCache";
 import { AddOrCreateDjModal } from "./Components/AddOrCreateDjModal";
+import { updateSignupForEvent } from "../util";
 
 const EventLineup = () => {
 
@@ -46,17 +47,9 @@ const EventLineup = () => {
         proposeEventChange({ ...eventScratchpad, signups: signups_copy });
     }
 
-    const updateSignup = (signup: EventSignup) => {
-        const signups_copy = eventScratchpad.signups.map(dj_signup =>
-            dj_signup.uuid === signup.uuid ? signup : dj_signup
-        );
-        proposeEventChange({ ...eventScratchpad, signups: signups_copy });
+    const updateSignup = (event: Event, signup: EventSignup) => {
+        proposeEventChange(updateSignupForEvent(event, signup));
     }
-
-    // const removeSlotFromLineup = (deleted_slot: Slot) => {
-    //     const slots_copy = eventScratchpad.slots.filter(slot => deleted_slot.dj_ref.id !== slot.dj_ref.id);
-    //     proposeEventChange({ ...eventScratchpad, slots: slots_copy });
-    // }
 
     return <Container>
         <Container>
@@ -73,13 +66,20 @@ const EventLineup = () => {
                     <h3 className="display-6">Signups</h3>
                     <Container>
                         <Row>
-                            <EventDjSignups event={eventScratchpad} onUpdateSignup={updateSignup} onAddSlotToLineup={addSlotFromSignup} onRemoveSignup={removeSignup} />
+                            <EventDjSignups
+                                event={eventScratchpad}
+                                onUpdateSignup={(newSignup) => updateSignup(eventScratchpad, newSignup)}
+                                onAddSlotToLineup={addSlotFromSignup}
+                                onRemoveSignup={removeSignup}
+                            />
                         </Row>
                     </Container>
                 </Col>
                 <Col md={{ order: 1, span: 6 }}>
                     <h3 className="display-6">Lineup (Local Times)</h3>
-                    <LineupSlotSortableList onUpdateSignup={updateSignup} />
+                    <LineupSlotSortableList
+                        onUpdateSignup={(newSignup) => updateSignup(eventScratchpad, newSignup)}
+                    />
                 </Col>
             </Row>
         </Container>
