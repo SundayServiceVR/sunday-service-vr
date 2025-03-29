@@ -6,7 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Spinner from "../../components/spinner";
 import { CurrentOrNextEvent } from "../../components/currentOrNextEvent/CurrentOrNextEvent";
 import { getAllEvents } from "../../store/events";
-import { useEventDjCache } from "../../contexts/eventDjCacheProvider";
+import { useEventDjCache } from "../../contexts/useEventDjCache";
 
 type Props = {
     past?: boolean;

@@ -1,5 +1,5 @@
 import { Col, Container, ListGroup, Row, Spinner, Stack } from "react-bootstrap"
-import { useEventDjCache } from "../../../../contexts/eventDjCacheProvider";
+import { useEventDjCache } from "../../../../contexts/useEventDjCache";
 import { Dj, Event } from "../../../../util/types";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";

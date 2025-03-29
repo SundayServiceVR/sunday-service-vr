@@ -2,7 +2,7 @@ import { Container, Form, ListGroup } from "react-bootstrap";
 import { useEventOperations } from "../outletContext";
 import EventSlotTechnicalDetails from "./EventSlotTechnicalDetails";
 import { setEventSlotByIndex } from "../util";
-import { useEventDjCache } from "../../../contexts/eventDjCacheProvider";
+import { useEventDjCache } from "../../../contexts/useEventDjCache";
 
 const EventTechnicalDetails = () => {
   const [eventScratchpad, updateEventScratchpad] = useEventOperations();

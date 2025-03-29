@@ -3,7 +3,7 @@ import { Slot, Event, EventSignup } from "../../../util/types";
 import { ActionMenu } from "../../../components/actionMenu/ActionMenu";
 import { ArrowDown, ArrowUp } from "react-feather";
 import SignupDetails from "./Components/SignupDetails";
-import { useEventDjCache } from "../../../contexts/eventDjCacheProvider";
+import { useEventDjCache } from "../../../contexts/useEventDjCache";
 
 
 type Props = {

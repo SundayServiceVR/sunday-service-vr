@@ -1,6 +1,6 @@
 import { Container, Card, Stack } from "react-bootstrap"
 import { Event, EventSignup } from "../../../util/types";
-import { useEventDjCache } from "../../../contexts/eventDjCacheProvider";
+import { useEventDjCache } from "../../../contexts/useEventDjCache";
 import { ActionMenu } from "../../../components/actionMenu/ActionMenu";
 import DjDetails from "./Components/DjDetails";
 import SignupDetails from "./Components/SignupDetails";

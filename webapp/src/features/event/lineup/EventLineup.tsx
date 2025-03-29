@@ -7,7 +7,7 @@ import { DjSearchSelect } from "../../dj/DjSearchSelect";
 import { DocumentReference } from "firebase/firestore";
 import { EventDjSignups } from "./EventSignupList";
 import {v4 as uuidv4} from 'uuid';
-import { useEventDjCache } from "../../../contexts/eventDjCacheProvider";
+import { useEventDjCache } from "../../../contexts/useEventDjCache";
 import { AddOrCreateDjModal } from "./Components/AddOrCreateDjModal";
 
 const EventLineup = () => {
