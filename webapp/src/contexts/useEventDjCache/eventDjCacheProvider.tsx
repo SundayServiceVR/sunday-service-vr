@@ -64,15 +64,20 @@ export const EventDjPlayMapperProvider = ({ children }: { children: ReactNode })
   };
 
   const getPlayedDjsForEvent = (event: Event) => {
-    // Why is 
-    const djRefs = event.slots
+    const djRefsFromSignups = event.slots
       .map(slot => event.signups.find(signup => signup.uuid === slot.signup_uuid))
       .filter(slot => slot != undefined)
       .map(slot => slot?.dj_refs)
       .filter(ref => ref != undefined)
       .flat()
 
-    const result = djRefs.filter(ref => ref != undefined).map(ref => djCache.get(ref!.id)).filter(dj => dj != undefined);
+    // TODO : Legacy signup shape.  Removed after data cleanup
+    const djRefsFromLegacy = event.slots
+      .map(slot => slot.dj_ref)
+      .filter(ref => ref != undefined)
+      .flat()
+
+    const result = [...djRefsFromSignups, ...djRefsFromLegacy].filter(ref => ref != undefined).map(ref => djCache.get(ref!.id)).filter(dj => dj != undefined);
     return result as Dj[];
   }
 
