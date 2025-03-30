@@ -65,23 +65,33 @@ const DjDetails = ({ djRef, onRemoveDjRef }: Props) => {
             <span>Other Events ({djEvents.length ?? "?"} total)</span>
           </Stack>
           <ListGroup>
-            {djEvents?.map((event, index) => {
-              if (!event) {
+            {djEvents
+              ?.sort((a, b) => new Date(b.start_datetime).getTime() - new Date(a.start_datetime).getTime())
+              .slice(0, 3)
+              .map((event, index) => {
+                if (!event) {
+                  return (
+                    <ListGroup.Item key={index} className="px-3 py-1">
+                      Unknown Event
+                    </ListGroup.Item>
+                  );
+                }
                 return (
                   <ListGroup.Item key={index} className="px-3 py-1">
-                    Unknown Event
+                    <Link to={`/events/${event.id}/lineup`} target="blank">
+                      {event.name} ({event.start_datetime.toLocaleDateString()})
+                    </Link>
                   </ListGroup.Item>
                 );
-              }
-              return (
-                <ListGroup.Item key={index} className="px-3 py-1">
-                  <Link to={`/events/${event.id}/lineup`} target="blank">
-                    {event.name} ({event.start_datetime.toLocaleDateString()})
-                  </Link>
-                </ListGroup.Item>
-              );
-            })}
+              })}
           </ListGroup>
+          {djEvents.length > 3 && (
+            <div className="mt-2">
+              <Link to={`/djs/${djRef.id}`} target="_blank">
+                See all
+              </Link>
+            </div>
+          )}
         </Col>
       </Row>
     </Container>

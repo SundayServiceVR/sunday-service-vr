@@ -10,7 +10,7 @@ const SignupDetails = ({signup, onUpdateSignup }: Props) => {
   return <Container>
     <Form.Group as={Row} className="mb-1">
       <Form.Label column="sm" sm={3} className="text-md-end">
-        <strong>Slot Name</strong>
+        <strong>Event Specific Name</strong>
       </Form.Label>
       <Col>
         <Form.Control

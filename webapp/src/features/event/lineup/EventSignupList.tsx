@@ -72,7 +72,7 @@ const EventSignupList = ({ event, onUpdateSignup, onAddSlotToLineup, onRemoveSig
                   <SignupDetails signup={signup} onUpdateSignup={onUpdateSignup} />
                   <hr />
                   {
-                    signup.dj_refs.map(djRef => (
+                    signup.dj_refs?.map(djRef => (
                       <DjDetails
                         key={djRef.id}
                         djRef={djRef}
