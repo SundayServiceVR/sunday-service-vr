@@ -38,12 +38,20 @@ const LineupSlotSortableList = ({ onUpdateSignup }: Props) => {
 
             const signupForSlot = eventScratchpad.signups.find(signup => signup.uuid === slot.signup_uuid);
 
+            // Legacy support
             if(!signupForSlot) {
-                // TODO: Error boundary and such
-                return <Alert>
-                    Unable to find signup for slot: Signup with {slot.signup_uuid} should exist but wasn't found.
-                    <Button onClick={() => removeSlot(index)}>Delete</Button>
-                </Alert>
+                return <ListGroupItem key={`slot-${index}`} className="p-1">
+                    <p>Legacy Slot Format</p>
+                    <p>Name: {slot.dj_name}</p>
+                    <p>Time: {slot.start_time.toLocaleTimeString()}</p>
+                    {slot.is_debut ?? <p>Debutt!</p>}
+                </ListGroupItem> 
+
+                // // TODO: Error boundary and such
+                // return <Alert>
+                //     Unable to find signup for slot: Signup with {slot.signup_uuid} should exist but wasn't found.
+                //     <Button onClick={() => removeSlot(index)}>Delete</Button>
+                // </Alert>
             }
 
             return <ListGroupItem key={`slot-${index}`} className="p-1">
