@@ -85,9 +85,9 @@ const setDjPlays = (event: Event) => {
 
   const legacyDjPlays = event.slots.map(slot => slot.dj_ref) ?? []
 
-  const newDjPlays = event.slots.map(slot => event.signups.find(signup => signup.uuid === slot.signup_uuid))
-    .filter(slot => slot !== undefined)
-    .map(signup => signup.dj_refs).flat();
+  const newDjPlays = event.slots.map(slot => event.signups?.find(signup => signup.uuid === slot.signup_uuid))
+    .map(signup => signup?.dj_refs).flat()
+    ?? [];
 
   return {
     ...event,
