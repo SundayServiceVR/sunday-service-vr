@@ -1,4 +1,4 @@
-import { Alert, Button, ListGroup, ListGroupItem } from "react-bootstrap";
+import { ListGroup, ListGroupItem } from "react-bootstrap";
 import { EventSignup, Slot } from "../../../util/types";
 import { useEventOperations } from "../outletContext";
 import LineupEventSlot from "./LineupEventSlot";
