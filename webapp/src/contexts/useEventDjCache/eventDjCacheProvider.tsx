@@ -1,7 +1,7 @@
 import { useState, ReactNode, useEffect } from 'react';
-import { Dj, Event } from '../../util/types';
+import { Dj, Event, Slot } from '../../util/types';
 import { EventDjPlayMapperContext } from './eventDjCacheContext';
-import { collection, getDocs, query } from 'firebase/firestore';
+import { collection, DocumentReference, getDocs, query } from 'firebase/firestore';
 import { db } from '../../util/firebase';
 import { docToEvent } from '../../store/converters';
 import { DjCache, EventCache } from './types';
@@ -63,6 +63,22 @@ export const EventDjPlayMapperProvider = ({ children }: { children: ReactNode })
     return events;
   };
 
+  const getSignupForSlot = (event: Event, slot: Slot) => {
+    const result =  event.signups.find(signups => signups.uuid === slot.signup_uuid);
+    return result;
+  }
+
+  const getDjsForSlot = (event: Event, slot: Slot) => {
+    
+    const refsFromSignup: DocumentReference[] = getSignupForSlot(event, slot)?.dj_refs ?? [];
+
+    // TODO : Legacy signup shape.  Removed after data cleanup
+    const djRefsFromLegacy = slot.dj_ref;
+
+    const result = [...refsFromSignup, djRefsFromLegacy].filter(ref => ref != undefined).map(ref => djCache.get(ref!.id)).filter(dj => dj != undefined);
+    return result as Dj[];
+  }
+
   const getPlayedDjsForEvent = (event: Event) => {
     const djRefsFromSignups = event.slots
       .map(slot => event.signups.find(signup => signup.uuid === slot.signup_uuid))
@@ -82,7 +98,7 @@ export const EventDjPlayMapperProvider = ({ children }: { children: ReactNode })
   }
 
   return (
-    <EventDjPlayMapperContext.Provider value={{ eventCache, djCache, getEventWithDjs, getEventsByDjId, getPlayedDjsForEvent, loading }}>
+    <EventDjPlayMapperContext.Provider value={{ eventCache, djCache, getEventWithDjs, getEventsByDjId, getPlayedDjsForEvent, getDjsForSlot, loading }}>
       {children}
     </EventDjPlayMapperContext.Provider>
   );

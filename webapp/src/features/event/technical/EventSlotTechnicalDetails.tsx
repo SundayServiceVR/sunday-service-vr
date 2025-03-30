@@ -27,8 +27,11 @@ const EventSlotTechnicalDetails = ({
 
     const signup = event.signups.find(signup => signup.uuid === slot.signup_uuid);
 
-    if(!signup) {
-        throw new Error(`Unable to find signup with a uuid of ${slot.signup_uuid}`)
+    //Support for legacy
+    const slotName = signup?.name ?? slot.dj_name;
+
+    if(!slotName) {
+        throw new Error(`Unable to find signup with a uuid of ${slot.signup_uuid}, and there is no legacy value at slot.dj_name`)
     }
 
 
@@ -45,7 +48,7 @@ const EventSlotTechnicalDetails = ({
                     </Row>
                     <Form.Group>
                         <Form.Label>Slot Name</Form.Label>
-                        <Form.Control value={signup.name} onChange={(event) => onUpdateSlot({ ...slot, name: event.target.value })} />
+                        <Form.Control value={slotName} onChange={(event) => onUpdateSlot({ ...slot, name: event.target.value })} />
                     </Form.Group>
 
                     <Form.Group as={Row} className="mb-3">
