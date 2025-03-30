@@ -4,6 +4,7 @@ import EventAnnouncements from "./EventAnnouncements";
 import EventLineup from "./lineup/EventLineup";
 import EventVerifyDJs from "./linupVerification/EventVerifyDJs";
 import EventTechnicalDetails from "./technical/EventTechnicalDetails";
+import DebuggingDetails from "./DebuggingDetails";
 
 export const eventRoutes: RouteObject[] = [
   {
@@ -34,6 +35,12 @@ export const eventRoutes: RouteObject[] = [
   {
     path: "announcements",
     element: <EventAnnouncements />,
+    handle: { crumb: () => <Link to="announcements">Announcements</Link>},
+  },
+
+  {
+    path: "debug",
+    element: <DebuggingDetails />,
     handle: { crumb: () => <Link to="announcements">Announcements</Link>},
   },
 ];
