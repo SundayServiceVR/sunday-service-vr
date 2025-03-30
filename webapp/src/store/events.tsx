@@ -80,10 +80,18 @@ export const calcSlotTimes = (event: Event): Event => {
   return newEvent;
 }
 
+// Before saving, we want to set dj plays for tracking here.
 const setDjPlays = (event: Event) => {
+
+  const legacyDjPlays = event.slots.map(slot => slot.dj_ref) ?? []
+
+  const newDjPlays = event.slots.map(slot => event.signups.find(signup => signup.uuid === slot.signup_uuid))
+    .filter(slot => slot !== undefined)
+    .map(signup => signup.dj_refs).flat();
+
   return {
     ...event,
-    dj_plays: event.slots.map(slot => slot.dj_ref) ?? []
+    dj_plays: [...legacyDjPlays, ...newDjPlays]
   } as Event
 }
 
