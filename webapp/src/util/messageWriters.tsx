@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import { Event, Slot } from "./types";
-import { attendeeRoleId, performerRoleId, signupSheetUrl } from "./constants";
 import { DjCache } from "../contexts/useEventDjCache/types";
+import { attendeeRoleId, performerRoleId } from "./constants";
 
 export const getDiscordMessage = (event: Event, djCache: DjCache): string => 
 `**${event.name}**
@@ -73,7 +73,7 @@ Host: ${event.host || "TBA"}
 If you are listed above, please react to this message if your slot works for you!`;
 
 
-export const getSignupsPostedMessage = (event: Event): string => {
+export const getSignupsPostedMessage = (event: Event, signupSheetUrl: string): string => {
 return `Signups are open for ${dateToDiscordTime(event.start_datetime).replace(">",":F>")}! Here's the signup sheet:
 
 ${signupSheetUrl}
