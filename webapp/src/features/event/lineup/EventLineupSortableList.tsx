@@ -1,14 +1,14 @@
 import { ListGroup, ListGroupItem } from "react-bootstrap";
 import { EventSignup, Slot } from "../../../util/types";
 import { useEventOperations } from "../outletContext";
-import LineupEventSlot from "./LineupEventSlot";
+import EventLineupSlot from "./EventLineupSlot";
 import { setEventSlotByIndex } from "../util";
 
 type Props = {
     onUpdateSignup: (newSignup: EventSignup) => void;
 }
 
-const LineupSlotSortableList = ({ onUpdateSignup }: Props) => {
+const EventLineupSortableList = ({ onUpdateSignup }: Props) => {
 
     const [eventScratchpad, proposeEventChange] = useEventOperations();
 
@@ -55,7 +55,7 @@ const LineupSlotSortableList = ({ onUpdateSignup }: Props) => {
             }
 
             return <ListGroupItem key={`slot-${index}`} className="p-1">
-                <LineupEventSlot
+                <EventLineupSlot
                     index={index}
                     slot={slot}
                     onSlotMoveLater={() => { swapSlots(index, index + 1); }}
@@ -71,4 +71,4 @@ const LineupSlotSortableList = ({ onUpdateSignup }: Props) => {
     </ListGroup>
 }
 
-export default LineupSlotSortableList;
+export default EventLineupSortableList;

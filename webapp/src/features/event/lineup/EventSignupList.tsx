@@ -2,10 +2,11 @@ import { useState } from "react";
 import { Container, Card, Stack } from "react-bootstrap";
 import { Dj, Event, EventSignup } from "../../../util/types";
 import { ActionMenu } from "../../../components/actionMenu/ActionMenu";
-import DjDetails from "./Components/DjDetails";
-import SignupDetails from "./Components/SignupDetails";
+import DjDetails from "./EventSignupDjDetails";
+import EventSlotDetails from "./EventSignupDetails";
 import { DocumentReference } from "firebase/firestore";
-import { AddOrCreateDjModal } from "./Components/AddOrCreateDjModal";
+import { AddOrCreateDjModal } from "./components/AddOrCreateDjModal";
+import { useEventDjCache } from "../../../contexts/useEventDjCache";
 
 type Props = {
   event: Event,
@@ -15,6 +16,9 @@ type Props = {
 };
 
 const EventSignupList = ({ event, onUpdateSignup, onAddSlotToLineup, onRemoveSignup }: Props) => {
+
+  const { reloadDj } = useEventDjCache();
+
   const [showModal, setShowModal] = useState(false); // State to control modal visibility
   const [selectedSignup, setSelectedSignup] = useState<EventSignup | null>(null); // State to track the selected signup
 
@@ -25,8 +29,9 @@ const EventSignupList = ({ event, onUpdateSignup, onAddSlotToLineup, onRemoveSig
     return event.slots.map(slot => slot.signup_uuid).includes(signup.uuid);
   };
 
-  const handleAddDj = (_: Dj, djRef: DocumentReference) => {
+  const handleAddDj = async (_: Dj, djRef: DocumentReference) => {
     if (selectedSignup) {
+      await reloadDj(djRef.id);
       onUpdateSignup({ ...selectedSignup, dj_refs: [...selectedSignup.dj_refs, djRef] });
     }
     setShowModal(false); // Close the modal after adding
@@ -69,7 +74,7 @@ const EventSignupList = ({ event, onUpdateSignup, onAddSlotToLineup, onRemoveSig
                   </Stack>
                 </Card.Header>
                 <Card.Body>
-                  <SignupDetails signup={signup} onUpdateSignup={onUpdateSignup} />
+                  <EventSlotDetails signup={signup} onUpdateSignup={onUpdateSignup} />
                   <hr />
                   {
                     signup.dj_refs?.map(djRef => (

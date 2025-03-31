@@ -2,7 +2,7 @@ import { Stack, Button, Container, Row, Col, } from "react-bootstrap";
 import { Slot, Event, EventSignup } from "../../../util/types";
 import { ActionMenu } from "../../../components/actionMenu/ActionMenu";
 import { ArrowDown, ArrowUp } from "react-feather";
-import SignupDetails from "./Components/SignupDetails";
+import EventSlotDetails from "./EventSignupDetails";
 import { useEventDjCache } from "../../../contexts/useEventDjCache";
 
 
@@ -18,7 +18,7 @@ type Props = {
     onUpdateSignup: (newSignup: EventSignup) => void,
 }
 
-const LineupEventSlot = ({
+const EventLineupSlot = ({
     onUpdateSignup,
     slot,
     signup,
@@ -65,7 +65,7 @@ const LineupEventSlot = ({
                         }]} />
             </Col>
             <Col xs={{ order: 2, span: 12 }} md={{ order: 2, span: true }} className="pt-3">
-                <SignupDetails signup={signup} onUpdateSignup={onUpdateSignup} />
+                <EventSlotDetails signup={signup} onUpdateSignup={onUpdateSignup} />
                 < hr />
                 <ul>
                     {
@@ -79,4 +79,4 @@ const LineupEventSlot = ({
     </Container>;
 }
 
-export default LineupEventSlot;
+export default EventLineupSlot;

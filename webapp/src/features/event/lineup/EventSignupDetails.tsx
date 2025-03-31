@@ -1,12 +1,12 @@
 import { Col, Container, Form, InputGroup, Row, ToggleButton } from "react-bootstrap"
-import { SlotType, SlotDuration, EventSignup } from "../../../../util/types"
+import { SlotType, SlotDuration, EventSignup } from "../../../util/types"
 
 type Props = {
   signup: EventSignup,
   onUpdateSignup: (signup: EventSignup) => void,
 }
 
-const SignupDetails = ({signup, onUpdateSignup }: Props) => {
+const EventSlotDetails = ({signup, onUpdateSignup }: Props) => {
   return <Container>
     <Form.Group as={Row} className="mb-1">
       <Form.Label column="sm" sm={3} className="text-md-end">
@@ -84,4 +84,4 @@ const SignupDetails = ({signup, onUpdateSignup }: Props) => {
   </Container>
 }
 
-export default SignupDetails;
+export default EventSlotDetails;

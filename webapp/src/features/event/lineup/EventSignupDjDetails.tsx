@@ -1,6 +1,6 @@
 import { Col, Container, Dropdown, ListGroup, Row, Spinner, Stack } from "react-bootstrap";
-import { useEventDjCache } from "../../../../contexts/useEventDjCache";
-import { Dj, Event } from "../../../../util/types";
+import { useEventDjCache } from "../../../contexts/useEventDjCache";
+import { Dj, Event } from "../../../util/types";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { DocumentReference } from "firebase/firestore";
@@ -8,7 +8,6 @@ import { Disc } from "react-feather"; // Import the Settings icon from react-fea
 
 type Props = {
   djRef: DocumentReference;
-
   onRemoveDjRef: (djRef: DocumentReference) => void;
 };
 

@@ -30,7 +30,7 @@ export const eventRoutes: RouteObject[] = [
   {
     path: "technicalDetails",
     element: <EventStreamDetails/>,
-    handle: { crumb: () => <Link to="technicalDetails">Technical Details</Link>}
+    handle: { crumb: () => <Link to="technicalDetails">Stream Details</Link>}
   },
   {
     path: "announcements",
@@ -41,6 +41,6 @@ export const eventRoutes: RouteObject[] = [
   {
     path: "debug",
     element: <DebuggingDetails />,
-    handle: { crumb: () => <Link to="announcements">Announcements</Link>},
+    handle: { crumb: () => <Link to="announcements">Debugging</Link>},
   },
 ];

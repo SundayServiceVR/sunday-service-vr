@@ -2,12 +2,12 @@ import { useState } from "react";
 import { Button, Col, Container, Row, Stack } from "react-bootstrap";
 import { Dj, Event, EventSignup, Slot, SlotDuration, SlotType } from "../../../util/types";
 import { useEventOperations } from "../outletContext";
-import LineupSlotSortableList from "./LineupSlotSortableList";
+import EventLineupSortableList from "./EventLineupSortableList";
 import { DocumentReference } from "firebase/firestore";
 import { EventDjSignups } from "./EventSignupList";
 import { v4 as uuidv4 } from 'uuid';
 import { useEventDjCache } from "../../../contexts/useEventDjCache";
-import { AddOrCreateDjModal } from "./Components/AddOrCreateDjModal";
+import { AddOrCreateDjModal } from "./components/AddOrCreateDjModal";
 import { updateSignupForEvent } from "../util";
 
 const EventLineup = () => {
@@ -17,7 +17,7 @@ const EventLineup = () => {
 
     const { reloadDj } = useEventDjCache();
 
-    const addSlotFromSignup = (signup: EventSignup) => {
+    const addSlotToLineup = (signup: EventSignup) => {
         const slot: Slot = {
             dj_ref: signup.dj_refs[0],
             duration: signup.requested_duration,
@@ -29,9 +29,10 @@ const EventLineup = () => {
         proposeEventChange({ ...eventScratchpad, slots: slots_copy });
     }
 
-    const addSignup = async (dj: Dj, djRef: DocumentReference, isDebut: boolean = false) => {
-        await reloadDj(djRef.id); // Need to reload so other components have access to any created djs.
+    const addSignup = async (_: Dj, djRef: DocumentReference) => {
+        const dj = await reloadDj(djRef.id); // Need to reload so other components have access to any created djs.
         setCreateDjModalShow(false);
+        const isDebut = false;
         const signups_copy = [...eventScratchpad.signups, {
             dj_refs: [djRef],
             name: dj?.dj_name,
@@ -70,7 +71,7 @@ const EventLineup = () => {
                             <EventDjSignups
                                 event={eventScratchpad}
                                 onUpdateSignup={(newSignup) => updateSignup(eventScratchpad, newSignup)}
-                                onAddSlotToLineup={addSlotFromSignup}
+                                onAddSlotToLineup={addSlotToLineup}
                                 onRemoveSignup={removeSignup}
                             />
                         </Row>
@@ -78,7 +79,7 @@ const EventLineup = () => {
                 </Col>
                 <Col md={{ order: 1, span: 6 }}>
                     <h3 className="display-6">Lineup (Local Times)</h3>
-                    <LineupSlotSortableList
+                    <EventLineupSortableList
                         onUpdateSignup={(newSignup) => updateSignup(eventScratchpad, newSignup)}
                     />
                 </Col>
