@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Breadcrumb, Button, Container, Nav, Stack, Toast } from 'react-bootstrap';
-import { calcSlotTimes, default_event, saveEvent } from "../../store/events";
+import { reconcileEventData, default_event, saveEvent } from "../../store/events";
 import { docToEvent } from "../../store/converters";
 import { onSnapshot, doc } from "firebase/firestore";
 import { Event } from "../../util/types";
@@ -51,7 +51,7 @@ const EventRoot = () => {
     }, [event]);
 
     const proposeEventChange = (newEvent: Event) => {
-        calcSlotTimes(newEvent);
+        reconcileEventData(newEvent);
         setHasChanges(true);
         setEventScratchpad(newEvent);
     }

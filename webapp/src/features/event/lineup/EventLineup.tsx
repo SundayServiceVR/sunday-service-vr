@@ -15,7 +15,7 @@ const EventLineup = () => {
     const [eventScratchpad, proposeEventChange] = useEventOperations();
     const [createDjModalShow, setCreateDjModalShow] = useState<boolean>(false);
 
-    const { djCache } = useEventDjCache();
+    const { djCache, reloadDj } = useEventDjCache();
 
     const addSlotFromSignup = (signup: EventSignup) => {
         const slot: Slot = {
@@ -29,11 +29,12 @@ const EventLineup = () => {
         proposeEventChange({ ...eventScratchpad, slots: slots_copy });
     }
 
-    const addSignup = (_: Dj, djRef: DocumentReference, isDebut: boolean = false) => {
+    const addSignup = async (_: Dj, djRef: DocumentReference, isDebut: boolean = false) => {
         setCreateDjModalShow(false);
+        const newDj = await reloadDj(djRef.id);
         const signups_copy = [...eventScratchpad.signups, {
             dj_refs: [djRef],
-            name: djCache.get(djRef.id)?.dj_name ?? "Unknown Dj",
+            name: newDj?.dj_name ?? "Unknown Dj",
             debut: isDebut,
             uuid: uuidv4(),
             requested_duration: 1 as SlotDuration,

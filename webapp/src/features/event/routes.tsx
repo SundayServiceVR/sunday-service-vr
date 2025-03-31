@@ -3,7 +3,7 @@ import EventDetails from "./basic/EventDetails";
 import EventAnnouncements from "./EventAnnouncements";
 import EventLineup from "./lineup/EventLineup";
 import EventVerifyDJs from "./linupVerification/EventVerifyDJs";
-import EventTechnicalDetails from "./technical/EventTechnicalDetails";
+import EventStreamDetails from "./stream/EventStreamDetails";
 import DebuggingDetails from "./DebuggingDetails";
 
 export const eventRoutes: RouteObject[] = [
@@ -29,7 +29,7 @@ export const eventRoutes: RouteObject[] = [
   },
   {
     path: "technicalDetails",
-    element: <EventTechnicalDetails/>,
+    element: <EventStreamDetails/>,
     handle: { crumb: () => <Link to="technicalDetails">Technical Details</Link>}
   },
   {

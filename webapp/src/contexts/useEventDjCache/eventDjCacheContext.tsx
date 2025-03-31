@@ -6,6 +6,7 @@ type EventDjCacheContextType = {
   eventCache: EventCache;
   djCache: DjCache;
   loading: boolean;
+  reloadDj: (id: string) => Promise<Dj | null>;
   getEventWithDjs: (id: string) => {
       event: Event;
       djs: (Dj | "PENDING")[];

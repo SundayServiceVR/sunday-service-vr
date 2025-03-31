@@ -10,7 +10,7 @@ type Props = {
     onUpdateSignup: (newSignup: EventSignup) => void,
 }
 
-const EventSlotTechnicalDetails = ({
+const EventSlotStreamDetails = ({
     index,
     slot,
     event,
@@ -81,8 +81,13 @@ const EventSlotTechnicalDetails = ({
                     {djs.map((dj, index) => (
                         <div key={index} className="mb-3">
                             <Row>
+                                <Col>
+                                    <strong>{dj.dj_name}</strong>
+                                </Col>
+                            </Row>
+                            <Row>
                                 <Col xs={4}>
-                                    <strong>Stream Link:</strong>
+                                    Stream Link:
                                 </Col>
                                 <Col xs={8}>
                                     <Button
@@ -95,7 +100,7 @@ const EventSlotTechnicalDetails = ({
                             </Row>
                             <Row>
                                 <Col xs={4}>
-                                    <strong>Twitch Username:</strong>
+                                    Twitch Username:
                                 </Col>
                                 <Col xs={8}>
                                     <Button
@@ -114,4 +119,4 @@ const EventSlotTechnicalDetails = ({
     );
 }
 
-export default EventSlotTechnicalDetails;
+export default EventSlotStreamDetails;

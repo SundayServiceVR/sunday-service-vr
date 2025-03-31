@@ -41,38 +41,39 @@ export const AddOrCreateDjModal = ({ show, handleClose, onDjSelected }: Props) =
     }
 
     return <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-            <Modal.Title>Add Dj</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-            {
-                !showCreateForm && <Stack direction="horizontal" gap={2}>
-                    <div className="flex-grow-1">
-                        <DjSearchSelect onDjSelect={onDjSelected} />
-                    </div>
-                    <div className="vr" />
-                    <Button onClick={() => setShowCreateForm(true)}>Onboard New Dj</Button>
-                </Stack>
-            }
-            {showCreateForm && <Form onSubmit={onFormSubmit}>
-                <DjForm dj={dj} setDj={setDj} busy={busy} />
-            </Form>
-            }
-        </Modal.Body>
-        <Modal.Footer>
-            {showCreateForm && <>
-                <Button variant="secondary" onClick={() => setShowCreateForm(false)} >
-                    Select Existing Dj
-                </Button>
-                <Button variant="secondary" onClick={handleClose}>
-                    Close
-                </Button>
-                <Button variant="primary" type="submit">
-                    Save Changes
-                </Button>
-            </>
-            }
+        <Form onSubmit={onFormSubmit}>
+            <Modal.Header closeButton>
+                <Modal.Title>Add Dj</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                {
+                    !showCreateForm && <Stack direction="horizontal" gap={2}>
+                        <div className="flex-grow-1">
+                            <DjSearchSelect onDjSelect={onDjSelected} />
+                        </div>
+                        <div className="vr" />
+                        <Button onClick={() => setShowCreateForm(true)}>Onboard New Dj</Button>
+                    </Stack>
+                }
+                {showCreateForm && <DjForm dj={dj} setDj={setDj} busy={busy} />
 
-        </Modal.Footer>
+                }
+            </Modal.Body>
+            <Modal.Footer>
+                {showCreateForm && <>
+                    <Button variant="secondary" onClick={() => setShowCreateForm(false)} >
+                        Select Existing Dj
+                    </Button>
+                    <Button variant="secondary" onClick={handleClose}>
+                        Close
+                    </Button>
+                    <Button variant="primary" type="submit">
+                        Save Changes
+                    </Button>
+                </>
+                }
+
+            </Modal.Footer>
+        </Form>
     </Modal>
 }

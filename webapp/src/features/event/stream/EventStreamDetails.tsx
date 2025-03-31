@@ -1,34 +1,23 @@
 import { Container, ListGroup } from "react-bootstrap";
 import { useEventOperations } from "../outletContext";
-import EventSlotTechnicalDetails from "./EventSlotTechnicalDetails";
+import EventSlotStreamDetails from "./EventSlotStreamDetails";
 import { setEventSlotByIndex, updateSignupForEvent } from "../util";
 import { useEventDjCache } from "../../../contexts/useEventDjCache";
 
-const EventTechnicalDetails = () => {
+const EventStreamDetails = () => {
   const [eventScratchpad, updateEventScratchpad] = useEventOperations();
-  const eventDjCache = useEventDjCache();
-
-
-
-  // Method to assertively get a DJ by ID
-  const getDjAssertive = (djId: string) => {
-    const dj = eventDjCache.djCache.get(djId);
-    if (!dj) {
-      throw new Error(`DJ with ID ${djId} not found in eventDjCache.`);
-    }
-    return dj;
-  };
+  const { getDjsForSlot } = useEventDjCache();
 
   return <Container>
     <h1 className="display-6">Stream Details</h1>
     <ListGroup>
       {eventScratchpad.slots.map((slot, index) => (
         <ListGroup.Item key={`${eventScratchpad.id}-slot-${index}`}>
-          <EventSlotTechnicalDetails 
+          <EventSlotStreamDetails 
             index={index} 
             slot={slot}
             event={eventScratchpad}
-            djs={[getDjAssertive(slot.dj_ref.id )]} // Populate DJs from the cache
+            djs={getDjsForSlot(eventScratchpad, slot)} // Populate DJs from the cache
             onUpdateSlot={(newSlot) => {
               updateEventScratchpad(
                 setEventSlotByIndex(eventScratchpad, index, newSlot)
@@ -45,4 +34,4 @@ const EventTechnicalDetails = () => {
     </ListGroup>
   </Container>
 }
-export default EventTechnicalDetails;
+export default EventStreamDetails;

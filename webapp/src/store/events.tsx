@@ -24,8 +24,7 @@ export const createEvent = async (event: Event) => {
 }
 
 export const saveEvent = async (event: Event, previousEvent?: Event) => {
-  event = calcSlotTimes(event);
-  event = setDjPlays(event);
+  event = reconcileEventData(event);
 
   const eventId = event.id;
 
@@ -64,7 +63,13 @@ export const saveEvent = async (event: Event, previousEvent?: Event) => {
   });
 }
 
-export const calcSlotTimes = (event: Event): Event => {
+export const reconcileEventData = (event: Event): Event => {
+  let newEvent = calcSlotTimes(event);
+  newEvent = setDjPlays(event);
+  return newEvent
+}
+
+const calcSlotTimes = (event: Event): Event => {
   const newEvent = { ...event }; // Shallow Copy
 
   const ONE_HOUR = 60 * 60 * 1000;
