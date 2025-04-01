@@ -5,7 +5,7 @@ import { ActionMenu } from "../../../components/actionMenu/ActionMenu";
 import DjDetails from "./EventSignupDjDetails";
 import EventSlotDetails from "./EventSignupDetails";
 import { DocumentReference } from "firebase/firestore";
-import { AddOrCreateDjModal } from "./Components/AddOrCreateDjModal";
+import { AddOrCreateDjModal } from "./components/AddOrCreateDjModal";
 import { useEventDjCache } from "../../../contexts/useEventDjCache";
 
 type Props = {
