@@ -2,12 +2,15 @@ import { Tabs, Tab, Form } from "react-bootstrap";
 import MessagePasteCard from "./messaging/MessagePasteCard";
 import { getDiscordMessage, getTwitterMessage } from "../../util/messageWriters";
 import { useEventOperations } from "./outletContext";
+import { useEventDjCache } from "../../contexts/useEventDjCache";
 
 const EventAnnouncements = () => {
 
     const [eventScratchpad, proposeEventChange] = useEventOperations();
 
-    const discordMessage = getDiscordMessage(eventScratchpad);
+    const { djCache } = useEventDjCache();
+
+    const discordMessage = getDiscordMessage(eventScratchpad, djCache);
     const twitterMessage = getTwitterMessage(eventScratchpad);
 
     const discordFooterInstructions = <>
@@ -22,7 +25,7 @@ const EventAnnouncements = () => {
     const twitterFooterInstructions = <p className="my-2">Paste this text to Twitter and Bluesky.</p>
     
     return <section>
-        <h1 className="display-5">Public Announcements</h1>
+        <h1 className="display-6">Public Announcements</h1>
         <Form>
             <Form.Group>
                 <Form.Label>

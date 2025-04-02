@@ -6,6 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Spinner from "../../components/spinner";
 import { CurrentOrNextEvent } from "../../components/currentOrNextEvent/CurrentOrNextEvent";
 import { getAllEvents } from "../../store/events";
+import { useEventDjCache } from "../../contexts/useEventDjCache";
 
 type Props = {
     past?: boolean;
@@ -14,6 +15,8 @@ type Props = {
 const EventList = ({ past = false}: Props) => {
     const [events, setEvents] = useState<Event[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
+
+    const { getPlayedDjsForEvent } = useEventDjCache();
 
     const navigate = useNavigate();
 
@@ -70,7 +73,7 @@ const EventList = ({ past = false}: Props) => {
                         <td><Link to={`/events/${event.id}`}>{event.start_datetime.toLocaleDateString()}</Link></td>
                         <td>{event.name}</td>
                         <td>{event.host}</td>
-                        <td>{event.slots.map(slot => slot.dj_name).join(", ")}</td>
+                        <td>{getPlayedDjsForEvent(event).map(dj => dj.dj_name).join(", ")}</td>
                     </tr>)}
                 </tbody>
             </Table>

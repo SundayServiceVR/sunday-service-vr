@@ -7,25 +7,24 @@ import Layout from './features/layout/Layout';
 import AnonymousLayout from './features/layout/AnonymousLayout';
 import ResetPassword from './features/auth/ResetPassword';
 
-import EventLineup from './features/event/lineup/EventLineup';
-import EventAnnouncements from './features/event/EventAnnouncements';
 import Home from './features/home/Home';
 import EventList from './features/event/EventList';
 import EventCreate from './features/event/basic/EventCreate';
 import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 
-import './App.css';
 import CreateDj from './features/dj/CreateDj';
 import DjDetails from './features/dj/DjDetails';
 import DjList from './features/dj/DjList';
-import EventDetails from './features/event/basic/EventDetails';
-import EventVerifyDJs from './features/event/lineup/EventVerifyDJs';
 import { Toaster } from 'react-hot-toast';
 import { DiscordIdInfo } from './features/dj/discordIdInfo/DiscordIdInfo';
+import { eventRoutes } from './features/event/routes';
 import GlobalSettings from "./features/globalSettings/GlobalSettings";
 
+import { EventDjPlayMapperProvider } from './contexts/useEventDjCache/eventDjCacheProvider';
+
+import './App.css';
+
 function App() {
-  // 
   if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
     const db = getFirestore();
     connectFirestoreEmulator(db, '127.0.0.1', 8080)
@@ -34,7 +33,11 @@ function App() {
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <FirebaseAuthProvider><Layout /></FirebaseAuthProvider>,
+      element: <FirebaseAuthProvider>
+          <EventDjPlayMapperProvider>
+            <Layout />
+          </EventDjPlayMapperProvider>
+        </FirebaseAuthProvider>,
       children: [
         {
           index: true,
@@ -68,33 +71,7 @@ function App() {
               path: ":eventId",
               element: <EventRoot />,
               handle: { crumb: () => <Link to="../">Event</Link>},
-              children: [
-                {
-                  index: true,
-                  element: <EventDetails />,
-                  handle: { crumb: () => <Link to="setup">Setup</Link>},
-                },
-                {
-                  path: "setup",
-                  element: <EventDetails />,
-                  handle: { crumb: () => <Link to="setup">Setup</Link>},
-                },
-                {
-                  path: "lineup",
-                  element: <EventLineup />,
-                  handle: { crumb: () => <Link to="event">Lineup</Link>},
-                },
-                {
-                  path: "verifyDJs",
-                  element: <EventVerifyDJs/>,
-                  handle: { crumb: () => <Link to="verifyDJs">Verify DJs</Link>}
-                },
-                {
-                  path: "announcements",
-                  element: <EventAnnouncements />,
-                  handle: { crumb: () => <Link to="announcements">Announcements</Link>},
-                },
-              ]
+              children: eventRoutes
             }
           ]
         },

@@ -22,6 +22,8 @@ const DjDetails = () => {
         discord_id: "",
         public_name: "",
         dj_name: "",
+        events: [],
+        notes: [],
      });
 
     const [ playedEvents, setPlayedEvents ] = useState<Event[]>([]);

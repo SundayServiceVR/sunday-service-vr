@@ -43,23 +43,14 @@ const EventBasicDetailsForm = ({ event: eventScratchpad, onEventChange: proposeE
                 Host
             </Form.Label>
             <Form.Control
-                placeholder="Strawbs"
+                placeholder="TBD"
                 type="text"
                 value={eventScratchpad.host}
                 required
                 onChange={(formEvent) => { proposeEventChange({ ...eventScratchpad, host: formEvent.target.value }); }}
             />
         </Form.Group>
-        <Form.Group className="mt-2">
-            <Form.Label>
-                Published
-            </Form.Label>
-            <Form.Check // prettier-ignore
-                type="switch"
-                checked={eventScratchpad.published}
-                onChange={(formEvent) => { proposeEventChange({ ...eventScratchpad, published: formEvent.target.checked }); }}
-            />
-        </Form.Group>
+       
     </Form>
     </>
 

@@ -52,7 +52,6 @@ export const DjSearchSelect = ({onDjSelect}: Props) => {
                     ref.current?.clear()
                 }}
                 selected={undefined}
-                size="lg"
             />
         </Form.Group>
     </Form>
