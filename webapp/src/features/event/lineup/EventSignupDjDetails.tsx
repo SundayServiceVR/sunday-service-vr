@@ -11,7 +11,7 @@ type Props = {
   onRemoveDjRef: (djRef: DocumentReference) => void;
 };
 
-const DjDetails = ({ djRef, onRemoveDjRef }: Props) => {
+const EventSignupDjDetails = ({ djRef, onRemoveDjRef }: Props) => {
   const { loading, getEventsByDjId, djCache } = useEventDjCache();
   const [djEvents, setDjEvents] = useState<Event[]>([]);
   const [dj, setDj] = useState<Dj>();
@@ -97,4 +97,4 @@ const DjDetails = ({ djRef, onRemoveDjRef }: Props) => {
   );
 };
 
-export default DjDetails;
+export default EventSignupDjDetails;
