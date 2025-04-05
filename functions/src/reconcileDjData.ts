@@ -3,7 +3,7 @@ import { DocumentData, getFirestore } from "firebase-admin/firestore";
 import { Dj, Event } from "../../webapp/src/util/types";
 import { listOfDocsMatch } from "./lib/util";
 
-const db = getFirestore("staging");
+const db = getFirestore();
 
 export const reconsileDjData = onRequest({ secrets: ["BACKUPS_SERVICE_ACCOUNT_KEY"] }, async (request, response) => {
     const djsToUpdate = await reconcileDjData();
