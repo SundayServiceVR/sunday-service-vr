@@ -3,8 +3,6 @@ import { Slot, Event, EventSignup } from "../../../util/types";
 import { ActionMenu } from "../../../components/actionMenu/ActionMenu";
 import { ArrowDown, ArrowUp } from "react-feather";
 import EventSlotDetails from "./EventSignupDetails";
-import { useEventDjCache } from "../../../contexts/useEventDjCache";
-
 
 type Props = {
     index: number,
@@ -27,9 +25,6 @@ const EventLineupSlot = ({
     onSlotMoveLater,
     onRemoveSlot,
 }: Props) => {
-
-    const { djCache } = useEventDjCache();
-
     return <Container className="my-2">
         <Row>
             <Col xs={{ order: 1, span: 6 }} md={{ order: 1, span: "auto" }}>
@@ -69,10 +64,11 @@ const EventLineupSlot = ({
                 < hr />
                 <ul>
                     {
-                        signup.dj_refs.map(dj_ref => djCache.get(dj_ref.id)).map(
-                            (dj) => <li key={dj?.dj_name ?? "unknown-dj"}>{dj?.dj_name ?? "unknown-dj"}</li>
+                        slot.djs?.map(
+                            (dj) => <li key={dj?.name ?? "unknown-dj"}>{dj?.name ?? "unknown-dj"}</li>
                         )
                     }
+
                 </ul>
             </Col>
         </Row>

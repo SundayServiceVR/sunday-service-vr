@@ -5,6 +5,8 @@ import { collection, doc, DocumentReference, getDoc, getDocs, query } from 'fire
 import { db } from '../../util/firebase';
 import { docToEvent } from '../../store/converters';
 import { DjCache, EventCache } from './types';
+import { getSignupForSlot } from './helpers';
+import { getDjCache } from './util';
 
 export const EventDjPlayMapperProvider = ({ children }: { children: ReactNode }) => {
   const [eventCache, setEventCache] = useState<EventCache>(new Map());
@@ -13,13 +15,7 @@ export const EventDjPlayMapperProvider = ({ children }: { children: ReactNode })
   const [ loading, setLoading ] = useState<boolean>(false);
 
   const reloadAllDjs = async () => {
-    const q = query(collection(db, "djs"));
-    const querySnapshot = await getDocs(q);
-
-    const djs = querySnapshot.docs.map(doc => ({ id: doc.id, dj: doc.data() as Dj }));
-    const djCache = new Map<string, Dj>();
-    djs.forEach(dj => djCache.set(dj.id, dj.dj))
-    setDjCache(djCache)
+    setDjCache(await getDjCache())
   }
 
   const reloadDj = async (id: string): Promise<Dj | null> => {
@@ -75,11 +71,6 @@ export const EventDjPlayMapperProvider = ({ children }: { children: ReactNode })
 
     return events;
   };
-
-  const getSignupForSlot = (event: Event, slot: Slot) => {
-    const result =  event.signups.find(signups => signups.uuid === slot.signup_uuid);
-    return result;
-  }
 
   const getDjsForSlot = (event: Event, slot: Slot) => {
     

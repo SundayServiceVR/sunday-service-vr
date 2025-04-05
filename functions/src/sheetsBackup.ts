@@ -3,10 +3,12 @@ import { onRequest } from "firebase-functions/v2/https";
 import { onSchedule } from "firebase-functions/v2/scheduler";
 import { JWT } from "google-auth-library";
 import { GoogleSpreadsheet } from "google-spreadsheet";
-import { DocumentReference, getFirestore, QuerySnapshot, Timestamp } from "firebase-admin/firestore";
+import { getFirestore, QuerySnapshot, Timestamp, DocumentReference } from "firebase-admin/firestore";
 import { defineString } from "firebase-functions/params";
-import { Dj, Slot } from "../../webapp/src/util/types";
+import { Dj, Slot, Event } from "../../webapp/src/util/types";
 import { logger } from "firebase-functions/v2";
+import { getSignupForSlot } from "../../webapp/src/contexts/useEventDjCache/helpers";
+import { fetchDjsMap } from "./lib/database";
 
 const backupSheetId = process.env.FUNCTIONS_EMULATOR === "true" ?
     "11jLcYOy1YryYb8PIFpwAMzcO928nFYskKKmigMQcvj0": // Nonoprod
@@ -120,15 +122,46 @@ async function backupEvents(backupDoc: GoogleSpreadsheet, querySnapshot: QuerySn
     await spreadsheet.clear();
     await spreadsheet.setHeaderRow(["id", ...EVENT_BACKUP_HEADERS]);
 
-    await spreadsheet.addRows(querySnapshot.docs.map((doc) => {
-        const event = doc.data();
+    const rows = querySnapshot.docs.map((doc) => {
+        const rawEvent = doc.data();
+        const event = rawEvent as Event;
+
+        const getSlotInfo = async (slot: Slot, event: Event) => {
+            const slotName = getSignupForSlot(event, slot)?.name ?? slot.dj_name;
+            const signup = getSignupForSlot(event, slot);
+
+            const adminDjCollection = await getFirestore().collection("djs");
+
+            // Converts the normal DocumentReference to the firebase admin DocumentReference
+            const djRefs: DocumentReference[] = (signup?.dj_refs?.map((ref) => {
+                return adminDjCollection.doc(ref.id);
+            }) ?? []);
+
+            const eventDjMap = await fetchDjsMap(djRefs);
+
+            const djNames = await djRefs?.map((ref) => {
+                const dj = eventDjMap.get(ref.id) as Dj | undefined;
+                return dj?.dj_name ?? `DJ Ref: ${ref.id}`;
+            }) ?? [];
+
+            return { slotName, djRefs, djNames };
+        };
+
+        const djs = event.slots.map(async (slot: Slot) => {
+            const slotInfo = await getSlotInfo(slot, event);
+            return slotInfo.djNames;
+        }).join(", ");
+
         return {
             id: doc.id,
-            date: (event.start_datetime as Timestamp).toDate().toUTCString(),
-            djs: event.slots.map((slot: Slot) => slot.dj_name).join(", "),
-            ...event,
+            rawDate: rawEvent.start_datetime,
+            date: (rawEvent.start_datetime as Timestamp).toDate().toUTCString(),
+            djs,
+            ...rawEvent,
         };
-    }));
+    });
+
+    await spreadsheet.addRows(rows.sort((a, b) => (a.rawDate - b.rawDate)));
 }
 
 /**

@@ -38,13 +38,20 @@ export type Slot = {
     signup_uuid?: string;
     stream_source_type?: StreamSourceType;
     stream_source_url?: string;
-
-    start_time: Date;
     duration: SlotDuration;
+
+    // Reconciled Fields
+    start_time: Date;
+
+    // Calculated for ease of access and record keeping
+    name?: string;
+    djs?: {
+        name?: string,
+        discord_id?: string,
+    }[];
 
     //Depricated
     is_live?: boolean;
-    name?: string;
     dj_ref: DocumentReference;
     prerecord_url?: string;
     slot_type?: SlotType;

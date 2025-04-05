@@ -2,15 +2,12 @@ import { Tabs, Tab, Form } from "react-bootstrap";
 import MessagePasteCard from "./messaging/MessagePasteCard";
 import { getDiscordMessage, getTwitterMessage } from "../../util/messageWriters";
 import { useEventOperations } from "./outletContext";
-import { useEventDjCache } from "../../contexts/useEventDjCache";
 
 const EventAnnouncements = () => {
 
     const [eventScratchpad, proposeEventChange] = useEventOperations();
 
-    const { djCache } = useEventDjCache();
-
-    const discordMessage = getDiscordMessage(eventScratchpad, djCache);
+    const discordMessage = getDiscordMessage(eventScratchpad);
     const twitterMessage = getTwitterMessage(eventScratchpad);
 
     const discordFooterInstructions = <>

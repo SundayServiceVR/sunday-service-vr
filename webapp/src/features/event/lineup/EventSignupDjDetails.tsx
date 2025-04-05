@@ -17,8 +17,8 @@ const EventSignupDjDetails = ({ djRef, onRemoveDjRef }: Props) => {
   const [dj, setDj] = useState<Dj>();
 
   useEffect(() => {
-    const inDj = djRef && djCache.get(djRef.id);
-    setDj(inDj);
+    const dj = djCache.get(djRef.id);
+    setDj(dj);
 
     const events = getEventsByDjId(djRef.id);
     setDjEvents(events);
@@ -45,7 +45,7 @@ const EventSignupDjDetails = ({ djRef, onRemoveDjRef }: Props) => {
         <Col className="text-end">
           <Dropdown>
             <Dropdown.Toggle variant="white" id="dropdown-basic" size="sm">
-              <Disc size={16} /> {/* Use the Settings icon */}
+              <Disc size={16} />
             </Dropdown.Toggle>
             <Dropdown.Menu>
               <Dropdown.Item as={Link} to={`/djs/${djRef.id}`} target="_blank">

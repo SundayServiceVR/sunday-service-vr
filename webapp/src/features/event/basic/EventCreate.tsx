@@ -1,16 +1,19 @@
 import { FormEvent, useState } from "react";
-import { createEvent, default_event } from "../../../store/events";
+import { default_event } from "../../../store/events";
 import { Event } from "../../../util/types";
 import EventBasicDetailsForm from "./EventBasicDetailsForm";
 import { Breadcrumb, Button, Form, Stack } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
 import Spinner from "../../../components/spinner";
+import { useEventStore } from "../../../hooks/useEventStore/useEventStore";
 
 const EventCreate = () => {
     const [ event, setEvent ] = useState<Event>({ ...default_event });
     const [ busy, setBusy ] = useState<boolean>(false);
     const navigate = useNavigate();
+
+    const { createEvent } = useEventStore();
 
     const onCreateEvent = (formEvent: FormEvent) => {
         formEvent.preventDefault();
