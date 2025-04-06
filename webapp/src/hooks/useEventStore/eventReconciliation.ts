@@ -62,10 +62,22 @@ const calcSlotFromSignup = (event: Event, djCache: DjCache): Event => {
     const signup = getSignupForSlot(event, slot) as EventSignup;
 
     const getDjInfoFromSignups = (signup: EventSignup) => signup?.dj_refs?.map(
-      (ref) => ({
-        name: djCache.get(ref.id)?.dj_name ?? `DJ: ${ref.id}`,
-        discord_id: djCache.get(ref.id)?.discord_id ?? undefined,
-      })
+      (ref) => {
+
+        const result:{
+          dj_name?: string,
+          discord_id?: string,
+        } = {
+          dj_name: djCache.get(ref.id)?.dj_name ?? `DJ: ${ref.id}`
+        };
+        const discord_id = djCache.get(ref.id)?.discord_id ?? undefined;
+
+        if (discord_id) {
+          result.discord_id = discord_id;
+        }
+
+        return result
+      }
     );
 
     const getDjInfoFromLegacySlot = () => {
@@ -74,7 +86,7 @@ const calcSlotFromSignup = (event: Event, djCache: DjCache): Event => {
         discord_id?: string,
       } = {};
       
-      if( slot.dj_name) {
+      if(slot.dj_name) {
         result.dj_name = slot.dj_name;
       }
       const discordId = djCache.get(slot.dj_ref.id)?.discord_id ?? undefined;

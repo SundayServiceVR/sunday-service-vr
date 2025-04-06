@@ -46,7 +46,7 @@ export type Slot = {
     // Calculated for ease of access and record keeping
     name?: string;
     djs?: {
-        name?: string,
+        dj_name?: string,
         discord_id?: string,
     }[];
 

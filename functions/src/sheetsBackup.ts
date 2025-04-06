@@ -5,10 +5,9 @@ import { JWT } from "google-auth-library";
 import { GoogleSpreadsheet } from "google-spreadsheet";
 import { getFirestore, QuerySnapshot, Timestamp, DocumentReference } from "firebase-admin/firestore";
 import { defineString } from "firebase-functions/params";
-import { Dj, Slot, Event } from "../../webapp/src/util/types";
+import { Dj } from "../../webapp/src/util/types";
 import { logger } from "firebase-functions/v2";
-import { getSignupForSlot } from "../../webapp/src/contexts/useEventDjCache/helpers";
-import { fetchDjsMap } from "./lib/database";
+import { docToEvent } from "../../webapp/src/store/converters";
 
 const backupSheetId = process.env.FUNCTIONS_EMULATOR === "true" ?
     "11jLcYOy1YryYb8PIFpwAMzcO928nFYskKKmigMQcvj0": // Nonoprod
@@ -123,45 +122,18 @@ async function backupEvents(backupDoc: GoogleSpreadsheet, querySnapshot: QuerySn
     await spreadsheet.setHeaderRow(["id", ...EVENT_BACKUP_HEADERS]);
 
     const rows = querySnapshot.docs.map((doc) => {
-        const rawEvent = doc.data();
-        const event = rawEvent as Event;
-
-        const getSlotInfo = async (slot: Slot, event: Event) => {
-            const slotName = getSignupForSlot(event, slot)?.name ?? slot.dj_name;
-            const signup = getSignupForSlot(event, slot);
-
-            const adminDjCollection = await getFirestore().collection("djs");
-
-            // Converts the normal DocumentReference to the firebase admin DocumentReference
-            const djRefs: DocumentReference[] = (signup?.dj_refs?.map((ref) => {
-                return adminDjCollection.doc(ref.id);
-            }) ?? []);
-
-            const eventDjMap = await fetchDjsMap(djRefs);
-
-            const djNames = await djRefs?.map((ref) => {
-                const dj = eventDjMap.get(ref.id) as Dj | undefined;
-                return dj?.dj_name ?? `DJ Ref: ${ref.id}`;
-            }) ?? [];
-
-            return { slotName, djRefs, djNames };
-        };
-
-        const djs = event.slots.map(async (slot: Slot) => {
-            const slotInfo = await getSlotInfo(slot, event);
-            return slotInfo.djNames;
-        }).join(", ");
-
+        const event = docToEvent(doc);
         return {
             id: doc.id,
-            rawDate: rawEvent.start_datetime,
-            date: (rawEvent.start_datetime as Timestamp).toDate().toUTCString(),
-            djs,
-            ...rawEvent,
+            name: event.name,
+            host: event.host,
+            rawDate: event.start_datetime,
+            date: event.start_datetime.toUTCString(),
+            djs: event.slots.map((slot) => slot.djs?.map((dj) => dj.dj_name).join(" + ")).join(", ") ?? "Unknown",
         };
     });
 
-    await spreadsheet.addRows(rows.sort((a, b) => (a.rawDate - b.rawDate)));
+    await spreadsheet.addRows(rows.sort((a, b) => (a.rawDate.getTime() - b.rawDate.getTime())));
 }
 
 /**
