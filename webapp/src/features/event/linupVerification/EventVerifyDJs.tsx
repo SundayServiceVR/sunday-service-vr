@@ -6,7 +6,6 @@ import MessagePasteCard from "../messaging/MessagePasteCard";
 const EventVerifyDJs = () => {
 
     const [eventScratchpad] = useEventOperations();
-
     const footerInstructions = <>
         <p className="mb-0 mt-2">Paste this message to <a target="_blank" 
                 rel="noopener noreferrer" 
@@ -21,7 +20,7 @@ const EventVerifyDJs = () => {
 
     return (
       <section>
-        <h1 className="display-5">Verify DJs</h1>
+        <h1 className="display-6">Verify DJs</h1>
         <p>Before publicly announcing the event lineup, we need to verify in the scheduling channel that the DJs are all still available and are okay with their times:</p>
         <Form>
             <Form.Group>

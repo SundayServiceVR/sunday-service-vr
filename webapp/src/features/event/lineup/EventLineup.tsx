@@ -1,55 +1,92 @@
 import { useState } from "react";
-import { Button, Col, Container, Row } from "react-bootstrap";
-import { Dj, Slot } from "../../../util/types";
+import { Button, Col, Container, Row, Stack } from "react-bootstrap";
+import { Dj, Event, EventSignup, Slot, SlotDuration, SlotType } from "../../../util/types";
 import { useEventOperations } from "../outletContext";
-import SortableDjList from "./SortableDjList";
-import { DjSearchSelect } from "../../dj/DjSearchSelect";
-import { CreateDjModal } from "../../dj/CreateDjModal";
+import EventLineupSortableList from "./EventLineupSortableList";
 import { DocumentReference } from "firebase/firestore";
+import { EventDjSignups } from "./EventSignupList";
+import { v4 as uuidv4 } from 'uuid';
+import { useEventDjCache } from "../../../contexts/useEventDjCache";
+import { AddOrCreateDjModal } from "./components/AddOrCreateDjModal";
+import { updateSignupForEvent } from "../util";
 
 const EventLineup = () => {
 
-    const [ eventScratchpad, proposeEventChange ] = useEventOperations();
-    const [ addDjModalShow, setAddDjModalShow ] = useState<boolean>(false);
+    const [eventScratchpad, proposeEventChange] = useEventOperations();
+    const [createDjModalShow, setCreateDjModalShow] = useState<boolean>(false);
 
-    const addNewDjAsSlot = (newDj: Dj, documentRef: DocumentReference) => {
+    const { reloadDj } = useEventDjCache();
+
+    const addSlotToLineup = (signup: EventSignup) => {
         const slot: Slot = {
-            dj_ref: documentRef,
-            discord_id: newDj.discord_id ?? "",
-            dj_name: newDj.dj_name ?? "",
-            rtmp_url: newDj.rtmp_url ?? "",
-            twitch_username: newDj.twitch_username ?? "",
-            prerecord_url: "",
-            duration: 1,
-            is_debut: false,
+            dj_ref: signup.dj_refs[0],
+            duration: signup.requested_duration,
+            start_time: new Date(),
+            signup_uuid: signup.uuid,
         }
-        setAddDjModalShow(false);
+        setCreateDjModalShow(false);
         const slots_copy = [...eventScratchpad.slots, slot];
-        proposeEventChange({...eventScratchpad, slots: slots_copy});
+        proposeEventChange({ ...eventScratchpad, slots: slots_copy });
     }
 
-    return <>
-        <h3 className="display-6">Add DJs</h3>
+    const addSignup = async (_: Dj, djRef: DocumentReference) => {
+        const dj = await reloadDj(djRef.id); // Need to reload so other components have access to any created djs.
+        setCreateDjModalShow(false);
+        const isDebut = false;
+        const signups_copy = [...eventScratchpad.signups, {
+            dj_refs: [djRef],
+            name: dj?.dj_name,
+            debut: isDebut,
+            uuid: uuidv4(),
+            requested_duration: 1 as SlotDuration,
+            type: SlotType.LIVE,
+        } as EventSignup];
+        proposeEventChange({ ...eventScratchpad, signups: signups_copy });
+    }
+
+    const removeSignup = (signup: EventSignup) => {
+        const signups_copy = eventScratchpad.signups.filter(dj_signup => dj_signup.uuid !== signup.uuid);
+        proposeEventChange({ ...eventScratchpad, signups: signups_copy });
+    }
+
+    const updateSignup = (event: Event, signup: EventSignup) => {
+        proposeEventChange(updateSignupForEvent(event, signup));
+    }
+
+    return <Container>
         <Container>
-            <Row>
-                <Col md={8} className="pt-2">
-                    <DjSearchSelect onDjSelect={addNewDjAsSlot}/>
+            <Row className="mb-3">
+                <Col className="d-flex flex-column align-items-center">
+                    <Stack direction="horizontal" gap={2}>
+                        <div className="ms-auto" />
+                        <Button variant="primary" onClick={() => setCreateDjModalShow(true)}>Add DJ to Signups</Button>
+                    </Stack>
                 </Col>
-                <Col className="d-flex justify-content-center pt-2">
-                    <Button variant="primary" size="lg" onClick={() => setAddDjModalShow(true)}>Add a New DJ</Button>
+            </Row>
+            <Row>
+                <Col md={{ span: 6 }}>
+                    <h3 className="display-6">Signups</h3>
+                    <Container>
+                        <Row>
+                            <EventDjSignups
+                                event={eventScratchpad}
+                                onUpdateSignup={(newSignup) => updateSignup(eventScratchpad, newSignup)}
+                                onAddSlotToLineup={addSlotToLineup}
+                                onRemoveSignup={removeSignup}
+                            />
+                        </Row>
+                    </Container>
+                </Col>
+                <Col md={{ order: 1, span: 6 }}>
+                    <h3 className="display-6">Lineup (Local Times)</h3>
+                    <EventLineupSortableList
+                        onUpdateSignup={(newSignup) => updateSignup(eventScratchpad, newSignup)}
+                    />
                 </Col>
             </Row>
         </Container>
-        < hr />
-        <div>
-            <h3 className="display-6">Schedule (Local Times)</h3>
-            <SortableDjList />
-        </div>
-
-
-        <CreateDjModal show={addDjModalShow} handleClose={() => setAddDjModalShow(false)} onDjCreated={addNewDjAsSlot} />
-
-    </>;
+        <AddOrCreateDjModal show={createDjModalShow} handleClose={() => setCreateDjModalShow(false)} onDjSelected={addSignup} />
+    </Container>;
 };
 
 export default EventLineup;

@@ -15,13 +15,10 @@ import { Slot, Event } from "../util/types";
  */
 export const docToEvent = (doc: DocumentData) => {
     const data = doc.data();
-    if (data) {
-      return {
-        ...docToEventRaw(data),
-        id: doc.ref.id,
-      } as Event;
-    }
-    return null;
+    return {
+      ...docToEventRaw(data),
+      id: doc.ref.id,
+    } as Event;
   }
   
 /**
@@ -40,6 +37,7 @@ export const docToEventRaw = (data: any) => {
           published: data.published ?? false,
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           slots: data.slots.map((slot: any) => ({ ...slot, start_time: slot.start_time.toDate() }) as Slot),
+          signups: data.signups ?? [],
       } as Event;
 
       return event;

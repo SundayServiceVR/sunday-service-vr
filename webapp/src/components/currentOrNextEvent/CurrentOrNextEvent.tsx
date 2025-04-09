@@ -1,16 +1,18 @@
 import { useEffect, useState } from "react";
 import { Event } from "../../util/types";
-import { getCurrentEvent, getNextEvent } from "../../store/events";
 import { Alert, AlertHeading, Button, Card, Col, Container, ListGroup, ListGroupItem, Row, Spinner } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
 import { EventPublishedStatusBadge } from "../../features/event/EventPublishedStatusBadge";
+import { useEventStore } from "../../hooks/useEventStore/useEventStore";
 
 export const CurrentOrNextEvent = () => {
 
     const [loading, setLoading] = useState<boolean>(false);
     const [isCurrentEvent, setIsCurrentEvent] = useState<boolean>(true);
     const [event, setEvent] = useState<Event | null>();
+
+    const { getCurrentEvent, getNextEvent } = useEventStore();
 
     useEffect(() => {
         setLoading(true);
@@ -23,7 +25,7 @@ export const CurrentOrNextEvent = () => {
             setEvent(fetchedEvent);
             setLoading(false);
         })()
-    }, []);
+    }, [getCurrentEvent, getNextEvent]);
 
     // Undefined = we haven't tried to fetch it yet
     if (event === undefined) {

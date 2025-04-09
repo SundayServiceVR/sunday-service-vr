@@ -46,7 +46,7 @@ const Layout = () => {
         </Navbar>
         <Container className="mt-1">
             <Outlet />
-        </Container> 
+        </Container>
     </>
 }
 export default Layout;

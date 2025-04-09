@@ -3,10 +3,11 @@ import { onRequest } from "firebase-functions/v2/https";
 import { onSchedule } from "firebase-functions/v2/scheduler";
 import { JWT } from "google-auth-library";
 import { GoogleSpreadsheet } from "google-spreadsheet";
-import { DocumentReference, getFirestore, QuerySnapshot, Timestamp } from "firebase-admin/firestore";
+import { getFirestore, QuerySnapshot, Timestamp, DocumentReference } from "firebase-admin/firestore";
 import { defineString } from "firebase-functions/params";
-import { Dj, Slot } from "../../webapp/src/util/types";
+import { Dj } from "../../webapp/src/util/types";
 import { logger } from "firebase-functions/v2";
+import { docToEvent } from "../../webapp/src/store/converters";
 
 const backupSheetId = process.env.FUNCTIONS_EMULATOR === "true" ?
     "11jLcYOy1YryYb8PIFpwAMzcO928nFYskKKmigMQcvj0": // Nonoprod
@@ -120,15 +121,19 @@ async function backupEvents(backupDoc: GoogleSpreadsheet, querySnapshot: QuerySn
     await spreadsheet.clear();
     await spreadsheet.setHeaderRow(["id", ...EVENT_BACKUP_HEADERS]);
 
-    await spreadsheet.addRows(querySnapshot.docs.map((doc) => {
-        const event = doc.data();
+    const rows = querySnapshot.docs.map((doc) => {
+        const event = docToEvent(doc);
         return {
             id: doc.id,
-            date: (event.start_datetime as Timestamp).toDate().toUTCString(),
-            djs: event.slots.map((slot: Slot) => slot.dj_name).join(", "),
-            ...event,
+            name: event.name,
+            host: event.host,
+            rawDate: event.start_datetime,
+            date: event.start_datetime.toUTCString(),
+            djs: event.slots.map((slot) => slot.djs?.map((dj) => dj.dj_name).join(" + ")).join(", ") ?? "Unknown",
         };
-    }));
+    });
+
+    await spreadsheet.addRows(rows.sort((a, b) => (a.rawDate.getTime() - b.rawDate.getTime())));
 }
 
 /**

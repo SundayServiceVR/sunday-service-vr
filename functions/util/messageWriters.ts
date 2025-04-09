@@ -1,4 +1,5 @@
 import { Event, Slot } from "../../webapp/src/util/types";
+import { getSignupForSlot } from "../../webapp/src/contexts/useEventDjCache/helpers";
 
 type TimeFormat = {
     shortTimezone: string,
@@ -52,14 +53,14 @@ Host: ${event.host}
 
 Lineup: (times ${timeFormat.shortTimezone})
 
-${event.slots.map((slot) => getSlotText(slot, timeFormat)).join("\n")}
+${event.slots.map((slot) => getSlotText(event, slot, timeFormat)).join("\n")}
 `;
 };
 
-const getSlotText = (slot: Slot, timeFormat: TimeFormat): string => [
+const getSlotText = (event: Event, slot: Slot, timeFormat: TimeFormat): string => [
     slot?.start_time?.toLocaleTimeString(
         timeFormat.locale, { timeZone: timeFormat.timezone, timeStyle: "short" }
     )?? "",
-    slot.dj_name,
+    getSignupForSlot(event, slot)?.name ?? slot.dj_name,
     slot.is_debut ? " DEBUTT" : null,
 ].join(" ").trim();

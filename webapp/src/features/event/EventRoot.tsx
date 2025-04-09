@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Breadcrumb, Button, Container, Nav, Stack, Toast } from 'react-bootstrap';
-import { calcSlotTimes, default_event, saveEvent } from "../../store/events";
+import { default_event } from "../../store/events";
 import { docToEvent } from "../../store/converters";
 import { onSnapshot, doc } from "firebase/firestore";
 import { Event } from "../../util/types";
@@ -10,6 +10,7 @@ import { Outlet, useLocation, useParams } from "react-router";
 import { Link } from "react-router-dom";
 import { EventPublishedStatusBadge } from "./EventPublishedStatusBadge";
 import toast from "react-hot-toast";
+import { useEventStore } from "../../hooks/useEventStore/useEventStore";
 
 
 const EventRoot = () => {
@@ -19,8 +20,9 @@ const EventRoot = () => {
     const [event, setEvent] = useState<Event>(default_event);
     const [eventScratchpad, setEventScratchpad] = useState<Event>(event ?? default_event);
     const [hasChanges, setHasChanges] = useState<boolean>(false);
-
     const { eventId } = useParams();
+
+    const { saveEvent, getReconcicledEvent} = useEventStore();
 
     // Listen for changes to the event and reset our actual event when they change.
     useEffect(() => {
@@ -50,14 +52,15 @@ const EventRoot = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [event]);
 
-    const proposeEventChange = (newEvent: Event) => {
-        calcSlotTimes(newEvent);
+    const proposeEventChange = (event: Event) => {
+        let newEvent = {...event}
+        newEvent = getReconcicledEvent(newEvent);
         setHasChanges(true);
         setEventScratchpad(newEvent);
     }
 
     const onSaveEvent = () => {
-        saveEvent(eventScratchpad);
+        saveEvent(eventScratchpad, event);
         setHasChanges(false);
     }
 
@@ -87,7 +90,7 @@ const EventRoot = () => {
 
         const newEvent = { ...event, published: true };
 
-        await saveEvent(newEvent);
+        await saveEvent(newEvent, event);
         setEventScratchpad(newEvent);
     }
 
@@ -97,11 +100,12 @@ const EventRoot = () => {
             <Breadcrumb.Item><Link to={`/events/${event.id}`}>{event.id}</Link></Breadcrumb.Item>
         </Breadcrumb>
 
-        <h2 className="fw-normal">
-            {event.name} ({event.start_datetime.toLocaleDateString()})<br />
-        </h2>
-
         <Stack direction="horizontal" gap={3}>
+            <h2 className="display-4">
+                {event.name} ({event.start_datetime.toLocaleDateString()})
+            </h2>
+
+
             <EventPublishedStatusBadge event={event} />
             <div className="ms-auto" />
             {!event.published && <Button size="lg" onClick={publishEvent}>Publish Event</Button>}
@@ -118,8 +122,12 @@ const EventRoot = () => {
                 <Link to={`/events/${event.id}/verifyDJs`} className="nav-link">Verify DJs</Link>
             </Nav.Item>
             <Nav.Item as="li">
-                <Link to={`/events/${event.id}/announcements`} className="nav-link">Public Announcements</Link>
+                <Link to={`/events/${event.id}/technicalDetails`} className="nav-link">Stream Details</Link>
             </Nav.Item>
+            <Nav.Item as="li">
+                <Link to={`/events/${event.id}/announcements`} className="nav-link">Messaging</Link>
+            </Nav.Item>
+
         </Nav>
 
         <Container className="mt-3">
