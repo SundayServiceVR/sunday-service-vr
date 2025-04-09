@@ -108,7 +108,7 @@ const getDiscordSlotText = (slot: Slot, event: Event, pingDj: boolean = false): 
         `${slot.start_time ? dateToDiscordTime(slot.start_time) : ""} : `,
         pingDj ? slot.djs?.map(dj => `<@${dj?.discord_id}>`).join(", ") : null,
         `${slot.name}`,
-        slotSignup?.debut ? "(DEBUTT!)" : null,
+        slotSignup?.is_debut ? "(DEBUTT!)" : null,
     ].filter(seg => seg != null).join(" ")
 
     return text;

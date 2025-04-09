@@ -28,7 +28,7 @@ export type EventSignup = {
     uuid: string;
     name: string;
     dj_refs: DocumentReference[];
-    debut: boolean;
+    is_debut: boolean;
     requested_duration: SlotDuration;
     type: SlotType;
 }
