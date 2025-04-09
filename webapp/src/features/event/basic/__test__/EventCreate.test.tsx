@@ -1,11 +1,14 @@
 import { render, screen } from '@testing-library/react'
 import EventCreate from '../EventCreate'
 import { MemoryRouter } from 'react-router-dom'
+import { EventDjPlayMapperProvider } from '../../../../contexts/useEventDjCache/eventDjCacheProvider'
 
 const renderWithRouter = () => {
     return render(
         <MemoryRouter>
-            <EventCreate />
+            <EventDjPlayMapperProvider>
+                <EventCreate />
+            </EventDjPlayMapperProvider>
         </MemoryRouter>
     )
 }
