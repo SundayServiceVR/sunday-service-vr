@@ -61,5 +61,5 @@ const getSlotText = (event: Event, slot: Slot, timeFormat: TimeFormat): string =
         timeFormat.locale, { timeZone: timeFormat.timezone, timeStyle: "short" }
     )?? "",
     slot.reconciled.signup?.name ?? slot.dj_name,
-    slot.is_debut ? " DEBUTT" : null,
+    slot.reconciled.signup.is_debut ? " DEBUTT" : null,
 ].join(" ").trim();
