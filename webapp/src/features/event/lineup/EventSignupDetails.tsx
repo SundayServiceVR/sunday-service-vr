@@ -76,8 +76,8 @@ const EventSlotDetails = ({signup, onUpdateSignup }: Props) => {
       <Col className="d-flex align-items-center">
         <Form.Check
           type="switch"
-          checked={signup.debut}
-          onChange={(debutChangeEvent) => { onUpdateSignup({ ...signup, debut: debutChangeEvent.target.checked }) }}
+          checked={signup.is_debut}
+          onChange={(debutChangeEvent) => { onUpdateSignup({ ...signup, is_debut: debutChangeEvent.target.checked }) }}
         />
       </Col>
     </Form.Group>

@@ -23,6 +23,9 @@ const EventLineup = () => {
             duration: signup.requested_duration,
             start_time: new Date(),
             signup_uuid: signup.uuid,
+            reconciled: {
+                signup
+            }
         }
         setCreateDjModalShow(false);
         const slots_copy = [...eventScratchpad.slots, slot];
@@ -36,7 +39,7 @@ const EventLineup = () => {
         const signups_copy = [...eventScratchpad.signups, {
             dj_refs: [djRef],
             name: dj?.dj_name,
-            debut: isDebut,
+            is_debut: isDebut,
             uuid: uuidv4(),
             requested_duration: 1 as SlotDuration,
             type: SlotType.LIVE,

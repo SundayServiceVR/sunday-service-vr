@@ -3,7 +3,6 @@ import { getFirestore } from "firebase-admin/firestore";
 import { Dj, Event } from "../../webapp/src/util/types";
 import { reconcileEventData as reconcileEventDataWebappMethod }
     from "../../webapp/src/hooks/useEventStore/eventReconciliation";
-import { fetchCollection } from "./lib/database";
 import { docToEvent } from "../../webapp/src/store/converters";
 
 const db = process.env.FUNCTIONS_EMULATOR ? getFirestore("staging") : getFirestore();

@@ -1,11 +1,10 @@
 import { useState, ReactNode, useEffect } from 'react';
-import { Dj, Event, Slot } from '../../util/types';
+import { Dj, Event } from '../../util/types';
 import { EventDjPlayMapperContext } from './eventDjCacheContext';
-import { collection, doc, DocumentReference, getDoc, getDocs, query } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, query } from 'firebase/firestore';
 import { db } from '../../util/firebase';
 import { docToEvent } from '../../store/converters';
 import { DjCache, EventCache } from './types';
-import { getSignupForSlot } from './helpers';
 import { getDjCache } from './util';
 
 export const EventDjPlayMapperProvider = ({ children }: { children: ReactNode }) => {
@@ -72,21 +71,6 @@ export const EventDjPlayMapperProvider = ({ children }: { children: ReactNode })
     return events;
   };
 
-  const getDjsForSlot = (event: Event, slot: Slot) => {
-    
-    const signup = getSignupForSlot(event, slot);
-    const refsFromSignup: DocumentReference[] = signup?.dj_refs ?? [];
-
-
-    const djRefsFromLegacy = slot.dj_ref;
-    const djRefList = signup
-      ? [...refsFromSignup]
-      : [ djRefsFromLegacy ]; // Legacy signup shape.  Removed after data cleanup
-
-    const result = djRefList.filter(ref => ref != undefined).map(ref => djCache.get(ref!.id)).filter(dj => dj != undefined);
-    return result as Dj[];
-  }
-
   const getPlayedDjsForEvent = (event: Event) => {
     const djRefsFromSignups = event.slots
       .map(slot => event.signups.find(signup => signup.uuid === slot.signup_uuid))
@@ -106,7 +90,7 @@ export const EventDjPlayMapperProvider = ({ children }: { children: ReactNode })
   }
 
   return (
-    <EventDjPlayMapperContext.Provider value={{ eventCache, djCache, getEventWithDjs, getEventsByDjId, getPlayedDjsForEvent, getDjsForSlot, reloadDj, loading }}>
+    <EventDjPlayMapperContext.Provider value={{ eventCache, djCache, getEventWithDjs, getEventsByDjId, getPlayedDjsForEvent, reloadDj, loading }}>
       {children}
     </EventDjPlayMapperContext.Provider>
   );

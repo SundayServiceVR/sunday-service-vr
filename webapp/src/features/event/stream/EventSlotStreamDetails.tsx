@@ -1,11 +1,11 @@
 import { Stack, Form, Container, Row, Col, ButtonGroup, InputGroup, Dropdown, DropdownButton, Button } from "react-bootstrap";
-import { Slot, StreamSourceType, Dj, Event, EventSignup } from "../../../util/types";
+import { Slot, StreamSourceType, Event, EventSignup } from "../../../util/types";
+import { useEventDjCache } from "../../../contexts/useEventDjCache";
 
 type Props = {
     index: number,
     slot: Slot,
     event: Event,
-    djs: Dj[],
     onUpdateSlot: (newSlot: Slot) => void,
     onUpdateSignup: (newSignup: EventSignup) => void,
 }
@@ -14,7 +14,6 @@ const EventSlotStreamDetails = ({
     index,
     slot,
     event,
-    djs,
     onUpdateSlot,
 }: Props) => {
     const handleSetStreamSource = (streamSource: string, sourceType: StreamSourceType) => {
@@ -25,6 +24,8 @@ const EventSlotStreamDetails = ({
         });
     };
 
+    const { djCache } = useEventDjCache();
+
     const signup = event.signups.find(signup => signup.uuid === slot.signup_uuid);
 
     //Support for legacy
@@ -33,7 +34,6 @@ const EventSlotStreamDetails = ({
     if(!slotName) {
         throw new Error(`Unable to find signup with a uuid of ${slot.signup_uuid}, and there is no legacy value at slot.dj_name`)
     }
-
 
     return (
         <Container className="my-2">
@@ -48,7 +48,11 @@ const EventSlotStreamDetails = ({
                     </Row>
                     <Form.Group>
                         <Form.Label>Slot Name</Form.Label>
-                        <Form.Control value={slotName} onChange={(event) => onUpdateSlot({ ...slot, name: event.target.value })} />
+                        <Form.Control
+                        value={slotName}
+                        readOnly
+                        // onChange={(event) => onUpdateSlot({ ...slot, name: event.target.value })}
+                        />
                     </Form.Group>
 
                     <Form.Group as={Row} className="mb-3">
@@ -78,11 +82,14 @@ const EventSlotStreamDetails = ({
                 </Col>
                 <Col xs={6} sm={4}>
                     <h5>Set Stream Information</h5>
-                    {djs.map((dj, index) => (
+                    {slot.reconciled.signup.dj_refs
+                        .map(dj_ref => djCache.get(dj_ref.id))
+                        .filter(dj => dj !== undefined)
+                        .map((dj, index) => (
                         <div key={index} className="mb-3">
                             <Row>
                                 <Col>
-                                    <strong>{dj.dj_name}</strong>
+                                    <strong>{dj?.dj_name ?? "Unknown"}</strong>
                                 </Col>
                             </Row>
                             <Row>
@@ -92,9 +99,9 @@ const EventSlotStreamDetails = ({
                                 <Col xs={8}>
                                     <Button
                                         variant="link"
-                                        onClick={() => handleSetStreamSource(dj.rtmp_url ?? "", StreamSourceType.RTMP)}
+                                        onClick={() => handleSetStreamSource(dj?.rtmp_url ?? "", StreamSourceType.RTMP)}
                                     >
-                                        {dj.rtmp_url || "N/A"}
+                                        {dj?.rtmp_url || "N/A"}
                                     </Button>
                                 </Col>
                             </Row>
@@ -105,9 +112,9 @@ const EventSlotStreamDetails = ({
                                 <Col xs={8}>
                                     <Button
                                         variant="link"
-                                        onClick={() => handleSetStreamSource(dj.twitch_username ?? "", StreamSourceType.TWITCH)}
+                                        onClick={() => handleSetStreamSource(dj?.twitch_username ?? "", StreamSourceType.TWITCH)}
                                     >
-                                        {dj.twitch_username || "N/A"}
+                                        {dj?.twitch_username || "N/A"}
                                     </Button>
                                 </Col>
                             </Row>

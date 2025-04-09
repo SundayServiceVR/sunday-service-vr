@@ -1,5 +1,4 @@
 import { Event, Slot } from "../../webapp/src/util/types";
-import { getSignupForSlot } from "../../webapp/src/contexts/useEventDjCache/helpers";
 
 type TimeFormat = {
     shortTimezone: string,
@@ -61,6 +60,6 @@ const getSlotText = (event: Event, slot: Slot, timeFormat: TimeFormat): string =
     slot?.start_time?.toLocaleTimeString(
         timeFormat.locale, { timeZone: timeFormat.timezone, timeStyle: "short" }
     )?? "",
-    getSignupForSlot(event, slot)?.name ?? slot.dj_name,
-    slot.is_debut ? " DEBUTT" : null,
+    slot.reconciled.signup?.name ?? slot.dj_name,
+    slot.reconciled.signup.is_debut ? " DEBUTT" : null,
 ].join(" ").trim();
