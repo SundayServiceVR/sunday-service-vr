@@ -38,19 +38,23 @@ export type Slot = {
     signup_uuid?: string;
     stream_source_type?: StreamSourceType;
     stream_source_url?: string;
-    duration: SlotDuration;
 
-    // Reconciled Fields
+    // Reconciled Fields for ease of access and record keeping
     start_time: Date;
 
-    // Calculated for ease of access and record keeping
-    name?: string;
+    // TODO:  I'd like to move all of these to the reconciled field for
+    // the sake of clarity and self-documentation.
+    reconciled: {
+        signup: EventSignup,
+    }
+
     djs?: {
         dj_name?: string,
         discord_id?: string,
     }[];
 
     //Depricated
+    duration: SlotDuration;
     is_live?: boolean;
     dj_ref: DocumentReference;
     prerecord_url?: string;
@@ -60,7 +64,6 @@ export type Slot = {
     dj_name?: string,
     rtmp_url?: string;
     twitch_username?: string;
-
 }
 
 export enum SlotType {
