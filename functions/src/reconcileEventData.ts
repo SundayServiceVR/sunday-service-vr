@@ -26,7 +26,9 @@ export const reconcileEventData = onRequest({ secrets: ["BACKUPS_SERVICE_ACCOUNT
 const reconcileEventDataMain = async (currentEvents: Event[]) => {
     const eventsToUpdate: Map<string, Event> = new Map();
 
-    const djs = await fetchCollection(db, "djs");
+    const collection = db.collection("djs");
+    const snapshot = await collection.get();
+    const djs = snapshot.docs.map((doc) => (doc.data()));
 
     const djCache: Map<string, Dj> = new Map();
     djs.forEach((dj) => djCache.set(dj.id, dj as Dj));

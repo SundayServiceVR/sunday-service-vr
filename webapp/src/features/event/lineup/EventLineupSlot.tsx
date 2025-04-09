@@ -65,10 +65,9 @@ const EventLineupSlot = ({
                 <ul>
                     {
                         slot.djs?.map(
-                            (dj) => <li key={dj?.name ?? "unknown-dj"}>{dj?.name ?? "unknown-dj"}</li>
+                            (dj) => <li key={dj?.dj_name ?? "unknown-dj"}>{dj?.dj_name ?? "unknown-dj"}</li>
                         )
                     }
-
                 </ul>
             </Col>
         </Row>
