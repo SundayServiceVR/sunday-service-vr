@@ -47,20 +47,20 @@ export const useEventStore = () => {
   }, []);
 
   const saveEvent = useCallback(async (event: Event, previousEvent?: Event) => {
-    event = getReconcicledEvent(event);
+    const reconciledEvent = getReconcicledEvent(event);
 
-    const eventId = event.id;
+    const eventId = reconciledEvent.id;
 
     if (!eventId) {
       throw (new Error("Attempted to save an event with no assigned id"));
     }
 
-    const djsAdded = event.dj_plays.filter(dj => !previousEvent?.dj_plays.includes(dj));
-    const djsRemoved = previousEvent?.dj_plays.filter(dj => !event?.dj_plays.includes(dj)) ?? [];
+    const djsAdded = reconciledEvent.dj_plays.filter(dj => !previousEvent?.dj_plays.includes(dj));
+    const djsRemoved = previousEvent?.dj_plays.filter(dj => !reconciledEvent?.dj_plays.includes(dj)) ?? [];
 
     await runTransaction(db, async (transaction) => {
       const eventRef = doc(db, "events", eventId);
-      transaction.set(eventRef, event);
+      transaction.set(eventRef, reconciledEvent);
 
       for (const dj of djsAdded) {
         const djRef = doc(db, "djs", dj.id);

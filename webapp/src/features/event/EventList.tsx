@@ -62,7 +62,7 @@ const EventList = ({ past = false}: Props) => {
                         <th>Date</th>
                         <th>Name</th>
                         <th>Host</th>
-                        <th>Slots</th>
+                        <th>Djs</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -70,7 +70,7 @@ const EventList = ({ past = false}: Props) => {
                         <td><Link to={`/events/${event.id}`}>{event.start_datetime.toLocaleDateString()}</Link></td>
                         <td>{event.name}</td>
                         <td>{event.host}</td>
-                        <td>{event.slots.map(slot => slot.djs?.map(dj => dj.dj_name)?.join(", "))}</td>
+                        <td>{event.slots.map(slot => { return slot.djs?.map(dj => dj.dj_name) ?? slot.dj_name }).join(", ")}</td>
                     </tr>)}
                 </tbody>
             </Table>

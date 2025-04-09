@@ -5,8 +5,8 @@ import { Event } from "../../util/types";
 
 export const reconcileEventData = (event: Event, djCache: DjCache): Event => {
   let newEvent = calcSlotTimes(event);
-  newEvent = setDjPlays(event);
-  newEvent = calcSlotFromSignup(event, djCache);
+  newEvent = setDjPlays(newEvent);
+  newEvent = calcSlotFromSignup(newEvent, djCache);
   return newEvent
 }
 
@@ -18,7 +18,10 @@ const calcSlotTimes = (event: Event): Event => {
   const time_counter = new Date(newEvent.start_datetime);
   for (let i = 0; i < event.slots?.length; i++) {
     event.slots[i].start_time = new Date(time_counter);
-    time_counter.setTime(time_counter.getTime() + ONE_HOUR * event.slots[i].duration);
+
+    const signup = getSignupForSlot(event, event.slots[i]);
+
+    time_counter.setTime(time_counter.getTime() + ONE_HOUR * (signup?.requested_duration));
   }
 
   newEvent.end_datetime = new Date(time_counter);
@@ -37,17 +40,15 @@ const setDjPlays = (event: Event) => {
     } as Event
   }
 
-  const legacyDjPlays = event.slots.map((slot: Slot) => slot.dj_ref) ?? []
+  const legacyDjPlays = event.slots.map((slot: Slot) => slot.dj_ref) ?? [];
 
-  const newDjPlays = event.slots.map((slot: Slot) => event.signups?.find(
-    (signup: EventSignup) => signup.uuid === slot.signup_uuid))
-    .filter((signup): signup is EventSignup => signup !== undefined)
-    .map((signup: EventSignup) => signup.dj_refs).flat()
-    ?? [];
+  const newDjPlays = event.slots.map(slot => getSignupForSlot(event, slot).dj_refs).flat();
+
+  const dj_plays = newDjPlays.length > 0 ? newDjPlays : legacyDjPlays;
 
   return {
     ...event,
-    dj_plays: [...legacyDjPlays, ...newDjPlays]
+    dj_plays,
   } as Event
 }
 
