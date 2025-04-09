@@ -2,51 +2,25 @@ import { EventSignup, Slot, SlotType } from "../../util/types";
 import { DjCache } from "../../contexts/useEventDjCache/types";
 import { Event } from "../../util/types";
 
+/**
+ * Reconciles event data by calculating slots from signups, setting DJ plays, and calculating slot times.
+ * @param event - The event to reconcile.
+ * @param djCache - A cache of DJ data.
+ * @returns The reconciled event.
+ */
 export const reconcileEventData = (event: Event, djCache: DjCache): Event => {
-  let newEvent = calcSlotTimes(event);
+  let newEvent = calcSlotsFromSignups(event, djCache);
   newEvent = setDjPlays(newEvent);
-  newEvent = calcSlotsFromSignups(newEvent, djCache);
-  return newEvent
-}
-
-const calcSlotTimes = (event: Event): Event => {
-  const newEvent = { ...event }; // Shallow Copy
-
-  const ONE_HOUR = 60 * 60 * 1000;
-
-  const time_counter = new Date(newEvent.start_datetime);
-  for (let i = 0; i < event.slots?.length; i++) {
-    event.slots[i].start_time = new Date(time_counter);
-
-    time_counter.setTime(time_counter.getTime() + ONE_HOUR * (event.slots[i].reconciled.signup.requested_duration));
-  }
-
-  newEvent.end_datetime = new Date(time_counter);
-
+  newEvent = calcSlotTimes(newEvent);
   return newEvent;
-}
+};
 
-// Before saving, we want to set dj plays for tracking here.
-const setDjPlays = (event: Event) => {
-  if (!event.slots) {
-    return {
-      ...event,
-      dj_plays: []
-    } as Event
-  }
-
-  const legacyDjPlays = event.slots.map((slot: Slot) => slot.dj_ref) ?? [];
-
-  const newDjPlays = event.slots.map(slot => slot.reconciled.signup.dj_refs).flat();
-
-  const dj_plays = newDjPlays.length > 0 ? newDjPlays : legacyDjPlays;
-
-  return {
-    ...event,
-    dj_plays,
-  } as Event
-}
-
+/**
+ * Calculates slots from signups and enriches slot data with DJ information.
+ * @param event - The event containing slots and signups.
+ * @param djCache - A cache of DJ data.
+ * @returns The event with updated slot data.
+ */
 const calcSlotsFromSignups = (event: Event, djCache: DjCache): Event => {
   const newEvent = { ...event }; // Shallow Copy
 
@@ -67,7 +41,6 @@ const calcSlotsFromSignups = (event: Event, djCache: DjCache): Event => {
 
     const getDjInfoFromSignups = (signup: EventSignup) => signup?.dj_refs?.map(
       (ref) => {
-
         const result:{
           dj_name?: string,
           discord_id?: string,
@@ -80,7 +53,7 @@ const calcSlotsFromSignups = (event: Event, djCache: DjCache): Event => {
           result.discord_id = discord_id;
         }
 
-        return result
+        return result;
       }
     );
 
@@ -99,7 +72,7 @@ const calcSlotsFromSignups = (event: Event, djCache: DjCache): Event => {
         result.discord_id = discordId;
       }
       return [result];
-    }
+    };
 
     const djs = signup ? getDjInfoFromSignups(signup) : getDjInfoFromLegacySlot();
 
@@ -110,9 +83,56 @@ const calcSlotsFromSignups = (event: Event, djCache: DjCache): Event => {
         signup,
       },
       djs: djs ?? [],
-    }
-
+    };
   });
 
   return newEvent;
-}
+};
+
+/**
+ * Calculates the start and end times for each slot in the event.
+ * @param event - The event containing slots.
+ * @returns The event with updated slot times and end time.
+ */
+const calcSlotTimes = (event: Event): Event => {
+  const newEvent = { ...event }; // Shallow Copy
+
+  const ONE_HOUR = 60 * 60 * 1000;
+
+  const time_counter = new Date(newEvent.start_datetime);
+  for (let i = 0; i < event.slots?.length; i++) {
+    event.slots[i].start_time = new Date(time_counter);
+
+    time_counter.setTime(time_counter.getTime() + ONE_HOUR * (event.slots[i].reconciled.signup.requested_duration));
+  }
+
+  newEvent.end_datetime = new Date(time_counter);
+
+  return newEvent;
+};
+
+/**
+ * Sets the DJ plays for the event based on slot data.
+ * @param event - The event containing slots.
+ * @returns The event with updated DJ plays.
+ */
+const setDjPlays = (event: Event): Event => {
+  if (!event.slots) {
+    return {
+      ...event,
+      dj_plays: []
+    } as Event;
+  }
+
+  const legacyDjPlays = event.slots.map((slot: Slot) => slot.dj_ref) ?? [];
+
+  const newDjPlays = event.slots.map(slot => slot.reconciled.signup.dj_refs).flat();
+
+  const dj_plays = newDjPlays.length > 0 ? newDjPlays : legacyDjPlays;
+
+  return {
+    ...event,
+    dj_plays,
+  } as Event;
+};
+
