@@ -107,8 +107,8 @@ const getDiscordSlotText = (slot: Slot, event: Event, pingDj: boolean = false): 
     const text = [
         `${slot.start_time ? dateToDiscordTime(slot.start_time) : ""} : `,
         pingDj ? slot.djs?.map(dj => `<@${dj?.discord_id}>`).join(", ") : null,
-        `${slot}`,
-        slotSignup?.debut ? "(DEBUTT!)" : null,
+        `${slot.reconciled.signup.name}`,
+        slot.reconciled.signup.is_debut ? "(DEBUTT!)" : null,
     ].filter(seg => seg != null).join(" ")
 
     return text;
@@ -116,21 +116,21 @@ const getDiscordSlotText = (slot: Slot, event: Event, pingDj: boolean = false): 
 
 
 const getTwitterSlotText = (slot : Slot): string => {
-    const debuttText = `${slot.is_debut? " - DEBUTT" : ""}`
-    const slotText = `${slot.start_time ? dateToLineupTime(slot.start_time, "Europe/London") : ""} - ${slot.dj_name}${debuttText}`;
+    const debuttText = `${slot.reconciled.signup.is_debut? " - DEBUTT" : ""}`
+    const slotText = `${slot.start_time ? dateToLineupTime(slot.start_time, "Europe/London") : ""} - ${slot.reconciled.signup.name}${debuttText}`;
     return slotText;
 }
 
 
 const getUkSlotText = (slot : Slot): string => {
     const debuttText = `${slot.is_debut? " DEBUTT" : ""}`
-    const slotText = `${slot.start_time ? dateToLineupTime(slot.start_time, "Europe/London") : ""} ${slot.dj_name}${debuttText}`;
+    const slotText = `${slot.start_time ? dateToLineupTime(slot.start_time, "Europe/London") : ""} ${slot.reconciled.signup.name}${debuttText}`;
     return slotText;
 }
 
 
 const getAusSlotText = (slot : Slot): string => {
     const debuttText = `${slot.is_debut? " DEBUTT" : ""}`
-    const slotText = `${slot.start_time ? dateToLineupTime(slot.start_time, "Australia/Sydney") : ""} ${slot.dj_name}${debuttText}`;
+    const slotText = `${slot.start_time ? dateToLineupTime(slot.start_time, "Australia/Sydney") : ""} ${slot.reconciled.signup.name}${debuttText}`;
     return slotText;
 }
