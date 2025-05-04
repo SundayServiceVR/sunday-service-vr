@@ -11,6 +11,7 @@ import { docToRawType } from "../../store/util";
 import Spinner from "../../components/spinner";
 import { docToEvent } from "../../store/converters";
 import { updateDj } from "../../store/dj";
+import toast from "react-hot-toast";
 
 const DjDetails = () => {
     
@@ -52,15 +53,26 @@ const DjDetails = () => {
         event.preventDefault();
         setBusy(true);
         (async () => {
-            if(!djId) {
-                throw(new Error("Attempted to update a dj with no id"))
+            try {
+                if(!djId) {
+                    throw(new Error("Attempted to update a dj with no id"))
+                }
+                await updateDj(djId, djScratchpad);
+                setDj(djScratchpad);
+                setIsEditing(false);
+            } catch (error) {
+                console.error(error);
+                if (error instanceof Error) {
+                    toast(`Error: ${error.message}`); // Replace with toast implementation if available
+                } else {
+                    toast(`Error: ${String(error)}`); // Replace with toast implementation if available
+                }
+            } finally {
+                setBusy(false);
             }
-            await updateDj(djId, djScratchpad);
-            setDj(djScratchpad);
-            setBusy(false);
-            setIsEditing(false);
         })();
     }
+
     const onCancelUpdate = () => {
         setDjScratchpad({...dj});
         setIsEditing(false);

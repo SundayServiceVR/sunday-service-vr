@@ -2,10 +2,8 @@ import { Link, RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { FirebaseAuthProvider } from './contexts/FirebaseAuthContext';
 
 import EventRoot from "./features/event/EventRoot";
-import Login from './features/auth/Login';
 import Layout from './features/layout/Layout';
 import AnonymousLayout from './features/layout/AnonymousLayout';
-import ResetPassword from './features/auth/ResetPassword';
 
 import Home from './features/home/Home';
 import EventList from './features/event/EventList';
@@ -86,14 +84,6 @@ function App() {
           element: <GlobalSettings />
         },
       ],
-    },
-    {
-      path: "/login",
-      element: <AnonymousLayout><Login /></AnonymousLayout>
-    },
-    {
-      path: "/resetPassword",
-      element: <AnonymousLayout><ResetPassword /></AnonymousLayout>
     },
     {
       path: "/discordRedirect",

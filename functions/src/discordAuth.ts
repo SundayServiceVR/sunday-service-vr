@@ -93,10 +93,11 @@ export const discordAuth = onRequest(
         // const discordUser = await getDiscordUserInfo(access_token);
         const discordGuildMember = await getDiscordGuildInfo(access_token);
 
-        await syncUserToFirestore(discordGuildMember);
+        const djObject = await syncUserToFirestore(discordGuildMember);
 
         // Generate a custom Firebase token
-        const firebaseToken = await admin.auth().createCustomToken(discordGuildMember.user.id);
+        const roles = djObject.roles?.map((role) => role.role) || []; // Default to "dj" if no roles are found
+        const firebaseToken = await admin.auth().createCustomToken(discordGuildMember.user.id, { roles });
 
         res.status(200).send({
             firebase_token: firebaseToken,
@@ -188,7 +189,7 @@ async function syncUserToFirestore(discordUser: DiscordGuildMemberResponse) {
         roles: djDoc.data().roles || [{ role: "dj" }], // Ensure roles are preserved
     });
 
-
+    return djDoc.data() as Dj;
     // // Save or update the DJ document in the "djs" Firestore collection
     // return await admin.firestore().collection("djs").doc(djDoc.id).set(defaultDjRecord, { merge: true });
 }
