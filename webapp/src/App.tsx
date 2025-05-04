@@ -23,6 +23,8 @@ import GlobalSettings from "./features/globalSettings/GlobalSettings";
 import { EventDjPlayMapperProvider } from './contexts/useEventDjCache/eventDjCacheProvider';
 
 import './App.css';
+// import { EventSignup } from './features/eventSignup/EventSignup';
+import { DiscordRedirect } from './features/auth/DiscordRedirect';
 
 function App() {
   if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
@@ -34,9 +36,9 @@ function App() {
     {
       path: "/",
       element: <FirebaseAuthProvider>
-          <EventDjPlayMapperProvider>
-            <Layout />
-          </EventDjPlayMapperProvider>
+            <EventDjPlayMapperProvider>
+                <Layout />
+              </EventDjPlayMapperProvider>
         </FirebaseAuthProvider>,
       children: [
         {
@@ -92,6 +94,10 @@ function App() {
     {
       path: "/resetPassword",
       element: <AnonymousLayout><ResetPassword /></AnonymousLayout>
+    },
+    {
+      path: "/discordRedirect",
+      element: <AnonymousLayout><DiscordRedirect/></AnonymousLayout>
     }
   ]);
 
