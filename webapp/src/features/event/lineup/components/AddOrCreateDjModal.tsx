@@ -7,7 +7,7 @@ import DjForm from "../../../dj/DjForm"
 import { Dj } from "../../../../util/types"
 import { createDj } from "../../../../store/dj"
 import { DjSearchSelect } from "../../../dj/DjSearchSelect"
-
+import { toast } from "react-hot-toast"
 
 type Props = {
     show: boolean,
@@ -33,9 +33,18 @@ export const AddOrCreateDjModal = ({ show, handleClose, onDjSelected }: Props) =
         event.preventDefault();
         setBusy(true);
         (async () => {
-            const documentRef = await createDj(dj);
-            onDjSelected(dj, documentRef);
-            setBusy(false);
+            try {
+                const documentRef = await createDj(dj);
+                onDjSelected(dj, documentRef);
+            } catch (error: unknown) {
+                if (error instanceof Error) {
+                    toast.error(error.message || "Failed to create DJ");
+                } else {
+                    toast.error("An unknown error occurred");
+                }
+            } finally {
+                setBusy(false);
+            }
         })();
         setDj(defaultDj);
     }

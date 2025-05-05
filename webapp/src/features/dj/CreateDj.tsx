@@ -4,6 +4,7 @@ import { Breadcrumb, Button, Form, Stack } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { Dj } from "../../util/types";
 import { createDj } from "../../store/dj";
+import { toast } from "react-hot-toast";
 
 const CreateDj = () => {
     const defaultDj: Dj = { 
@@ -25,9 +26,14 @@ const CreateDj = () => {
         event.preventDefault();
         setBusy(true);
         (async () => {
-            const result = await createDj(dj);
-            navigate(`/djs/${result.id}`);
-            setBusy(false);
+            try {
+                const result = await createDj(dj);
+                navigate(`/djs/${result.id}`);
+            } catch (error) {
+                toast.error(`An error occurred while creating the DJ.: ${(error as Error).message ?? "Unknown error"}`);
+            } finally {
+                setBusy(false);
+            }
         })();
     }
 
