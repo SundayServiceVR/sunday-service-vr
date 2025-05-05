@@ -23,6 +23,7 @@ import { EventDjPlayMapperProvider } from './contexts/useEventDjCache/eventDjCac
 import './App.css';
 // import { EventSignup } from './features/eventSignup/EventSignup';
 import { DiscordRedirect } from './features/auth/DiscordRedirect';
+import RoleGuard from './components/roleGuard/roleGuard';
 
 function App() {
   if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
@@ -34,10 +35,12 @@ function App() {
     {
       path: "/",
       element: <FirebaseAuthProvider>
-            <EventDjPlayMapperProvider>
-                <Layout />
-              </EventDjPlayMapperProvider>
-        </FirebaseAuthProvider>,
+        <RoleGuard requiredRole='admin'>
+          <EventDjPlayMapperProvider>
+            <Layout />
+          </EventDjPlayMapperProvider>
+        </RoleGuard>
+      </FirebaseAuthProvider>,
       children: [
         {
           index: true,
@@ -46,14 +49,14 @@ function App() {
         {
           path: "djs",
           children: [
-            { index: true, element: <DjList />},
+            { index: true, element: <DjList /> },
             { path: "create", element: <CreateDj /> },
             { path: ":djId", element: <DjDetails /> },
           ],
         },
         {
           path: "events",
-          handle: { crumb: () => <Link to="/events">Events</Link>},
+          handle: { crumb: () => <Link to="/events">Events</Link> },
           children: [
             {
               index: true,
@@ -70,7 +73,7 @@ function App() {
             {
               path: ":eventId",
               element: <EventRoot />,
-              handle: { crumb: () => <Link to="../">Event</Link>},
+              handle: { crumb: () => <Link to="../">Event</Link> },
               children: eventRoutes
             }
           ]
@@ -87,7 +90,7 @@ function App() {
     },
     {
       path: "/discordRedirect",
-      element: <AnonymousLayout><DiscordRedirect/></AnonymousLayout>
+      element: <AnonymousLayout><DiscordRedirect /></AnonymousLayout>
     }
   ]);
 

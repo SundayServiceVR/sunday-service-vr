@@ -1,6 +1,6 @@
 // FirebaseAuthContext.tsx
 import * as React from "react";
-import { onAuthStateChanged, User } from "firebase/auth";
+import { Auth, onAuthStateChanged, User } from "firebase/auth";
 import { auth } from "../util/firebase";
 
 import logo from '../assets/svg/S4_Logo.svg';
@@ -18,25 +18,40 @@ const loginWithDiscord = () => {
 };
 
 
-type ContextState = { user: User | false | null };
+type FirebaseAuthContextType = { user?: User, auth?: Auth, roles?: string[] };
 
 
 const FirebaseAuthContext =
-  React.createContext<ContextState | false | null>(null);
+  React.createContext<FirebaseAuthContextType>({});
 
 type Props = {
   children: React.ReactNode
 }
 
 const FirebaseAuthProvider = ({ children }: Props) => {
-  const [user, setUser] = React.useState<User | false | null>( null );
-
+  const [user, setUser] = React.useState<User | false | null>();
+  const [authInstance, setAuthInstance] = React.useState<Auth>();
+  const [roles, setRoles] = React.useState<string[]>();
+  
   React.useEffect(() => {
-    onAuthStateChanged(auth, setUser);
+      onAuthStateChanged(auth, setUser);
+      setAuthInstance(auth);
   }, []);
 
-  if(user === undefined) {
-    return <div>Loading...</div>;
+  React.useEffect(() => {
+    (async () => {
+      const token = await auth?.currentUser?.getIdTokenResult();
+      setRoles(token?.claims.roles as string[]);
+    })();
+  }, [user]);
+
+
+  if(user === undefined || authInstance === undefined) {
+    return <div></div>;
+  }
+
+  if(user === false) {
+    return <div>Unauthorized</div>;
   }
 
   if(user === null) {
@@ -55,10 +70,10 @@ const FirebaseAuthProvider = ({ children }: Props) => {
   }
 
   return (
-    <FirebaseAuthContext.Provider value={{ user }}>
+    <FirebaseAuthContext.Provider value={{ user, auth: authInstance, roles }}>
       {children}
     </FirebaseAuthContext.Provider>
   );
 };
 
-export { FirebaseAuthProvider };
+export { FirebaseAuthProvider, FirebaseAuthContext };
