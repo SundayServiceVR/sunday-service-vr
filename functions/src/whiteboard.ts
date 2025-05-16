@@ -1,5 +1,5 @@
-import { logger } from "firebase-functions/v1";
-import { onRequest } from "firebase-functions/v1/https";
+import * as logger from "firebase-functions/logger";
+import { onRequest } from "firebase-functions/v2/https";
 import { getNextEvent } from "../util/events";
 import { timeFormats, getLineupText } from "../util/messageWriters";
 
