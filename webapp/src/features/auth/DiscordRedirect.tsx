@@ -15,6 +15,7 @@ const DiscordRedirect = () => {
 
         const authenticateWithDiscord = async () => {
             try {
+  
                 const response = await fetch(process.env.NODE_ENV === 'production' 
                     ? 'https://us-central1-sunday-service-vr.cloudfunctions.net/discordAuth' 
                     : 'http://127.0.0.1:5001/sunday-service-vr/us-central1/discordAuth', {

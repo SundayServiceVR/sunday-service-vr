@@ -3,7 +3,7 @@ import * as admin from "firebase-admin";
 import axios, { AxiosResponse } from "axios";
 import { onRequest } from "firebase-functions/v2/https";
 import { defineSecret } from "firebase-functions/params";
-import { Dj } from "../../webapp/src/util/types";
+import { AppUserRole, Dj } from "../../webapp/src/util/types";
 
 interface DiscordTokenResponse {
     access_token: string;
@@ -93,11 +93,11 @@ export const discordAuth = onRequest(
         // const discordUser = await getDiscordUserInfo(access_token);
         const discordGuildMember = await getDiscordGuildInfo(access_token);
 
-        const djObject = await syncUserToFirestore(discordGuildMember);
+        const djSnapshot = await syncUserToFirestore(discordGuildMember);
 
         // Generate a custom Firebase token
-        const roles = djObject.roles?.map((role) => role.role) || []; // Default to "dj" if no roles are found
-        const firebaseToken = await admin.auth().createCustomToken(discordGuildMember.user.id, { roles });
+        const roles = djSnapshot.data().roles?.map((role: AppUserRole) => role.role) || []; // Default to "dj" if no roles are found
+        const firebaseToken = await admin.auth().createCustomToken(djSnapshot.id, { roles });
 
         res.status(200).send({
             firebase_token: firebaseToken,
@@ -166,6 +166,7 @@ async function syncUserToFirestore(discordUser: DiscordGuildMemberResponse) {
             ...discordUser,
         },
         public_name: discordUser.nick || discordUser.user.global_name || discordUser.user.username || "Unknown User",
+        public_avatar: discordUser.avatar || discordUser.user.avatar || undefined,
         dj_name: discordUser.nick || discordUser.user.global_name || discordUser.user.username || "Unknown User",
         roles: [{ role: "dj" }], // Default role for new users, can be updated later
     };
@@ -189,7 +190,7 @@ async function syncUserToFirestore(discordUser: DiscordGuildMemberResponse) {
         roles: djDoc.data().roles || [{ role: "dj" }], // Ensure roles are preserved
     });
 
-    return djDoc.data() as Dj;
+    return djDoc;
     // // Save or update the DJ document in the "djs" Firestore collection
     // return await admin.firestore().collection("djs").doc(djDoc.id).set(defaultDjRecord, { merge: true });
 }

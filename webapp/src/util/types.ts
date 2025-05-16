@@ -12,6 +12,8 @@ export type Dj = {
     }
 
     public_name: string;
+    public_avatar?: string;
+    
     dj_name: string;
     twitch_username?: string;
     rtmp_url?: string;
