@@ -5,7 +5,7 @@ import { auth, db } from "../util/firebase";
 
 import logo from '../assets/svg/S4_Logo.svg';
 import discordIcon from '../assets/svg/Discord-Symbol-White.svg';
-import { getFirestore, doc, getDoc } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { Dj } from "../util/types";
 
 const loginWithDiscord = () => {
@@ -63,7 +63,7 @@ const FirebaseAuthProvider = ({ children }: Props) => {
         if (djDoc.exists()) {
           updateProfile(user, {
             displayName: dj.public_name ?? userId,
-            photoURL: dj.discord?.avatar || dj.discord?.user?.avatar || undefined,
+            photoURL: dj.discord?.avatar || dj.discord?.avatar || undefined,
           })
         } else {
           console.log("No DJ found with the given userId.");
