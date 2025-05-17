@@ -59,9 +59,13 @@ const EventRoot = () => {
         setEventScratchpad(newEvent);
     }
 
-    const onSaveEvent = () => {
-        saveEvent(eventScratchpad, event);
-        setHasChanges(false);
+    const onSaveEvent = async () => {
+        try {
+            await saveEvent(eventScratchpad, event);
+            setHasChanges(false);
+        } catch (error) {
+            toast.error(`Error saving event: ${(error as Error).message}`);
+        }
     }
 
     const onCancelChanges = () => {
