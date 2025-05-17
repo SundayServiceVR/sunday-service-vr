@@ -1,3 +1,4 @@
+import { APIGuildMember } from "discord-api-types/v10";
 import { DocumentReference } from "firebase/firestore";
 
 export type Dj = {
@@ -5,11 +6,7 @@ export type Dj = {
     roles?: AppUserRole[];
 
     discord_id: string;
-    discord?: {
-        avatar?: string;
-        name?: string;
-        banner?: string;
-    }
+    discord?: APIGuildMember;
 
     public_name: string;
     public_avatar?: string;

@@ -11,13 +11,14 @@ import * as admin from "firebase-admin";
 import { initializeApp } from "firebase-admin/app";
 import { readFileSync } from "fs";
 
-const isLocal = process.env.FUNCTIONS_EMULATOR === "true";
 
-const credential = isLocal ?
+const credential =
     admin.credential.cert(
+        // TODO: This works now because we are manually deploying the functions, which also
+        // uploads our local admin key.  I think there's a different way to specify the
+        // service account/ credentials when deploying to the emulator, but I don't know what it is.
         getLocalAdminKey()
-    ) :
-    admin.credential.applicationDefault();
+    );
 
 initializeApp({
     credential,

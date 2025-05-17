@@ -1,27 +1,13 @@
-import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 import axios, { AxiosResponse } from "axios";
 import { onRequest } from "firebase-functions/v2/https";
 import { defineSecret } from "firebase-functions/params";
 import { AppUserRole, Dj } from "../../webapp/src/util/types";
+import { getRolesFromDiscordRoles } from "./lib/rolesMap";
+import { APIGuildMember } from "discord-api-types/v10";
 
 interface DiscordTokenResponse {
     access_token: string;
-}
-
-interface DiscordUserResponse {
-    id: string;
-    global_name?: string;
-    username: string;
-    avatar?: string;
-    banner?: string;
-}
-
-interface DiscordGuildMemberResponse {
-    nick?: string;
-    avatar?: string;
-    banner?: string;
-    user: DiscordUserResponse;
 }
 
 const discord_client_secret = defineSecret("DISCORD_CLIENT_SECRET");
@@ -32,7 +18,7 @@ db_auth.settings({ ignoreUndefinedProperties: true });
 
 export const discordAuth = onRequest(
     { cors: true, secrets: ["DISCORD_CLIENT_SECRET"] },
-    async (req: functions.Request, res: functions.Response) => {
+    async (req, res) => {
         res.set("Access-Control-Allow-Credentials", "true");
 
         const { code, redirect_uri } = req.body;
@@ -91,13 +77,13 @@ export const discordAuth = onRequest(
 
         // Fetch the user's Discord profile information
         // const discordUser = await getDiscordUserInfo(access_token);
-        const discordGuildMember = await getDiscordGuildInfo(access_token);
+        const discordGuildMember = await getDiscordGuildMember(access_token);
 
-        const djSnapshot = await syncUserToFirestore(discordGuildMember);
+        const { djDocId, syncedDjData } = await syncUserToFirestore(discordGuildMember);
 
         // Generate a custom Firebase token
-        const roles = djSnapshot.data().roles?.map((role: AppUserRole) => role.role) || []; // Default to "dj" if no roles are found
-        const firebaseToken = await admin.auth().createCustomToken(djSnapshot.id, { roles });
+        const roles = syncedDjData.roles?.map((role: AppUserRole) => role.role) || []; // Default to "dj" if no roles are found
+        const firebaseToken = await admin.auth().createCustomToken(djDocId, { roles });
 
         res.status(200).send({
             firebase_token: firebaseToken,
@@ -122,13 +108,13 @@ export const discordAuth = onRequest(
  *
  * @param {string} access_token - The access token for authenticating the request.
  * @param {string} discord_user_id - The Discord user ID for identifying the guild member.
- * @return {Promise<DiscordUserResponse>} - A promise that resolves to the user's guild member information.
+ * @return {Promise<APIGuildMember>} - A promise that resolves to the user's guild member information.
  */
-async function getDiscordGuildInfo(access_token: string): Promise<DiscordGuildMemberResponse> {
+async function getDiscordGuildMember(access_token: string): Promise<APIGuildMember> {
     // Fetch the user's Discord profile information
     const guildId = "1004489038159413248";
     const url = `/users/@me/guilds/${guildId}/member`;
-    return await discordApiRequest(url, access_token) as unknown as DiscordGuildMemberResponse;
+    return await discordApiRequest(url, access_token) as unknown as APIGuildMember;
 }
 
 /**
@@ -139,7 +125,7 @@ async function getDiscordGuildInfo(access_token: string): Promise<DiscordGuildMe
  * @param {string} access_token - The access token for authentication.
  * @return {Promise<T>} - A promise that resolves to the response data.
  */
-async function discordApiRequest<T extends DiscordUserResponse>(url: string, access_token: string): Promise<T> {
+async function discordApiRequest<T extends APIGuildMember>(url: string, access_token: string): Promise<T> {
     const baseUrl = "https://discord.com/api";
     const fullUrl = baseUrl + url;
     const response = await axios.get<T>(
@@ -156,10 +142,10 @@ async function discordApiRequest<T extends DiscordUserResponse>(url: string, acc
 /**
  * Synchronizes a Discord user's information to Firestore.
  *
- * @param {DiscordUserResponse} discordUser - The Discord user's profile information.
+ * @param {APIGuildMember} discordUser - The Discord user's profile information.
  * @return {Promise<void>} - A promise that resolves when the user data is saved or updated in Firestore.
  */
-async function syncUserToFirestore(discordUser: DiscordGuildMemberResponse) {
+async function syncUserToFirestore(discordUser: APIGuildMember) {
     const defaultDjRecord: Dj = {
         discord_id: discordUser.user.id,
         discord: {
@@ -183,14 +169,22 @@ async function syncUserToFirestore(discordUser: DiscordGuildMemberResponse) {
         await db_auth.collection("djs").add(defaultDjRecord);
     }
 
-    // Update the default dj doc with existing data if the DJ document exists
-    djDoc && await db_auth.collection("djs").doc(djDoc.id).set({
+    // Sync the roles from Discord to Firestore
+    const roles = getRolesFromDiscordRoles(discordUser.roles);
+
+    const syncedDjData: Dj = {
         ...djDoc.data(),
         ...defaultDjRecord,
-        roles: djDoc.data().roles || [{ role: "dj" }], // Ensure roles are preserved
-    });
+        // roles: djDoc.data().roles || [{ role: "dj" }], // Ensure roles are preserved
+        roles,
+    };
 
-    return djDoc;
+    // Update the default dj doc with existing data if the DJ document exists
+    djDoc && await db_auth.collection("djs").doc(djDoc.id).set(syncedDjData);
+
+    const djDocId = djDoc?.id;
+
+    return { djDocId, syncedDjData };
     // // Save or update the DJ document in the "djs" Firestore collection
     // return await admin.firestore().collection("djs").doc(djDoc.id).set(defaultDjRecord, { merge: true });
 }

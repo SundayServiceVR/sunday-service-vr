@@ -122,8 +122,6 @@ const DjDetails = () => {
                                 <dd>{ dj.rtmp_url }</dd>
                                 <dt>Twitch Username</dt>
                                 <dd>{ dj.twitch_username }</dd>
-                                <dt>Roles</dt>
-                                <dd>{ dj.roles ? dj.roles.map(role => role.role).join(', ') : 'No roles assigned' }</dd>
                                 <Button onClick={() => { setDjScratchpad({...dj}); setIsEditing(true); }}>Edit</Button>
                             </dl>
 

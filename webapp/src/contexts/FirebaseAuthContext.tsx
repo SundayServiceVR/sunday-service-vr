@@ -19,6 +19,9 @@ const loginWithDiscord = () => {
   window.location.href = DISCORD_AUTH_URL;
 };
 
+const getAvatarUrl = (discordUserId: string, discordAvatarId: string) => { 
+  return `https://cdn.discordapp.com/avatars/${discordUserId}/${discordAvatarId}.png?size=128`;
+}
 
 type FirebaseAuthContextType = { user?: User, auth?: Auth, roles?: string[] };
 
@@ -63,7 +66,7 @@ const FirebaseAuthProvider = ({ children }: Props) => {
         if (djDoc.exists()) {
           updateProfile(user, {
             displayName: dj.public_name ?? userId,
-            photoURL: dj.discord?.avatar || dj.discord?.avatar || undefined,
+            photoURL: dj.public_avatar ? getAvatarUrl(dj.discord_id, dj.public_avatar) : null,
           })
         } else {
           console.log("No DJ found with the given userId.");
