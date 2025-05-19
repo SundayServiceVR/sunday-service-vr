@@ -1,5 +1,12 @@
 import { AppUserRole } from "../../../webapp/src/util/types";
 
+
+// 1004489271568248833 - Domoni Poobah            - Discord Admin   -> DJ (s4), Host, Admin
+// 1374015426555543562 - Sacrus Cericus           - Host            -> DJ (s4), Host
+// 1004490402914643968 - Incola Sacredos          - Founder         -> DJ (s4), Founder
+// 1004491516359749722 - Saltare MDusic Hospite   - General Dj      -> DJ (s4)
+// x                   - xxx                      - Developer       -> DJ (s4), Host, Developer, Admin
+
 type DiscordRoleToAppUserRole = {
     role: string;
     discordRoleName: string;
@@ -10,15 +17,17 @@ type DiscordRoleToAppUserRole = {
 
 const roleNameToAppUserRole = (roleId: string) => {
     const discordRolesMap: {[key: string] : DiscordRoleToAppUserRole} = {
-    // 1004489271568248833 - Domoni Poobah            - Discord Admin   -> DJ (s4), Host, Admin
-    // x                   - xxx                      - Host            -> DJ (s4), Host
-    // 1004490402914643968 - Incola Sacredos          - Founder         -> DJ (s4), Founder but add's a litte tag on apps
-    // 1004491516359749722 - Saltare MDusic Hospite    - General Dj     -> DJ (s4)
-    // x                   - xxx                      - Developer       -> DJ (s4), Host, Developer, Admin
+
         "1004489271568248833": {
             role: "admin",
             discordRoleName: "Domoni Poobah",
-            displayName: "Discord Admin",
+            displayName: "Admin",
+            appUserRoles: [{ role: "dj" }, { role: "admin" }],
+        },
+        "1374015426555543562": {
+            role: "host",
+            discordRoleName: "Sacrus Cericus",
+            displayName: "Host",
             appUserRoles: [{ role: "dj" }, { role: "admin" }],
         },
         "1004491516359749722": {
