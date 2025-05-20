@@ -2,7 +2,7 @@ import { AppUserRole } from "../../../webapp/src/util/types";
 
 
 // 1004489271568248833 - Domoni Poobah            - Discord Admin   -> DJ (s4), Host, Admin
-// 1374015426555543562 - Sacrus Cericus           - Host            -> DJ (s4), Host
+// 1076583666794369044 - Honoratus Hospes           - Host            -> DJ (s4), Host
 // 1004490402914643968 - Incola Sacredos          - Founder         -> DJ (s4), Founder
 // 1004491516359749722 - Saltare MDusic Hospite   - General Dj      -> DJ (s4)
 // x                   - xxx                      - Developer       -> DJ (s4), Host, Developer, Admin
@@ -24,9 +24,9 @@ const roleNameToAppUserRole = (roleId: string) => {
             displayName: "Admin",
             appUserRoles: [{ role: "dj" }, { role: "admin" }],
         },
-        "1374015426555543562": {
+        "1076583666794369044": {
             role: "host",
-            discordRoleName: "Sacrus Cericus",
+            discordRoleName: "Honoratus Hospes",
             displayName: "Host",
             appUserRoles: [{ role: "dj" }, { role: "admin" }],
         },
