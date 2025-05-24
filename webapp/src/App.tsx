@@ -2,10 +2,8 @@ import { Link, RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { FirebaseAuthProvider } from './contexts/FirebaseAuthContext';
 
 import EventRoot from "./features/event/EventRoot";
-import Login from './features/auth/Login';
 import Layout from './features/layout/Layout';
 import AnonymousLayout from './features/layout/AnonymousLayout';
-import ResetPassword from './features/auth/ResetPassword';
 
 import Home from './features/home/Home';
 import EventList from './features/event/EventList';
@@ -23,6 +21,9 @@ import GlobalSettings from "./features/globalSettings/GlobalSettings";
 import { EventDjPlayMapperProvider } from './contexts/useEventDjCache/eventDjCacheProvider';
 
 import './App.css';
+// import { EventSignup } from './features/eventSignup/EventSignup';
+import { DiscordRedirect } from './features/auth/DiscordRedirect';
+import RoleGuard from './components/roleGuard/roleGuard';
 
 function App() {
   if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
@@ -34,10 +35,12 @@ function App() {
     {
       path: "/",
       element: <FirebaseAuthProvider>
+        <RoleGuard requireAnyRole={['host', 'admin']}>
           <EventDjPlayMapperProvider>
             <Layout />
           </EventDjPlayMapperProvider>
-        </FirebaseAuthProvider>,
+        </RoleGuard>
+      </FirebaseAuthProvider>,
       children: [
         {
           index: true,
@@ -46,14 +49,14 @@ function App() {
         {
           path: "djs",
           children: [
-            { index: true, element: <DjList />},
+            { index: true, element: <DjList /> },
             { path: "create", element: <CreateDj /> },
             { path: ":djId", element: <DjDetails /> },
           ],
         },
         {
           path: "events",
-          handle: { crumb: () => <Link to="/events">Events</Link>},
+          handle: { crumb: () => <Link to="/events">Events</Link> },
           children: [
             {
               index: true,
@@ -70,7 +73,7 @@ function App() {
             {
               path: ":eventId",
               element: <EventRoot />,
-              handle: { crumb: () => <Link to="../">Event</Link>},
+              handle: { crumb: () => <Link to="../">Event</Link> },
               children: eventRoutes
             }
           ]
@@ -86,12 +89,8 @@ function App() {
       ],
     },
     {
-      path: "/login",
-      element: <AnonymousLayout><Login /></AnonymousLayout>
-    },
-    {
-      path: "/resetPassword",
-      element: <AnonymousLayout><ResetPassword /></AnonymousLayout>
+      path: "/discordRedirect",
+      element: <AnonymousLayout><DiscordRedirect /></AnonymousLayout>
     }
   ]);
 
