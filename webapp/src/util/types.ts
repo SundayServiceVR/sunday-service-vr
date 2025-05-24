@@ -1,8 +1,16 @@
+import { APIGuildMember } from "discord-api-types/v10";
 import { DocumentReference } from "firebase/firestore";
 
 export type Dj = {
+
+    roles?: AppUserRole[];
+
     discord_id: string;
+    discord?: APIGuildMember;
+
     public_name: string;
+    public_avatar?: string;
+    
     dj_name: string;
     twitch_username?: string;
     rtmp_url?: string;
@@ -25,12 +33,17 @@ export type Event = {
 }
 
 export type EventSignup = {
-    uuid: string;
     name: string;
-    dj_refs: DocumentReference[];
-    is_debut: boolean;
+    // submitter_discord_id: string;
     requested_duration: SlotDuration;
     type: SlotType;
+    // submitter_notes: string;
+
+    uuid: string;
+    dj_refs: DocumentReference[];
+    is_debut: boolean;
+    // maintainer_notes: string;
+
 }
 
 export type Slot = {
@@ -90,5 +103,9 @@ export const SlotTypes =
         { name: 'Radio', value: '3' },
     ];
 
-
 export type SlotDuration = (0.5 | 1 | 1.5 | 2 | 2.5 | 3 | 3.5 | 4);
+
+export type AppUserRole = {
+    role: 'admin' | 'host' | 'dj';
+    club_id?: string;
+}

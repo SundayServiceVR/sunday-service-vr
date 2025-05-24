@@ -4,6 +4,7 @@ import { Event } from "../../../util/types";
 import EventBasicDetailsForm from "./EventBasicDetailsForm";
 import { Breadcrumb, Button, Form, Stack } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-hot-toast";
 
 import Spinner from "../../../components/spinner";
 import { useEventStore } from "../../../hooks/useEventStore/useEventStore";
@@ -19,9 +20,16 @@ const EventCreate = () => {
         formEvent.preventDefault();
         (async () => {
             setBusy(true);
-            event.end_datetime = event.start_datetime;
-            const result = await createEvent(event);
-            navigate(`/events/${result.id}`)
+            try {
+                event.end_datetime = event.start_datetime;
+                const result = await createEvent(event);
+                navigate(`/events/${result.id}`);
+            } catch (error) {
+                const errorMessage = error instanceof Error ? error.message : "Failed to create event";
+                toast.error(errorMessage);
+            } finally {
+                setBusy(false);
+            }
         })();
     }
 
