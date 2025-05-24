@@ -40,7 +40,7 @@ const DiscordRedirect = () => {
 
                 await updateProfile(user, {
                     displayName: synced_dj_data.public_name,
-                    photoURL: synced_dj_data.public_avatar
+                    photoURL: synced_dj_data.avatar
                 });
 
                 const redirectTarget = sessionStorage.getItem('preAuthRedirect') ?? `/`;

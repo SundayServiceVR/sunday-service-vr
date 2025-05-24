@@ -135,21 +135,17 @@ async function discordApiRequest<T extends APIGuildMember>(url: string, access_t
  * @return {Promise<void>} - A promise that resolves when the user data is saved or updated in Firestore.
  */
 async function syncUserToFirestore(discordUser: APIGuildMember) {
-    const public_avatar = `https://cdn.discordapp.com/avatars/${discordUser.user.id}/${discordUser.avatar ?? discordUser.user.avatar}.png?size=128`;
+    const avatar = `https://cdn.discordapp.com/avatars/${discordUser.user.id}/${discordUser.avatar ?? discordUser.user.avatar}.png`;
 
     const defaultDjRecord: Dj = {
         discord_id: discordUser.user.id,
-        // discord: {
-        //     ...discordUser,
-        // },
         public_name: discordUser.nick || discordUser.user.global_name || discordUser.user.username || "Unknown User",
-        public_avatar,
+        avatar,
         dj_name: discordUser.nick || discordUser.user.global_name || discordUser.user.username || "Unknown User",
         roles: [{ role: "dj" }], // Default role for new users, can be updated later
     };
 
     let djDocId: string;
-
 
     // Attempt to fetch an existing DJ from the "djs" Firestore collection
     const djDoc = (
@@ -170,11 +166,12 @@ async function syncUserToFirestore(discordUser: APIGuildMember) {
     const syncedDjData: Dj = {
         ...defaultDjRecord,
         ...djDoc?.data() ?? {}, // Overlay existing data on the default record
+        avatar, // As long as we are tightly coupled to Discord, we will reset the avatar every time.
         roles,
     };
 
     // Update the default dj doc with existing data if the DJ document exists
-    djDoc && await db_auth.collection("djs").doc(djDoc.id).set(syncedDjData);
+    await db_auth.collection("djs").doc(djDocId).set(syncedDjData);
 
     return { djDocId, syncedDjData };
 }
