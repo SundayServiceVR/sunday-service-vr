@@ -28,7 +28,7 @@ const roleNameToAppUserRole = (roleId: string) => {
             role: "host",
             discordRoleName: "Honoratus Hospes",
             displayName: "Host",
-            appUserRoles: [{ role: "dj" }, { role: "admin" }],
+            appUserRoles: [{ role: "dj" }, { role: "host" }],
         },
         "1004491516359749722": {
             role: "dj",

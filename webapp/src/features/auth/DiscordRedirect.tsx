@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import Spinner from '../../components/spinner';
 import { Alert } from 'react-bootstrap';
-import { getAuth, signInWithCustomToken } from "firebase/auth";
+import { getAuth, signInWithCustomToken, updateProfile } from "firebase/auth";
+import { Dj } from '../../util/types';
 
 const DiscordRedirect = () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -15,7 +16,6 @@ const DiscordRedirect = () => {
 
         const authenticateWithDiscord = async () => {
             try {
-  
                 const response = await fetch(process.env.NODE_ENV === 'production' 
                     ? 'https://us-central1-sunday-service-vr.cloudfunctions.net/discordAuth' 
                     : 'http://127.0.0.1:5001/sunday-service-vr/us-central1/discordAuth', {
@@ -33,16 +33,18 @@ const DiscordRedirect = () => {
                     throw new Error('Failed to authenticate with Discord');
                 }
 
-                const data = await response.json();
+                const { firebase_token, synced_dj_data }: { firebase_token: string, synced_dj_data: Dj } = await response.json();
                 const auth = getAuth();
-                await signInWithCustomToken(auth, data.firebase_token);
+                const userCredentials = await signInWithCustomToken(auth, firebase_token);
+                const user = userCredentials.user;
 
-                sessionStorage.setItem("discord_user", JSON.stringify(data.discord_user));
+                await updateProfile(user, {
+                    displayName: synced_dj_data.public_name,
+                    photoURL: synced_dj_data.public_avatar
+                });
+
                 const redirectTarget = sessionStorage.getItem('preAuthRedirect') ?? `/`;
                 window.location.replace(redirectTarget);
-
-
-       
             } catch (error) {
                 console.error('Error during Discord authentication:', error);
                 setError('Authentication failed. Please try again.');

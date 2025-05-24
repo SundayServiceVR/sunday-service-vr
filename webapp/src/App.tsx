@@ -35,7 +35,7 @@ function App() {
     {
       path: "/",
       element: <FirebaseAuthProvider>
-        <RoleGuard requiredRole='admin'>
+        <RoleGuard requireAnyRole={['host', 'admin']}>
           <EventDjPlayMapperProvider>
             <Layout />
           </EventDjPlayMapperProvider>

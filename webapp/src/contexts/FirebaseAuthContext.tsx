@@ -1,12 +1,10 @@
 // FirebaseAuthContext.tsx
 import * as React from "react";
-import { Auth, onAuthStateChanged, updateProfile, User } from "firebase/auth";
-import { auth, db } from "../util/firebase";
+import { Auth, onAuthStateChanged, User } from "firebase/auth";
+import { auth,} from "../util/firebase";
 
 import logo from '../assets/svg/S4_Logo.svg';
 import discordIcon from '../assets/svg/Discord-Symbol-White.svg';
-import { doc, getDoc } from "firebase/firestore";
-import { Dj } from "../util/types";
 
 const loginWithDiscord = () => {
   sessionStorage.setItem('preAuthRedirect', window.location.href);
@@ -18,10 +16,6 @@ const loginWithDiscord = () => {
   const DISCORD_AUTH_URL = `https://discord.com/api/oauth2/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=${responseType}&scope=${scope}`;
   window.location.href = DISCORD_AUTH_URL;
 };
-
-const getAvatarUrl = (discordUserId: string, discordAvatarId: string) => { 
-  return `https://cdn.discordapp.com/avatars/${discordUserId}/${discordAvatarId}.png?size=128`;
-}
 
 type FirebaseAuthContextType = { user?: User, auth?: Auth, roles?: string[] };
 
@@ -47,31 +41,6 @@ const FirebaseAuthProvider = ({ children }: Props) => {
     (async () => {
       const token = await auth?.currentUser?.getIdTokenResult();
       setRoles(token?.claims.roles as string[]);
-    })();
-  }, [user]);
-
-  
-  React.useEffect(() => {
-    (async () => {
-
-      if(user === undefined || user === null || user === false) {
-        return;
-      }
-
-      const userId = user.uid;
-      if (userId) {
-        const djDocRef = doc(db, "djs", userId);
-        const djDoc = await getDoc(djDocRef);
-        const dj = djDoc.data() as Dj;
-        if (djDoc.exists()) {
-          updateProfile(user, {
-            displayName: dj.public_name ?? userId,
-            photoURL: dj.public_avatar ? getAvatarUrl(dj.discord_id, dj.public_avatar) : null,
-          })
-        } else {
-          console.log("No DJ found with the given userId.");
-        }
-      }
     })();
   }, [user]);
 

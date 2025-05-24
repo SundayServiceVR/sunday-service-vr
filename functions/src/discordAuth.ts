@@ -79,29 +79,18 @@ export const discordAuth = onRequest(
         // const discordUser = await getDiscordUserInfo(access_token);
         const discordGuildMember = await getDiscordGuildMember(access_token);
 
-        const { djDocId, syncedDjData } = await syncUserToFirestore(discordGuildMember);
+        const { djDocId, syncedDjData: synced_dj_data } = await syncUserToFirestore(discordGuildMember);
 
         // Generate a custom Firebase token
-        const roles = syncedDjData.roles?.map((role: AppUserRole) => role.role) || []; // Default to "dj" if no roles are found
+        const roles = synced_dj_data.roles?.map((role: AppUserRole) => role.role) || []; // Default to "dj" if no roles are found
         const firebaseToken = await admin.auth().createCustomToken(djDocId, { roles });
 
         res.status(200).send({
             firebase_token: firebaseToken,
-            discord_user: discordGuildMember,
+            synced_dj_data,
         });
         return;
     });
-
-// /**
-//  * Fetches the Discord user's profile information using the provided access token.
-//  *
-//  * @param {string} access_token - The access token for authenticating the request.
-//  * @return {Promise<DiscordUserResponse>} - A promise that resolves to the user's Discord profile information.
-//  */
-// async function getDiscordUserInfo(access_token: string): Promise<DiscordUserResponse> {
-//     // Fetch the user's Discord profile information
-//     return await discordApiRequest("/users/@me", access_token);
-// }
 
 /**
  * Fetches the Discord user's guild member information using the provided access token and user ID.
@@ -146,45 +135,46 @@ async function discordApiRequest<T extends APIGuildMember>(url: string, access_t
  * @return {Promise<void>} - A promise that resolves when the user data is saved or updated in Firestore.
  */
 async function syncUserToFirestore(discordUser: APIGuildMember) {
+    const public_avatar = `https://cdn.discordapp.com/avatars/${discordUser.user.id}/${discordUser.avatar ?? discordUser.user.avatar}.png?size=128`;
+
     const defaultDjRecord: Dj = {
         discord_id: discordUser.user.id,
-        discord: {
-            ...discordUser,
-        },
+        // discord: {
+        //     ...discordUser,
+        // },
         public_name: discordUser.nick || discordUser.user.global_name || discordUser.user.username || "Unknown User",
-        public_avatar: discordUser.avatar || discordUser.user.avatar || undefined,
+        public_avatar,
         dj_name: discordUser.nick || discordUser.user.global_name || discordUser.user.username || "Unknown User",
         roles: [{ role: "dj" }], // Default role for new users, can be updated later
     };
+
+    let djDocId: string;
 
 
     // Attempt to fetch an existing DJ from the "djs" Firestore collection
     const djDoc = (
         await db_auth.collection("djs").where("discord_id", "==", discordUser.user.id).get()
     ).docs[0];
+    djDocId = djDoc?.id;
 
     // Merge existing DJ data with the new data if the DJ document exists
     if (!djDoc) {
         // If no existing DJ document is found, create a new one
-        await db_auth.collection("djs").add(defaultDjRecord);
+        const newDjDoc = await db_auth.collection("djs").add(defaultDjRecord);
+        djDocId = newDjDoc.id;
     }
 
     // Sync the roles from Discord to Firestore
     const roles = getRolesFromDiscordRoles(discordUser.roles);
 
     const syncedDjData: Dj = {
-        ...djDoc.data(),
         ...defaultDjRecord,
-        // roles: djDoc.data().roles || [{ role: "dj" }], // Ensure roles are preserved
+        ...djDoc?.data() ?? {}, // Overlay existing data on the default record
         roles,
     };
 
     // Update the default dj doc with existing data if the DJ document exists
     djDoc && await db_auth.collection("djs").doc(djDoc.id).set(syncedDjData);
 
-    const djDocId = djDoc?.id;
-
     return { djDocId, syncedDjData };
-    // // Save or update the DJ document in the "djs" Firestore collection
-    // return await admin.firestore().collection("djs").doc(djDoc.id).set(defaultDjRecord, { merge: true });
 }
