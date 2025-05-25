@@ -1,7 +1,7 @@
 import { FormEvent, useState } from "react";
 import DjForm from "./DjForm";
-import { Breadcrumb, Button, Form, Stack } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
+import { Button, Form, Stack } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 import { Dj } from "../../util/types";
 import { createDj } from "../../store/dj";
 import { toast } from "react-hot-toast";
@@ -38,10 +38,6 @@ const CreateDj = () => {
     }
 
     return <section>
-        <Breadcrumb className="px-2">
-            <Breadcrumb.Item><Link to="/djs">Djs</Link></Breadcrumb.Item>
-            <Breadcrumb.Item><Link to="/djs/create">Create</Link></Breadcrumb.Item>
-        </Breadcrumb>
         <h2 className="display-6">Create Dj</h2>
         <Form onSubmit={onSubmit}>
             <DjForm dj={dj} setDj={setDj} busy={busy}/>

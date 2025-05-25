@@ -27,6 +27,7 @@
         "react-router-dom": "^6.22.3",
         "ulid": "^2.3.0",
         "upgrade": "^1.1.0",
+        "use-react-router-breadcrumbs": "^4.0.1",
         "web-vitals": "^2.1.4"
     },
     "devDependencies": {

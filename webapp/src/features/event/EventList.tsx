@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Event } from "../../util/types";
-import { Alert, AlertHeading, Breadcrumb, Button, Nav, Stack, Table } from "react-bootstrap";
+import { Alert, AlertHeading, Button, Nav, Stack, Table } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 
 import Spinner from "../../components/spinner";
@@ -34,9 +34,6 @@ const EventList = ({ past = false}: Props) => {
     }
 
     return <section>
-        <Breadcrumb className="px-2">
-            <Breadcrumb.Item><Link to="/events">Events</Link></Breadcrumb.Item>
-        </Breadcrumb>
         <CurrentOrNextEvent />
         <Stack direction="horizontal" gap={3}>
             <span className="me-auto" />

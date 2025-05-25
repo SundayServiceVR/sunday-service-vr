@@ -20,10 +20,11 @@ import GlobalSettings from "./features/globalSettings/GlobalSettings";
 
 import { EventDjPlayMapperProvider } from './contexts/useEventDjCache/eventDjCacheProvider';
 
-import './App.css';
 // import { EventSignup } from './features/eventSignup/EventSignup';
 import { DiscordRedirect } from './features/auth/DiscordRedirect';
 import RoleGuard from './components/roleGuard/roleGuard';
+
+import './App.css';
 
 function App() {
   if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
