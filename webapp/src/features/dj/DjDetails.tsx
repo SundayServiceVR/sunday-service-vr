@@ -1,5 +1,5 @@
 import { FormEvent, useEffect, useState } from "react";
-import { Alert, Breadcrumb, Button, Col, Container, Form, ListGroup, ListGroupItem, Row, Stack } from "react-bootstrap";
+import { Alert, Button, Col, Container, Form, ListGroup, ListGroupItem, Row, Stack } from "react-bootstrap";
 import { useParams } from "react-router";
 import { collection, doc, getDoc, getDocs, orderBy, query, where } from "firebase/firestore";
 import { db } from "../../util/firebase";
@@ -8,7 +8,7 @@ import DjForm from "./DjForm";
 import { Link } from "react-router-dom";
 import { docToRawType } from "../../store/util";
 
-import Spinner from "../../components/spinner";
+import Spinner from "../../components/spinner/Spinner";
 import { docToEvent } from "../../store/converters";
 import { updateDj } from "../../store/dj";
 import toast from "react-hot-toast";
@@ -83,14 +83,10 @@ const DjDetails = () => {
     }
 
     return <div>
-        <Breadcrumb className="px-2">
-            <Breadcrumb.Item><Link to="/djs">Djs</Link></Breadcrumb.Item>
-            <Breadcrumb.Item><Link to={`/djs/${djId}`}>{dj.dj_name}</Link></Breadcrumb.Item>
-        </Breadcrumb>
         <Container>
             <Row className="justify-content-md-center">
                 <Col md={4}>
-                    <h3>Dj Details</h3>
+                    <h3 className="display-6">Dj Details</h3>
                     { isEditing 
                         ? <>
                                 <Alert variant="info">
@@ -130,7 +126,7 @@ const DjDetails = () => {
                     }
                 </Col>
                 <Col md={4}>
-                <h3>Plays ({playedEvents.length})</h3>
+                <h3 className="display-6">Plays ({playedEvents.length})</h3>
                     <ListGroup>
                         { playedEvents.map(event => <ListGroupItem><Link to={`/events/${event.id}`}>{event.name} - {event.start_datetime.toLocaleDateString()}</Link></ListGroupItem>) }
                     </ListGroup>

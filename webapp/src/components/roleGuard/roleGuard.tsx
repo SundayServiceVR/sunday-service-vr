@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import { FirebaseAuthContext } from '../../contexts/FirebaseAuthContext';
+import Spinner from '../spinner/Spinner';
 
 type RoleGuardProps = {
   requireAnyRole?: string[];
@@ -9,6 +10,10 @@ type RoleGuardProps = {
 const RoleGuard: React.FC<RoleGuardProps> = ({ requireAnyRole, children }) => {
 
   const { roles, auth } = useContext(FirebaseAuthContext);
+
+  if(!auth || !roles) {
+    return <Spinner type="logo" />;
+  }
 
   if (requireAnyRole && requireAnyRole.length > 0) {
     if (!roles?.some((role: string) => requireAnyRole.includes(role))) {

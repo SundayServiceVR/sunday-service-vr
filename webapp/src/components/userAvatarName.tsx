@@ -15,7 +15,9 @@ const UserAvatarName = (user: Props) => {
                 style={{ width: '40px', height: '40px' }}
             />
             }
-            <span>{displayName ?? "Unknown User"}</span>
+            {
+                displayName &&  <span className="ps-2">{displayName}</span>
+            }
         </div>
     );
 }

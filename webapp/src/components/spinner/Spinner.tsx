@@ -5,7 +5,7 @@ import S4Logo from "../../assets/svg/S4_Logo.svg?react";
 import "./spinner.css";
 
 type SpinnerProps = {
-  type: "simple"|"logo"
+  type?: "simple"|"logo"
 }
 const Spinner = ({ type = "simple" }: SpinnerProps) => {
   switch (type) {
@@ -19,7 +19,7 @@ const Spinner = ({ type = "simple" }: SpinnerProps) => {
     case "simple":
     default: {
       return (
-        <div className="spinnerWrapper">
+        <div className="withFade">
           <BootstrapSpinner />
         </div>
       );

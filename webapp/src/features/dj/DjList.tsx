@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import { DocumentReference, collection, getDocs, orderBy, query } from "firebase/firestore";
 import { Dj, Event } from "../../util/types";
 import { db } from "../../util/firebase";
-import { Alert, AlertHeading, Breadcrumb, Button, Col, Container, Form, InputGroup, Row, Table } from "react-bootstrap";
+import { Alert, AlertHeading, Button, Col, Container, Form, InputGroup, Row, Table } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { docToRawType } from "../../store/util";
 
-import Spinner from "../../components/spinner";
+import Spinner from "../../components/spinner/Spinner";
 import { getAllEvents } from "../../store/events";
 
 type Props = {
@@ -47,7 +47,7 @@ const DjList = ({ past = false }: Props) => {
     const [djs, setDjs] = useState<DjMap>(new Map());
     const [searchTerm, setSearchTerm] = useState<string>("");
     const [earliestEvent, setEarliestEvent] = useState<Event>();
-    const [loading, setLoading] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(true);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -76,11 +76,7 @@ const DjList = ({ past = false }: Props) => {
     })
 
     return <section>
-        <Breadcrumb className="px-2">
-            <Breadcrumb.Item><Link to="/djs">Djs</Link></Breadcrumb.Item>
-        </Breadcrumb>
-        <h2>Sunday Serice DJs</h2>
-
+        <h2 className="display-6">Dj Roster</h2>
 
         {djs.size <= 0 && <Alert variant="warning"><AlertHeading>No Djs Found</AlertHeading>Should we add a dj?</Alert>}
 

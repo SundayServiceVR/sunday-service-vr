@@ -1,7 +1,7 @@
 import { Form } from "react-bootstrap";
 import { Dj } from "../../util/types";
 import { Link } from "react-router-dom";
-import Spinner from "../../components/spinner";
+import Spinner from "../../components/spinner/Spinner";
 
 type Props = {
     dj: Dj,

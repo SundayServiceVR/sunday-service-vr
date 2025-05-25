@@ -66,7 +66,7 @@ const Home = () => {
     return <section>
         {/* Hero Section */}
         <div className="hero-section text-center py-5 bg-light">
-            <h1>Welcome to Sunday Service VR</h1>
+            <h1 className="display-4">Welcome to Sunday Service VR</h1>
             <p className="lead">Your one-stop platform for hosting and participating in virtual events.</p>
             <div className="mt-4">
                 <CurrentOrNextEvent />
@@ -75,7 +75,7 @@ const Home = () => {
 
         <Container className="my-5">
             {/* Signup Sheet Section */}
-            <h2 className="mb-4 text-center">Signup Sheet</h2>
+            <h2 className="display-6 mb-4 text-center">Signup Sheet</h2>
             <Row className="justify-content-center">
                 <Col md={6}>
                     <Card className="shadow-sm">
@@ -90,7 +90,7 @@ const Home = () => {
             </Row>
 
             {/* Helpful Links Section */}
-            <h2 className="mt-5 mb-4 text-center">Helpful Links</h2>
+            <h2 className="display-6 mt-5 mb-4 text-center">Helpful Links</h2>
             <Row className="g-4">
                 {
                     HELPFUL_LINKS.map((entry, entryIndex) =>

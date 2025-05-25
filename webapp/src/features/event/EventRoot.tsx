@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Breadcrumb, Button, Container, Nav, Stack, Toast } from 'react-bootstrap';
+import { Button, Container, Nav, Stack, Toast } from 'react-bootstrap';
 import { default_event } from "../../store/events";
 import { docToEvent } from "../../store/converters";
 import { onSnapshot, doc } from "firebase/firestore";
@@ -99,10 +99,6 @@ const EventRoot = () => {
     }
 
     return <>
-        <Breadcrumb className="px-2">
-            <Breadcrumb.Item><Link to="/events">Events</Link></Breadcrumb.Item>
-            <Breadcrumb.Item><Link to={`/events/${event.id}`}>{event.id}</Link></Breadcrumb.Item>
-        </Breadcrumb>
 
         <Stack direction="horizontal" gap={3}>
             <h2 className="display-4">

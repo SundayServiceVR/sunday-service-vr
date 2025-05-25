@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { Event } from "../../util/types";
-import { Alert, AlertHeading, Breadcrumb, Button, Nav, Stack, Table } from "react-bootstrap";
+import { Alert, AlertHeading, Button, Nav, Stack, Table } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 
-import Spinner from "../../components/spinner";
+import Spinner from "../../components/spinner/Spinner";
 import { CurrentOrNextEvent } from "../../components/currentOrNextEvent/CurrentOrNextEvent";
 import { getAllEvents } from "../../store/events";
 
@@ -13,7 +13,7 @@ type Props = {
 
 const EventList = ({ past = false}: Props) => {
     const [events, setEvents] = useState<Event[]>([]);
-    const [loading, setLoading] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(true);
 
     const navigate = useNavigate();
 
@@ -34,9 +34,6 @@ const EventList = ({ past = false}: Props) => {
     }
 
     return <section>
-        <Breadcrumb className="px-2">
-            <Breadcrumb.Item><Link to="/events">Events</Link></Breadcrumb.Item>
-        </Breadcrumb>
         <CurrentOrNextEvent />
         <Stack direction="horizontal" gap={3}>
             <span className="me-auto" />
