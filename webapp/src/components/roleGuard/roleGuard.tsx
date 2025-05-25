@@ -11,7 +11,7 @@ const RoleGuard: React.FC<RoleGuardProps> = ({ requireAnyRole, children }) => {
 
   const { roles, auth } = useContext(FirebaseAuthContext);
 
-  if(!auth) {
+  if(!auth || !roles) {
     return <Spinner type="logo" />;
   }
 

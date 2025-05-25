@@ -8,7 +8,7 @@ import { useEventStore } from "../../hooks/useEventStore/useEventStore";
 
 export const CurrentOrNextEvent = () => {
 
-    const [loading, setLoading] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(true);
     const [isCurrentEvent, setIsCurrentEvent] = useState<boolean>(true);
     const [event, setEvent] = useState<Event | null>();
 
@@ -28,13 +28,10 @@ export const CurrentOrNextEvent = () => {
     }, [getCurrentEvent, getNextEvent]);
 
     // Undefined = we haven't tried to fetch it yet
-    if (event === undefined) {
-        return <></>
-    }
-
-    // loading = we're trying to fetch it
-    if (loading) {
-        return <Spinner />
+    if (event === undefined || loading) {
+            return <div style={{ minHeight: "200px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                { loading ? <Spinner /> : <></> }
+            </div>
     }
 
     // Null = we tried to fetch it but we didn't find anything

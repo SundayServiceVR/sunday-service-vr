@@ -13,7 +13,7 @@ type Props = {
 
 const EventList = ({ past = false}: Props) => {
     const [events, setEvents] = useState<Event[]>([]);
-    const [loading, setLoading] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(true);
 
     const navigate = useNavigate();
 

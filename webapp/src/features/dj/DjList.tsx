@@ -47,7 +47,7 @@ const DjList = ({ past = false }: Props) => {
     const [djs, setDjs] = useState<DjMap>(new Map());
     const [searchTerm, setSearchTerm] = useState<string>("");
     const [earliestEvent, setEarliestEvent] = useState<Event>();
-    const [loading, setLoading] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(true);
     const navigate = useNavigate();
 
     useEffect(() => {
