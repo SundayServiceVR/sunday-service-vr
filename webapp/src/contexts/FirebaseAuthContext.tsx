@@ -1,24 +1,9 @@
 // FirebaseAuthContext.tsx
 import * as React from "react";
 import { Auth, onAuthStateChanged, User } from "firebase/auth";
-import { auth,} from "../util/firebase";
-
-import logo from '../assets/svg/S4_Logo.svg';
-import discordIcon from '../assets/svg/Discord-Symbol-White.svg';
-
-const loginWithDiscord = () => {
-
-  const clientId = '1225554722916663376';
-  const redirectUri = encodeURIComponent(window.location.origin + '/discordRedirect');
-  const scope = 'identify guilds.members.read';
-  const responseType = 'code';
-
-  const DISCORD_AUTH_URL = `https://discord.com/api/oauth2/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=${responseType}&scope=${scope}`;
-  window.location.href = DISCORD_AUTH_URL;
-};
+import { auth } from "../util/firebase";
 
 type FirebaseAuthContextType = { user?: User, auth?: Auth, roles?: string[] };
-
 
 const FirebaseAuthContext =
   React.createContext<FirebaseAuthContextType>({});
