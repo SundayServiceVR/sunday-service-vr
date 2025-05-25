@@ -31,7 +31,7 @@ export const CurrentOrNextEvent = () => {
     // Undefined = we haven't tried to fetch it yet
     if (event === undefined || loading) {
             return <div style={{ minHeight: "200px", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                { loading && <Spinner type="simple" /> }
+                { loading && <Spinner /> }
             </div>
     }
 
