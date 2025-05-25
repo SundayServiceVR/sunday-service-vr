@@ -6,7 +6,7 @@ import { getSignupsPostedMessage } from "../../../util/messageWriters";
 import MessagePasteCard from "../messaging/MessagePasteCard";
 import { doc, getDoc, getFirestore } from "@firebase/firestore";
 import { useEffect, useState } from "react";
-import Spinner from "../../../components/spinner";
+import Spinner from "../../../components/spinner/Spinner";
 
 const EventDetails = () => {
 

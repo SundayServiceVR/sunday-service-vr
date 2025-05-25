@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import Spinner from '../../components/spinner';
+import Spinner from '../../components/spinner/Spinner';
 import { Alert } from 'react-bootstrap';
 import { getAuth, signInWithCustomToken, updateProfile } from "firebase/auth";
 import { Dj } from '../../util/types';

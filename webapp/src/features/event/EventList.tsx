@@ -3,7 +3,7 @@ import { Event } from "../../util/types";
 import { Alert, AlertHeading, Button, Nav, Stack, Table } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 
-import Spinner from "../../components/spinner";
+import Spinner from "../../components/spinner/Spinner";
 import { CurrentOrNextEvent } from "../../components/currentOrNextEvent/CurrentOrNextEvent";
 import { getAllEvents } from "../../store/events";
 

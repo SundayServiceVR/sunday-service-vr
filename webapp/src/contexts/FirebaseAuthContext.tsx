@@ -2,6 +2,7 @@
 import * as React from "react";
 import { Auth, onAuthStateChanged, User } from "firebase/auth";
 import { auth } from "../util/firebase";
+import Spinner from "../components/spinner/Spinner";
 
 type FirebaseAuthContextType = { user?: User, auth?: Auth, roles?: string[] };
 
@@ -31,7 +32,7 @@ const FirebaseAuthProvider = ({ children }: Props) => {
 
 
   if(user === undefined || authInstance === undefined) {
-    return <div></div>;
+    return <Spinner type="logo" />;
   }
 
   if(user === false) {

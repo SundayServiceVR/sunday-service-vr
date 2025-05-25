@@ -6,7 +6,7 @@ import { Alert, AlertHeading, Button, Col, Container, Form, InputGroup, Row, Tab
 import { Link, useNavigate } from "react-router-dom";
 import { docToRawType } from "../../store/util";
 
-import Spinner from "../../components/spinner";
+import Spinner from "../../components/spinner/Spinner";
 import { getAllEvents } from "../../store/events";
 
 type Props = {

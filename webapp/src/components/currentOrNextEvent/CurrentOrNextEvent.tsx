@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { Event } from "../../util/types";
-import { Alert, AlertHeading, Button, Card, Col, Container, ListGroup, ListGroupItem, Row, Spinner } from "react-bootstrap";
+import { Alert, AlertHeading, Button, Card, Col, Container, ListGroup, ListGroupItem, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
 import { EventPublishedStatusBadge } from "../../features/event/EventPublishedStatusBadge";
 import { useEventStore } from "../../hooks/useEventStore/useEventStore";
+import Spinner from "../spinner/Spinner";
 
 export const CurrentOrNextEvent = () => {
 
@@ -30,7 +31,7 @@ export const CurrentOrNextEvent = () => {
     // Undefined = we haven't tried to fetch it yet
     if (event === undefined || loading) {
             return <div style={{ minHeight: "200px", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                { loading ? <Spinner /> : <></> }
+                { loading && <Spinner type="simple" /> }
             </div>
     }
 

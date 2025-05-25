@@ -6,7 +6,7 @@ import { Breadcrumb, Button, Form, Stack } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 
-import Spinner from "../../../components/spinner";
+import Spinner from "../../../components/spinner/Spinner";
 import { useEventStore } from "../../../hooks/useEventStore/useEventStore";
 
 const EventCreate = () => {

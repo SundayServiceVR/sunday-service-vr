@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { FirebaseAuthContext } from '../../contexts/FirebaseAuthContext';
-import Spinner from '../spinner';
+import Spinner from '../spinner/Spinner';
 
 type RoleGuardProps = {
   requireAnyRole?: string[];

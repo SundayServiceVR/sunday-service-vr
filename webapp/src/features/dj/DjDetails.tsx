@@ -8,7 +8,7 @@ import DjForm from "./DjForm";
 import { Link } from "react-router-dom";
 import { docToRawType } from "../../store/util";
 
-import Spinner from "../../components/spinner";
+import Spinner from "../../components/spinner/Spinner";
 import { docToEvent } from "../../store/converters";
 import { updateDj } from "../../store/dj";
 import toast from "react-hot-toast";
