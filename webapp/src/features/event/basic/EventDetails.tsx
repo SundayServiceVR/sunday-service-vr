@@ -7,11 +7,13 @@ import MessagePasteCard from "../messaging/MessagePasteCard";
 import { doc, getDoc, getFirestore } from "@firebase/firestore";
 import { useEffect, useState } from "react";
 import Spinner from "../../../components/spinner/Spinner";
+import { Link, useParams } from "react-router-dom";
 
 const EventDetails = () => {
 
     const [signupSheetUrl, setSignupSheetUrl] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(true);
+    const { eventId } = useParams();
 
     useEffect(() => {
         const fetchSignupUrl = async () => {
@@ -35,6 +37,7 @@ const EventDetails = () => {
     const [eventScratchpad, proposeEventChange] = useEventOperations();
     const message = getSignupsPostedMessage(eventScratchpad, signupSheetUrl);
 
+
     return <>
         <Card>
             <CardBody>
@@ -42,6 +45,7 @@ const EventDetails = () => {
                 <EventBasicDetailsForm event={eventScratchpad} onEventChange={proposeEventChange} />
             </CardBody>
         </Card>
+        <Link to={`/eventSignup/${eventId}`}>Event Signup Link</Link>
         <Card className="mt-4">
             <CardBody>
                 { loading ? <Spinner type="simple" /> : 

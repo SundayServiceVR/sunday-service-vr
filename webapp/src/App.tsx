@@ -25,6 +25,7 @@ import { DiscordRedirect } from './features/auth/DiscordRedirect';
 import RoleGuard from './components/roleGuard/roleGuard';
 
 import './App.css';
+import { EventSignupForm } from './features/eventSignup/EventSignup';
 
 
 function App() {
@@ -80,6 +81,7 @@ function App() {
             }
           ]
         },
+
         {
           path: "discordIdInfo",
           element: <DiscordIdInfo />
@@ -91,13 +93,27 @@ function App() {
       ],
     },
     {
+      path: "eventSignup",
+      children: [
+        {
+          path: `:eventId`,
+          // TODO: Refactor so we don't have two FirebaseAuthProviders
+          element: <FirebaseAuthProvider>
+            <RoleGuard requireAnyRole={['dj', 'host']}>
+              <EventSignupForm />
+            </RoleGuard>
+          </FirebaseAuthProvider>,
+        },
+      ]
+    },
+    {
       path: "/login",
       element: <LoginPage />,
     },
     {
       path: "/discordRedirect",
       element: <AnonymousLayout><DiscordRedirect /></AnonymousLayout>
-    }
+    },
   ]);
 
   return <>

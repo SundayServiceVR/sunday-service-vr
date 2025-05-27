@@ -1,4 +1,10 @@
+// You probably don't want to use this:
+//
 import { DocumentReference } from "firebase/firestore";
+//
+// Attempting to use the DocumentReference type from the firebase library will result in type errors
+// when creating references with firebase-admin (in functions).  This type plays nicely with both
+// the client and admin library.
 
 export type Dj = {
 
