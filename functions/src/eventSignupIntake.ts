@@ -4,8 +4,8 @@ import * as admin from "firebase-admin";
 import { v4 as uuidv4 } from "uuid";
 import { Dj, EventSignup } from "../../webapp/src/util/types";
 import { DocumentReference } from "firebase-admin/firestore";
+import { DecodedIdToken } from "firebase-admin/auth";
 
-admin.initializeApp();
 const db = admin.firestore();
 
 export const eventSignupIntake = functions.https.onRequest(async (req, res) => {
@@ -24,17 +24,21 @@ export const eventSignupIntake = functions.https.onRequest(async (req, res) => {
         return;
     }
     const idToken = auth.split("Bearer ")[1];
-    let decoded;
+    let decoded: DecodedIdToken;
     try {
         decoded = await admin.auth().verifyIdToken(idToken);
     } catch {
         res.status(401).send("Invalid token");
         return;
     }
-    const userId = decoded.uid;
+    const discord_id = decoded.discord_id;
+    if (!discord_id) {
+        res.status(400).send("discordId not found in user claims");
+        return;
+    }
 
     // Fetch DJ record
-    const djSnap = await db.collection("dj").where("discord_id", "==", userId).limit(1).get();
+    const djSnap = await db.collection("djs").where("discord_id", "==", discord_id).limit(1).get();
     if (djSnap.empty) {
         res.status(404).send("DJ record not found");
         return;
@@ -53,7 +57,7 @@ export const eventSignupIntake = functions.https.onRequest(async (req, res) => {
     const djRef: DocumentReference = djDoc.ref;
 
     // Fetch event
-    const eventRef = db.collection("event").doc(eventId);
+    const eventRef = db.collection("events").doc(eventId);
     const eventSnap = await eventRef.get();
     if (!eventSnap.exists) {
         res.status(404).send("Event not found");
@@ -80,7 +84,7 @@ export const eventSignupIntake = functions.https.onRequest(async (req, res) => {
             requested_duration: requestedDuration,
             type: type,
             uuid: uuidv4(),
-            //@ts-expect-error
+            // @ts-expect-error - Conflict between admin and client DocumentReference types
             dj_refs: [djRef],
             is_debut: is_debut,
         };
