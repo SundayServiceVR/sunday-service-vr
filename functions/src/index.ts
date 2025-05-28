@@ -41,4 +41,5 @@ export * from "./reconcileDjData";
 export * from "./reconcileEventData";
 export * from "./whiteboard";
 export * from "./discordAuth";
-export * from "./eventSignupIntake";
+export * from "./eventSignup/eventSignupIntake";
+export * from "./eventSignup/eventSignupGetEventAndDj";

@@ -1,4 +1,4 @@
-import { DocumentData } from "firebase/firestore";
+import { DocumentData, Timestamp } from "firebase/firestore";
 import { Slot, Event } from "../util/types";
 
 
@@ -29,18 +29,30 @@ export const docToEvent = (doc: DocumentData) => {
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const docToEventRaw = (data: any) => {
-  if (data) {
-      const event = {
-          ...data,
-          start_datetime: data.start_datetime.toDate(),
-          end_datetime: data.end_datetime?.toDate(),
-          published: data.published ?? false,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          slots: data.slots.map((slot: any) => ({ ...slot, start_time: slot.start_time.toDate() }) as Slot),
-          signups: data.signups ?? [],
-      } as Event;
 
-      return event;
+  if (!data) {
+    throw new Error("Event is null or undefined");
   }
-  return null;
+
+  return {
+      ...data,
+      start_datetime: extractDate(data.start_datetime),
+      end_datetime: extractDate(data.end_datetime),
+      published: data.published ?? false,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      slots: data.slots.map((slot: any) => ({ ...slot, start_time: extractDate(slot.start_time) }) as Slot),
+      signups: data.signups ?? [],
+  } as Event;
+}
+
+function extractDate(date: Date | Timestamp | string): Date {
+  if (date instanceof Date) {
+    return date;
+  } else if (date instanceof Timestamp) {
+    return date.toDate();
+  } else if (typeof date === "string") {
+    return new Date(date);
+  } else {
+    throw new Error("Invalid date format");
+  }
 }

@@ -25,7 +25,9 @@ import { DiscordRedirect } from './features/auth/DiscordRedirect';
 import RoleGuard from './components/roleGuard/roleGuard';
 
 import './App.css';
-import { EventSignupForm } from './features/eventSignup/EventSignup';
+import { EventSignupWizard } from './features/eventSignup/EventSignupWizard';
+import { EventSignupStart } from './features/eventSignup/EventSignupStart';
+import { EventSignupRoot } from './features/eventSignup/EventSignupRoot';
 
 
 function App() {
@@ -100,9 +102,20 @@ function App() {
           // TODO: Refactor so we don't have two FirebaseAuthProviders
           element: <FirebaseAuthProvider>
             <RoleGuard requireAnyRole={['dj', 'host']}>
-              <EventSignupForm />
+              <EventSignupRoot />
             </RoleGuard>
           </FirebaseAuthProvider>,
+
+          children: [
+            {
+              index: true,
+              element: <EventSignupStart />
+            }, {
+              path: "wizard",
+              element: <EventSignupWizard />
+            }
+ 
+          ]
         },
       ]
     },
