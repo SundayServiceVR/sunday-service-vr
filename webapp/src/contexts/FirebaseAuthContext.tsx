@@ -31,7 +31,7 @@ const FirebaseAuthProvider = ({ children }: Props) => {
   }, [user]);
 
 
-  if(user === undefined && authInstance === undefined) {
+  if(user === undefined || authInstance === undefined) {
     return <Spinner type="logo" />;
   }
 
@@ -40,7 +40,7 @@ const FirebaseAuthProvider = ({ children }: Props) => {
     return <div>Unauthorized</div>;
   }
 
-  if(user == undefined) {
+  if(user === null) {
       sessionStorage.setItem('preAuthRedirect', window.location.href);
     window.location.href = '/login';
     return (
