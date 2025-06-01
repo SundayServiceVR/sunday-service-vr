@@ -48,8 +48,8 @@ export const docToEventRaw = (data: any) => {
 function extractDate(date: Date | Timestamp | string): Date {
   if (date instanceof Date) {
     return date;
-  } else if (date instanceof Timestamp) {
-    return date.toDate();
+    } else if (typeof (date as Timestamp).toDate === "function") {
+    return (date as Timestamp).toDate();
   } else if (typeof date === "string") {
     return new Date(date);
   } else {

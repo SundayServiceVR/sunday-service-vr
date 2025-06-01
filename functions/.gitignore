@@ -10,3 +10,5 @@ node_modules/
 
 # Local Private Key
 local_admin_key.json
+
+.secret.local
