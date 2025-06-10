@@ -14,7 +14,7 @@ type Props = {
 }
 
 const FirebaseAuthProvider = ({ children }: Props) => {
-  const [user, setUser] = React.useState<User | false | null>();
+  const [user, setUser] = React.useState<User | null | "Pending">("Pending");
   const [authInstance, setAuthInstance] = React.useState<Auth>();
   const [roles, setRoles] = React.useState<string[]>();
   
@@ -31,22 +31,16 @@ const FirebaseAuthProvider = ({ children }: Props) => {
   }, [user]);
 
 
-  if(user === undefined || authInstance === undefined) {
+  if(user === "Pending") {
     return <Spinner type="logo" />;
   }
 
-  if(user === false) {
-
+  if(user === null) {
+    sessionStorage.setItem('preAuthRedirect', window.location.href);
+    window.location.href = '/login';
     return <div>Unauthorized</div>;
   }
 
-  if(user === null) {
-      sessionStorage.setItem('preAuthRedirect', window.location.href);
-    window.location.href = '/login';
-    return (
-      <div>Redirecting...</div>
-    );
-  }
 
   return (
     <FirebaseAuthContext.Provider value={{ user, auth: authInstance, roles }}>
