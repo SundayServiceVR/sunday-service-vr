@@ -41,15 +41,28 @@ export const docToEventRaw = (data: any) => {
       published: data.published ?? false,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       slots: data.slots.map((slot: any) => ({ ...slot, start_time: extractDate(slot.start_time) }) as Slot),
-      signups: data.signups ?? [],
+      signups: data.signups.map((signup: any) => ({
+        ...signup,
+        available_from: signup.event_signup_form_data.available_from !== "any" ? extractDate(signup.event_signup_form_data.available_from) : "any",
+        available_to: signup.event_signup_form_data.available_to !== "any" ? extractDate(signup.event_signup_form_data.available_to) : "any",
+      })),
   } as Event;
 }
 
-function extractDate(date: Date | Timestamp | string): Date {
+type TimestampShell = {
+  seconds: number;
+  nanoseconds: number;
+}
+
+function extractDate(date: Date | Timestamp | TimestampShell | string): Date {
   if (date instanceof Date) {
     return date;
-    } else if (typeof (date as Timestamp).toDate === "function") {
+  } else if (typeof (date as Timestamp).toDate === "function") {
     return (date as Timestamp).toDate();
+  } else if (typeof date === "object" && "seconds" in date && "nanoseconds" in date) {
+    // Assuming it's a Timestamp object
+    return new Timestamp(date.seconds, date.nanoseconds).toDate();
+    // return new Date((date as Timestamp).seconds * 1000 + (date as Timestamp).nanoseconds / 1e6);
   } else if (typeof date === "string") {
     return new Date(date);
   } else {

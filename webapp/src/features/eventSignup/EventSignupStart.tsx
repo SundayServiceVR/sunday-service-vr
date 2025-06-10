@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { useEventSignupOutletMembers } from "./outletContext";
 import { Card, Container } from "react-bootstrap";
 import { auth } from "../../util/firebase";
+import { getPrettyValueFromAvailability } from "./utils";
 
 export const EventSignupStart = () => {
   const { eventId } = useParams();
@@ -29,13 +30,13 @@ export const EventSignupStart = () => {
                 <Card.Text>
                   <ul>
                     <li><strong>Name:</strong> {signup.name}</li>
-                    <li><strong>Back to Back?:</strong> {signup.type}</li>
-                    <li><strong>Live/Prerecord:</strong> {signup.type}</li>
-                    <li><strong>Stream Link:</strong> NYI</li>
-                    <li><strong>Duration:</strong> {signup.requested_duration}</li>
-                    <li><strong>Available From:</strong> NYI</li>
-                    <li><strong>Available To:</strong> NYI</li>
-                    <li><strong>Notes:</strong> NYI</li>
+                    <li><strong>Back to Back?:</strong> {signup.event_signup_form_data?.is_b2b}</li>
+                    <li><strong>Live/Prerecord:</strong> {signup.event_signup_form_data?.type}</li>
+                    <li><strong>Stream Link:</strong> {signup.event_signup_form_data?.stream_link}</li>
+                    <li><strong>Duration:</strong> {signup.event_signup_form_data?.requested_duration}</li>
+                    <li><strong>Available From:</strong> {getPrettyValueFromAvailability(signup.event_signup_form_data?.available_from)}</li>
+                    <li><strong>Available To:</strong> {getPrettyValueFromAvailability(signup.event_signup_form_data?.available_to)}</li>
+                    <li><strong>Notes:</strong> {signup.event_signup_form_data?.dj_notes}</li>
                     {/* Add more fields as needed */}
                   </ul>
                 </Card.Text>

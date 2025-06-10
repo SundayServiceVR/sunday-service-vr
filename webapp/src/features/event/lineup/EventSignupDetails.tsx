@@ -1,5 +1,5 @@
 import { Col, Container, Form, InputGroup, Row, ToggleButton } from "react-bootstrap"
-import { SlotType, SlotDuration, EventSignup } from "../../../util/types"
+import { SlotType, SlotDuration, EventSignup, EventSignupFormData } from "../../../util/types"
 
 type Props = {
   signup: EventSignup,
@@ -81,7 +81,29 @@ const EventSlotDetails = ({signup, onUpdateSignup }: Props) => {
         />
       </Col>
     </Form.Group>
+    <Form.Group as={Row}>
+      <Form.Label column="sm" xs={12} md={3} className="text-md-end">
+        <strong>Availability</strong>
+      </Form.Label>
+      <Col className="d-flex align-items-center">
+        { availabilityTimeFormat(signup.event_signup_form_data?.available_from) }
+        -
+        { availabilityTimeFormat(signup.event_signup_form_data?.available_to) }
+      </Col>
+    </Form.Group>
   </Container>
+}
+
+const availabilityTimeFormat = (time: EventSignupFormData["available_from"] | EventSignupFormData["available_to"]) => {
+  if (!time) {
+    return "Unknown";
+  }
+
+  if (time === "any") {
+    return "Any Time";
+  }
+
+  return time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 }
 
 export default EventSlotDetails;

@@ -17,7 +17,7 @@ export const eventSignupGetEventAndDj = functions.https.onRequest(async (req, re
     }
 
 
-    // Fetch DJ record
+    // Fetch Event record
     const eventSnap = await db.collection("events").doc(event_id as string).get();
     if (!eventSnap.exists) {
         res.status(404).send("Event not found");

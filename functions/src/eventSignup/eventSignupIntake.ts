@@ -2,10 +2,10 @@ import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 
 import { v4 as uuidv4 } from "uuid";
-import { Dj, EventSignup, SlotType } from "../../../webapp/src/util/types";
+import { Dj, EventSignup, EventSignupFormData } from "../../../webapp/src/util/types";
 import { DocumentReference } from "firebase-admin/firestore";
 import { authenticate } from "../lib/authenticate";
-import { EventSignupFormData } from "../../../webapp/src/features/eventSignup/types";
+
 
 const db = admin.firestore();
 
@@ -46,32 +46,37 @@ export const eventSignupIntake = functions.https.onRequest(async (req, res) => {
         return;
     }
     const eventData = eventSnap.data();
-    const signups: EventSignup[] = eventData?.signups || [];
+
+    if(eventData === undefined) {
+        res.status(500).send("Event data is undefined");
+        return;
+    }
+
+    const signups: EventSignup[] | undefined = eventData.signups;
 
     // Check for existing signup by this DJ
-    const existingSignup = signups.find((s) => s.dj_refs && s.dj_refs.some((ref) => ref.path === djRef.path));
+    const existingSignup = signups?.find((s) => s.dj_refs && s.dj_refs.some((ref) => ref.path === djRef.path));
     if (existingSignup) {
-        // Update existing signup
-        existingSignup.name = form_data.dj_name ?? "Unknown Name";
-        existingSignup.requested_duration = form_data.requested_duration ?? 1;
-        existingSignup.type = form_data.type ?? SlotType.LIVE;
-        existingSignup.is_debut;
-        await eventRef.update({ signups });
+        existingSignup.event_signup_form_data = form_data;
+        await eventRef.update({ ...existingSignup });
         res.status(200).send("Signup updated");
         return;
     } else {
         // Create new signup
         const newSignup: EventSignup = {
-            name: form_data.dj_name ?? "Unknown Name",
-            requested_duration: form_data.requested_duration ?? 1,
-            type: form_data.type ?? SlotType.LIVE,
+            event_signup_form_data: form_data,
             uuid: uuidv4(),
             // @ts-expect-error - Conflict between admin and client DocumentReference types
             dj_refs: [djRef],
             is_debut: is_debut,
         };
-        signups.push(newSignup);
-        await eventRef.update({ signups });
+        if(!signups) {
+            eventData.signups = [newSignup]
+        } else {
+            signups.push(newSignup);
+        }
+
+        await eventRef.update({ ...eventData });
         res.status(201).send("Signup created");
         return;
     }

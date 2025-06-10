@@ -46,9 +46,26 @@ export type EventSignup = {
     uuid: string;
     dj_refs: DocumentReference[];
     is_debut: boolean;
+    event_signup_form_data?: EventSignupFormData;
     // maintainer_notes: string;
-
 }
+
+// Define the form data interface for all steps
+export interface EventSignupFormData {
+    event_id: string;
+    name?: string;
+    requested_duration?: SlotDuration;
+    type?: SlotType;
+
+    is_b2b?: string;
+    b2b_members_response?: string;
+    available_from?: Date | "any";
+    available_to?: Date | "any";
+    stream_link?: string;
+    confirm_expectations?: boolean;
+    dj_notes?: string;
+}
+
 
 export type Slot = {
 

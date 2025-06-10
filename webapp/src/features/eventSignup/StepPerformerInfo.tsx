@@ -1,6 +1,6 @@
 import React from "react";
 import { Container, Form } from "react-bootstrap";
-import { EventSignupFormData } from "./types";
+import { EventSignupFormData } from "../../util/types";
 
 interface Step1Props {
   formData: EventSignupFormData;
@@ -19,13 +19,13 @@ const StepPerformerInfo: React.FC<Step1Props> = ({ formData, onChange }) => {
         </Form.Select>
       </Form.Group>
 
-      <Form.Group className="mb-3" controlId="dj_name">
+      <Form.Group className="mb-3" controlId="name">
         <Form.Label>What is your {formData.is_b2b ? "Back to Back" : "Dj"} name?</Form.Label>
         <Form.Control
           type="text"
-          name="dj_name"
+          name="name"
           placeholder="Enter the name as it should appear on the lineup"
-          value={formData.dj_name}
+          value={formData.name}
           onChange={onChange}
           required
         />

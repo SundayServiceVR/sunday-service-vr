@@ -6,8 +6,10 @@ import StepPerformerInfo from "./StepPerformerInfo";
 import StepAvailability from "./StepAvailability";
 import StepStreamDetails from "./StepStreamDetails";
 import StepConfirmation from "./StepConfirmation";
-import { EventSignupFormData } from "./types.ts";
+
 import { useEventSignupOutletMembers } from "./outletContext.ts";
+import { Timestamp } from "firebase/firestore";
+import { EventSignupFormData } from "../../util/types.ts";
 
 export const EventSignupWizard = () => {
     const { eventId: event_id } = useParams();
@@ -25,17 +27,17 @@ export const EventSignupWizard = () => {
     );
 
     const [formData, setFormData] = React.useState<EventSignupFormData>({
-        event_id: event_id ?? "",
-        dj_name: existingSignup?.name ?? dj.dj_name,
+        event_id: existingSignup?.event_signup_form_data?.event_id ?? event_id ?? "",
+        name: existingSignup?.event_signup_form_data?.name ?? dj.dj_name,
         requested_duration: existingSignup?.requested_duration ?? undefined,
-        type: existingSignup?.type ?? undefined,
+        type: existingSignup?.event_signup_form_data?.type ?? undefined,
+        is_b2b: existingSignup?.event_signup_form_data?.is_b2b ? "true" : "false",
+        available_from: existingSignup?.event_signup_form_data?.available_from ?? "any",
         // streamLink: existingSignup?.stream_source_url ?? "",
         // is_b2b: existingSignup?.is_b2b ? "true" : "false",
         // availableFrom: existingSignup?.availableFrom ?? "",
         // availableTo: existingSignup?.availableTo ?? "",
         
-
-
     });
     const [validated, setValidated] = React.useState(false);
 
@@ -51,10 +53,16 @@ export const EventSignupWizard = () => {
     const handleChange = (e: React.ChangeEvent<HTMLElement>) => {
         const target = e.target as HTMLInputElement | HTMLSelectElement;
         const { name, value, type } = target;
-        let newValue: string | boolean = value;
+        
+        let newValue: string | boolean | Timestamp = value;
         if (type === "checkbox") {
             newValue = (target as HTMLInputElement).checked;
         }
+        
+        if(name === "available_from" || name === "available_to") {
+            newValue = Timestamp.fromDate(new Date(value));
+        }
+
         setFormData((prev) => ({
             ...prev,
             [name]: newValue,
