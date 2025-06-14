@@ -37,13 +37,13 @@ export type Event = {
 }
 
 export type EventSignup = {
-    name: string;
-    // submitter_discord_id: string;
-    requested_duration: SlotDuration;
-    type: SlotType;
-    // submitter_notes: string;
 
     uuid: string;
+
+    name: string;
+    requested_duration: SlotDuration;
+    type: SlotType;
+
     dj_refs: DocumentReference[];
     is_debut: boolean;
     event_signup_form_data?: EventSignupFormData;

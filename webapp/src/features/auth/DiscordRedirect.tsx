@@ -5,8 +5,7 @@ import { getAuth, signInWithCustomToken, updateProfile } from "firebase/auth";
 import { Dj } from '../../util/types';
 
 const DiscordRedirect = () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const [authRequest, setAuthRequest] = useState<Promise<any>>();
+    const [authRequest, setAuthRequest] = useState<Promise<void>>();
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
@@ -56,7 +55,7 @@ const DiscordRedirect = () => {
 
                 const redirectTarget = sessionStorage.getItem('preAuthRedirect') ?? `/`;
                 window.location.replace(redirectTarget);
-            } catch (error: any) {
+            } catch (error: Error | unknown) {
                 console.error('Error during Discord authentication:', error);
             }
         };

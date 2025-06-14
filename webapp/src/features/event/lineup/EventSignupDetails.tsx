@@ -1,4 +1,4 @@
-import { Col, Container, Form, InputGroup, Row, ToggleButton } from "react-bootstrap"
+import { Alert, Col, Container, Form, InputGroup, Row, ToggleButton } from "react-bootstrap"
 import { SlotType, SlotDuration, EventSignup, EventSignupFormData } from "../../../util/types"
 
 type Props = {
@@ -6,7 +6,7 @@ type Props = {
   onUpdateSignup: (signup: EventSignup) => void,
 }
 
-const EventSlotDetails = ({signup, onUpdateSignup }: Props) => {
+const EventSlotDetails = ({ signup, onUpdateSignup }: Props) => {
   return <Container>
     <Form.Group as={Row} className="mb-1">
       <Form.Label column="sm" sm={3} className="text-md-end">
@@ -14,11 +14,11 @@ const EventSlotDetails = ({signup, onUpdateSignup }: Props) => {
       </Form.Label>
       <Col>
         <Form.Control
-              size="sm"
-              value={signup.name}
-              defaultValue={1}
-              onChange={(event) => { onUpdateSignup({ ...signup, name: event.target.value }) }}
-                        />
+          size="sm"
+          value={signup.name}
+          defaultValue={1}
+          onChange={(event) => { onUpdateSignup({ ...signup, name: event.target.value }) }}
+        />
       </Col>
     </Form.Group>
     <Form.Group as={Row}>
@@ -81,16 +81,49 @@ const EventSlotDetails = ({signup, onUpdateSignup }: Props) => {
         />
       </Col>
     </Form.Group>
-    <Form.Group as={Row}>
+    {
+      signup.event_signup_form_data && 
+        <Form.Group as={Row}>
+          <Form.Label column="sm" xs={12} md={3} className="text-md-end">
+            <strong>Availability</strong>
+          </Form.Label>
+          <Col className="d-flex align-items-center">
+            {availabilityTimeFormat(signup.event_signup_form_data?.available_from)}
+            -
+            {availabilityTimeFormat(signup.event_signup_form_data?.available_to)}
+          </Col>
+      </Form.Group>
+    }
+
+    {
+      signup.event_signup_form_data?.dj_notes && 
+      <Form.Group as={Row}>
       <Form.Label column="sm" xs={12} md={3} className="text-md-end">
-        <strong>Availability</strong>
+        <strong>Dj Notes</strong>
       </Form.Label>
       <Col className="d-flex align-items-center">
-        { availabilityTimeFormat(signup.event_signup_form_data?.available_from) }
-        -
-        { availabilityTimeFormat(signup.event_signup_form_data?.available_to) }
+        {signup.event_signup_form_data?.dj_notes}
       </Col>
     </Form.Group>
+    }
+
+    {
+      signup.event_signup_form_data?.is_b2b &&
+      <>
+        <Form.Group as={Row}>
+          <Form.Label column="sm" xs={12} md={3} className="text-md-end">
+            <strong>B2B With</strong>
+          </Form.Label>
+          <Col className="d-flex align-items-center">
+            {signup.event_signup_form_data?.b2b_members_response}
+          </Col>
+        </Form.Group>
+        <Alert variant="warning mt-2">
+          Please make sure to to add other B2B DJs to this slot to be tracked.
+        </Alert>
+      </>
+    }
+
   </Container>
 }
 
@@ -102,6 +135,7 @@ const availabilityTimeFormat = (time: EventSignupFormData["available_from"] | Ev
   if (time === "any") {
     return "Any Time";
   }
+
 
   return time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 }

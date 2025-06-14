@@ -1,5 +1,5 @@
 import { DocumentData, Timestamp } from "firebase/firestore";
-import { Slot, Event } from "../util/types";
+import { Slot, Event, EventSignup } from "../util/types";
 
 
 // Any is used here because we literally aren't sure of the shape that's stored in the db.
@@ -41,11 +41,15 @@ export const docToEventRaw = (data: any) => {
       published: data.published ?? false,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       slots: data.slots.map((slot: any) => ({ ...slot, start_time: extractDate(slot.start_time) }) as Slot),
-      signups: data.signups.map((signup: any) => ({
+      signups: data.signups.map((signup: EventSignup) => ({
         ...signup,
-        available_from: extractDateOrAny(signup?.event_signup_form_data?.available_from),
-        available_to: extractDateOrAny(signup?.event_signup_form_data?.available_to),
-      })),
+        event_signup_form_data : {
+          ...signup.event_signup_form_data,
+          available_from: extractDateOrAny(signup?.event_signup_form_data?.available_from),
+          available_to: extractDateOrAny(signup?.event_signup_form_data?.available_to),
+        },
+      }
+    )),
   } as Event;
 }
 
@@ -70,7 +74,7 @@ if (date instanceof Date) {
   }
 }
 
-function extractDateOrAny(date: Date | Timestamp | TimestampShell | string): Date | string {
+function extractDateOrAny(date: Date | Timestamp | TimestampShell | string | undefined): Date | string {
   if(date === undefined) {
     return "any"
   } else if (date === "any") {

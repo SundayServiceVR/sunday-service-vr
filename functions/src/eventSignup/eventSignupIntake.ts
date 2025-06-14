@@ -56,9 +56,20 @@ export const eventSignupIntake = functions.https.onRequest(async (req, res) => {
 
     // Check for existing signup by this DJ
     const existingSignup = signups?.find((s) => s.dj_refs && s.dj_refs.some((ref) => ref.path === djRef.path));
-    
+
     if (existingSignup) {
         existingSignup.event_signup_form_data = form_data;
+
+        const index = signups?.findIndex((s) => s.uuid === existingSignup.uuid);
+        
+        if(signups) {
+            if (index !== undefined && index !== -1) {
+                signups[index] = extractSignupData(existingSignup);
+            }
+        } else {
+            eventData.signups = [extractSignupData(existingSignup)];
+        }
+
 
         await eventRef.update(eventData);
         res.status(200).send("Signup updated");
@@ -72,10 +83,13 @@ export const eventSignupIntake = functions.https.onRequest(async (req, res) => {
             dj_refs: [djRef],
             is_debut: is_debut,
         };
+
+
+        
         if(!signups) {
-            eventData.signups = [newSignup]
+            eventData.signups = [ extractSignupData(newSignup)]
         } else {
-            signups.push(newSignup);
+            signups.push(extractSignupData(newSignup));
         }
 
         await eventRef.update(eventData);
@@ -83,3 +97,12 @@ export const eventSignupIntake = functions.https.onRequest(async (req, res) => {
         return;
     }
 });
+
+const extractSignupData = (signup: EventSignup): EventSignup => {
+    return {
+        ...signup,
+        name: signup.event_signup_form_data?.name ?? signup.name,
+        requested_duration: signup.event_signup_form_data?.requested_duration ?? signup.requested_duration,
+        type: signup.event_signup_form_data?.type ?? signup.type,
+    };
+}
