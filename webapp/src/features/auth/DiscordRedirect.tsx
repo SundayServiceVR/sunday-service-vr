@@ -30,6 +30,17 @@ const DiscordRedirect = () => {
                 });
 
                 if (!response.ok) {
+
+                    if (response.status != undefined) {
+                        if (response.status === 403) {
+                            setError('You are not authorized to access this application.');
+                        } else if (response.status === 404 && process.env.NODE_ENV !== 'production') {
+                            setError("Authorization function hasn't started yet.");
+                        } else {
+                            setError('Authentication failed. Please try again.');
+                        }
+                    }
+
                     throw new Error('Failed to authenticate with Discord');
                 }
 
@@ -45,9 +56,8 @@ const DiscordRedirect = () => {
 
                 const redirectTarget = sessionStorage.getItem('preAuthRedirect') ?? `/`;
                 window.location.replace(redirectTarget);
-            } catch (error) {
+            } catch (error: any) {
                 console.error('Error during Discord authentication:', error);
-                setError('Authentication failed. Please try again.');
             }
         };
 
