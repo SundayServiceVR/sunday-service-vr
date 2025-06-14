@@ -1,7 +1,7 @@
 import { Timestamp } from "firebase/firestore";
 
 export function getHourOptionFromAvailability(availability: Date | Timestamp | "any" | undefined) {
-    if(availability === undefined || availability === "any") {
+    if(availability === undefined || availability === "any" || (availability instanceof Timestamp && (Number.isNaN(availability.seconds) || Number.isNaN(availability.nanoseconds)))) {
       return "any";
     }
 
@@ -9,7 +9,7 @@ export function getHourOptionFromAvailability(availability: Date | Timestamp | "
         return availability.toISOString(); // "HH:mm"
     }
   
-    return availability.toDate().toISOString(); // "YYYY-MM-DDTHH:mm"
+    return new Timestamp(availability.seconds, availability.nanoseconds).toDate().toISOString(); // "YYYY-MM-DDTHH:mm"
   
   }
 
@@ -26,5 +26,6 @@ export function getHourOptionFromAvailability(availability: Date | Timestamp | "
 
     }
 
-    return availability.toDate().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+
+    return new Timestamp(availability.seconds, availability.nanoseconds).toDate().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
   }

@@ -1,6 +1,7 @@
 import React from "react";
 import { Container, Form } from "react-bootstrap";
-import { EventSignupFormData } from "./types";
+import { EventSignupFormData } from "../../../util/types";
+
 
 interface Step3Props {
   formData: EventSignupFormData;
@@ -21,15 +22,15 @@ const EventSignupStep3: React.FC<Step3Props> = ({ formData, onChange }) => (
         </Form.Select>
       </Form.Group>
       { formData.type === "LIVE" && (
-        <Form.Group className="mb-3" controlId="streamLink">
-        <Form.Label>Stream Link</Form.Label>
-        <Form.Control
-          type="url"
-          name="streamLink"
-          placeholder="Enter your stream link"
-          value={formData.streamLink || ""}
-          onChange={onChange}
-          required
+        <Form.Group className="mb-3" controlId="stream_link">
+          <Form.Label>Stream Link</Form.Label>
+          <Form.Control
+            type="url"
+            name="stream_link"
+            placeholder="Enter your stream link"
+            value={formData.stream_link || ""}
+            onChange={onChange}
+            required
         />
       </Form.Group>
     )}

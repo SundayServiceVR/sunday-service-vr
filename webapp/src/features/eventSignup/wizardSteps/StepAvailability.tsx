@@ -1,10 +1,10 @@
 import React from "react";
 import { Container, Form } from "react-bootstrap";
 
-import { useEventSignupOutletMembers } from "./outletContext";
-import { getHourOptionFromAvailability } from "./utils";
+import { useEventSignupOutletMembers } from "../outletContext";
+import { getHourOptionFromAvailability } from "../utils";
 import { Timestamp } from "firebase/firestore";
-import { EventSignupFormData } from "../../util/types";
+import { EventSignupFormData } from "../../../util/types";
 
 interface Step2Props {
   formData: EventSignupFormData;

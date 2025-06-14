@@ -2,10 +2,10 @@ import React from "react";
 import { Container, Form, Button, ProgressBar } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router";
 import { auth } from "../../util/firebase";
-import StepPerformerInfo from "./StepPerformerInfo";
-import StepAvailability from "./StepAvailability";
-import StepStreamDetails from "./StepStreamDetails";
-import StepConfirmation from "./StepConfirmation";
+import StepPerformerInfo from "./wizardSteps/StepPerformerInfo.tsx";
+import StepAvailability from "./wizardSteps/StepAvailability.tsx";
+import StepStreamDetails from "./wizardSteps/StepStreamDetails.tsx";
+import StepConfirmation from "./wizardSteps/StepConfirmation.tsx";
 
 import { useEventSignupOutletMembers } from "./outletContext.ts";
 import { Timestamp } from "firebase/firestore";
@@ -15,7 +15,7 @@ export const EventSignupWizard = () => {
     const { eventId: event_id } = useParams();
     const [toastMsg, setToastMsg] = React.useState<string | null>(null);
     const [step, setStep] = React.useState(0);
-    const { dj, event } = useEventSignupOutletMembers();
+    const { dj, event, loadEvent } = useEventSignupOutletMembers();
 
     const navigate = useNavigate();
 
@@ -26,18 +26,21 @@ export const EventSignupWizard = () => {
         })
     );
 
+    const defaultFormData = {
+        event_id: event_id ?? "",
+        name: dj.dj_name,
+        requested_duration: undefined,
+        type: undefined,
+        is_b2b: false,
+        available_from: "any",
+        available_to: "any",
+    };
+
     const [formData, setFormData] = React.useState<EventSignupFormData>({
-        event_id: existingSignup?.event_signup_form_data?.event_id ?? event_id ?? "",
-        name: existingSignup?.event_signup_form_data?.name ?? dj.dj_name,
-        requested_duration: existingSignup?.requested_duration ?? undefined,
-        type: existingSignup?.event_signup_form_data?.type ?? undefined,
-        is_b2b: existingSignup?.event_signup_form_data?.is_b2b ? "true" : "false",
+        ...defaultFormData,
+        ...existingSignup?.event_signup_form_data,
         available_from: existingSignup?.event_signup_form_data?.available_from ?? "any",
-        // streamLink: existingSignup?.stream_source_url ?? "",
-        // is_b2b: existingSignup?.is_b2b ? "true" : "false",
-        // availableFrom: existingSignup?.availableFrom ?? "",
-        // availableTo: existingSignup?.availableTo ?? "",
-        
+        available_to: existingSignup?.event_signup_form_data?.available_to ?? "any",
     });
     const [validated, setValidated] = React.useState(false);
 
@@ -54,13 +57,27 @@ export const EventSignupWizard = () => {
         const target = e.target as HTMLInputElement | HTMLSelectElement;
         const { name, value, type } = target;
         
-        let newValue: string | boolean | Timestamp = value;
+        let newValue: string | number | boolean | Timestamp = value;
+
+        // Handle checkbox inputs
         if (type === "checkbox") {
             newValue = (target as HTMLInputElement).checked;
         }
         
+        // Handle specific cases for date fields
         if(name === "available_from" || name === "available_to") {
             newValue = Timestamp.fromDate(new Date(value));
+        }
+
+        // TODO:  Convert this to 'yes' and 'no' to avoid having to translate between 1/0 and true/false
+        // Handle specific cases for boolean values
+        if(name === "is_b2b") {
+            newValue = (value === "1") ? true : false;
+        }
+
+        // Handle specific cases for numbers
+        if(name === "requested_duration") {
+            newValue = parseFloat(value) as EventSignupFormData["requested_duration"] ?? 1;
         }
 
         setFormData((prev) => ({
@@ -128,6 +145,7 @@ export const EventSignupWizard = () => {
             });
             
             if(response.ok) {
+                await loadEvent();
                 navigate(`/eventSignup/${event_id}`);
             } else {
                 setToastMsg(`Response status: ${response.status}`);

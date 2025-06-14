@@ -1,9 +1,8 @@
-
 import { Link, useParams } from "react-router-dom";
 import { useEventSignupOutletMembers } from "./outletContext";
-import { Card, Container } from "react-bootstrap";
+import { Container } from "react-bootstrap";
 import { auth } from "../../util/firebase";
-import { getPrettyValueFromAvailability } from "./utils";
+import EventSignupPreview from "./EventSignupPreview";
 
 export const EventSignupStart = () => {
   const { eventId } = useParams();
@@ -17,37 +16,12 @@ export const EventSignupStart = () => {
   // The event should be sanitized of all signups other than the current DJ via the google cloud function.
   if (event.signups.length > 0) {
 
-    return <Container className="mt-4 background-white shadow p-4">
+    return <Container className="mt-4 bg-white shadow p-4">
       <h2 className="display-4">You are signed up for {event.name} ({event.start_datetime.toLocaleDateString()})!</h2>
 
       {signup && (
         <div className="my-3">
-          <Card>
-            <Card.Header className="bg-secondary text-white">
-            <Card.Title>Submission:</Card.Title>
-            </Card.Header>
-              <Card.Body>
-                <Card.Text>
-                  <ul>
-                    <li><strong>Name:</strong> {signup.name}</li>
-                    <li><strong>Back to Back?:</strong> {signup.event_signup_form_data?.is_b2b}</li>
-                    <li><strong>Live/Prerecord:</strong> {signup.event_signup_form_data?.type}</li>
-                    <li><strong>Stream Link:</strong> {signup.event_signup_form_data?.stream_link}</li>
-                    <li><strong>Duration:</strong> {signup.event_signup_form_data?.requested_duration}</li>
-                    <li><strong>Available From:</strong> {getPrettyValueFromAvailability(signup.event_signup_form_data?.available_from)}</li>
-                    <li><strong>Available To:</strong> {getPrettyValueFromAvailability(signup.event_signup_form_data?.available_to)}</li>
-                    <li><strong>Notes:</strong> {signup.event_signup_form_data?.dj_notes}</li>
-                    {/* Add more fields as needed */}
-                  </ul>
-                </Card.Text>
-              </Card.Body>
-              <Card.Footer className="text-center">
-                <Link to={`/eventSignup/${eventId}/wizard`} className="btn btn-primary btn-lg">
-                Update Signup
-              </Link>
-              </Card.Footer>
-          </Card>
-
+          <EventSignupPreview signup={signup} eventId={eventId!} />
         </div>
       )}
 

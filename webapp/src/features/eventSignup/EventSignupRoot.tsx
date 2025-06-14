@@ -15,13 +15,15 @@ export const EventSignupRoot = () => {
   const { eventId } = useParams<{ eventId?: string }>();
 
   useEffect(() => {
+    loadEvent();
+  }, [eventId]);
+
+  const loadEvent =  async () => {
     if(!eventId) {
       setError("No event ID provided.");
       return;
     }
-    setLoading(true);
-    (async () => {
-
+      setLoading(true);
       const origin = process.env.NODE_ENV === "development"
         ? "http://localhost:5001"
         : window.location.origin;
@@ -52,8 +54,7 @@ export const EventSignupRoot = () => {
       } finally {
         setLoading(false);
       }
-    })();
-  }, [eventId]);
+    };
 
   if (loading) {
     return <Spinner type="logo" />;
@@ -69,6 +70,6 @@ export const EventSignupRoot = () => {
 
 
   return <>
-    <Outlet context={{event, dj}} />
+    <Outlet context={{event, dj, loadEvent}} />
   </>
 }

@@ -1,6 +1,6 @@
 import React from "react";
 import { Container, Form } from "react-bootstrap";
-import { EventSignupFormData } from "../../util/types";
+import { EventSignupFormData } from "../../../util/types";
 
 interface Step3Props {
   formData: EventSignupFormData;

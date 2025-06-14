@@ -43,8 +43,8 @@ export const docToEventRaw = (data: any) => {
       slots: data.slots.map((slot: any) => ({ ...slot, start_time: extractDate(slot.start_time) }) as Slot),
       signups: data.signups.map((signup: any) => ({
         ...signup,
-        available_from: signup.event_signup_form_data.available_from !== "any" ? extractDate(signup.event_signup_form_data.available_from) : "any",
-        available_to: signup.event_signup_form_data.available_to !== "any" ? extractDate(signup.event_signup_form_data.available_to) : "any",
+        available_from: extractDateOrAny(signup?.event_signup_form_data?.available_from),
+        available_to: extractDateOrAny(signup?.event_signup_form_data?.available_to),
       })),
   } as Event;
 }
@@ -55,7 +55,7 @@ type TimestampShell = {
 }
 
 function extractDate(date: Date | Timestamp | TimestampShell | string): Date {
-  if (date instanceof Date) {
+if (date instanceof Date) {
     return date;
   } else if (typeof (date as Timestamp).toDate === "function") {
     return (date as Timestamp).toDate();
@@ -67,5 +67,17 @@ function extractDate(date: Date | Timestamp | TimestampShell | string): Date {
     return new Date(date);
   } else {
     throw new Error("Invalid date format");
+  }
+}
+
+function extractDateOrAny(date: Date | Timestamp | TimestampShell | string): Date | string {
+  if(date === undefined) {
+    return "any"
+  } else if (date === "any") {
+    return "any"
+  } else if (date instanceof Date) {
+    return date;
+  } else {
+    return extractDate(date);
   }
 }

@@ -57,7 +57,7 @@ export interface EventSignupFormData {
     requested_duration?: SlotDuration;
     type?: SlotType;
 
-    is_b2b?: string;
+    is_b2b?: boolean;
     b2b_members_response?: string;
     available_from?: Date | "any";
     available_to?: Date | "any";

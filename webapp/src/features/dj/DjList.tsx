@@ -8,6 +8,7 @@ import { docToRawType } from "../../store/util";
 
 import Spinner from "../../components/spinner/Spinner";
 import { getAllEvents } from "../../store/events";
+import toast from "react-hot-toast";
 
 type Props = {
     past?: boolean;
@@ -53,16 +54,23 @@ const DjList = ({ past = false }: Props) => {
     useEffect(() => {
         setLoading(true);
         (async () => {
-            const { djs: djMap, events } = await fetchData();
+            try {
+                const { djs: djMap, events } = await fetchData();
 
-            events.forEach(event => {
-                event.dj_plays.forEach(djRef => {
-                    djMap.get(djRef.id)?.events.push(event);
-                })
-            });
-            setEarliestEvent(events[events.length - 1] ?? null);
-            setDjs(djMap);
-            setLoading(false);
+                events.forEach(event => {
+                    event.dj_plays.forEach(djRef => {
+                        djMap.get(djRef.id)?.events.push(event);
+                    });
+                });
+                setEarliestEvent(events[events.length - 1] ?? null);
+                setDjs(djMap);
+
+                setLoading(false);
+            } catch (error) {
+                setLoading(false);
+                toast.error("Problem loading djs.  Please yell at windy in the coordination channel.");
+                throw error; // Rethrow the error to allow it to bubble up to an error boundary
+            }
         })()
     }, [past]);
 

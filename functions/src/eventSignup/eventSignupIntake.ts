@@ -56,9 +56,11 @@ export const eventSignupIntake = functions.https.onRequest(async (req, res) => {
 
     // Check for existing signup by this DJ
     const existingSignup = signups?.find((s) => s.dj_refs && s.dj_refs.some((ref) => ref.path === djRef.path));
+    
     if (existingSignup) {
         existingSignup.event_signup_form_data = form_data;
-        await eventRef.update({ ...existingSignup });
+
+        await eventRef.update(eventData);
         res.status(200).send("Signup updated");
         return;
     } else {
@@ -76,7 +78,7 @@ export const eventSignupIntake = functions.https.onRequest(async (req, res) => {
             signups.push(newSignup);
         }
 
-        await eventRef.update({ ...eventData });
+        await eventRef.update(eventData);
         res.status(201).send("Signup created");
         return;
     }
