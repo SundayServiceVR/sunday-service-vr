@@ -103,7 +103,7 @@ async function getDiscordGuildMember(access_token: string): Promise<APIGuildMemb
     // Fetch the user's Discord profile information
     const guildId = "1004489038159413248";
     const url = `/users/@me/guilds/${guildId}/member`;
-    
+
     return await discordApiRequest(url, access_token) as unknown as APIGuildMember;
 }
 
