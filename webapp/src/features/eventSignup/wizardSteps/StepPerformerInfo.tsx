@@ -44,7 +44,7 @@ const StepPerformerInfo: React.FC<Step1Props> = ({ formData, onChange }) => {
         </Form.Group>
       )}
       <Form.Group className="mb-3" controlId="requested_duration">
-        <Form.Label>How long will your performance be {formData.requested_duration}?</Form.Label>
+        <Form.Label>How long will your performance be?</Form.Label>
         <Form.Select name="requested_duration" value={formData.requested_duration?.toString() || ""} onChange={onChange} required>
           <option value="" disabled>Select duration</option>
           <option value={"1"}>One Hour</option>
