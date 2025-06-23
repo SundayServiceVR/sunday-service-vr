@@ -129,7 +129,7 @@ export const EventSignupWizard = () => {
             setValidated(true);
             return;
         }
-        let endpoint = "/eventSignupIntake";
+        let endpoint = "https://eventsignupintake-diczrrhb6a-uc.a.run.app/eventSignupIntake";
         if (process.env.NODE_ENV === "development") {
             endpoint = "http://localhost:5001/sunday-service-vr/us-central1/eventSignupIntake";
         }
