@@ -47,7 +47,7 @@ export const eventSignupIntake = functions.https.onRequest(async (req, res) => {
     }
     const eventData = eventSnap.data();
 
-    if(eventData === undefined) {
+    if (eventData === undefined) {
         res.status(500).send("Event data is undefined");
         return;
     }
@@ -61,8 +61,8 @@ export const eventSignupIntake = functions.https.onRequest(async (req, res) => {
         existingSignup.event_signup_form_data = form_data;
 
         const index = signups?.findIndex((s) => s.uuid === existingSignup.uuid);
-        
-        if(signups) {
+
+        if (signups) {
             if (index !== undefined && index !== -1) {
                 signups[index] = extractSignupData(existingSignup);
             }
@@ -85,9 +85,8 @@ export const eventSignupIntake = functions.https.onRequest(async (req, res) => {
         };
 
 
-        
-        if(!signups) {
-            eventData.signups = [ extractSignupData(newSignup)]
+        if (!signups) {
+            eventData.signups = [extractSignupData(newSignup)];
         } else {
             signups.push(extractSignupData(newSignup));
         }
@@ -105,4 +104,4 @@ const extractSignupData = (signup: EventSignup): EventSignup => {
         requested_duration: signup.event_signup_form_data?.requested_duration ?? signup.requested_duration,
         type: signup.event_signup_form_data?.type ?? signup.type,
     };
-}
+};
