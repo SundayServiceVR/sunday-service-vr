@@ -23,7 +23,7 @@ export const EventSignupRoot = () => {
     setLoading(true);
     const origin = process.env.NODE_ENV === "development"
       ? "http://localhost:5001"
-      : "https://sunday-service-vr.web.app/";
+      : "https://eventsignupgeteventanddj-diczrrhb6a-uc.a.run.app/";
       // : window.location.origin;
 
     const endpoint = "/sunday-service-vr/us-central1/eventSignupGetEventAndDj"
