@@ -3,17 +3,13 @@ import * as functions from "firebase-functions";
 import { authenticate } from "../lib/authenticate";
 import { allowMethod } from "../lib/allowMethod";
 import { docToEvent } from "../../../webapp/src/store/converters";
+import corsOptions from "./corsOptions";
 
 const db = admin.firestore();
 
 export const eventSignupGetEventAndDj = functions.https.onRequest(
     {
-        cors: [
-            "localhost",
-            /^https:\/\/sunday-service-vr-[^.]+\.web\.app$/,
-            "https://sunday-service-vr.web.app",
-            "https://s4tan.s4vr.net",
-        ],
+        ...corsOptions,
     },
     async (req, res) => {
         allowMethod(req, res, "GET");

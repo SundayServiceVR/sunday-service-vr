@@ -5,11 +5,15 @@ import { v4 as uuidv4 } from "uuid";
 import { Dj, EventSignup, EventSignupFormData } from "../../../webapp/src/util/types";
 import { DocumentReference } from "firebase-admin/firestore";
 import { authenticate } from "../lib/authenticate";
+import corsOptions from "./corsOptions";
 
 
 const db = admin.firestore();
 
-export const eventSignupIntake = functions.https.onRequest(async (req, res) => {
+export const eventSignupIntake = functions.https.onRequest( {
+    ...corsOptions,
+}
+, async (req, res) => {
     if (req.method !== "POST") {
         res.status(405).send("Method Not Allowed");
         return;
