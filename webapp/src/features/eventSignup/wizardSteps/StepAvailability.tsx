@@ -67,7 +67,7 @@ const StepAvailability: React.FC<Step2Props> = ({ formData, onChange }) => (
 
     const start = new Date(event.start_datetime);
     const options = [];
-    for (let i = 0; i <= 8; i++) {
+    for (let i = 0; i <= 6; i++) {
       const optionDate = new Date(start.getTime() + i * 60 * 60 * 1000);
       const value = Timestamp.fromDate(optionDate).toDate().toISOString();
       const label = optionDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
