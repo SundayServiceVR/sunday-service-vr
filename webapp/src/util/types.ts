@@ -1,4 +1,10 @@
+// You probably don't want to use this:
+//
 import { DocumentReference } from "firebase/firestore";
+//
+// Attempting to use the DocumentReference type from the firebase library will result in type errors
+// when creating references with firebase-admin (in functions).  This type plays nicely with both
+// the client and admin library.
 
 export type Dj = {
 
@@ -31,18 +37,35 @@ export type Event = {
 }
 
 export type EventSignup = {
-    name: string;
-    // submitter_discord_id: string;
-    requested_duration: SlotDuration;
-    type: SlotType;
-    // submitter_notes: string;
 
     uuid: string;
+
+    name: string;
+    requested_duration: SlotDuration;
+    type: SlotType;
+
     dj_refs: DocumentReference[];
     is_debut: boolean;
+    event_signup_form_data?: EventSignupFormData;
     // maintainer_notes: string;
-
 }
+
+// Define the form data interface for all steps
+export interface EventSignupFormData {
+    event_id: string;
+    name?: string;
+    requested_duration?: SlotDuration;
+    type?: SlotType;
+
+    is_b2b?: boolean;
+    b2b_members_response?: string;
+    available_from?: Date | "any";
+    available_to?: Date | "any";
+    stream_link?: string;
+    confirm_expectations?: boolean;
+    dj_notes?: string;
+}
+
 
 export type Slot = {
 

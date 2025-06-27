@@ -83,7 +83,7 @@ export const discordAuth = onRequest(
 
         // Generate a custom Firebase token
         const roles = synced_dj_data.roles?.map((role: AppUserRole) => role.role) || []; // Default to "dj" if no roles are found
-        const firebaseToken = await admin.auth().createCustomToken(djDocId, { roles });
+        const firebaseToken = await admin.auth().createCustomToken(djDocId, { roles, discord_id: synced_dj_data.discord_id });
 
         res.status(200).send({
             firebase_token: firebaseToken,
@@ -103,6 +103,7 @@ async function getDiscordGuildMember(access_token: string): Promise<APIGuildMemb
     // Fetch the user's Discord profile information
     const guildId = "1004489038159413248";
     const url = `/users/@me/guilds/${guildId}/member`;
+
     return await discordApiRequest(url, access_token) as unknown as APIGuildMember;
 }
 
