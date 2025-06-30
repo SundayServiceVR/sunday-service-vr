@@ -16,9 +16,9 @@ const EventSignupStep3: React.FC<Step3Props> = ({ formData, onChange }) => (
       <Form.Group className="mb-3" controlId="type">
         <Form.Label>Live or Prerecord</Form.Label>
         <Form.Select name="type" value={formData.type || ""} onChange={onChange} required>
-          <option value="" disabled />
+          <option value=""/>
           <option value="LIVE">Live</option>
-          <option value="PRERECORD" disabled>Prerecord</option>
+          <option value="PRERECORD">Prerecord</option>
         </Form.Select>
       </Form.Group>
       { formData.type === "LIVE" && (

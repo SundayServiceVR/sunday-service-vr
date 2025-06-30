@@ -68,7 +68,14 @@ export const EventSignupRoot = () => {
     return <div>Event or DJ data not found.</div>;
   }
 
-
+  if( !event.signupsAreOpen) {
+    return <div style={{ textAlign: "center", marginTop: "3rem" }}>
+      <h2 style={{ color: "#b71c1c" }}>Signups Closed</h2>
+      <p style={{ fontSize: "1.2rem" }}>
+        Signups for this event are currently closed.
+      </p>
+    </div>
+  }
 
   return <>
     <Outlet context={{ event, dj, loadEvent }} />
