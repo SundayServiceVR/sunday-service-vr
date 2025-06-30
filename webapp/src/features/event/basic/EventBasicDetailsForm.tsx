@@ -50,7 +50,20 @@ const EventBasicDetailsForm = ({ event: eventScratchpad, onEventChange: proposeE
                 onChange={(formEvent) => { proposeEventChange({ ...eventScratchpad, host: formEvent.target.value }); }}
             />
         </Form.Group>
-       
+               <Form.Group className="mt-2">
+            <Form.Label>
+                Signups Open
+            </Form.Label>
+            <Form.Check
+                type="switch"
+                checked={eventScratchpad.signupsAreOpen}
+                required
+                onChange={(formEvent) => { 
+                    const checked = (formEvent.target as HTMLInputElement).checked;
+                    proposeEventChange({ ...eventScratchpad, signupsAreOpen: checked }); 
+                }}
+            />
+        </Form.Group>
     </Form>
     </>
 

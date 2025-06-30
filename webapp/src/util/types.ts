@@ -32,7 +32,10 @@ export type Event = {
     host: string;
     slots: Slot[];
     footer: string;
+
+    signupsAreOpen?: boolean;
     signups: EventSignup[]
+
     dj_plays: DocumentReference[],
 }
 
