@@ -25,7 +25,7 @@ export const EventSignupStart = () => {
         </div>
       )}
 
-      <p className="text-center mt-4">If there are questions, this should be a link to the discord channel.</p>
+      <p className="text-center mt-4">If there are questions, please contact Windy the Deer in discord.</p>
       
     </Container>
   }
