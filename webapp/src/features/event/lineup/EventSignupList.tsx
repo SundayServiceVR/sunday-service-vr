@@ -108,7 +108,7 @@ const EventSignupList = ({
         </ButtonGroup>
       </div>
 
-      <Stack gap={1}>
+      <Stack gap={3}>
         {sortedSignups.map((signup) => (
           <EventSignupEntry
             key={signup.uuid}
