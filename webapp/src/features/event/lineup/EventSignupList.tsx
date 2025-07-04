@@ -97,7 +97,7 @@ const EventSignupList = ({
             variant={sortBy === "default" ? "primary" : "outline-primary"}
             onClick={() => setSortBy("default")}
           >
-            Default
+            Signup Order
           </Button>
           <Button 
             variant={sortBy === "recent" ? "primary" : "outline-primary"}
