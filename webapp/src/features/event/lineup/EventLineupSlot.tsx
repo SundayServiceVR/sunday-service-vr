@@ -1,8 +1,10 @@
-import { Stack, Button, Container, Row, Col, } from "react-bootstrap";
+import { Stack, Button, Container, Row, Col } from "react-bootstrap";
 import { Slot, Event, EventSignup } from "../../../util/types";
 import { ActionMenu } from "../../../components/actionMenu/ActionMenu";
-import { ArrowDown, ArrowUp } from "react-feather";
+import { ArrowDown, ArrowUp, AlertTriangle, Clock } from "react-feather";
 import EventSlotDetails from "./EventSignupDetails";
+import { hasAvailabilityConflict } from "../util";
+import { getPrettyValueFromAvailability } from "../../eventSignup/utils";
 
 type Props = {
     index: number,
@@ -25,14 +27,31 @@ const EventLineupSlot = ({
     onSlotMoveLater,
     onRemoveSlot,
 }: Props) => {
-    return <Container className="my-2">
+    const hasConflict = hasAvailabilityConflict(slot, signup);
+    
+    return <Container className={`my-2 ${hasConflict ? 'border border-danger rounded p-2' : ''}`}>
         <Row>
             <Col xs={{ order: 1, span: 6 }} md={{ order: 1, span: "auto" }}>
                 <span style={{ "width": "30px" }}>
                     <Stack gap={1}>
-                        <span className="lead text-muted mb-1">
-                            {slot.start_time?.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                        </span>
+                        <div className="d-flex flex-column">
+                          <span className={`lead mb-0 ${hasConflict ? 'text-danger fw-bold' : ''}`}>
+                              {slot.start_time?.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                              {hasConflict && <AlertTriangle className="ms-1" size={16} />}
+                          </span>
+                          {/* Availability as subtitle */}
+                          {signup.event_signup_form_data?.available_from && signup.event_signup_form_data?.available_to && (
+                            <small className={`text-muted d-flex align-items-center gap-1 ${hasConflict ? 'text-danger' : ''}`} style={{ fontSize: "0.65rem" }}>
+                              <Clock size={10} />
+                              <span>
+                                {signup.event_signup_form_data.available_from === "any" && signup.event_signup_form_data.available_to === "any"
+                                  ? "Any Time"
+                                  : `${getPrettyValueFromAvailability(signup.event_signup_form_data.available_from)} - ${getPrettyValueFromAvailability(signup.event_signup_form_data.available_to)}`
+                                }
+                              </span>
+                            </small>
+                          )}
+                        </div>
                         <Button variant={"outline-secondary"} color={"primary"} size={"sm"} onClick={() => onSlotMoveSooner()}>
                             <ArrowUp />
                         </Button>

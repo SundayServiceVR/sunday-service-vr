@@ -5,8 +5,9 @@ import { ActionMenu } from "../../../components/actionMenu/ActionMenu";
 import EventSignupDjDetails from "./EventSignupDjDetails";
 import EventSlotDetails from "./EventSignupDetails";
 import { DocumentReference } from "firebase/firestore";
-import { Plus } from "react-feather"; // Import the Feather Plus icon
+import { Plus, Clock, ChevronDown, ChevronRight } from "react-feather"; // Import the Feather Plus icon and Clock icon
 import { Row, Col } from "react-bootstrap"; // Import Row and Col from react-bootstrap
+import { getPrettyValueFromAvailability } from "../../eventSignup/utils";
 
 type Props = {
   signup: EventSignup;
@@ -25,16 +26,51 @@ const EventSignupEntry = ({
   setSelectedSignup,
   setShowModal,
 }: Props) => {
-  const [isCollapsed, setIsCollapsed] = useState(false); // State to manage collapse
+  const [isCollapsed, setIsCollapsed] = useState(true); // Default to hidden/collapsed
 
   const [showSignupModal, setShowSignupModal] = useState(false); // State to manage modal visibility
 
   return (
     <>
-      <Card key={`signup-${signup.uuid}`}>
-        <Card.Header>
+      <Card key={`signup-${signup.uuid}`} className="rounded-0">
+        <Card.Header className="rounded-0 p-2">
           <Stack direction="horizontal" gap={1}>
-            <div className="lead">{signup.name}</div>
+            <div 
+              className="d-flex align-items-center"
+              style={{ cursor: 'pointer' }}
+              onClick={() => setIsCollapsed(!isCollapsed)}
+            >
+              {isCollapsed ? <ChevronRight size={16} /> : <ChevronDown size={16} />}
+            </div>
+            <div className="d-flex flex-column">
+              <div className="lead">{signup.name}</div>
+              <div className="d-flex align-items-center gap-2">
+                {/* Availability info */}
+                {signup.event_signup_form_data?.available_from && signup.event_signup_form_data?.available_to && (
+                  <small className="text-muted d-flex align-items-center gap-1">
+                    <Clock size={12} />
+                    <span>
+                      {signup.event_signup_form_data.available_from === "any" && signup.event_signup_form_data.available_to === "any"
+                        ? "Any Time"
+                        : `${getPrettyValueFromAvailability(signup.event_signup_form_data.available_from)} - ${getPrettyValueFromAvailability(signup.event_signup_form_data.available_to)}`
+                      }
+                    </span>
+                  </small>
+                )}
+                {/* Set type */}
+                {signup.event_signup_form_data?.type && (
+                  <small className="text-muted">
+                    • {signup.event_signup_form_data.type}
+                  </small>
+                )}
+                {/* Debut indicator */}
+                {signup.is_debut && (
+                  <small className="text-success fw-bold">
+                    • DEBUT
+                  </small>
+                )}
+              </div>
+            </div>
             <div className="ms-auto"></div>
             <ActionMenu
               options={[
@@ -67,31 +103,22 @@ const EventSignupEntry = ({
             />
           </Stack>
         </Card.Header>
-        <Card.Body>
-          <Row className="mb-3">
-            {/* Hide Entry Button */}
-            <Col xs={12} md={6} className="mb-2 mb-md-0">
-              <Button
-                variant="outline-secondary"
-                className="w-100"
-                onClick={() => setIsCollapsed(!isCollapsed)}
-              >
-                {isCollapsed ? "Show Entry" : "Hide Entry"}
-              </Button>
-            </Col>
+        <Card.Body className="p-2">
+          <Row>
             {/* Add to Lineup Button */}
-            <Col xs={12} md={6}>
+            <Col xs={12}>
               <Button
                 variant="outline-success"
                 className="w-100"
+                size="sm"
                 onClick={() => onAddSlotToLineup(signup)}
               >
-                <Plus className="me-2" /> Add to Lineup
+                <Plus /> Add to Lineup
               </Button>
             </Col>
           </Row>
           {!isCollapsed && (
-            <>
+            <div className="my-3">
               <EventSlotDetails signup={signup} onUpdateSignup={onUpdateSignup} />
               <hr />
               {signup.dj_refs?.map((djRef: DocumentReference) => (
@@ -106,7 +133,7 @@ const EventSignupEntry = ({
                   }
                 />
               ))}
-            </>
+            </div>
           )}
         </Card.Body>
       </Card>
