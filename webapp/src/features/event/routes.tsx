@@ -3,7 +3,6 @@ import EventDetails from "./basic/EventDetails";
 import EventAnnouncements from "./EventAnnouncements";
 import EventLineup from "./lineup/EventLineup";
 import EventVerifyDJs from "./linupVerification/EventVerifyDJs";
-import EventStreamDetails from "./stream/EventStreamDetails";
 import DebuggingDetails from "./DebuggingDetails";
 import PreflightChecklist from "./PreflightChecklist";
 

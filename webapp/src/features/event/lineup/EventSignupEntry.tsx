@@ -6,7 +6,6 @@ import EventSignupDjDetails from "./EventSignupDjDetails";
 import EventSlotDetails from "./EventSignupDetails";
 import { DocumentReference } from "firebase/firestore";
 import { Plus, Clock, ChevronDown, ChevronRight } from "react-feather"; // Import the Feather Plus icon and Clock icon
-import { Row, Col } from "react-bootstrap"; // Import Row and Col from react-bootstrap
 import { getPrettyValueFromAvailability } from "../../eventSignup/utils";
 
 type Props = {
