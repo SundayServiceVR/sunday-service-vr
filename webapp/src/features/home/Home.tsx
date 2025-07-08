@@ -1,7 +1,5 @@
-import { Card, Container, Spinner, Row, Col } from "react-bootstrap";
+import { Card, Container, Row, Col } from "react-bootstrap";
 import { CurrentOrNextEvent } from "../../components/currentOrNextEvent/CurrentOrNextEvent";
-import { useEffect, useState } from "react";
-import { getFirestore, doc, getDoc } from "firebase/firestore";
 import "./Home.css";
 
 const HELPFUL_LINKS = [
@@ -33,36 +31,6 @@ const HELPFUL_LINKS = [
 ];
 
 const Home = () => {
-    const [signupSheetUrl, setSignupSheetUrl] = useState("");
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        const fetchSignupUrl = async () => {
-            const firestore = getFirestore();
-            const docRef = doc(firestore, "/global/global_settings");
-            try {
-                const docSnap = await getDoc(docRef);
-                const url = docSnap.exists() ? docSnap.data().signup_url : "unable to find signup url";
-                setSignupSheetUrl(url);
-            } catch (error) {
-                console.error("Error fetching signup URL:", error);
-                setSignupSheetUrl("unable to find signup url");
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchSignupUrl();
-    }, []);
-
-    if (loading) {
-        return <div className="d-flex justify-content-center align-items-center vh-100">
-            <Spinner animation="border" role="status">
-                <span className="visually-hidden">Loading...</span>
-            </Spinner>
-        </div>;
-    }
-
     return <section>
         {/* Hero Section */}
         <div className="hero-section text-center py-5 bg-light">
@@ -74,21 +42,6 @@ const Home = () => {
         </div>
 
         <Container className="my-5">
-            {/* Signup Sheet Section */}
-            <h2 className="display-6 mb-4 text-center">Signup Sheet</h2>
-            <Row className="justify-content-center">
-                <Col md={6}>
-                    <Card className="shadow-sm">
-                        <Card.Header className="bg-primary text-white">
-                            <Card.Title>Signup Sheet</Card.Title>
-                        </Card.Header>
-                        <Card.Body>
-                            <p><a href={signupSheetUrl} target="_blank" rel="noopener noreferrer">{signupSheetUrl}</a></p>
-                        </Card.Body>
-                    </Card>
-                </Col>
-            </Row>
-
             {/* Helpful Links Section */}
             <h2 className="display-6 mt-5 mb-4 text-center">Helpful Links</h2>
             <Row className="g-4">
