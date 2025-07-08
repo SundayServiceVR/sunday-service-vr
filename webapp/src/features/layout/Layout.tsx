@@ -45,13 +45,13 @@ const Layout = () => {
                                     Dj Roster
                                 </Link>
                             </Nav.Link>
-                            <Nav.Link as="span">
-                                <Link to="/globalSettings" className="nav-link p-0">
-                                    Global Settings
-                                </Link>
-                            </Nav.Link>
                         </>
                     )}
+                    <Nav.Link as="span" className="d-lg-none">
+                        <Link to="/userInfo" className="nav-link p-0">
+                            User Info
+                        </Link>
+                    </Nav.Link>
                     <Nav.Link
                         className="d-lg-none"
                         onClick={() => confirm({
@@ -69,11 +69,7 @@ const Layout = () => {
                         })}>
                         Logout
                     </Nav.Link>
-                    <Nav.Link as="span" className="d-lg-none">
-                        <Link to="/userInfo" className="nav-link p-0">
-                            User Info
-                        </Link>
-                    </Nav.Link>
+                    
                 </Nav>
                 <Nav className="ms-auto mx-3 d-none d-lg-flex">
                     <Nav.Item className="p-0">
