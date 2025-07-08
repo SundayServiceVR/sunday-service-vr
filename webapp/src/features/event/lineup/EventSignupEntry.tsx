@@ -35,7 +35,7 @@ const EventSignupEntry = ({
       <Card key={`signup-${signup.uuid}`} className="rounded-0">
         <Card.Header className="rounded-0 p-2">
           <Stack direction="horizontal" gap={1}>
-            <div 
+            <div
               className="d-flex align-items-center"
               style={{ cursor: 'pointer' }}
               onClick={() => setIsCollapsed(!isCollapsed)}
@@ -72,6 +72,13 @@ const EventSignupEntry = ({
               </div>
             </div>
             <div className="ms-auto"></div>
+            <Button
+              variant="outline-success"
+              size="sm"
+              onClick={() => onAddSlotToLineup(signup)}
+            >
+              <Plus /> Add to Lineup
+            </Button>
             <ActionMenu
               options={[
                 {
@@ -103,21 +110,8 @@ const EventSignupEntry = ({
             />
           </Stack>
         </Card.Header>
-        <Card.Body className="p-2">
-          <Row>
-            {/* Add to Lineup Button */}
-            <Col xs={12}>
-              <Button
-                variant="outline-success"
-                className="w-100"
-                size="sm"
-                onClick={() => onAddSlotToLineup(signup)}
-              >
-                <Plus /> Add to Lineup
-              </Button>
-            </Col>
-          </Row>
-          {!isCollapsed && (
+        {!isCollapsed && (
+          <Card.Body className="p-2">
             <div className="my-3">
               <EventSlotDetails signup={signup} onUpdateSignup={onUpdateSignup} />
               <hr />
@@ -134,8 +128,8 @@ const EventSignupEntry = ({
                 />
               ))}
             </div>
-          )}
-        </Card.Body>
+          </Card.Body>
+        )}
       </Card>
       <Modal show={showSignupModal} onHide={() => setShowSignupModal(false)} centered>
         <Modal.Header closeButton onHide={() => setShowSignupModal(false)}>

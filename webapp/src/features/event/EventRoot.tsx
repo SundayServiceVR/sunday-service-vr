@@ -107,8 +107,6 @@ const EventRoot = () => {
 
 
             <EventPublishedStatusBadge event={event} />
-            <div className="ms-auto" />
-            {!event.published && <Button size="lg" onClick={publishEvent}>Publish Event</Button>}
         </Stack>
 
         <Nav defaultActiveKey="/events/setup" variant="tabs" as="ul" activeKey={location.pathname}>
@@ -127,7 +125,9 @@ const EventRoot = () => {
             <Nav.Item as="li">
                 <Link to={`/events/${event.id}/announcements`} className="nav-link">Messaging</Link>
             </Nav.Item>
-
+            <Nav.Item as="li">
+                <Link to={`/events/${event.id}/preflight`} className="nav-link">Preflight</Link>
+            </Nav.Item>
         </Nav>
 
         <Container className="mt-3">
