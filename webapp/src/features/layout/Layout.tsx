@@ -17,8 +17,17 @@ const Layout = () => {
         return <AuthErrorAlert />;
     }
     return <>
-        <Navbar expand="lg" className="bg-body-secondary px-3" data-bs-theme="dark">
-            <Navbar.Brand className="px-3">Sunday Service</Navbar.Brand>
+        <Navbar expand="lg" className="bg-body-secondary px-3 py-0" data-bs-theme="dark">
+            <Navbar.Brand className="d-flex align-items-center">
+                <img
+                    src="/images/s4logo_2.png"
+                    width="50"
+                    height="50"
+                    className="d-inline-block align-top me-2 my-0 mx-0"
+                    alt="Sunday Service logo"
+                />
+                Sunday Service
+            </Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse className="justify-content-end">
                 <Nav className="me-auto mx-3">
