@@ -71,12 +71,6 @@ const PreflightChecklist = () => {
             //     link: `/events/${eventScratchpad.id}/verifyDJs`
             // },
             // {
-            //     label: 'Stream Details',
-            //     completed: eventScratchpad.slots.every(slot => slot.stream_source_url),
-            //     description: 'Stream sources configured for all slots',
-            //     link: `/events/${eventScratchpad.id}/technicalDetails`
-            // },
-            // {
             //     label: 'Announcements Ready',
             //     completed: !!eventScratchpad.message,
             //     description: 'Event announcement message is prepared',

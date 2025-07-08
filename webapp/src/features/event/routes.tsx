@@ -34,11 +34,6 @@ export const eventRoutes: RouteObject[] = [
     handle: { crumb: () => <Link to="preflight">Preflight</Link>}
   },
   {
-    path: "technicalDetails",
-    element: <EventStreamDetails/>,
-    handle: { crumb: () => <Link to="technicalDetails">Stream Details</Link>}
-  },
-  {
     path: "announcements",
     element: <EventAnnouncements />,
     handle: { crumb: () => <Link to="announcements">Announcements</Link>},

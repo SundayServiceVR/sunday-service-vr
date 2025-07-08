@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button, Container, Nav, Stack, Toast } from 'react-bootstrap';
+import { Button, Container, Nav, Stack } from 'react-bootstrap';
 import { default_event } from "../../store/events";
 import { docToEvent } from "../../store/converters";
 import { onSnapshot, doc } from "firebase/firestore";
@@ -74,30 +74,6 @@ const EventRoot = () => {
         setEventScratchpad(event);
     }
 
-    const publishEvent = async () => {
-        if (hasChanges) {
-            toast.custom(<Toast
-                className="d-inline-block m-1"
-                bg="warning"
-            >
-                <Toast.Header closeButton={false}>
-                    UwU
-                </Toast.Header>
-                <Toast.Body>
-                    Please save changes before publishing this event.
-                </Toast.Body>
-            </Toast>
-            );
-
-            return;
-        }
-
-        const newEvent = { ...event, published: true };
-
-        await saveEvent(newEvent, event);
-        setEventScratchpad(newEvent);
-    }
-
     return <>
 
         <Stack direction="horizontal" gap={3}>
@@ -118,9 +94,6 @@ const EventRoot = () => {
             </Nav.Item>
             <Nav.Item as="li">
                 <Link to={`/events/${event.id}/verifyDJs`} className="nav-link">Verify DJs</Link>
-            </Nav.Item>
-            <Nav.Item as="li">
-                <Link to={`/events/${event.id}/technicalDetails`} className="nav-link">Stream Details</Link>
             </Nav.Item>
             <Nav.Item as="li">
                 <Link to={`/events/${event.id}/announcements`} className="nav-link">Messaging</Link>
