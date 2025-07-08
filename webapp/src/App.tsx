@@ -1,5 +1,6 @@
 import { Link, RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { FirebaseAuthProvider } from './contexts/FirebaseAuthContext';
+import { ThemeProvider } from './contexts/ThemeContext';
 
 import EventRoot from "./features/event/EventRoot";
 import Layout from './features/layout/Layout';
@@ -16,7 +17,7 @@ import DjList from './features/dj/DjList';
 import { Toaster } from 'react-hot-toast';
 import { DiscordIdInfo } from './features/dj/discordIdInfo/DiscordIdInfo';
 import { eventRoutes } from './features/event/routes';
-import GlobalSettings from "./features/globalSettings/GlobalSettings";
+import { UserInfo } from './features/user/UserInfo';
 
 import { EventDjPlayMapperProvider } from './contexts/useEventDjCache/eventDjCacheProvider';
 
@@ -89,22 +90,22 @@ function App() {
           element: <DiscordIdInfo />
         },
         {
-          path: "globalSettings",
-          element: <GlobalSettings />
+          path: "userInfo",
+          element: <UserInfo />
         },
       ],
     },
     {
       path: "eventSignup",
+      element: <FirebaseAuthProvider>
+            <RoleGuard requireAnyRole={['dj', 'host']}><Layout /></RoleGuard>
+      </FirebaseAuthProvider>,
       children: [
         {
           path: `:eventId`,
           // TODO: Refactor so we don't have two FirebaseAuthProviders
-          element: <FirebaseAuthProvider>
-            <RoleGuard requireAnyRole={['dj', 'host']}>
-              <EventSignupRoot />
-            </RoleGuard>
-          </FirebaseAuthProvider>,
+          element: 
+              <EventSignupRoot />,
 
           children: [
             {
@@ -120,6 +121,18 @@ function App() {
       ]
     },
     {
+      path: "/userInfo",
+      element: <FirebaseAuthProvider>
+            <RoleGuard requireAnyRole={['dj', 'host', 'admin']}><Layout /></RoleGuard>
+      </FirebaseAuthProvider>,
+      children: [
+        {
+          index: true,
+          element: <UserInfo />
+        },
+      ]
+    },
+    {
       path: "/login",
       element: <LoginPage />,
     },
@@ -129,10 +142,12 @@ function App() {
     },
   ]);
 
-  return <>
-    <RouterProvider router={router} />
-    <Toaster />
-  </>;
+  return (
+    <ThemeProvider>
+      <RouterProvider router={router} />
+      <Toaster />
+    </ThemeProvider>
+  );
 }
 
 export default App;

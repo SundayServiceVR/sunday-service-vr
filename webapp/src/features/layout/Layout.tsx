@@ -7,17 +7,28 @@ import { confirm } from "../../components/confirm";
 import AuthErrorAlert from "./AuthErrorAlert";
 import BreadcrumbsBar from "./BreadcrumbsBar";
 import UserDropdown from "./UserDropdown";
+import DarkModeToggle from "../../components/DarkModeToggle";
 import { signOut } from 'firebase/auth';
 import { Link } from 'react-router-dom';
 
 const Layout = () => {
-    const { auth } = useContext(FirebaseAuthContext);
+    const { auth, roles } = useContext(FirebaseAuthContext);
+
     if (!auth) {
         return <AuthErrorAlert />;
     }
     return <>
-        <Navbar expand="lg" className="bg-body-secondary px-3" data-bs-theme="dark">
-            <Navbar.Brand className="px-3">Sunday Service</Navbar.Brand>
+        <Navbar expand="lg" className="bg-body-secondary px-3 py-0" data-bs-theme="dark">
+            <Navbar.Brand className="d-flex align-items-center">
+                <img
+                    src="/images/s4logo_2.png"
+                    width="50"
+                    height="50"
+                    className="d-inline-block align-top me-2 my-0 mx-0"
+                    alt="Sunday Service logo"
+                />
+                Sunday Service
+            </Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse className="justify-content-end">
                 <Nav className="me-auto mx-3">
@@ -26,26 +37,36 @@ const Layout = () => {
                             {auth.currentUser?.displayName}
                         </span>
                     </Nav.Item>
-                    <Nav.Link as="span">
-                        <Link to="/" className="nav-link p-0">
-                            Home
+
+                    {(roles?.includes('host') || roles?.includes('admin')) && (
+                        <>
+                            <Nav.Link as="span">
+                                <Link to="/" className="nav-link p-0">
+                                    Home
+                                </Link>
+                            </Nav.Link>
+                            <Nav.Link as="span">
+                                <Link to="/events" className="nav-link p-0">
+                                    Events
+                                </Link>
+                            </Nav.Link>
+                            <Nav.Link as="span">
+                                <Link to="/djs" className="nav-link p-0">
+                                    Dj Roster
+                                </Link>
+                            </Nav.Link>
+                        </>
+                    )}
+                    <Nav.Link as="span" className="d-lg-none">
+                        <Link to="/userInfo" className="nav-link p-0">
+                            User Info
                         </Link>
                     </Nav.Link>
-                    <Nav.Link as="span">
-                        <Link to="/events" className="nav-link p-0">
-                            Events
-                        </Link>
-                    </Nav.Link>
-                    <Nav.Link as="span">
-                        <Link to="/djs" className="nav-link p-0">
-                            Dj Roster
-                        </Link>
-                    </Nav.Link>
-                    <Nav.Link as="span">
-                        <Link to="/globalSettings" className="nav-link p-0">
-                            Global Settings
-                        </Link>
-                    </Nav.Link>
+                    <Nav.Item className="d-lg-none mb-2">
+                        <div className="ms-2">
+                            <DarkModeToggle />
+                        </div>
+                    </Nav.Item>
                     <Nav.Link
                         className="d-lg-none"
                         onClick={() => confirm({
@@ -63,8 +84,12 @@ const Layout = () => {
                         })}>
                         Logout
                     </Nav.Link>
+                    
                 </Nav>
                 <Nav className="ms-auto mx-3 d-none d-lg-flex">
+                    <Nav.Item className="p-0 me-2">
+                        <DarkModeToggle />
+                    </Nav.Item>
                     <Nav.Item className="p-0">
                         <UserAvatarName displayName={""} photoURL={auth.currentUser?.photoURL} />
                     </Nav.Item>
@@ -72,7 +97,9 @@ const Layout = () => {
                 </Nav>
             </Navbar.Collapse>
         </Navbar>
-        <BreadcrumbsBar />
+        {(roles?.includes('host') || roles?.includes('admin')) && (
+            <BreadcrumbsBar />
+        )}
         <Container className="mt-1">
             <Outlet />
         </Container>

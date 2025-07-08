@@ -3,8 +3,8 @@ import EventDetails from "./basic/EventDetails";
 import EventAnnouncements from "./EventAnnouncements";
 import EventLineup from "./lineup/EventLineup";
 import EventVerifyDJs from "./linupVerification/EventVerifyDJs";
-import EventStreamDetails from "./stream/EventStreamDetails";
 import DebuggingDetails from "./DebuggingDetails";
+import PreflightChecklist from "./PreflightChecklist";
 
 export const eventRoutes: RouteObject[] = [
   {
@@ -28,9 +28,9 @@ export const eventRoutes: RouteObject[] = [
     handle: { crumb: () => <Link to="verifyDJs">Verify DJs</Link>}
   },
   {
-    path: "technicalDetails",
-    element: <EventStreamDetails/>,
-    handle: { crumb: () => <Link to="technicalDetails">Stream Details</Link>}
+    path: "preflight",
+    element: <PreflightChecklist />,
+    handle: { crumb: () => <Link to="preflight">Preflight</Link>}
   },
   {
     path: "announcements",

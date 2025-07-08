@@ -1,0 +1,199 @@
+/* Dark mode styles for the app */
+
+:root {
+  --bs-body-bg: #ffffff;
+  --bs-body-color: #212529;
+}
+
+[data-bs-theme="dark"] {
+  --bs-body-bg: #212529;
+  --bs-body-color: #ffffff;
+  --bs-card-bg: #97a6be;
+  --bs-card-border-color: #343a40;
+  --bs-border-color: #363f48;
+  --bs-border-color-translucent: rgba(255, 255, 255, 0.15);
+  --bs-input-bg: #2a303b;
+}
+
+/* Custom dark mode styles */
+.theme-dark {
+  background-color: var(--bs-body-bg);
+  color: var(--bs-body-color);
+}
+
+.theme-dark .card {
+  background-color: var(--bs-card-bg);
+  border-color: var(--bs-card-border-color);
+}
+
+.theme-dark .navbar {
+  background-color: var(--bs-dark) !important;
+}
+
+.theme-dark .navbar .navbar-brand {
+  color: var(--bs-light) !important;
+}
+
+.theme-dark .navbar .nav-link {
+  color: var(--bs-light) !important;
+}
+
+.theme-dark .navbar .nav-link:hover {
+  color: var(--bs-primary) !important;
+}
+
+.theme-dark .breadcrumb {
+
+  border-color: var(--bs-card-border-color);
+}
+
+.theme-dark .breadcrumb .breadcrumb-item a {
+  color: var(--bs-primary);
+}
+
+.theme-dark .breadcrumb .breadcrumb-item.active {
+  color: var(--bs-body-color);
+}
+
+.theme-dark .floatingActionBar {
+  background-color: var(--bs-card-bg);
+  border-color: var(--bs-card-border-color);
+}
+
+/* Fix for Bootstrap components in dark mode */
+.theme-dark .modal-content {
+  background-color: var(--bs-card-bg);
+  border-color: var(--bs-card-border-color);
+}
+
+.theme-dark .modal-header {
+  border-color: var(--bs-border-color);
+}
+
+.theme-dark .modal-footer {
+  border-color: var(--bs-border-color);
+}
+
+.theme-dark .form-control {
+  background-color: var(--bs-input-bg);
+  border-color: var(--bs-border-color);
+  color: var(--bs-body-color);
+}
+
+.theme-dark .form-control:focus {
+  background-color: var(--bs-input-bg);
+  border-color: var(--bs-primary);
+  color: var(--bs-body-color);
+  box-shadow: 0 0 0 0.2rem rgba(var(--bs-primary-rgb), 0.25);
+}
+
+.theme-dark .form-select {
+  background-color: var(--bs-input-bg);
+  border-color: var(--bs-border-color);
+  color: var(--bs-body-color);
+}
+
+.theme-dark .form-select:focus {
+  background-color: var(--bs-input-bg);
+  border-color: var(--bs-primary);
+  color: var(--bs-body-color);
+}
+
+.theme-dark .table {
+  color: var(--bs-body-color);
+}
+
+.theme-dark .table th {
+  border-color: var(--bs-border-color);
+}
+
+.theme-dark .table td {
+  border-color: var(--bs-border-color);
+}
+
+.theme-dark .table-striped > tbody > tr:nth-of-type(odd) > td,
+.theme-dark .table-striped > tbody > tr:nth-of-type(odd) > th {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.theme-dark .list-group-item {
+  background-color: var(--bs-card-bg);
+  border-color: var(--bs-border-color);
+  color: var(--bs-body-color);
+}
+
+.theme-dark .dropdown-menu {
+  background-color: var(--bs-card-bg);
+  border-color: var(--bs-border-color);
+}
+
+.theme-dark .dropdown-item {
+  color: var(--bs-body-color);
+}
+
+.theme-dark .dropdown-item:hover,
+.theme-dark .dropdown-item:focus {
+  background-color: var(--bs-primary);
+  color: var(--bs-light);
+}
+
+.theme-dark .alert {
+  border-color: var(--bs-border-color);
+}
+
+/* Custom confirm dialog dark mode */
+.theme-dark .confirm {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.theme-dark .confirmCard {
+  background-color: var(--bs-card-bg);
+  border-color: var(--bs-card-border-color);
+}
+
+.theme-dark .confirmCardTitle {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: var(--bs-border-color);
+}
+
+.theme-dark .confirmCardBody {
+  color: var(--bs-body-color);
+}
+
+/* Login page dark mode */
+.theme-dark .login-container {
+  background-color: var(--bs-body-bg) !important;
+}
+
+.theme-dark .login-card {
+  background-color: var(--bs-card-bg) !important;
+  border-color: var(--bs-card-border-color) !important;
+  color: var(--bs-body-color) !important;
+}
+
+/* Spinner dark mode */
+.theme-dark .spinner-border {
+  color: var(--bs-primary);
+}
+
+/* Toast dark mode */
+.theme-dark .Toaster__toast {
+  background-color: var(--bs-card-bg);
+  color: var(--bs-body-color);
+  border-color: var(--bs-border-color);
+}
+
+/* Smooth transitions */
+body,
+.card,
+.navbar,
+.modal-content,
+.form-control,
+.form-select,
+.dropdown-menu,
+.table,
+.list-group-item,
+.alert,
+.confirmCard {
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
