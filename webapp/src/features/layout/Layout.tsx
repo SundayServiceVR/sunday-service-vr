@@ -7,6 +7,7 @@ import { confirm } from "../../components/confirm";
 import AuthErrorAlert from "./AuthErrorAlert";
 import BreadcrumbsBar from "./BreadcrumbsBar";
 import UserDropdown from "./UserDropdown";
+import DarkModeToggle from "../../components/DarkModeToggle";
 import { signOut } from 'firebase/auth';
 import { Link } from 'react-router-dom';
 
@@ -61,6 +62,11 @@ const Layout = () => {
                             User Info
                         </Link>
                     </Nav.Link>
+                    <Nav.Item className="d-lg-none mb-2">
+                        <div className="ms-2">
+                            <DarkModeToggle />
+                        </div>
+                    </Nav.Item>
                     <Nav.Link
                         className="d-lg-none"
                         onClick={() => confirm({
@@ -81,6 +87,9 @@ const Layout = () => {
                     
                 </Nav>
                 <Nav className="ms-auto mx-3 d-none d-lg-flex">
+                    <Nav.Item className="p-0 me-2">
+                        <DarkModeToggle />
+                    </Nav.Item>
                     <Nav.Item className="p-0">
                         <UserAvatarName displayName={""} photoURL={auth.currentUser?.photoURL} />
                     </Nav.Item>

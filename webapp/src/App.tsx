@@ -1,5 +1,6 @@
 import { Link, RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { FirebaseAuthProvider } from './contexts/FirebaseAuthContext';
+import { ThemeProvider } from './contexts/ThemeContext';
 
 import EventRoot from "./features/event/EventRoot";
 import Layout from './features/layout/Layout';
@@ -141,10 +142,12 @@ function App() {
     },
   ]);
 
-  return <>
-    <RouterProvider router={router} />
-    <Toaster />
-  </>;
+  return (
+    <ThemeProvider>
+      <RouterProvider router={router} />
+      <Toaster />
+    </ThemeProvider>
+  );
 }
 
 export default App;

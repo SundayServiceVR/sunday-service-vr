@@ -1,5 +1,7 @@
+import { Card, Button, Container, Row, Col } from 'react-bootstrap';
 import logo from '../../assets/svg/S4_Logo.svg';
 import discordIcon from '../../assets/svg/Discord-Symbol-White.svg';
+import DarkModeToggle from '../../components/DarkModeToggle';
 
 const loginWithDiscord = () => {
   const clientId = '1225554722916663376';
@@ -14,16 +16,29 @@ const loginWithDiscord = () => {
 
 const LoginPage = () => {
     return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', backgroundColor: '#f4f4f9' }}>
-        <div style={{ textAlign: 'center', padding: '40px', borderRadius: '10px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', backgroundColor: '#fff' }}>
-          <img src={logo} alt="Logo" style={{ marginBottom: '20px', width: '100px', height: 'auto' }} />
-          <h2 style={{ marginBottom: '20px', color: '#333' }}>Welcome to Sunday Service VR</h2>
-          <button onClick={() => loginWithDiscord()} className="btn btn-primary" style={{ padding: '10px 20px', fontSize: '16px', borderRadius: '5px', backgroundColor: '#5865F2', color: '#fff' }}>
-            <img src={discordIcon} alt="Discord Icon" style={{ width: '20px', height: '20px', marginRight: '10px' }} />
-            Login with Discord
-          </button>
-        </div>
-      </div>
+      <Container className="login-container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <Row className="w-100">
+          <Col md={6} lg={4} className="mx-auto">
+            <div className="position-absolute top-0 end-0 m-3">
+              <DarkModeToggle />
+            </div>
+            <Card className="login-card shadow">
+              <Card.Body className="text-center p-4">
+                <img src={logo} alt="Logo" className="mb-4" style={{ width: '100px', height: 'auto' }} />
+                <h2 className="mb-4">Welcome to Sunday Service VR</h2>
+                <Button 
+                  onClick={() => loginWithDiscord()} 
+                  className="d-flex align-items-center justify-content-center mx-auto"
+                  style={{ backgroundColor: '#5865F2', borderColor: '#5865F2', padding: '10px 20px', fontSize: '16px' }}
+                >
+                  <img src={discordIcon} alt="Discord Icon" style={{ width: '20px', height: '20px', marginRight: '10px' }} />
+                  Login with Discord
+                </Button>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+      </Container>
     );
   }
 
