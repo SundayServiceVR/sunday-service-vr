@@ -37,37 +37,29 @@ export const UserInfo = () => {
                                 
                                 <Row className="mb-3">
                                     <Col sm={3}>
-                                        <strong>Discord Avatar:</strong>
+                                        <strong>Discord User:</strong>
                                     </Col>
-                                    <Col sm={9}>
+                                    <Col sm={9} className="d-flex align-items-center">
                                         {user.photoURL ? (
                                             <img 
                                                 src={user.photoURL} 
                                                 alt="Discord Avatar" 
-                                                className="rounded-circle"
+                                                className="rounded-circle me-3"
                                                 style={{ width: '64px', height: '64px' }}
                                             />
                                         ) : (
-                                            <span className="text-muted">No avatar available</span>
+                                            <div 
+                                                className="rounded-circle bg-light d-flex align-items-center justify-content-center me-3"
+                                                style={{ width: '64px', height: '64px' }}
+                                            >
+                                                <i className="fas fa-user text-muted"></i>
+                                            </div>
                                         )}
-                                    </Col>
-                                </Row>
-
-                                <Row className="mb-3">
-                                    <Col sm={3}>
-                                        <strong>Discord Display Name:</strong>
-                                    </Col>
-                                    <Col sm={9}>
-                                        {user.displayName || <span className="text-muted">Not available</span>}
-                                    </Col>
-                                </Row>
-
-                                <Row className="mb-3">
-                                    <Col sm={3}>
-                                        <strong>Discord Guild:</strong>
-                                    </Col>
-                                    <Col sm={9}>
-                                        <span className="text-muted">Sunday Service VR</span>
+                                        <div>
+                                            <div className="fw-bold">
+                                                {user.displayName || <span className="text-muted">Display name not available</span>}
+                                            </div>
+                                        </div>
                                     </Col>
                                 </Row>
 
