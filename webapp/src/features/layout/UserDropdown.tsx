@@ -3,9 +3,10 @@ import { NavDropdown, Nav } from 'react-bootstrap';
 import { confirm } from "../../components/confirm";
 import { useContext } from "react";
 import { FirebaseAuthContext } from "../../contexts/FirebaseAuthContext";
+import { Link } from 'react-router-dom';
 
 const UserDropdown = () => {
-    const { roles, auth } = useContext(FirebaseAuthContext);
+    const { auth } = useContext(FirebaseAuthContext);
 
     if (!auth || !auth.currentUser) {
         return null; // or handle unauthenticated state
@@ -14,11 +15,11 @@ const UserDropdown = () => {
     return (
         <Nav.Item className="dropdown d-flex align-items-center">
             <NavDropdown title={auth.currentUser?.displayName}>
-                {roles?.map((role) => (
-                    <NavDropdown.Item key={role}>
-                        {role}
-                    </NavDropdown.Item>
-                ))}
+                <NavDropdown.Item as="span">
+                    <Link to="/userInfo" className="nav-link p-0">
+                        My User Info
+                    </Link>
+                </NavDropdown.Item>
                 <NavDropdown.Divider />
                 <NavDropdown.Item>
                     <Nav.Link onClick={() => confirm({
