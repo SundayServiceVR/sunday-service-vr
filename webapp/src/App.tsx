@@ -40,7 +40,7 @@ function App() {
     {
       path: "/",
       element: <FirebaseAuthProvider>
-        <RoleGuard requireAnyRole={['host', 'admin']}>
+        <RoleGuard requireAnyRole={['dj', 'host', 'admin']}>
           <EventDjPlayMapperProvider>
             <Layout />
           </EventDjPlayMapperProvider>
@@ -54,9 +54,9 @@ function App() {
         {
           path: "djs",
           children: [
-            { index: true, element: <DjList /> },
-            { path: "create", element: <CreateDj /> },
-            { path: ":djId", element: <DjDetails /> },
+            { index: true, element: <RoleGuard requireAnyRole={['host', 'admin']}><DjList /></RoleGuard>},
+            { path: "create", element: <RoleGuard requireAnyRole={['host', 'admin']}><CreateDj /></RoleGuard> },
+            { path: ":djId", element: <RoleGuard requireAnyRole={['host', 'admin']}><DjDetails /></RoleGuard> },
           ],
         },
         {

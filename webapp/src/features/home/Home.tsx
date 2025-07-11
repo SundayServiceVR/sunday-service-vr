@@ -1,7 +1,8 @@
 import { Card, Container, Row, Col } from "react-bootstrap";
 import { CurrentOrNextEvent } from "../../components/currentOrNextEvent/CurrentOrNextEvent";
+import { useContext } from "react";
+import { FirebaseAuthContext } from "../../contexts/FirebaseAuthContext";
 import "./Home.css";
-
 const HELPFUL_LINKS = [
     {
         title: "Hosting Guide",
@@ -31,6 +32,19 @@ const HELPFUL_LINKS = [
 ];
 
 const Home = () => {
+
+  const { roles } = useContext(FirebaseAuthContext);
+
+    if (!roles?.includes("fake")) {
+        return (
+            <section className="text-center py-5">
+                <h2>We don't have anything here for you on this page yet:</h2>
+                <p>Try the signup sheet link again.</p>
+                <p>Bleat.</p>
+            </section>
+        );
+    }
+
     return <section>
         {/* Hero Section */}
         <div className="hero-section text-center py-5 bg-light">

@@ -37,7 +37,7 @@ const Spinner = ({ type = "simple" }: SpinnerProps) => {
           <S4Logo className="logoSpinner withFade" />
           {showLogoutLink && (
             <div className="logoutMessage">
-              <p>Looks like this is taking a while. If you are stuck, log out and log back in.</p>
+              <p>Looks like this is taking a while: This is a hotfix for some issue's we've been seeing. If you are stuck, log out and log back in.</p>
               <button onClick={handleLogout} className="btn btn-link">
                 Log out
               </button>
