@@ -47,6 +47,10 @@ export type EventSignup = {
     requested_duration: SlotDuration;
     type: SlotType;
 
+    //Feels like a mess keeping this here.  We'll do this from the signup form in the future.
+    stream_source_type?: StreamSourceType;
+    stream_source_url?: string;
+
     dj_refs: DocumentReference[];
     is_debut: boolean;
     event_signup_form_data?: EventSignupFormData;

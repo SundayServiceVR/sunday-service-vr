@@ -1,5 +1,5 @@
 import { Alert, Col, Container, Form, InputGroup, Row, ToggleButton } from "react-bootstrap"
-import { SlotType, SlotDuration, EventSignup, EventSignupFormData } from "../../../util/types"
+import { SlotType, SlotDuration, EventSignup, EventSignupFormData, StreamSourceType } from "../../../util/types"
 
 type Props = {
   signup: EventSignup,
@@ -109,21 +109,42 @@ const EventSlotDetails = ({ signup, onUpdateSignup }: Props) => {
 
     <Form.Group as={Row}>
       <Form.Label column="sm" xs={12} md={3} className="text-md-end">
+        <strong>Source</strong>
+      </Form.Label>
+      <Col>
+        <Form.Select
+          size="sm"
+          value={signup.stream_source_type || ''}
+          onChange={(event) => { 
+            onUpdateSignup({ 
+              ...signup, 
+              stream_source_type: event.target.value as StreamSourceType,
+            }) 
+          }}
+        >
+          <option value="">Select Source Type</option>
+          {Object.values(StreamSourceType).map((sourceType) => (
+            <option key={sourceType} value={sourceType}>
+              {sourceType}
+            </option>
+          ))}
+        </Form.Select>
+      </Col>
+    </Form.Group>
+    
+    <Form.Group as={Row}>
+      <Form.Label column="sm" xs={12} md={3} className="text-md-end">
         <strong>Stream Link</strong>
       </Form.Label>
       <Col>
         <Form.Control
           size="sm"
-          value={signup.event_signup_form_data?.stream_link || ''}
+          value={signup.stream_source_url ?? signup.event_signup_form_data?.stream_link ?? ''}
           placeholder="Enter stream link"
-          disabled
           onChange={(event) => { 
             onUpdateSignup({ 
               ...signup, 
-              event_signup_form_data: {
-                ...(signup.event_signup_form_data || {}),
-                stream_link: event.target.value
-              } as EventSignupFormData
+              stream_source_url: event.target.value,
             }) 
           }}
         />
