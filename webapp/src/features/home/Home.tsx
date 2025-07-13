@@ -35,7 +35,7 @@ const Home = () => {
 
   const { roles } = useContext(FirebaseAuthContext);
 
-    if (!roles?.includes("fake")) {
+    if (!roles?.includes("host")) {
         return (
             <section className="text-center py-5">
                 <h2>We don't have anything here for you on this page yet:</h2>
