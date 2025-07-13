@@ -41,6 +41,14 @@ const FirebaseAuthProvider = ({ children }: Props) => {
         try {
           const token = await user.getIdTokenResult();
           const userRoles = token?.claims.roles as string[];
+
+          // BUGFIXED: Sometimes, users are logged in, but the call to actually fetch roles is never made.
+          // I think this happens when the user is already logged in successfully via refresh token, and no call is made to fetch them.
+          // This hopefully patches the issue by 
+          if(userRoles === undefined) {
+            redirectToDiscordRedirect();
+          }
+
           console.log('FirebaseAuthProvider: User roles fetched', { roles: userRoles });
           setRoles(userRoles);
         } catch (error) {
@@ -62,8 +70,7 @@ const FirebaseAuthProvider = ({ children }: Props) => {
 
   if(user === null) {
     console.log('FirebaseAuthProvider: User not authenticated, redirecting to login');
-    sessionStorage.setItem('preAuthRedirect', window.location.href);
-    window.location.href = '/login';
+    redirectToLogin();
     return <div>Unauthorized</div>;
   }
 
@@ -76,5 +83,15 @@ const FirebaseAuthProvider = ({ children }: Props) => {
     </FirebaseAuthContext.Provider>
   );
 };
+
+function redirectToLogin() {
+  sessionStorage.setItem('preAuthRedirect', window.location.href);
+  window.location.href = '/login';
+}
+
+function redirectToDiscordRedirect() {
+  sessionStorage.setItem('preAuthRedirect', window.location.href);
+  window.location.href = '/discordRedirect';
+}
 
 export { FirebaseAuthProvider, FirebaseAuthContext };

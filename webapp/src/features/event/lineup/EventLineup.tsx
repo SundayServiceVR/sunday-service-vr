@@ -23,6 +23,8 @@ const EventLineup = () => {
             duration: signup.requested_duration,
             start_time: new Date(),
             signup_uuid: signup.uuid,
+            // stream_source_type: signup.type ?? StreamSourceType.MANUAL as SlotType,
+            stream_source_url: signup.event_signup_form_data?.stream_link,
             reconciled: {
                 signup
             }
