@@ -46,7 +46,7 @@ const FirebaseAuthProvider = ({ children }: Props) => {
           // I think this happens when the user is already logged in successfully via refresh token, and no call is made to fetch them.
           // This hopefully patches the issue by 
           if(userRoles === undefined) {
-            redirectToDiscordRedirect();
+            redirectToLogin();
           }
 
           console.log('FirebaseAuthProvider: User roles fetched', { roles: userRoles });
@@ -87,11 +87,6 @@ const FirebaseAuthProvider = ({ children }: Props) => {
 function redirectToLogin() {
   sessionStorage.setItem('preAuthRedirect', window.location.href);
   window.location.href = '/login';
-}
-
-function redirectToDiscordRedirect() {
-  sessionStorage.setItem('preAuthRedirect', window.location.href);
-  window.location.href = '/discordRedirect';
 }
 
 export { FirebaseAuthProvider, FirebaseAuthContext };
