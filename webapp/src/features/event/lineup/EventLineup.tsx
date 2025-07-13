@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button, Col, Container, Row, Stack } from "react-bootstrap";
-import { Dj, Event, EventSignup, Slot, SlotDuration, SlotType, StreamSourceType } from "../../../util/types";
+import { Dj, Event, EventSignup, Slot, SlotDuration, SlotType } from "../../../util/types";
 import { useEventOperations } from "../outletContext";
 import EventLineupSortableList from "./EventLineupSortableList";
 import { DocumentReference } from "firebase/firestore";
