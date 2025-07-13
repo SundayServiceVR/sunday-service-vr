@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button, Col, Container, Row, Stack } from "react-bootstrap";
-import { Dj, Event, EventSignup, Slot, SlotDuration, SlotType } from "../../../util/types";
+import { Dj, Event, EventSignup, Slot, SlotDuration, SlotType, StreamSourceType } from "../../../util/types";
 import { useEventOperations } from "../outletContext";
 import EventLineupSortableList from "./EventLineupSortableList";
 import { DocumentReference } from "firebase/firestore";
@@ -23,6 +23,8 @@ const EventLineup = () => {
             duration: signup.requested_duration,
             start_time: new Date(),
             signup_uuid: signup.uuid,
+            stream_source_type: signup.type ?? StreamSourceType.MANUAL as SlotType,
+            stream_source_url: signup.event_signup_form_data?.stream_link,
             reconciled: {
                 signup
             }
