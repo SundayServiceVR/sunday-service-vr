@@ -82,29 +82,29 @@ const EventSlotDetails = ({ signup, onUpdateSignup }: Props) => {
       </Col>
     </Form.Group>
     {
-      signup.event_signup_form_data && 
-        <Form.Group as={Row}>
-          <Form.Label column="sm" xs={12} md={3} className="text-md-end">
-            <strong>Availability</strong>
-          </Form.Label>
-          <Col className="d-flex align-items-center">
-            {availabilityTimeFormat(signup.event_signup_form_data?.available_from)}
-            -
-            {availabilityTimeFormat(signup.event_signup_form_data?.available_to)}
-          </Col>
+      signup.event_signup_form_data &&
+      <Form.Group as={Row}>
+        <Form.Label column="sm" xs={12} md={3} className="text-md-end">
+          <strong>Availability</strong>
+        </Form.Label>
+        <Col className="d-flex align-items-center">
+          {availabilityTimeFormat(signup.event_signup_form_data?.available_from)}
+          -
+          {availabilityTimeFormat(signup.event_signup_form_data?.available_to)}
+        </Col>
       </Form.Group>
     }
 
     {
-      signup.event_signup_form_data?.dj_notes && 
+      signup.event_signup_form_data?.dj_notes &&
       <Form.Group as={Row}>
-      <Form.Label column="sm" xs={12} md={3} className="text-md-end">
-        <strong>Dj Notes</strong>
-      </Form.Label>
-      <Col className="d-flex align-items-center">
-        {signup.event_signup_form_data?.dj_notes}
-      </Col>
-    </Form.Group>
+        <Form.Label column="sm" xs={12} md={3} className="text-md-end">
+          <strong>Dj Notes</strong>
+        </Form.Label>
+        <Col className="d-flex align-items-center">
+          {signup.event_signup_form_data?.dj_notes}
+        </Col>
+      </Form.Group>
     }
 
     <Form.Group as={Row}>
@@ -116,19 +116,19 @@ const EventSlotDetails = ({ signup, onUpdateSignup }: Props) => {
           size="sm"
           value={signup.event_signup_form_data?.stream_link || ''}
           placeholder="Enter stream link"
-          disabled
-          onChange={(event) => { 
-            onUpdateSignup({ 
-              ...signup, 
+          onChange={(event) => {
+            onUpdateSignup({
+              ...signup,
               event_signup_form_data: {
                 ...(signup.event_signup_form_data || {}),
                 stream_link: event.target.value
               } as EventSignupFormData
-            }) 
+            })
           }}
         />
       </Col>
     </Form.Group>
+
 
     {
       signup.event_signup_form_data?.is_b2b &&
