@@ -62,10 +62,9 @@ export const UserInfo = () => {
                                         </div>
                                     </Col>
                                 </Row>
-
-                                <Row className="mb-3">
+                                 <Row className="mb-3">
                                     <Col sm={3}>
-                                        <strong>Discord ID:</strong>
+                                        <strong>User ID:</strong>
                                     </Col>
                                     <Col sm={9}>
                                         <code className="bg-light p-1 rounded">
