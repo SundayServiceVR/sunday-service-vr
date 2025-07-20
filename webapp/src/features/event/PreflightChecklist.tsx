@@ -5,6 +5,27 @@ import toast from 'react-hot-toast';
 import { EventPublishedStatusBadge } from './EventPublishedStatusBadge';
 import { Link } from 'react-router-dom';
 
+// Add types for checklist items
+type RequiredChecklistItem = {
+    label: string;
+    completed: boolean;
+    description: string;
+    link: string;
+    optional?: false;
+};
+
+type OptionalChecklistItem = {
+    label: string;
+    completed: boolean;
+    description: string;
+    link: string;
+    buttonLabel: string;
+    external: true;
+    optional: true;
+};
+
+type ChecklistItem = RequiredChecklistItem | OptionalChecklistItem;
+
 const PreflightChecklist = () => {
     const [eventScratchpad, proposeEventChange] = useEventOperations();
     const { saveEvent } = useEventStore();
@@ -38,52 +59,76 @@ const PreflightChecklist = () => {
                eventScratchpad.slots.length > 0;
     };
 
-    const getChecklistItems = () => {
-        const items = [
+    const getChecklistItems = (): ChecklistItem[] => {
+        const required: RequiredChecklistItem[] = [
             {
                 label: 'Event Name',
                 completed: !!eventScratchpad.name,
                 description: 'Event has a name assigned',
-                link: `/events/${eventScratchpad.id}/setup`
+                link: `/events/${eventScratchpad.id}/setup`,
+                optional: false,
             },
             {
                 label: 'Host Assigned',
                 completed: !!eventScratchpad.host,
                 description: 'Event has a host assigned',
-                link: `/events/${eventScratchpad.id}/setup`
+                link: `/events/${eventScratchpad.id}/setup`,
+                optional: false,
             },
             {
                 label: 'Date & Time Set',
                 completed: !!eventScratchpad.start_datetime,
                 description: 'Event has a start date and time',
-                link: `/events/${eventScratchpad.id}/setup`
+                link: `/events/${eventScratchpad.id}/setup`,
+                optional: false,
             },
             {
                 label: 'Lineup Created',
                 completed: eventScratchpad.slots.length > 0,
                 description: `${eventScratchpad.slots.length} slot(s) in lineup`,
-                link: `/events/${eventScratchpad.id}/lineup`
+                link: `/events/${eventScratchpad.id}/lineup`,
+                optional: false,
             },
-            // {
-            //     label: 'DJ Verification',
-            //     completed: eventScratchpad.slots.every(slot => slot.reconciled?.signup),
-            //     description: 'All DJs have been verified and confirmed',
-            //     link: `/events/${eventScratchpad.id}/verifyDJs`
-            // },
-            // {
-            //     label: 'Announcements Ready',
-            //     completed: !!eventScratchpad.message,
-            //     description: 'Event announcement message is prepared',
-            //     link: `/events/${eventScratchpad.id}/announcements`
-            // }
         ];
 
-        return items;
+        const optional: OptionalChecklistItem[] = [
+            {
+                label: 'Add the event to vrc.tl',
+                completed: false,
+                description: 'Share your event on the VRC event listing site.',
+                external: true,
+                link: 'https://vrc.tl',
+                buttonLabel: 'Go to vrc.tl',
+                optional: true,
+            },
+            {
+                label: 'Create a post on Bluesky',
+                completed: false,
+                description: 'Announce your event to the Bluesky community.',
+                external: true,
+                link: 'https://bsky.app/profile/sundayservice.bsky.social',
+                buttonLabel: 'Go to Bluesky',
+                optional: true,
+            },
+            {
+                label: 'Update the assets repo',
+                completed: false,
+                description: 'Update posters and host images in the assets repository.',
+                external: true,
+                link: 'https://github.com/StrawbsProtato/strawbsprotato.github.io',
+                buttonLabel: 'Go to GitHub',
+                optional: true,
+            },
+        ];
+
+        return [...required, ...optional];
     };
 
     const checklistItems = getChecklistItems();
-    const completedCount = checklistItems.filter(item => item.completed).length;
-    const totalCount = checklistItems.length;
+    const requiredItems = checklistItems.filter(item => !item.optional);
+    const optionalItems = checklistItems.filter(item => item.optional);
+    const completedCount = requiredItems.filter(item => item.completed).length;
+    const totalCount = requiredItems.length;
 
     return (
         <Container>
@@ -160,7 +205,7 @@ const PreflightChecklist = () => {
                 </Card.Header>
                 <Card.Body>
                     <div className="checklist">
-                        {checklistItems.map((item, index) => (
+                        {requiredItems.map((item, index) => (
                             <div key={index} className="d-flex align-items-center mb-3 p-2 border rounded">
                                 <div className="me-3">
                                     <span 
@@ -183,6 +228,46 @@ const PreflightChecklist = () => {
                                     >
                                         {item.completed ? 'Review' : 'Complete'}
                                     </Link>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </Card.Body>
+            </Card>
+
+            <Card className="mt-4">
+                <Card.Header>
+                    <h6 className="mb-0">Additional Steps (Optional)</h6>
+                </Card.Header>
+                <Card.Body>
+                    <div className="checklist">
+                        {optionalItems.map((item, index) => (
+                            <div key={index} className="d-flex align-items-center mb-3 p-2 border rounded bg-light">
+                                <div className="me-3">
+                                    <span
+                                        className="badge bg-info"
+                                        style={{ fontSize: '1rem', padding: '0.5rem' }}
+                                    >
+                                        i
+                                    </span>
+                                </div>
+                                <div className="flex-grow-1">
+                                    <h6 className="mb-1 text-muted">
+                                        {item.label}
+                                    </h6>
+                                    <small className="text-muted">{item.description}</small>
+                                </div>
+                                <div className="ms-auto">
+                                    {'buttonLabel' in item && (
+                                        <a
+                                            href={item.link}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="btn btn-outline-primary btn-sm"
+                                        >
+                                            {item.buttonLabel}
+                                        </a>
+                                    )}
                                 </div>
                             </div>
                         ))}
