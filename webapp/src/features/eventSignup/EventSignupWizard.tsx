@@ -43,6 +43,7 @@ export const EventSignupWizard = () => {
         available_to: existingSignup?.event_signup_form_data?.available_to ?? "any",
     });
     const [validated, setValidated] = React.useState(false);
+    const [submitting, setSubmitting] = React.useState(false); // <-- Add submitting state
 
     const steps = [
         StepPerformerInfo,
@@ -129,6 +130,7 @@ export const EventSignupWizard = () => {
             setValidated(true);
             return;
         }
+        setSubmitting(true); // <-- Set submitting true
         let endpoint = "https://eventsignupintake-diczrrhb6a-uc.a.run.app/eventSignupIntake";
         if (process.env.NODE_ENV === "development") {
             endpoint = "http://localhost:5001/sunday-service-vr/us-central1/eventSignupIntake";
@@ -153,6 +155,8 @@ export const EventSignupWizard = () => {
 
         } catch (error) {
             setToastMsg("Submission failed");
+        } finally {
+            setSubmitting(false); // <-- Always unset submitting
         }
     };
 
@@ -165,22 +169,28 @@ export const EventSignupWizard = () => {
                 validated={validated}
                 onSubmit={step === steps.length - 1 ? handleSubmit : handleNext}
                 className="mt-4"
+                style={submitting ? { pointerEvents: "none", opacity: 0.6 } : {}} // <-- Block input
             >
                 <input type="hidden" name="event_id" value={event_id} />
                 <CurrentStep formData={formData} onChange={handleChange} />
                 <div className="d-flex justify-content-between mt-4">
-                  
-                    <Button variant="secondary" onClick={handleBack} type="button" disabled={step === 0}>
+                    <Button variant="secondary" onClick={handleBack} type="button" disabled={step === 0 || submitting}>
                         Back
                     </Button>
-                 
                     {step < steps.length - 1 ? (
-                        <Button type="submit" className="btn btn-primary">
+                        <Button type="submit" className="btn btn-primary" disabled={submitting}>
                             Next
                         </Button>
                     ) : (
-                        <Button type="submit" className="btn btn-primary">
-                            Submit
+                        <Button type="submit" className="btn btn-primary" disabled={submitting}>
+                            {submitting ? (
+                                <>
+                                    <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                    Submitting...
+                                </>
+                            ) : (
+                                "Submit"
+                            )}
                         </Button>
                     )}
                 </div>
