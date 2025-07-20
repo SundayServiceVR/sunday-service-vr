@@ -93,9 +93,18 @@ const PreflightChecklist = () => {
 
         const optional: OptionalChecklistItem[] = [
             {
+                label: 'Add post to vrchat',
+                completed: false,
+                description: 'Post this event to the VRChat.',
+                external: true,
+                link: 'https://vrchat.com/home/group/grp_626cd923-6dea-4583-abcb-8c09a765969f/posts',
+                buttonLabel: 'Go to VRChat',
+                optional: true,
+            },
+            {
                 label: 'Add the event to vrc.tl',
                 completed: false,
-                description: 'Share your event on the VRC event listing site.',
+                description: 'Share your event on the VRCTL event listing site.',
                 external: true,
                 link: 'https://vrc.tl',
                 buttonLabel: 'Go to vrc.tl',
