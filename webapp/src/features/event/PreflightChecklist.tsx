@@ -95,7 +95,7 @@ const PreflightChecklist = () => {
             {
                 label: 'Add post to vrchat',
                 completed: false,
-                description: 'Post this event to the VRChat.',
+                description: 'Post this event to VRChat.',
                 external: true,
                 link: 'https://vrchat.com/home/group/grp_626cd923-6dea-4583-abcb-8c09a765969f/posts',
                 buttonLabel: 'Go to VRChat',
