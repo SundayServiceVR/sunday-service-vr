@@ -25,7 +25,6 @@ const EventSignupEntry = ({
   onUpdateSignup,
   setSelectedSignup,
   setShowModal,
-  event,
 }: Props) => {
   const [isCollapsed, setIsCollapsed] = useState(true); // Default to hidden/collapsed
 
@@ -114,7 +113,7 @@ const EventSignupEntry = ({
         {!isCollapsed && (
           <Card.Body className="p-2">
             <div className="my-3">
-              <EventSlotDetails signup={signup} onUpdateSignup={onUpdateSignup} event={event} />
+              <EventSlotDetails signup={signup} onUpdateSignup={onUpdateSignup} />
               <hr />
               {signup.dj_refs?.map((djRef: DocumentReference) => (
                 <EventSignupDjDetails
