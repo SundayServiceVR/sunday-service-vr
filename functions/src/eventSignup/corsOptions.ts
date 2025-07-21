@@ -4,5 +4,6 @@ export default {
         /^https:\/\/sunday-service-vr-[^.]+\.web\.app$/,
         "https://sunday-service-vr.web.app",
         "https://s4tan.s4vr.net",
+        "https://sunday-service-vr.firebaseapp.com",
     ],
 };
