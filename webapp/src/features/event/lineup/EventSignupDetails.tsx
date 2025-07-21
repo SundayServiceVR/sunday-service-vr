@@ -131,7 +131,6 @@ const EventSlotDetails = ({ signup, onUpdateSignup }: Props) => {
       </Form.Group>
     )}
 
-
     {
       signup.event_signup_form_data?.is_b2b &&
       <>
