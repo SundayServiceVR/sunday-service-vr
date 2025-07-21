@@ -107,27 +107,29 @@ const EventSlotDetails = ({ signup, onUpdateSignup }: Props) => {
       </Form.Group>
     }
 
-    <Form.Group as={Row}>
-      <Form.Label column="sm" xs={12} md={3} className="text-md-end">
-        <strong>Stream Link</strong>
-      </Form.Label>
-      <Col>
-        <Form.Control
-          size="sm"
-          value={signup.event_signup_form_data?.stream_link || ''}
-          placeholder="Enter stream link"
-          onChange={(event) => {
-            onUpdateSignup({
-              ...signup,
-              event_signup_form_data: {
-                ...(signup.event_signup_form_data || {}),
-                stream_link: event.target.value
-              } as EventSignupFormData
-            })
-          }}
-        />
-      </Col>
-    </Form.Group>
+    {signup.type !== SlotType.PRERECORD && (
+      <Form.Group as={Row}>
+        <Form.Label column="sm" xs={12} md={3} className="text-md-end">
+          <strong>Stream Link</strong>
+        </Form.Label>
+        <Col>
+          <Form.Control
+            size="sm"
+            value={signup.event_signup_form_data?.stream_link || ''}
+            placeholder="Enter stream link"
+            onChange={(event) => {
+              onUpdateSignup({
+                ...signup,
+                event_signup_form_data: {
+                  ...(signup.event_signup_form_data || {}),
+                  stream_link: event.target.value
+                } as EventSignupFormData
+              })
+            }}
+          />
+        </Col>
+      </Form.Group>
+    )}
 
 
     {
