@@ -22,7 +22,7 @@ const EventLineupSlot = ({
     onUpdateSignup,
     slot,
     signup,
-    // event, // TODO:  Remove if we don't need this.
+    event,
     onSlotMoveSooner,
     onSlotMoveLater,
     onRemoveSlot,
@@ -79,7 +79,7 @@ const EventLineupSlot = ({
                         }]} />
             </Col>
             <Col xs={{ order: 2, span: 12 }} md={{ order: 2, span: true }} className="pt-3">
-                <EventSlotDetails signup={signup} onUpdateSignup={onUpdateSignup} />
+                <EventSlotDetails signup={signup} onUpdateSignup={onUpdateSignup} event={event} />
                 < hr />
                 <ul>
                     {

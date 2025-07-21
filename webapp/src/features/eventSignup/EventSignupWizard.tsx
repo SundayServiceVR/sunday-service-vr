@@ -172,7 +172,7 @@ export const EventSignupWizard = () => {
                 style={submitting ? { pointerEvents: "none", opacity: 0.6 } : {}} // <-- Block input
             >
                 <input type="hidden" name="event_id" value={event_id} />
-                <CurrentStep formData={formData} onChange={handleChange} />
+                <CurrentStep formData={formData} onChange={handleChange} event={event} />
                 <div className="d-flex justify-content-between mt-4">
                     <Button variant="secondary" onClick={handleBack} type="button" disabled={step === 0 || submitting}>
                         Back

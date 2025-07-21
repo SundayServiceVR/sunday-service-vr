@@ -4,11 +4,12 @@ import { Container, Form } from "react-bootstrap";
 import { useEventSignupOutletMembers } from "../outletContext";
 import { getHourOptionFromAvailability } from "../utils";
 import { Timestamp } from "firebase/firestore";
-import { EventSignupFormData } from "../../../util/types";
+import { EventSignupFormData, Event } from "../../../util/types";
 
 interface Step2Props {
   formData: EventSignupFormData;
   onChange: (e: React.ChangeEvent<HTMLElement>) => void;
+  event?: Event;
 }
 
 const StepAvailability: React.FC<Step2Props> = ({ formData, onChange }) => (

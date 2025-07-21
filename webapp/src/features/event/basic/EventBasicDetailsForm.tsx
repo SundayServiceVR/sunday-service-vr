@@ -64,6 +64,28 @@ const EventBasicDetailsForm = ({ event: eventScratchpad, onEventChange: proposeE
                 }}
             />
         </Form.Group>
+        <Form.Group className="mt-2">
+            <Form.Label>
+                Live Jive Event
+            </Form.Label>
+            <Form.Check
+                type="switch"
+                checked={eventScratchpad.signup_configuration?.isLiveJive || false}
+                onChange={(formEvent) => { 
+                    const checked = (formEvent.target as HTMLInputElement).checked;
+                    proposeEventChange({ 
+                        ...eventScratchpad, 
+                        signup_configuration: {
+                            ...eventScratchpad.signup_configuration,
+                            isLiveJive: checked
+                        }
+                    }); 
+                }}
+            />
+            <Form.Text className="text-muted">
+                Enable this for "Live Jive" events where only live performances are allowed (typically the last Sunday of the month).
+            </Form.Text>
+        </Form.Group>
     </Form>
     </>
 

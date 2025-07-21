@@ -118,6 +118,7 @@ const EventSignupList = ({
             onUpdateSignup={onUpdateSignup}
             setSelectedSignup={setSelectedSignup}
             setShowModal={setShowModal}
+            event={event}
           />
         ))}
       </Stack>
