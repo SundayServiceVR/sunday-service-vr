@@ -1,6 +1,6 @@
 import { Card, Stack, Button, Modal, Form } from "react-bootstrap";
 import { useState } from "react"; // Import useState
-import { EventSignup } from "../../../util/types";
+import { EventSignup, Event } from "../../../util/types";
 import { ActionMenu } from "../../../components/actionMenu/ActionMenu";
 import EventSignupDjDetails from "./EventSignupDjDetails";
 import EventSlotDetails from "./EventSignupDetails";
@@ -15,6 +15,7 @@ type Props = {
   onUpdateSignup: (signup: EventSignup) => void;
   setSelectedSignup: (signup: EventSignup | null) => void;
   setShowModal: (show: boolean) => void;
+  event?: Event;
 };
 
 const EventSignupEntry = ({

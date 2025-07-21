@@ -37,6 +37,12 @@ export type Event = {
     signups: EventSignup[]
 
     dj_plays: DocumentReference[],
+    
+    // Configuration for signup behavior and restrictions
+    signup_configuration?: {
+        isLiveJive?: boolean;
+        // Future signup options can be added here
+    };
 }
 
 export type EventSignup = {

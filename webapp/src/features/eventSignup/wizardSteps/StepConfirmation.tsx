@@ -1,10 +1,11 @@
 import React from "react";
 import { Container, Form } from "react-bootstrap";
-import { EventSignupFormData } from "../../../util/types";
+import { EventSignupFormData, Event } from "../../../util/types";
 
 interface Step3Props {
   formData: EventSignupFormData;
   onChange: (e: React.ChangeEvent<HTMLElement>) => void;
+  event?: Event;
 }
 
 const EventSignupStep3: React.FC<Step3Props> = ({ formData, onChange }) => (
