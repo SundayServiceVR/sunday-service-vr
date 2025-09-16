@@ -136,7 +136,7 @@ export const SlotTypes =
 export type SlotDuration = (0.5 | 1 | 1.5 | 2 | 2.5 | 3 | 3.5 | 4);
 
 export type AppUserRole = {
-    role: 'admin' | 'host' | 'dj' | 'bingo';
+    role: 'developer' | 'admin' | 'host' | 'dj' | 'bingo';
     club_id?: string;
 }
 

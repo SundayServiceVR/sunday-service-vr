@@ -18,6 +18,12 @@ type DiscordRoleToAppUserRole = {
 const roleNameToAppUserRole = (roleId: string) => {
     const discordRolesMap: {[key: string] : DiscordRoleToAppUserRole} = {
 
+        "1235094950345969716": {
+            role: "developer",
+            discordRoleName: "Developer",
+            displayName: "Developer",
+            appUserRoles: [{ role: "dj" }, { role: "host" }, { role: "developer" }, { role: "admin" }],
+        },
         "1004489271568248833": {
             role: "admin",
             discordRoleName: "Domoni Poobah",
@@ -36,6 +42,7 @@ const roleNameToAppUserRole = (roleId: string) => {
             displayName: "General DJ",
             appUserRoles: [{ role: "dj" }],
         },
+
     };
     return discordRolesMap[roleId]?.appUserRoles ?? [];
 };
