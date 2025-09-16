@@ -31,7 +31,7 @@ const BingoPlayer: React.FC = () => {
 
         // Listen for active games
         const gamesRef = collection(db, 'bingo_games');
-        const q = query(gamesRef, where('state', 'in', ['setup', 'playing']));
+        const q = query(gamesRef, where('state', 'in', ['setup', 'playing', 'ended']));
         
         const unsubscribe = onSnapshot(q, (snapshot) => {
             const games = snapshot.docs.map(doc => ({
@@ -41,6 +41,16 @@ const BingoPlayer: React.FC = () => {
                 started_at: doc.data().started_at?.toDate(),
                 ended_at: doc.data().ended_at?.toDate(),
             })) as BingoGame[];
+
+            // Sort by creation time (newest first) and prioritize active games
+            games.sort((a, b) => {
+                // First, prioritize setup and playing games over ended games
+                if (a.state !== 'ended' && b.state === 'ended') return -1;
+                if (a.state === 'ended' && b.state !== 'ended') return 1;
+                
+                // Then sort by creation time (newest first)
+                return b.created_at.getTime() - a.created_at.getTime();
+            });
 
             if (games.length > 0) {
                 setCurrentGame(games[0]);
@@ -228,6 +238,7 @@ const BingoPlayer: React.FC = () => {
                     state: 'ended',
                     winner_discord_id: user.uid,
                     winner_public_name: user.displayName || 'Unknown Player',
+                    winner_avatar_url: user.photoURL || '',
                     ended_at: serverTimestamp(),
                 });
 
@@ -294,9 +305,24 @@ const BingoPlayer: React.FC = () => {
                 <Row className="justify-content-center">
                     <Col lg={6}>
                         <Alert variant="success" className="text-center">
-                            <h2>BINGO!</h2>
+                            <h2>🎉 BINGO! 🎉</h2>
                             {currentGame.winner_public_name && (
-                                <h4>Winner: {currentGame.winner_public_name}</h4>
+                                <div className="mt-3">
+                                    <div className="d-flex align-items-center justify-content-center mb-3">
+                                        {currentGame.winner_avatar_url && (
+                                            <img 
+                                                src={currentGame.winner_avatar_url} 
+                                                alt={`${currentGame.winner_public_name}'s avatar`}
+                                                className="rounded-circle me-3"
+                                                style={{ width: '64px', height: '64px' }}
+                                            />
+                                        )}
+                                        <div>
+                                            <h3 className="mb-0">{currentGame.winner_public_name}</h3>
+                                            <p className="text-muted mb-0">Winner!</p>
+                                        </div>
+                                    </div>
+                                </div>
                             )}
                             <p>The game has ended. Wait for the host to start a new game.</p>
                         </Alert>

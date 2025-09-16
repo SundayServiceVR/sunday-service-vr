@@ -27,7 +27,7 @@ const BingoHost: React.FC = () => {
 
         // Listen for active games
         const gamesRef = collection(db, 'bingo_games');
-        const q = query(gamesRef, where('state', 'in', ['setup', 'playing']));
+        const q = query(gamesRef, where('state', 'in', ['setup', 'playing', 'ended']));
         
         const unsubscribe = onSnapshot(q, (snapshot) => {
             const games = snapshot.docs.map(doc => ({
@@ -38,7 +38,17 @@ const BingoHost: React.FC = () => {
                 ended_at: doc.data().ended_at?.toDate(),
             })) as BingoGame[];
 
-            // Get the most recent active game
+            // Sort by creation time (newest first) and prioritize active games
+            games.sort((a, b) => {
+                // First, prioritize setup and playing games over ended games
+                if (a.state !== 'ended' && b.state === 'ended') return -1;
+                if (a.state === 'ended' && b.state !== 'ended') return 1;
+                
+                // Then sort by creation time (newest first)
+                return b.created_at.getTime() - a.created_at.getTime();
+            });
+
+            // Get the most recent active game or most recent ended game if no active games
             if (games.length > 0) {
                 setCurrentGame(games[0]);
             } else {
@@ -151,12 +161,6 @@ const BingoHost: React.FC = () => {
         }
     };
 
-    const resetForNewGame = () => {
-        setCurrentGame(null);
-        setValuesInput('');
-        setError(null);
-    };
-
     const getLastDrawnValue = () => {
         if (!currentGame || currentGame.drawn_values.length === 0) return null;
         return currentGame.drawn_values[currentGame.drawn_values.length - 1];
@@ -187,8 +191,8 @@ const BingoHost: React.FC = () => {
                         <Card.Body>
                             {error && <Alert variant="danger">{error}</Alert>}
 
-                            {!currentGame && (
-                                <div>
+                            {(!currentGame || currentGame.state === 'ended') && (
+                                <div className="mb-4">
                                     <h4>Create New Bingo Game</h4>
                                     <Form.Group className="mb-3">
                                         <Form.Label>Bingo Values (comma-separated, minimum 25)</Form.Label>
@@ -289,18 +293,28 @@ const BingoHost: React.FC = () => {
 
                             {currentGame && currentGame.state === 'ended' && (
                                 <div>
-                                    <Alert variant="success">
-                                        <h4>Game Ended!</h4>
+                                    <Alert variant="success" className="text-center">
+                                        <h2>🎉 BINGO! 🎉</h2>
                                         {currentGame.winner_public_name && (
-                                            <p>Winner: <strong>{currentGame.winner_public_name}</strong></p>
+                                            <div className="mt-3">
+                                                <div className="d-flex align-items-center justify-content-center mb-3">
+                                                    {currentGame.winner_avatar_url && (
+                                                        <img 
+                                                            src={currentGame.winner_avatar_url} 
+                                                            alt={`${currentGame.winner_public_name}'s avatar`}
+                                                            className="rounded-circle me-3"
+                                                            style={{ width: '64px', height: '64px' }}
+                                                        />
+                                                    )}
+                                                    <div>
+                                                        <h3 className="mb-0">{currentGame.winner_public_name}</h3>
+                                                        <p className="text-muted mb-0">Winner!</p>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         )}
+                                        <p className="mt-3 mb-0">Game ended. Create a new game above to play again!</p>
                                     </Alert>
-                                    <Button 
-                                        variant="primary" 
-                                        onClick={resetForNewGame}
-                                    >
-                                        Start New Game
-                                    </Button>
                                 </div>
                             )}
                         </Card.Body>

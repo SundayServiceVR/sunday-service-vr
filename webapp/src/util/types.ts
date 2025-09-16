@@ -151,6 +151,7 @@ export type BingoGame = {
     drawn_values: string[];
     winner_discord_id?: string;
     winner_public_name?: string;
+    winner_avatar_url?: string;
     created_at: Date;
     started_at?: Date;
     ended_at?: Date;
