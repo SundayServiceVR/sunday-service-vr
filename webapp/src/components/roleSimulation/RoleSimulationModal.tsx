@@ -9,10 +9,11 @@ type Props = {
 }
 
 const availableRoles = [
+    { value: 'developer', label: 'Developer' },
     { value: 'admin', label: 'Admin' },
     { value: 'host', label: 'Host' },
     { value: 'dj', label: 'DJ' },
-    { value: 'developer', label: 'Developer' }
+    { value: 'bingo', label: 'Bingo' }
 ];
 
 export const RoleSimulationModal = ({ show, handleClose, currentSimulatedRoles, onRoleSimulationChange }: Props) => {

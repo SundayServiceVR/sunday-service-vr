@@ -111,7 +111,7 @@ function App() {
           element: <BingoPlayer />
         },
         {
-          path: "host-1439656567",
+          path: "host",
           element: <RoleGuard requireAnyRole={['bingo', 'dj', 'host', 'admin']}>
             <BingoHost />
           </RoleGuard>
