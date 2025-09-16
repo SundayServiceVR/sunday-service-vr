@@ -145,7 +145,7 @@ const BingoHost: React.FC = () => {
                             {currentGame && currentGame.state === 'ended' && (
                                 <div>
                                     <Alert variant="success" className="text-center">
-                                        <h2>🎉 BINGO! 🎉</h2>
+                                        <h2>BINGO!</h2>
                                         {currentGame.winner_public_name && (
                                             <div className="mt-3">
                                                 <div className="d-flex align-items-center justify-content-center mb-3">

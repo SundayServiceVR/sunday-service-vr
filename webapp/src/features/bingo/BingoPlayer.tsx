@@ -55,7 +55,7 @@ const BingoPlayer: React.FC = () => {
                 <Row className="justify-content-center">
                     <Col lg={6}>
                         <Alert variant="success" className="text-center">
-                            <h2>🎉 BINGO! 🎉</h2>
+                            <h2>BINGO!</h2>
                             {currentGame.winner_public_name && (
                                 <div className="mt-3">
                                     <div className="d-flex align-items-center justify-content-center mb-3">
