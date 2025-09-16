@@ -139,3 +139,32 @@ export type AppUserRole = {
     role: 'admin' | 'host' | 'dj';
     club_id?: string;
 }
+
+// Bingo Game Types
+export type BingoGameState = 'setup' | 'playing' | 'ended';
+
+export type BingoGame = {
+    id?: string;
+    state: BingoGameState;
+    host_discord_id: string;
+    values: string[];
+    drawn_values: string[];
+    winner_discord_id?: string;
+    winner_public_name?: string;
+    created_at: Date;
+    started_at?: Date;
+    ended_at?: Date;
+}
+
+export type BingoCard = {
+    id?: string;
+    game_id: string;
+    player_discord_id: string;
+    player_public_name: string;
+    grid: string[]; // 25 values in row-major order (0-24)
+    marked: boolean[]; // 25 boolean values in row-major order (0-24)
+    has_bingo: boolean;
+    bingo_claimed: boolean;
+    locked_out: boolean;
+    created_at: Date;
+}

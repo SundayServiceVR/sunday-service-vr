@@ -1,0 +1,65 @@
+.bingo-grid {
+    display: grid;
+    grid-template-rows: auto repeat(5, 1fr);
+    gap: 2px;
+    background: #dee2e6;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.bingo-header {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 2px;
+    margin-bottom: 2px;
+}
+
+.bingo-header > div {
+    background: #0d6efd;
+    color: white;
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+.bingo-row {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 2px;
+}
+
+.bingo-cell {
+    aspect-ratio: 1;
+    background: white;
+    border: 2px solid #dee2e6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.9rem;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.bingo-cell:hover {
+    border-color: #0d6efd;
+}
+
+.bingo-cell.marked {
+    background: #dc3545;
+    color: white;
+    border-color: #dc3545;
+}
+
+.bingo-cell.free {
+    background: #28a745;
+    color: white;
+    border-color: #28a745;
+}
+
+.bingo-cell.called {
+    background: #d4edda;
+    border-color: #28a745;
+}

@@ -45,11 +45,21 @@ const Layout = () => {
                                     Dj Roster
                                 </Link>
                             </Nav.Link>
+                            <Nav.Link as="span">
+                                <Link to="/bingo" className="nav-link p-0">
+                                    Bingo
+                                </Link>
+                            </Nav.Link>
                         </>
                     )}
                     <Nav.Link as="span" className="d-lg-none">
                         <Link to="/userInfo" className="nav-link p-0">
                             User Info
+                        </Link>
+                    </Nav.Link>
+                    <Nav.Link as="span" className="d-lg-none">
+                        <Link to="/bingo" className="nav-link p-0">
+                            Bingo
                         </Link>
                     </Nav.Link>
                     <Nav.Link

@@ -28,6 +28,8 @@ import './App.css';
 import { EventSignupWizard } from './features/eventSignup/EventSignupWizard';
 import { EventSignupStart } from './features/eventSignup/EventSignupStart';
 import { EventSignupRoot } from './features/eventSignup/EventSignupRoot';
+import BingoHost from './features/bingo/BingoHost';
+import BingoPlayer from './features/bingo/BingoPlayer';
 
 
 function App() {
@@ -91,6 +93,19 @@ function App() {
         {
           path: "userInfo",
           element: <UserInfo />
+        },
+        {
+          path: "bingo",
+          children: [
+            {
+              index: true,
+              element: <BingoPlayer />
+            },
+            {
+              path: "host",
+              element: <BingoHost />
+            }
+          ]
         },
       ],
     },
