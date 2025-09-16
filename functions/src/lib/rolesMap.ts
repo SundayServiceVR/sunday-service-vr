@@ -42,6 +42,10 @@ const roleNameToAppUserRole = (roleId: string) => {
 
 export const getRolesFromDiscordRoles = (discordRoles: string[]): AppUserRole[] => {
     const roles: Map<string, AppUserRole> = new Map();
+
+    // Add default "bingo" role for all users
+    roles.set("bingo", { role: "bingo" });
+
     discordRoles.forEach((role) => {
         roleNameToAppUserRole(role).forEach((appUserRole) => {
             const mapKey = `${appUserRole.role}`;

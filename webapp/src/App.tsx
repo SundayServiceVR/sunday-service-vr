@@ -94,20 +94,29 @@ function App() {
           path: "userInfo",
           element: <UserInfo />
         },
-        {
-          path: "bingo",
-          children: [
-            {
-              index: true,
-              element: <BingoPlayer />
-            },
-            {
-              path: "host",
-              element: <BingoHost />
-            }
-          ]
-        },
       ],
+    },
+    {
+      path: "/bingo",
+      element: <FirebaseAuthProvider>
+        <RoleGuard requireAnyRole={['bingo', 'dj', 'host', 'admin']}>
+          <EventDjPlayMapperProvider>
+            <Layout />
+          </EventDjPlayMapperProvider>
+        </RoleGuard>
+      </FirebaseAuthProvider>,
+      children: [
+        {
+          index: true,
+          element: <BingoPlayer />
+        },
+        {
+          path: "host-1439656567",
+          element: <RoleGuard requireAnyRole={['bingo', 'dj', 'host', 'admin']}>
+            <BingoHost />
+          </RoleGuard>
+        }
+      ]
     },
     {
       path: "eventSignup",

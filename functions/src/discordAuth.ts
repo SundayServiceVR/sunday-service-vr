@@ -179,7 +179,7 @@ async function syncUserToFirestore(discordUser: APIGuildMember) {
         public_name: discordUser.nick || discordUser.user.global_name || discordUser.user.username || "Unknown User",
         avatar,
         dj_name: discordUser.nick || discordUser.user.global_name || discordUser.user.username || "Unknown User",
-        roles: [{ role: "dj" }], // Default role for new users, can be updated later
+        roles: [{ role: "bingo" }], // Default role for new users, can be updated later
     };
 
     let djDocId: string;
