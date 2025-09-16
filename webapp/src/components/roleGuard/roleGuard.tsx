@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { FirebaseAuthContext } from '../../contexts/FirebaseAuthContext';
 import Spinner from '../spinner/Spinner';
+import { Alert } from 'react-bootstrap';
 
 type RoleGuardProps = {
   requireAnyRole?: string[];
@@ -9,7 +10,7 @@ type RoleGuardProps = {
 
 const RoleGuard: React.FC<RoleGuardProps> = ({ requireAnyRole, children }) => {
 
-  const { roles, auth } = useContext(FirebaseAuthContext);
+  const { roles, auth, isSimulatingRoles, actualRoles } = useContext(FirebaseAuthContext);
 
   if(!auth || !roles) {
     return <Spinner type="logo" />;
@@ -22,6 +23,21 @@ const RoleGuard: React.FC<RoleGuardProps> = ({ requireAnyRole, children }) => {
           <div>
             You do not have the required permissions to view this content.
           </div>
+          <div className="mt-2">
+            <small className="text-muted">
+              Required: {requireAnyRole.join(' or ')} | 
+              Your roles: {roles.join(', ') || 'none'}
+            </small>
+          </div>
+          {isSimulatingRoles && (
+            <Alert variant="warning" className="mt-3">
+              <small>
+                <strong>Role Simulation Active:</strong> You're simulating roles [{roles.join(', ')}]. 
+                Your actual roles are [{actualRoles?.join(', ')}].
+                Use the Role Simulation button in the navbar to change or clear simulation.
+              </small>
+            </Alert>
+          )}
           {auth && <button className="btn btn-primary mt-3" onClick={() => auth.signOut()}>Log Out</button>}
         </div>
       </div>;

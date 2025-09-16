@@ -4,7 +4,15 @@ import { Auth, onAuthStateChanged, User } from "firebase/auth";
 import { auth } from "../util/firebase";
 import Spinner from "../components/spinner/Spinner";
 
-type FirebaseAuthContextType = { user?: User, auth?: Auth, roles?: string[] };
+type FirebaseAuthContextType = { 
+  user?: User, 
+  auth?: Auth, 
+  roles?: string[],
+  isSimulatingRoles?: boolean,
+  actualRoles?: string[],
+  setSimulatedRoles?: (roles: string[]) => void,
+  clearRoleSimulation?: () => void
+};
 
 const FirebaseAuthContext =
   React.createContext<FirebaseAuthContextType>({});
@@ -17,6 +25,8 @@ const FirebaseAuthProvider = ({ children }: Props) => {
   const [user, setUser] = React.useState<User | null | "Pending">("Pending");
   const [authInstance, setAuthInstance] = React.useState<Auth>();
   const [roles, setRoles] = React.useState<string[]>();
+  const [actualRoles, setActualRoles] = React.useState<string[]>();
+  const [simulatedRoles, setSimulatedRolesState] = React.useState<string[] | null>(null);
   
   React.useEffect(() => {
       console.log('FirebaseAuthProvider: Setting up auth state listener');
@@ -50,17 +60,52 @@ const FirebaseAuthProvider = ({ children }: Props) => {
           }
 
           console.log('FirebaseAuthProvider: User roles fetched', { roles: userRoles });
-          setRoles(userRoles);
+          setActualRoles(userRoles);
+          
+          // Load simulated roles from localStorage if user is a developer
+          const savedSimulatedRoles = localStorage.getItem('simulatedRoles');
+          if (userRoles.includes('developer') && savedSimulatedRoles) {
+            try {
+              const parsedSimulatedRoles = JSON.parse(savedSimulatedRoles);
+              setSimulatedRolesState(parsedSimulatedRoles);
+              setRoles(parsedSimulatedRoles);
+            } catch (error) {
+              console.error('Error parsing simulated roles from localStorage:', error);
+              setRoles(userRoles);
+            }
+          } else {
+            setRoles(userRoles);
+          }
         } catch (error) {
           console.error('FirebaseAuthProvider: Error fetching user roles', error);
           setRoles([]); // Set empty roles on error
+          setActualRoles([]);
         }
       } else {
         console.log('FirebaseAuthProvider: Clearing roles (user not logged in)');
         setRoles(undefined); // Clear roles when user is not logged in
+        setActualRoles(undefined);
+        setSimulatedRolesState(null);
       }
     })();
   }, [user]);
+
+  // Role simulation functions
+  const setSimulatedRoles = React.useCallback((newRoles: string[]) => {
+    if (actualRoles?.includes('developer')) {
+      setSimulatedRolesState(newRoles);
+      setRoles(newRoles);
+      localStorage.setItem('simulatedRoles', JSON.stringify(newRoles));
+      console.log('FirebaseAuthProvider: Role simulation set', { simulatedRoles: newRoles });
+    }
+  }, [actualRoles]);
+
+  const clearRoleSimulation = React.useCallback(() => {
+    setSimulatedRolesState(null);
+    setRoles(actualRoles);
+    localStorage.removeItem('simulatedRoles');
+    console.log('FirebaseAuthProvider: Role simulation cleared');
+  }, [actualRoles]);
 
 
   if(user === "Pending") {
@@ -78,7 +123,15 @@ const FirebaseAuthProvider = ({ children }: Props) => {
 
 
   return (
-    <FirebaseAuthContext.Provider value={{ user, auth: authInstance, roles }}>
+    <FirebaseAuthContext.Provider value={{ 
+      user, 
+      auth: authInstance, 
+      roles,
+      isSimulatingRoles: simulatedRoles !== null,
+      actualRoles,
+      setSimulatedRoles,
+      clearRoleSimulation
+    }}>
       {children}
     </FirebaseAuthContext.Provider>
   );
