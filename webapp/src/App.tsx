@@ -144,7 +144,7 @@ function App() {
     {
       path: "/userInfo",
       element: <FirebaseAuthProvider>
-            <RoleGuard requireAnyRole={['dj', 'host', 'admin']}><Layout /></RoleGuard>
+            <RoleGuard requireAnyRole={['bingo', 'dj', 'host', 'admin']}><Layout /></RoleGuard>
       </FirebaseAuthProvider>,
       children: [
         {
