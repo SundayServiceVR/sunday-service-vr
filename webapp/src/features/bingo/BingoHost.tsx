@@ -143,28 +143,26 @@ const BingoHost: React.FC = () => {
                                 </div>
                             )}
 
-                            {currentGame && currentGame.state === 'ended' && (
+                            {currentGame && currentGame.state === 'ended' && currentGame.winner_public_name && (
                                 <div>
                                     <Alert variant="success" className="text-center">
                                         <h2>BINGO!</h2>
-                                        {currentGame.winner_public_name && (
-                                            <div className="mt-3">
-                                                <div className="d-flex align-items-center justify-content-center mb-3">
-                                                    {currentGame.winner_avatar_url && (
-                                                        <img 
-                                                            src={currentGame.winner_avatar_url} 
-                                                            alt={`${currentGame.winner_public_name}'s avatar`}
-                                                            className="rounded-circle me-3"
-                                                            style={{ width: '64px', height: '64px' }}
-                                                        />
-                                                    )}
-                                                    <div>
-                                                        <h3 className="mb-0">{currentGame.winner_public_name}</h3>
-                                                        <p className="text-muted mb-0">Winner!</p>
-                                                    </div>
+                                        <div className="mt-3">
+                                            <div className="d-flex align-items-center justify-content-center mb-3">
+                                                {currentGame.winner_avatar_url && (
+                                                    <img 
+                                                        src={currentGame.winner_avatar_url} 
+                                                        alt={`${currentGame.winner_public_name}'s avatar`}
+                                                        className="rounded-circle me-3"
+                                                        style={{ width: '64px', height: '64px' }}
+                                                    />
+                                                )}
+                                                <div>
+                                                    <h3 className="mb-0">{currentGame.winner_public_name}</h3>
+                                                    <p className="text-muted mb-0">Winner!</p>
                                                 </div>
                                             </div>
-                                        )}
+                                        </div>
                                         <p className="mt-3 mb-0">Game ended. Create a new game above to play again!</p>
                                     </Alert>
                                 </div>

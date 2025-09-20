@@ -42,7 +42,7 @@ function App() {
     {
       path: "/",
       element: <FirebaseAuthProvider>
-        <RoleGuard requireAnyRole={['dj', 'host', 'admin']}>
+        <RoleGuard requireAnyRole={['dj', 'host', 'admin', 'bingo']}>
           <EventDjPlayMapperProvider>
             <Layout />
           </EventDjPlayMapperProvider>
@@ -111,7 +111,7 @@ function App() {
           element: <BingoPlayer />
         },
         {
-          path: "host",
+          path: "host-5712788787",
           element: <RoleGuard requireAnyRole={['bingo', 'dj', 'host', 'admin']}>
             <BingoHost />
           </RoleGuard>
@@ -121,7 +121,7 @@ function App() {
     {
       path: "eventSignup",
       element: <FirebaseAuthProvider>
-            <RoleGuard requireAnyRole={['dj', 'host']}><Layout /></RoleGuard>
+            <RoleGuard requireAnyRole={['dj', 'host', 'admin']}><Layout /></RoleGuard>
       </FirebaseAuthProvider>,
       children: [
         {
