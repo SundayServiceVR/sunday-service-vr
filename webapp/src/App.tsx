@@ -28,6 +28,8 @@ import './App.css';
 import { EventSignupWizard } from './features/eventSignup/EventSignupWizard';
 import { EventSignupStart } from './features/eventSignup/EventSignupStart';
 import { EventSignupRoot } from './features/eventSignup/EventSignupRoot';
+import BingoHost from './features/bingo/BingoHost';
+import BingoPlayer from './features/bingo/BingoPlayer';
 
 
 function App() {
@@ -93,6 +95,28 @@ function App() {
           element: <UserInfo />
         },
       ],
+    },
+    {
+      path: "/bingo",
+      element: <FirebaseAuthProvider>
+        <RoleGuard requireAnyRole={['bingo', 'dj', 'host', 'admin']}>
+          <EventDjPlayMapperProvider>
+            <Layout />
+          </EventDjPlayMapperProvider>
+        </RoleGuard>
+      </FirebaseAuthProvider>,
+      children: [
+        {
+          index: true,
+          element: <BingoPlayer />
+        },
+        {
+          path: "host",
+          element: <RoleGuard requireAnyRole={['bingo', 'dj', 'host', 'admin']}>
+            <BingoHost />
+          </RoleGuard>
+        }
+      ]
     },
     {
       path: "eventSignup",
