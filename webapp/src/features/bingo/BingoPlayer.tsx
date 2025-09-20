@@ -158,6 +158,7 @@ const BingoPlayer: React.FC = () => {
                                         <Button
                                             variant="success"
                                             size="lg"
+                                            className="w-100"
                                             onClick={claimBingo}
                                             disabled={isLoading || playerCard.locked_out || !checkForBingo(playerCard.marked)}
                                         >
@@ -165,12 +166,12 @@ const BingoPlayer: React.FC = () => {
                                         </Button>
                                     </div>
 
-                                    <div className="mt-3">
+                                    {/* <div className="mt-3">
                                         <small className="text-muted">
                                             Click on the squares to mark them when the number is called. 
                                             The center square is FREE. Green squares have been called.
                                         </small>
-                                    </div>
+                                    </div> */}
                                 </>
                             )}
                         </Card.Body>

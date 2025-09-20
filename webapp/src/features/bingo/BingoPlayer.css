@@ -5,6 +5,18 @@
     background: #dee2e6;
     padding: 10px;
     border-radius: 8px;
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+    .bingo-grid {
+        padding: 5px;
+        gap: 1px;
+        max-width: 100%;
+    }
 }
 
 .bingo-header {
@@ -24,6 +36,14 @@
     border-radius: 4px;
 }
 
+/* Mobile responsive text */
+@media (max-width: 768px) {
+    .bingo-header > div {
+        font-size: 1rem;
+        padding: 8px 4px;
+    }
+}
+
 .bingo-row {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
@@ -41,6 +61,26 @@
     font-size: 0.9rem;
     border-radius: 4px;
     transition: all 0.2s;
+    padding: 2px;
+    text-align: center;
+    overflow: hidden;
+    word-wrap: break-word;
+    hyphens: auto;
+}
+
+/* Mobile responsive cells */
+@media (max-width: 768px) {
+    .bingo-cell {
+        font-size: 0.7rem;
+        border-width: 1px;
+        padding: 1px;
+    }
+}
+
+@media (max-width: 480px) {
+    .bingo-cell {
+        font-size: 0.6rem;
+    }
 }
 
 .bingo-cell:hover {

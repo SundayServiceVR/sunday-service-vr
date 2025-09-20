@@ -10,7 +10,7 @@ type RoleGuardProps = {
 
 const RoleGuard: React.FC<RoleGuardProps> = ({ requireAnyRole, children }) => {
 
-  const { roles, auth, isSimulatingRoles, actualRoles } = useContext(FirebaseAuthContext);
+  const { roles, auth, isSimulatingRoles, actualRoles, clearRoleSimulation } = useContext(FirebaseAuthContext);
 
   if(!auth || !roles) {
     return <Spinner type="logo" />;
@@ -38,7 +38,14 @@ const RoleGuard: React.FC<RoleGuardProps> = ({ requireAnyRole, children }) => {
               </small>
             </Alert>
           )}
-          {auth && <button className="btn btn-primary mt-3" onClick={() => auth.signOut()}>Log Out</button>}
+          <div className="d-flex gap-2 justify-content-center mt-3">
+            {isSimulatingRoles && clearRoleSimulation && (
+              <button className="btn btn-warning" onClick={() => clearRoleSimulation()}>
+                Cancel Role Simulation
+              </button>
+            )}
+            {auth && <button className="btn btn-primary" onClick={() => auth.signOut()}>Log Out</button>}
+          </div>
         </div>
       </div>;
     }
