@@ -9,11 +9,14 @@ type Props = {
 }
 
 const availableRoles = [
+    { value: 'developer', label: 'Developer' },
     { value: 'admin', label: 'Admin' },
     { value: 'host', label: 'Host' },
     { value: 'dj', label: 'DJ' },
-    { value: 'developer', label: 'Developer' }
+    { value: 'bingo', label: 'Bingo' }
 ];
+
+const allRoles = availableRoles.map(role => role.value);
 
 export const RoleSimulationModal = ({ show, handleClose, currentSimulatedRoles, onRoleSimulationChange }: Props) => {
     const [selectedRoles, setSelectedRoles] = useState<string[]>(currentSimulatedRoles);
@@ -32,12 +35,12 @@ export const RoleSimulationModal = ({ show, handleClose, currentSimulatedRoles, 
     };
 
     const handleReset = () => {
-        setSelectedRoles(['admin', 'host', 'dj', 'developer']); // Default developer roles
+        setSelectedRoles(allRoles); // Default developer roles
     };
 
     const handleClearSimulation = () => {
-        setSelectedRoles(['admin', 'host', 'dj', 'developer']); // This will trigger clearing simulation
-        onRoleSimulationChange(['admin', 'host', 'dj', 'developer']);
+        setSelectedRoles(allRoles); // This will trigger clearing simulation
+        onRoleSimulationChange(allRoles);
         handleClose();
     };
 

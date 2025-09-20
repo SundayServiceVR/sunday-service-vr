@@ -136,6 +136,37 @@ export const SlotTypes =
 export type SlotDuration = (0.5 | 1 | 1.5 | 2 | 2.5 | 3 | 3.5 | 4);
 
 export type AppUserRole = {
-    role: 'admin' | 'host' | 'dj' | 'developer';
+    role: 'developer' | 'admin' | 'host' | 'dj' | 'bingo';
     club_id?: string;
+}
+
+// Bingo Game Types
+export type BingoGameState = 'setup' | 'playing' | 'ended';
+
+export type BingoGame = {
+    id?: string;
+    state: BingoGameState;
+    host_discord_id: string;
+    values: string[];
+    drawn_values: string[];
+    winner_discord_id?: string;
+    winner_public_name?: string;
+    winner_avatar_url?: string;
+    hardcore_mode: boolean;
+    created_at: Date;
+    started_at?: Date;
+    ended_at?: Date;
+}
+
+export type BingoCard = {
+    id?: string;
+    game_id: string;
+    player_discord_id: string;
+    player_public_name: string;
+    grid: string[]; // 25 values in row-major order (0-24)
+    marked: boolean[]; // 25 boolean values in row-major order (0-24)
+    has_bingo: boolean;
+    bingo_claimed: boolean;
+    locked_out: boolean;
+    created_at: Date;
 }

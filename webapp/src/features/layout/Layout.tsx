@@ -47,6 +47,11 @@ const Layout = () => {
                                     Dj Roster
                                 </Link>
                             </Nav.Link>
+                            <Nav.Link as="span">
+                                <Link to="/bingo" className="nav-link p-0">
+                                    Bingo
+                                </Link>
+                            </Nav.Link>
                         </>
                     )}
                     
@@ -66,6 +71,11 @@ const Layout = () => {
                     <Nav.Link as="span" className="d-lg-none">
                         <Link to="/userInfo" className="nav-link p-0">
                             User Info
+                        </Link>
+                    </Nav.Link>
+                    <Nav.Link as="span" className="d-lg-none">
+                        <Link to="/bingo" className="nav-link p-0">
+                            Bingo
                         </Link>
                     </Nav.Link>
                     <Nav.Link
@@ -95,9 +105,6 @@ const Layout = () => {
                 </Nav>
             </Navbar.Collapse>
         </Navbar>
-        {(roles?.includes('host') || roles?.includes('admin')) && (
-            <BreadcrumbsBar />
-        )}
         
         {/* Role Simulation Status Bar */}
         {isSimulatingRoles && (
@@ -115,6 +122,10 @@ const Layout = () => {
                     </button>
                 </div>
             </div>
+        )}
+
+        {(roles?.includes('host') || roles?.includes('admin')) && (
+            <BreadcrumbsBar />
         )}
         
         <Container className="mt-1">

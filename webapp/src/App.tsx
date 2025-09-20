@@ -28,6 +28,8 @@ import './App.css';
 import { EventSignupWizard } from './features/eventSignup/EventSignupWizard';
 import { EventSignupStart } from './features/eventSignup/EventSignupStart';
 import { EventSignupRoot } from './features/eventSignup/EventSignupRoot';
+import BingoHost from './features/bingo/BingoHost';
+import BingoPlayer from './features/bingo/BingoPlayer';
 
 
 function App() {
@@ -40,7 +42,7 @@ function App() {
     {
       path: "/",
       element: <FirebaseAuthProvider>
-        <RoleGuard requireAnyRole={['dj', 'host', 'admin']}>
+        <RoleGuard requireAnyRole={['dj', 'host', 'admin', 'bingo']}>
           <EventDjPlayMapperProvider>
             <Layout />
           </EventDjPlayMapperProvider>
@@ -95,9 +97,29 @@ function App() {
       ],
     },
     {
+      path: "/bingo",
+      element: <FirebaseAuthProvider>
+        <RoleGuard requireAnyRole={['bingo', 'dj', 'host', 'admin']}>
+          <EventDjPlayMapperProvider>
+            <Layout />
+          </EventDjPlayMapperProvider>
+        </RoleGuard>
+      </FirebaseAuthProvider>,
+      children: [
+        {
+          index: true,
+          element: <BingoPlayer />
+        },
+        {
+          path: "host-571278878341632",
+          element: <BingoHost />
+        }
+      ]
+    },
+    {
       path: "eventSignup",
       element: <FirebaseAuthProvider>
-            <RoleGuard requireAnyRole={['dj', 'host']}><Layout /></RoleGuard>
+            <RoleGuard requireAnyRole={['dj', 'host', 'admin']}><Layout /></RoleGuard>
       </FirebaseAuthProvider>,
       children: [
         {
@@ -122,7 +144,7 @@ function App() {
     {
       path: "/userInfo",
       element: <FirebaseAuthProvider>
-            <RoleGuard requireAnyRole={['dj', 'host', 'admin']}><Layout /></RoleGuard>
+            <RoleGuard requireAnyRole={['bingo', 'dj', 'host', 'admin']}><Layout /></RoleGuard>
       </FirebaseAuthProvider>,
       children: [
         {
