@@ -105,9 +105,6 @@ const Layout = () => {
                 </Nav>
             </Navbar.Collapse>
         </Navbar>
-        {(roles?.includes('host') || roles?.includes('admin')) && (
-            <BreadcrumbsBar />
-        )}
         
         {/* Role Simulation Status Bar */}
         {isSimulatingRoles && (
@@ -125,6 +122,10 @@ const Layout = () => {
                     </button>
                 </div>
             </div>
+        )}
+
+        {(roles?.includes('host') || roles?.includes('admin')) && (
+            <BreadcrumbsBar />
         )}
         
         <Container className="mt-1">
