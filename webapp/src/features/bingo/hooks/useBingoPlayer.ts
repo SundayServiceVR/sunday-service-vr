@@ -17,8 +17,9 @@ export const useBingoPlayer = () => {
     const { user } = useContext(FirebaseAuthContext);
     const [currentGame, setCurrentGame] = useState<BingoGame | null>(null);
     const [playerCard, setPlayerCard] = useState<BingoCard | null>(null);
-    const [isLoading, setIsLoading] = useState(false);
+    const [isClaimingBingo, setIsClaimingBingo] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [showNopeModal, setShowNopeModal] = useState(false);
 
     // Helper functions for converting between 2D and 1D array indices
     const getIndex = (row: number, col: number) => row * 5 + col;
@@ -63,7 +64,6 @@ export const useBingoPlayer = () => {
     const generatePlayerCard = useCallback(async () => {
         if (!user || !currentGame || currentGame.state !== 'playing') return;
 
-        setIsLoading(true);
         try {
             // Shuffle and pick 24 random values (25th is FREE space)
             const shuffled = [...currentGame.values].sort(() => Math.random() - 0.5);
@@ -104,8 +104,6 @@ export const useBingoPlayer = () => {
         } catch (err) {
             setError('Failed to generate bingo card. Please try again.');
             console.error('Error generating card:', err);
-        } finally {
-            setIsLoading(false);
         }
     }, [user, currentGame]);
 
@@ -148,16 +146,14 @@ export const useBingoPlayer = () => {
         const newMarked = [...playerCard.marked];
         newMarked[index] = !newMarked[index];
 
-        setIsLoading(true);
         try {
             await updateDoc(doc(db, 'bingo_cards', playerCard.id!), {
                 marked: newMarked,
             });
+            setError(null); // Clear any previous errors
         } catch (err) {
             setError('Failed to update card. Please try again.');
             console.error('Error updating card:', err);
-        } finally {
-            setIsLoading(false);
         }
     };
 
@@ -203,7 +199,7 @@ export const useBingoPlayer = () => {
 
         const hasBingo = checkForBingo(playerCard.marked);
         if (!hasBingo) {
-            setError('You do not have a valid bingo!');
+            setShowNopeModal(true);
             return;
         }
 
@@ -221,14 +217,22 @@ export const useBingoPlayer = () => {
             }
         }
 
-        setIsLoading(true);
+        setIsClaimingBingo(true);
         try {
             if (invalidMarks.length > 0) {
-                // Lock out player for false bingo
-                await updateDoc(doc(db, 'bingo_cards', playerCard.id!), {
-                    locked_out: true,
-                });
-                setError(`Invalid bingo! You marked values that weren't called: ${invalidMarks.join(', ')}`);
+                // Show "Nope" modal immediately
+                setShowNopeModal(true);
+                
+                // Only lock out player in hardcore mode
+                if (currentGame.hardcore_mode) {
+                    await updateDoc(doc(db, 'bingo_cards', playerCard.id!), {
+                        locked_out: true,
+                    });
+                } else {
+                    // In non-hardcore mode, reset loading state immediately
+                    setIsClaimingBingo(false);
+                }
+                return;
             } else {
                 // Valid bingo! End the game
                 await updateDoc(doc(db, 'bingo_games', currentGame.id!), {
@@ -248,7 +252,7 @@ export const useBingoPlayer = () => {
             setError('Failed to claim bingo. Please try again.');
             console.error('Error claiming bingo:', err);
         } finally {
-            setIsLoading(false);
+            setIsClaimingBingo(false);
         }
     };
 
@@ -270,11 +274,12 @@ export const useBingoPlayer = () => {
         // State
         currentGame,
         playerCard,
-        isLoading,
+        isLoading: isClaimingBingo, // Only bingo claiming should disable the button
         error,
         
         // Actions
         setError,
+        setShowNopeModal,
         toggleCell,
         claimBingo,
         
@@ -282,5 +287,6 @@ export const useBingoPlayer = () => {
         getCellClass,
         checkForBingo,
         getIndex,
+        showNopeModal,
     };
 };

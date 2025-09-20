@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Container, Row, Col, Card, Button, Alert, Badge, Nav } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button, Alert, Badge, Nav, Modal } from 'react-bootstrap';
 import { FirebaseAuthContext } from '../../contexts/FirebaseAuthContext';
 import { Link } from 'react-router-dom';
 import { useBingoPlayer } from './hooks';
@@ -12,10 +12,12 @@ const BingoPlayer: React.FC = () => {
         playerCard,
         isLoading,
         error,
+        showNopeModal,
+        setShowNopeModal,
         toggleCell,
         claimBingo,
-        getCellClass,
         checkForBingo,
+        getCellClass,
         getIndex,
     } = useBingoPlayer();
 
@@ -107,6 +109,7 @@ const BingoPlayer: React.FC = () => {
                     {playerCard?.locked_out && (
                         <Alert variant="danger">
                             <strong>Locked Out!</strong> You claimed a false bingo and can no longer participate in this game.
+                            {currentGame?.hardcore_mode && <div className="mt-2"><em>This game is running in Hardcore Mode.</em></div>}
                         </Alert>
                     )}
 
@@ -116,6 +119,11 @@ const BingoPlayer: React.FC = () => {
                             <Badge bg="info">
                                 {currentGame.drawn_values.length} values called
                             </Badge>
+                            {currentGame.hardcore_mode && (
+                                <Badge bg="warning" className="ms-2">
+                                    Hardcore Mode
+                                </Badge>
+                            )}
                         </Card.Header>
                         <Card.Body>
                             {!playerCard ? (
@@ -178,6 +186,19 @@ const BingoPlayer: React.FC = () => {
                     </Card>
                 </Col>
             </Row>
+
+            {/* Nope Modal */}
+            <Modal show={showNopeModal} onHide={() => setShowNopeModal(false)} centered>
+                <Modal.Body className="text-center py-5">
+                    <h1 style={{ fontSize: '4rem', margin: '0' }}>🙅‍♂️</h1>
+                    <h2 className="mt-3 mb-0">Nope</h2>
+                </Modal.Body>
+                <Modal.Footer className="justify-content-center border-0">
+                    <Button variant="secondary" onClick={() => setShowNopeModal(false)}>
+                        OK
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </Container>
     );
 };

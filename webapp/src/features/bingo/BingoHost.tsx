@@ -7,11 +7,12 @@ const BingoHost: React.FC = () => {
     const {
         currentGame,
         valuesInput,
+        hardcoreMode,
         isLoading,
         error,
         setValuesInput,
+        setHardcoreMode,
         createGame,
-        startGame,
         drawValue,
         endGame,
         getLastDrawnValue,
@@ -44,7 +45,7 @@ const BingoHost: React.FC = () => {
 
                             {(!currentGame || currentGame.state === 'ended') && (
                                 <div className="mb-4">
-                                    <h4>Create New Bingo Game</h4>
+                                    <h4>Start New Bingo Game</h4>
                                     <Form.Group className="mb-3">
                                         <Form.Label>Bingo Values (comma-separated, minimum 25)</Form.Label>
                                         <Form.Control
@@ -53,34 +54,30 @@ const BingoHost: React.FC = () => {
                                             value={valuesInput}
                                             onChange={(e) => setValuesInput(e.target.value)}
                                             placeholder="B1, B2, B3, I16, I17, N31, N32, G46, G47, O61, O62, ..."
+                                            defaultValue={'A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z'}
                                             disabled={isLoading}
                                         />
                                         <Form.Text className="text-muted">
                                             Enter at least 25 values separated by commas. These will be randomly distributed to player cards.
                                         </Form.Text>
                                     </Form.Group>
+                                    <Form.Group className="mb-3">
+                                        <Form.Check
+                                            type="checkbox"
+                                            id="hardcore-mode"
+                                            label="Hardcore Mode"
+                                            checked={hardcoreMode}
+                                            onChange={(e) => setHardcoreMode(e.target.checked)}
+                                            disabled={isLoading}
+                                        />
+                                        <Form.Text className="text-muted">
+                                            In Hardcore Mode, players who submit a false bingo are locked out and cannot submit again.
+                                        </Form.Text>
+                                    </Form.Group>
                                     <Button 
                                         variant="primary" 
                                         onClick={createGame}
                                         disabled={isLoading || !valuesInput.trim()}
-                                    >
-                                        {isLoading ? 'Creating...' : 'Create Game'}
-                                    </Button>
-                                </div>
-                            )}
-
-                            {currentGame && currentGame.state === 'setup' && (
-                                <div>
-                                    <h4>Game Setup Complete</h4>
-                                    <Alert variant="info">
-                                        Game created with {currentGame.values.length} values. 
-                                        Players can now see "Waiting to start" on their screens.
-                                    </Alert>
-                                    <Button 
-                                        variant="success" 
-                                        size="lg"
-                                        onClick={startGame}
-                                        disabled={isLoading}
                                     >
                                         {isLoading ? 'Starting...' : 'Start Game'}
                                     </Button>
@@ -96,6 +93,11 @@ const BingoHost: React.FC = () => {
                                                 <Badge bg="secondary">
                                                     {currentGame.drawn_values.length} / {currentGame.values.length} values drawn
                                                 </Badge>
+                                                {currentGame.hardcore_mode && (
+                                                    <Badge bg="warning" className="ms-2">
+                                                        Hardcore Mode
+                                                    </Badge>
+                                                )}
                                             </p>
                                             
                                             {getLastDrawnValue() && (
@@ -129,8 +131,7 @@ const BingoHost: React.FC = () => {
                                             <div style={{ maxHeight: '300px', overflowY: 'auto' }}>
                                                 {currentGame.drawn_values.map((value: string, index: number) => (
                                                     <Badge 
-                                                        key={index} 
-                                                        bg="outline-secondary" 
+                                                        key={index}
                                                         className="me-2 mb-2"
                                                     >
                                                         {value}

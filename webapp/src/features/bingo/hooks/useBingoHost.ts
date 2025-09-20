@@ -17,6 +17,7 @@ export const useBingoHost = () => {
     const { user } = useContext(FirebaseAuthContext);
     const [currentGame, setCurrentGame] = useState<BingoGame | null>(null);
     const [valuesInput, setValuesInput] = useState('');
+    const [hardcoreMode, setHardcoreMode] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -76,19 +77,23 @@ export const useBingoHost = () => {
             }
 
             const gameData: Omit<BingoGame, 'id'> = {
-                state: 'setup' as BingoGameState,
+                state: 'playing' as BingoGameState,
                 host_discord_id: user.uid,
                 values,
                 drawn_values: [],
+                hardcore_mode: hardcoreMode,
                 created_at: new Date(),
+                started_at: new Date(),
             };
 
             await addDoc(collection(db, 'bingo_games'), {
                 ...gameData,
                 created_at: serverTimestamp(),
+                started_at: serverTimestamp(),
             });
 
             setValuesInput('');
+            setHardcoreMode(false);
         } catch (err) {
             setError('Failed to create game. Please try again.');
             console.error('Error creating game:', err);
@@ -168,11 +173,13 @@ export const useBingoHost = () => {
         // State
         currentGame,
         valuesInput,
+        hardcoreMode,
         isLoading,
         error,
         
         // Actions
         setValuesInput,
+        setHardcoreMode,
         setError,
         createGame,
         startGame,

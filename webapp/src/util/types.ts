@@ -152,6 +152,7 @@ export type BingoGame = {
     winner_discord_id?: string;
     winner_public_name?: string;
     winner_avatar_url?: string;
+    hardcore_mode: boolean;
     created_at: Date;
     started_at?: Date;
     ended_at?: Date;
