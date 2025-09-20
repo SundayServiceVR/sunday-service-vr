@@ -111,7 +111,7 @@ function App() {
           element: <BingoPlayer />
         },
         {
-          path: "host",
+          path: "host-571278878341632",
           element: <BingoHost />
         }
       ]
