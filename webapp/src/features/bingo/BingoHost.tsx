@@ -54,7 +54,6 @@ const BingoHost: React.FC = () => {
                                             value={valuesInput}
                                             onChange={(e) => setValuesInput(e.target.value)}
                                             placeholder="B1, B2, B3, I16, I17, N31, N32, G46, G47, O61, O62, ..."
-                                            defaultValue={'A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z'}
                                             disabled={isLoading}
                                         />
                                         <Form.Text className="text-muted">
