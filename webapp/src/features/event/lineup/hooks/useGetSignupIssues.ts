@@ -27,7 +27,7 @@ export function useGetSignupIssues({ onUpdateSignup, openB2BModal }: SignupIssue
               id: `debut-${ref.id}`,
               title: "Possible Debut",
               message:
-                "Looks like this DJ hasn't performed before. If this is correct, set the debut option on the signup.",
+                "Looks like this DJ hasn't performed before. If this is the case, set the debut option on the signup.",
               actionLabel: "Mark as Debut",
               action: () => onUpdateSignup({ ...signup, is_debut: !signup.is_debut }),
             });
