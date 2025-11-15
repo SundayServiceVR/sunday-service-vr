@@ -25,7 +25,7 @@ const IssuePopoverIcon = ({ idSuffix, issues }: Props) => {
             <div>{issue.message}</div>
             {issue.action && issue.actionLabel && (
               <div className="mt-1">
-                <Button size="sm" variant="outline-primary" onClick={issue.action}>
+                <Button size="sm" variant="primary" onClick={issue.action}>
                   {issue.actionLabel}
                 </Button>
               </div>

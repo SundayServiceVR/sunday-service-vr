@@ -1,11 +1,16 @@
-import { useEventDjCache } from "../../../contexts/useEventDjCache";
-import { SignupIssue } from "./IssuePopoverIcon";
-import { EventSignup } from "../../../util/types";
+import { useEventDjCache } from "../../../../contexts/useEventDjCache";
+import { SignupIssue } from "../components/IssuePopoverIcon";
+import { EventSignup } from "../../../../util/types";
 
 /**
  * Returns a function that takes an EventSignup and returns an array of SignupIssue objects.
  */
-export function useGetSignupIssues() {
+interface SignupIssueHandlers {
+  onUpdateSignup: (signup: EventSignup) => void;
+  openB2BModal: (signup: EventSignup) => void;
+}
+
+export function useGetSignupIssues({ onUpdateSignup, openB2BModal }: SignupIssueHandlers) {
   const { getEventsByDjId } = useEventDjCache();
 
   return (signup: EventSignup): SignupIssue[] => {
@@ -23,6 +28,8 @@ export function useGetSignupIssues() {
               title: "Possible Debut",
               message:
                 "Looks like this DJ hasn't performed before. If this is correct, set the debut option on the signup.",
+              actionLabel: "Toggle Debut",
+              action: () => onUpdateSignup({ ...signup, is_debut: !signup.is_debut }),
             });
           }
         });
@@ -36,6 +43,8 @@ export function useGetSignupIssues() {
               title: "Marked as Debut",
               message:
                 "This DJ is marked as a debut but has previous plays. Verify the debut flag.",
+              actionLabel: "Toggle Debut",
+              action: () => onUpdateSignup({ ...signup, is_debut: !signup.is_debut }),
             });
           }
         });
@@ -51,6 +60,8 @@ export function useGetSignupIssues() {
           title: "B2B DJ(s) Not Added",
           message:
             "Please make sure to add other B2B DJs to this slot to be tracked.",
+          actionLabel: "Add DJ to Slot",
+          action: () => openB2BModal(signup),
         });
       }
     }

@@ -1,7 +1,7 @@
 import { Card, Stack, Button, Modal, Form, Alert } from "react-bootstrap";
 import { useState } from "react"; // Import useState
-import IssuePopoverIcon from "./IssuePopoverIcon";
-import { useGetSignupIssues } from "./useGetSignupIssues";
+import IssuePopoverIcon from "./components/IssuePopoverIcon";
+import { useGetSignupIssues } from "./hooks/useGetSignupIssues";
 import { EventSignup, Event } from "../../../util/types";
 import { ActionMenu } from "../../../components/actionMenu/ActionMenu";
 import EventSignupDjDetails from "./EventSignupDjDetails";
@@ -31,7 +31,17 @@ const EventSignupEntry = ({
   const [isCollapsed, setIsCollapsed] = useState(true); // Default to hidden/collapsed
 
   const [showSignupModal, setShowSignupModal] = useState(false); // State to manage modal visibility
-  const getSignupIssues = useGetSignupIssues();
+
+  // Helper to combine setSelectedSignup and setShowModal
+  const openB2BModal = (signup: EventSignup) => {
+    setSelectedSignup(signup);
+    setShowModal(true);
+  };
+
+  const getSignupIssues = useGetSignupIssues({
+    onUpdateSignup,
+    openB2BModal,
+  });
   const issues = getSignupIssues(signup);
 
   return (
@@ -96,10 +106,7 @@ const EventSignupEntry = ({
                 },
                 {
                   label: "Add DJ to Slot (B2B)",
-                  onClick: () => {
-                    setSelectedSignup(signup); // Set the selected signup
-                    setShowModal(true); // Show the modal
-                  },
+                  onClick: () => openB2BModal(signup),
                 },
                 {
                   label: "View Signup Info",
@@ -121,13 +128,33 @@ const EventSignupEntry = ({
           <Card.Body className="p-2">
             <div className="my-3">
               {issues.map((issue) => (
-                <>
-                  <div key={issue.id} className="mt-3">
-                    <Alert variant="warning">
-                      <strong>{issue.title}:</strong> {issue.message}
-                    </Alert>
-                  </div>
-                </>
+                <div key={issue.id} className="mt-3">
+                  <Alert variant="warning">
+                    <strong>{issue.title}:</strong> {issue.message}
+                    {issue.actionLabel && (
+                      <div className="mt-2">
+                        <Button
+                          size="sm"
+                          variant="outline-primary"
+                          onClick={() => {
+                            if (issue.actionLabel === "Toggle Debut") {
+                              onUpdateSignup({
+                                ...signup,
+                                is_debut: !signup.is_debut,
+                              });
+                            } else if (issue.actionLabel === "Add DJ to Slot") {
+                              openB2BModal(signup);
+                            } else if (typeof issue.action === "function") {
+                              issue.action();
+                            }
+                          }}
+                        >
+                          {issue.actionLabel}
+                        </Button>
+                      </div>
+                    )}
+                  </Alert>
+                </div>
               ))}
               { issues.length > 0 ? <hr /> : null }
               <EventSlotDetails signup={signup} onUpdateSignup={onUpdateSignup} />
