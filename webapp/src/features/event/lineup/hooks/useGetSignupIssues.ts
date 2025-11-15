@@ -28,7 +28,7 @@ export function useGetSignupIssues({ onUpdateSignup, openB2BModal }: SignupIssue
               title: "Possible Debut",
               message:
                 "Looks like this DJ hasn't performed before. If this is correct, set the debut option on the signup.",
-              actionLabel: "Toggle Debut",
+              actionLabel: "Mark as Debut",
               action: () => onUpdateSignup({ ...signup, is_debut: !signup.is_debut }),
             });
           }
@@ -43,7 +43,7 @@ export function useGetSignupIssues({ onUpdateSignup, openB2BModal }: SignupIssue
               title: "Marked as Debut",
               message:
                 "This DJ is marked as a debut but has previous plays. Verify the debut flag.",
-              actionLabel: "Toggle Debut",
+              actionLabel: "Unmark as Debut",
               action: () => onUpdateSignup({ ...signup, is_debut: !signup.is_debut }),
             });
           }
