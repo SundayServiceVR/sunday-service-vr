@@ -27,7 +27,6 @@ const EventSignupEntry = ({
   onUpdateSignup,
   setSelectedSignup,
   setShowModal,
-  event,
 }: Props) => {
   const [isCollapsed, setIsCollapsed] = useState(true); // Default to hidden/collapsed
 
@@ -35,10 +34,6 @@ const EventSignupEntry = ({
   const { getEventsByDjId } = useEventDjCache();
 
   const issues: Issue[] = [];
-
-  function isEvent(obj: unknown): obj is Event {
-    return !!obj && typeof obj === "object" && "start_datetime" in obj && "name" in obj;
-  }
 
   // Debut issue
   if (signup.dj_refs && signup.dj_refs.length > 0) {
@@ -57,12 +52,7 @@ const EventSignupEntry = ({
     } else {
       // If marked as debut but there are previous plays (excluding the current event), flag it
       signup.dj_refs.forEach((ref) => {
-        const events = (getEventsByDjId(ref.id) || []).filter((e): e is Event => {
-          if (!isEvent(e) || !event) return true;
-          const eTime = new Date(e.start_datetime).getTime();
-          const curTime = new Date(event.start_datetime).getTime();
-          return !(e.name === event.name && eTime === curTime);
-        });
+        const events = getEventsByDjId(ref.id);
         if (events.length > 0) {
           issues.push({
             id: `debut-contradiction-${ref.id}`,
