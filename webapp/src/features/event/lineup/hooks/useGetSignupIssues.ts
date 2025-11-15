@@ -1,6 +1,6 @@
 import { useEventDjCache } from "../../../../contexts/useEventDjCache";
 import { SignupIssue } from "../components/IssuePopoverIcon";
-import { EventSignup } from "../../../../util/types";
+import { Event, EventSignup } from "../../../../util/types";
 
 /**
  * Returns a function that takes an EventSignup and returns an array of SignupIssue objects.
@@ -13,7 +13,7 @@ interface SignupIssueHandlers {
 export function useGetSignupIssues({ onUpdateSignup, openB2BModal }: SignupIssueHandlers) {
   const { getEventsByDjId } = useEventDjCache();
 
-  return (signup: EventSignup): SignupIssue[] => {
+  return (signup: EventSignup, event: Event): SignupIssue[] => {
     const issues: SignupIssue[] = [];
 
     // Debut issue
@@ -21,7 +21,7 @@ export function useGetSignupIssues({ onUpdateSignup, openB2BModal }: SignupIssue
       if (!signup.is_debut) {
         // If not marked as debut but no previous events, flag possible debut
         signup.dj_refs.forEach((ref) => {
-          const events = getEventsByDjId(ref.id);
+          const events = getEventsByDjId(ref.id).filter((e) => e.id !== event.id);
           if (events.length === 0) {
             issues.push({
               id: `debut-${ref.id}`,
@@ -36,7 +36,7 @@ export function useGetSignupIssues({ onUpdateSignup, openB2BModal }: SignupIssue
       } else {
         // If marked as debut but there are previous plays (excluding the current event), flag it
         signup.dj_refs.forEach((ref) => {
-          const events = getEventsByDjId(ref.id);
+          const events = getEventsByDjId(ref.id).filter((e) => e.id !== event.id);
           if (events.length > 0) {
             issues.push({
               id: `debut-contradiction-${ref.id}`,

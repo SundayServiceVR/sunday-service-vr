@@ -17,7 +17,7 @@ type Props = {
   onUpdateSignup: (signup: EventSignup) => void;
   setSelectedSignup: (signup: EventSignup | null) => void;
   setShowModal: (show: boolean) => void;
-  event?: Event;
+  event: Event;
 };
 
 const EventSignupEntry = ({
@@ -27,6 +27,7 @@ const EventSignupEntry = ({
   onUpdateSignup,
   setSelectedSignup,
   setShowModal,
+  event,
 }: Props) => {
   const [isCollapsed, setIsCollapsed] = useState(true); // Default to hidden/collapsed
 
@@ -42,7 +43,7 @@ const EventSignupEntry = ({
     onUpdateSignup,
     openB2BModal,
   });
-  const issues = getSignupIssues(signup);
+  const issues = getSignupIssues(signup, event);
 
   return (
     <>
