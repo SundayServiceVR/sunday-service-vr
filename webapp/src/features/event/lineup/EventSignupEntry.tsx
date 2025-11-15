@@ -1,7 +1,7 @@
-import { Card, Stack, Button, Modal, Form } from "react-bootstrap";
+import { Card, Stack, Button, Modal, Form, Alert } from "react-bootstrap";
 import { useState } from "react"; // Import useState
-import IssuePopoverIcon, { Issue } from "./IssuePopoverIcon";
-import { useEventDjCache } from "../../../contexts/useEventDjCache";
+import IssuePopoverIcon from "./IssuePopoverIcon";
+import { useGetSignupIssues } from "./useGetSignupIssues";
 import { EventSignup, Event } from "../../../util/types";
 import { ActionMenu } from "../../../components/actionMenu/ActionMenu";
 import EventSignupDjDetails from "./EventSignupDjDetails";
@@ -31,38 +31,8 @@ const EventSignupEntry = ({
   const [isCollapsed, setIsCollapsed] = useState(true); // Default to hidden/collapsed
 
   const [showSignupModal, setShowSignupModal] = useState(false); // State to manage modal visibility
-  const { getEventsByDjId } = useEventDjCache();
-
-  const issues: Issue[] = [];
-
-  // Debut issue
-  if (signup.dj_refs && signup.dj_refs.length > 0) {
-    if (!signup.is_debut) {
-      // If not marked as debut but no previous events, flag possible debut
-      signup.dj_refs.forEach((ref) => {
-        const events = getEventsByDjId(ref.id) || [];
-        if (events.length === 0) {
-          issues.push({
-            id: `debut-${ref.id}`,
-            title: "Possible Debut",
-            message: "Looks like this DJ hasn't performed before. If this is correct, set the debut option on the signup.",
-          });
-        }
-      });
-    } else {
-      // If marked as debut but there are previous plays (excluding the current event), flag it
-      signup.dj_refs.forEach((ref) => {
-        const events = getEventsByDjId(ref.id);
-        if (events.length > 0) {
-          issues.push({
-            id: `debut-contradiction-${ref.id}`,
-            title: "Marked as Debut",
-            message: "This DJ is marked as a debut but has previous plays. Verify the debut flag.",
-          });
-        }
-      });
-    }
-  }
+  const getSignupIssues = useGetSignupIssues();
+  const issues = getSignupIssues(signup);
 
   return (
     <>
@@ -150,14 +120,22 @@ const EventSignupEntry = ({
         {!isCollapsed && (
           <Card.Body className="p-2">
             <div className="my-3">
+              {issues.map((issue) => (
+                <>
+                  <div key={issue.id} className="mt-3">
+                    <Alert variant="warning">
+                      <strong>{issue.title}:</strong> {issue.message}
+                    </Alert>
+                  </div>
+                </>
+              ))}
+              { issues.length > 0 ? <hr /> : null }
               <EventSlotDetails signup={signup} onUpdateSignup={onUpdateSignup} />
               <hr />
               {signup.dj_refs?.map((djRef: DocumentReference) => (
                 <EventSignupDjDetails
                   key={djRef.id}
                   djRef={djRef}
-                  signup={signup}
-                  issues={issues}
                   onRemoveDjRef={(dj_ref) =>
                     onUpdateSignup({
                       ...signup,

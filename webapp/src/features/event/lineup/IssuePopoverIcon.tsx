@@ -1,7 +1,7 @@
 import { OverlayTrigger, Popover, Button } from "react-bootstrap";
 import { AlertTriangle } from "react-feather";
 
-type Issue = {
+type SignupIssue = {
   id: string;
   title: string;
   message: string;
@@ -11,7 +11,7 @@ type Issue = {
 
 type Props = {
   idSuffix: string;
-  issues: Issue[];
+  issues: SignupIssue[];
 };
 
 const IssuePopoverIcon = ({ idSuffix, issues }: Props) => {
@@ -51,5 +51,5 @@ const IssuePopoverIcon = ({ idSuffix, issues }: Props) => {
   );
 };
 
-export type { Issue };
+export type { SignupIssue };
 export default IssuePopoverIcon;

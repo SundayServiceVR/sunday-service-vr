@@ -1,20 +1,17 @@
-import { Col, Container, Dropdown, ListGroup, Row, Spinner, Stack, Alert } from "react-bootstrap";
+import { Col, Container, Dropdown, ListGroup, Row, Spinner, Stack } from "react-bootstrap";
 import { useEventDjCache } from "../../../contexts/useEventDjCache";
-import { Dj, Event, EventSignup } from "../../../util/types";
+import { Dj, Event } from "../../../util/types";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { DocumentReference } from "firebase/firestore";
 import { Disc } from "react-feather"; // Import the Settings icon from react-feather
-import { Issue } from "./IssuePopoverIcon";
 
 type Props = {
   djRef: DocumentReference;
   onRemoveDjRef: (djRef: DocumentReference) => void;
-  signup?: EventSignup;
-  issues: Issue[];
 };
 
-const EventSignupDjDetails = ({ djRef, onRemoveDjRef, signup, issues }: Props) => {
+const EventSignupDjDetails = ({ djRef, onRemoveDjRef}: Props) => {
   const { loading, getEventsByDjId, djCache } = useEventDjCache();
   const [djEvents, setDjEvents] = useState<Event[]>([]);
   const [dj, setDj] = useState<Dj>();
@@ -94,13 +91,7 @@ const EventSignupDjDetails = ({ djRef, onRemoveDjRef, signup, issues }: Props) =
               </Link>
             </div>
           )}
-          { issues.map((issue) => (
-            <div key={issue.id} className="mt-3">
-              <Alert variant="warning">
-                <strong>{issue.title}:</strong> {issue.message}
-              </Alert>
-            </div>
-          ))}
+          
         </Col>
       </Row>
     </Container>

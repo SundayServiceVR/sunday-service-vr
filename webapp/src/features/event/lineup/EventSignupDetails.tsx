@@ -1,4 +1,4 @@
-import { Alert, Col, Container, Form, InputGroup, Row, ToggleButton } from "react-bootstrap"
+import { Col, Container, Form, InputGroup, Row, ToggleButton } from "react-bootstrap"
 import { SlotType, SlotDuration, EventSignup, EventSignupFormData } from "../../../util/types"
 
 type Props = {
@@ -142,9 +142,6 @@ const EventSlotDetails = ({ signup, onUpdateSignup }: Props) => {
             {signup.event_signup_form_data?.b2b_members_response}
           </Col>
         </Form.Group>
-        <Alert variant="warning mt-2">
-          Please make sure to to add other B2B DJs to this slot to be tracked.
-        </Alert>
       </>
     }
 
