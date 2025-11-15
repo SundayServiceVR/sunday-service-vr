@@ -1,5 +1,7 @@
 import { Card, Stack, Button, Modal, Form } from "react-bootstrap";
 import { useState } from "react"; // Import useState
+import IssuePopoverIcon, { Issue } from "./IssuePopoverIcon";
+import { useEventDjCache } from "../../../contexts/useEventDjCache";
 import { EventSignup, Event } from "../../../util/types";
 import { ActionMenu } from "../../../components/actionMenu/ActionMenu";
 import EventSignupDjDetails from "./EventSignupDjDetails";
@@ -29,6 +31,49 @@ const EventSignupEntry = ({
   const [isCollapsed, setIsCollapsed] = useState(true); // Default to hidden/collapsed
 
   const [showSignupModal, setShowSignupModal] = useState(false); // State to manage modal visibility
+  const { getEventsByDjId } = useEventDjCache();
+
+  const issues: Issue[] = [];
+
+  // Debut issue
+  if (signup.dj_refs && signup.dj_refs.length > 0) {
+    if (!signup.is_debut) {
+      // If not marked as debut but no previous events, flag possible debut
+      signup.dj_refs.forEach((ref) => {
+        const events = getEventsByDjId(ref.id) || [];
+        if (events.length === 0) {
+          issues.push({
+            id: `debut-${ref.id}`,
+            title: "Possible Debut",
+            message: "Looks like this DJ hasn't performed before. If this is correct, set the debut option on the signup.",
+          });
+        }
+      });
+    } else {
+      // If marked as debut but there are previous plays (excluding the current event), flag it
+      signup.dj_refs.forEach((ref) => {
+        const events = (getEventsByDjId(ref.id) || []).filter((e) => {
+          if (!event) return true;
+          try {
+            const eAny = e as any;
+            const curAny = event as any;
+            const eTime = new Date(eAny.start_datetime).getTime();
+            const curTime = new Date(curAny.start_datetime).getTime();
+            return !(eAny.name === curAny.name && eTime === curTime);
+          } catch (err) {
+            return true;
+          }
+        });
+        if (events.length > 0) {
+          issues.push({
+            id: `debut-contradiction-${ref.id}`,
+            title: "Marked as Debut",
+            message: "This DJ is marked as a debut but has previous plays. Verify the debut flag.",
+          });
+        }
+      });
+    }
+  }
 
   return (
     <>
@@ -45,6 +90,9 @@ const EventSignupEntry = ({
             <div className="d-flex flex-column">
               <div className="lead">{signup.name}</div>
               <div className="d-flex align-items-center gap-2">
+                {issues.length > 0 && (
+                  <IssuePopoverIcon idSuffix={signup.uuid} issues={issues} />
+                )}
                 {/* Availability info */}
                 {signup.event_signup_form_data?.available_from && signup.event_signup_form_data?.available_to && (
                   <small className="text-muted d-flex align-items-center gap-1">
@@ -119,6 +167,7 @@ const EventSignupEntry = ({
                 <EventSignupDjDetails
                   key={djRef.id}
                   djRef={djRef}
+                  signup={signup}
                   onRemoveDjRef={(dj_ref) =>
                     onUpdateSignup({
                       ...signup,

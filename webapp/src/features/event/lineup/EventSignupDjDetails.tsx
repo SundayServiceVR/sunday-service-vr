@@ -1,6 +1,6 @@
-import { Col, Container, Dropdown, ListGroup, Row, Spinner, Stack } from "react-bootstrap";
+import { Col, Container, Dropdown, ListGroup, Row, Spinner, Stack, Alert } from "react-bootstrap";
 import { useEventDjCache } from "../../../contexts/useEventDjCache";
-import { Dj, Event } from "../../../util/types";
+import { Dj, Event, EventSignup } from "../../../util/types";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { DocumentReference } from "firebase/firestore";
@@ -9,9 +9,10 @@ import { Disc } from "react-feather"; // Import the Settings icon from react-fea
 type Props = {
   djRef: DocumentReference;
   onRemoveDjRef: (djRef: DocumentReference) => void;
+  signup?: EventSignup;
 };
 
-const EventSignupDjDetails = ({ djRef, onRemoveDjRef }: Props) => {
+const EventSignupDjDetails = ({ djRef, onRemoveDjRef, signup }: Props) => {
   const { loading, getEventsByDjId, djCache } = useEventDjCache();
   const [djEvents, setDjEvents] = useState<Event[]>([]);
   const [dj, setDj] = useState<Dj>();
@@ -89,6 +90,14 @@ const EventSignupDjDetails = ({ djRef, onRemoveDjRef }: Props) => {
               <Link to={`/djs/${djRef.id}`} target="_blank">
                 See all
               </Link>
+            </div>
+          )}
+          {/* Show debut notice when this DJ has no previous events and the signup is not marked as a debut */}
+          {djEvents.length === 0 && !(signup?.is_debut) && (
+            <div className="mt-3">
+              <Alert variant="warning">
+                Looks like this DJ hasn't performed before. If so, set the debut option.
+              </Alert>
             </div>
           )}
         </Col>
