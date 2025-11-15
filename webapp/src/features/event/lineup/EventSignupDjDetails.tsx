@@ -5,14 +5,16 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { DocumentReference } from "firebase/firestore";
 import { Disc } from "react-feather"; // Import the Settings icon from react-feather
+import { Issue } from "./IssuePopoverIcon";
 
 type Props = {
   djRef: DocumentReference;
   onRemoveDjRef: (djRef: DocumentReference) => void;
   signup?: EventSignup;
+  issues: Issue[];
 };
 
-const EventSignupDjDetails = ({ djRef, onRemoveDjRef, signup }: Props) => {
+const EventSignupDjDetails = ({ djRef, onRemoveDjRef, signup, issues }: Props) => {
   const { loading, getEventsByDjId, djCache } = useEventDjCache();
   const [djEvents, setDjEvents] = useState<Event[]>([]);
   const [dj, setDj] = useState<Dj>();
@@ -92,14 +94,13 @@ const EventSignupDjDetails = ({ djRef, onRemoveDjRef, signup }: Props) => {
               </Link>
             </div>
           )}
-          {/* Show debut notice when this DJ has no previous events and the signup is not marked as a debut */}
-          {djEvents.length === 0 && !(signup?.is_debut) && (
-            <div className="mt-3">
+          { issues.map((issue) => (
+            <div key={issue.id} className="mt-3">
               <Alert variant="warning">
-                Looks like this DJ hasn't performed before. If so, set the debut option.
+                <strong>{issue.title}:</strong> {issue.message}
               </Alert>
             </div>
-          )}
+          ))}
         </Col>
       </Row>
     </Container>

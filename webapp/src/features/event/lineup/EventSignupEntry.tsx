@@ -167,6 +167,7 @@ const EventSignupEntry = ({
                   key={djRef.id}
                   djRef={djRef}
                   signup={signup}
+                  issues={issues}
                   onRemoveDjRef={(dj_ref) =>
                     onUpdateSignup({
                       ...signup,
