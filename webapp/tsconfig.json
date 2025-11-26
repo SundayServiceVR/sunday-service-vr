@@ -13,6 +13,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
+    "types": ["vitest/globals", "vite/client"],
     "jsx": "react-jsx",
 
     /* Linting */
