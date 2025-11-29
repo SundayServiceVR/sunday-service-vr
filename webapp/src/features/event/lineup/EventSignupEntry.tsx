@@ -11,6 +11,7 @@ import { useEventDjCache } from "../../../contexts/useEventDjCache";
 import DjDetails from "../../../components/DjDetails";
 import { Container, Spinner } from "react-bootstrap";
 import EventSlotDetails from "./EventSignupDetails";
+import DjAvatarList from "../../../components/DjAvatarList"; // Import DjAvatarList component
 
 type Props = {
   signup: EventSignup;
@@ -72,7 +73,7 @@ const EventSignupEntry = ({
   const [isCollapsed, setIsCollapsed] = useState(true); // Default to hidden/collapsed
 
   const [showSignupModal, setShowSignupModal] = useState(false); // State to manage modal visibility
-  
+
   const { djCache } = useEventDjCache();
 
   // Helper to combine setSelectedSignup and setShowModal
@@ -101,28 +102,11 @@ const EventSignupEntry = ({
             >
               {isCollapsed ? <ChevronRight size={16} /> : <ChevronDown size={16} />}
             </div>
+            {/* Replace individual DJ avatar rendering with DjAvatarList */}
+            <DjAvatarList djRefs={signup.dj_refs || []} />
             <div className="d-flex flex-column">
               <div className="lead d-flex align-items-center gap-2">
                 <span>{signup.name}</span>
-                {signup.dj_refs?.map((djRef: DocumentReference) => {
-                  const dj = djCache.get(djRef.id);
-                  if (!dj) return null;
-                  const avatarUrl = dj.avatar || `https://cdn.discordapp.com/embed/avatars/0.png`;
-                  return (
-                    <img
-                      key={djRef.id}
-                      src={avatarUrl}
-                      alt={dj.dj_name}
-                      title={dj.dj_name}
-                      style={{
-                        width: '24px',
-                        height: '24px',
-                        borderRadius: '50%',
-                        objectFit: 'cover'
-                      }}
-                    />
-                  );
-                })}
               </div>
               <div className="d-flex align-items-center gap-2">
                 {issues.length > 0 && (
@@ -246,7 +230,7 @@ const EventSignupEntry = ({
                   </Alert>
                 </div>
               ))}
-              { issues.length > 0 ? <hr /> : null }
+              {issues.length > 0 ? <hr /> : null}
               <EventSlotDetails signup={signup} onUpdateSignup={onUpdateSignup} />
               <hr />
               {djData.map(({ djRef, dj, djEvents, loading }) => {

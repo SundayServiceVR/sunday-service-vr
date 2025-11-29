@@ -54,13 +54,23 @@ const DjAvatarList: React.FC<Props> = ({ djRefs }) => {
   }
 
   return (
-    <div className="d-flex align-items-center gap-2">
-      {djRefs.map((djRef) => {
+    <div className="d-flex align-items-center" style={{ position: "relative" }}>
+      {djRefs.map((djRef, index) => {
         const dj = djCache.get(djRef.id);
         if (!dj) return null;
         const avatarUrl = dj.avatar || `https://cdn.discordapp.com/embed/avatars/0.png`;
         console.log("Rendering DJ from djRefs:", { discord_id: dj.discord_id, public_name: dj.public_name, avatarUrl });
-        return renderAvatar(dj.discord_id, dj.public_name, avatarUrl);
+        return (
+          <div
+            key={djRef.id}
+            style={{
+              marginLeft: index === 0 ? "0" : "-15px", // Overlap effect
+              zIndex: djRefs.length - index, // Ensure proper stacking order
+            }}
+          >
+            {renderAvatar(dj.discord_id, dj.public_name, avatarUrl)}
+          </div>
+        );
       })}
     </div>
   );
