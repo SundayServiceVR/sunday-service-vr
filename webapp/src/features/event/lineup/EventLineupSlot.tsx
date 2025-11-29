@@ -98,11 +98,6 @@ const EventLineupSlot = ({
                                     ? `https://cdn.discordapp.com/avatars/${dj.discord_id}/0.png`
                                     : `https://cdn.discordapp.com/embed/avatars/0.png`; // Default avatar
 
-                                console.log(`DJ ${index} from signup.dj_refs:`, {
-                                    discord_id: dj.discord_id,
-                                    avatarUrl,
-                                }); // Debugging log
-
                                 return (
                                     <DjDetails
                                         key={djRef.id}
