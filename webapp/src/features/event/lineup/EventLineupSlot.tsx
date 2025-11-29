@@ -90,7 +90,7 @@ const EventLineupSlot = ({
                         <p>No DJs available for this slot.</p>
                     ) : (
                         <>
-                            {signup.dj_refs.map((djRef, index) => {
+                            {signup.dj_refs.map((djRef) => {
                                 const dj = djRef && djCache.get(djRef.id);
                                 if (!dj) return null; // Ensure the DJ exists
 
