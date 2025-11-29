@@ -1,7 +1,7 @@
 import * as logger from "firebase-functions/logger";
 import { onRequest } from "firebase-functions/v2/https";
-import { getNextEvent } from "../util/events";
-import { timeFormats, getLineupText } from "../util/messageWriters";
+import { getNextEvent } from "./events";
+import { timeFormats, getLineupText } from "./messageWriters";
 
 const PLACEHOLDER_TEXT = `Sunday Service
 

@@ -1,4 +1,4 @@
-import { Event, Slot } from "../../webapp/src/util/types";
+import { Event, Slot } from "../../../webapp/src/util/types";
 
 type TimeFormat = {
     shortTimezone: string,

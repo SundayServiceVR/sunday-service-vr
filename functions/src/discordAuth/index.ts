@@ -2,8 +2,8 @@ import * as admin from "firebase-admin";
 import axios, { AxiosResponse } from "axios";
 import { onRequest } from "firebase-functions/v2/https";
 import { defineSecret } from "firebase-functions/params";
-import { AppUserRole, Dj } from "../../webapp/src/util/types";
-import { getRolesFromDiscordRoles } from "./lib/rolesMap";
+import { AppUserRole, Dj } from "../../../webapp/src/util/types";
+import { getRolesFromDiscordRoles } from "./rolesMap";
 import { APIGuildMember } from "discord-api-types/v10";
 
 interface DiscordTokenResponse {

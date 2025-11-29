@@ -1,7 +1,7 @@
 import * as admin from "firebase-admin";
 import * as functions from "firebase-functions";
-import { authenticate } from "../lib/authenticate";
-import { allowMethod } from "../lib/allowMethod";
+import { authenticate } from "../discordAuth/authenticate";
+import { allowMethod } from "./allowMethod";
 import { docToEvent } from "../../../webapp/src/store/converters";
 import corsOptions from "./corsOptions";
 

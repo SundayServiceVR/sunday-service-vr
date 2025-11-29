@@ -1,6 +1,6 @@
 
 import { Timestamp, getFirestore } from "firebase-admin/firestore";
-import { docToEventRaw } from "../../webapp/src/store/converters";
+import { docToEventRaw } from "../../../webapp/src/store/converters";
 
 /**
  * Fetches the next event.
@@ -20,6 +20,9 @@ export const getNextEvent = async (includeNonPublished = false) => {
     const snapshot = await docRef.get();
 
     const eventDoc = snapshot.docs[0]?.data();
+    if (!eventDoc) {
+        return null;
+    }
     const event = docToEventRaw(eventDoc);
 
     return event;
