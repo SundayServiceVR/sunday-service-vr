@@ -34,7 +34,7 @@ const DjAvatarList: React.FC<Props> = ({ djRefs }) => {
       >
         <img
           src={avatarUrl}
-          alt={public_name}
+          alt=""
           style={{
             width: "40px",
             height: "40px",
