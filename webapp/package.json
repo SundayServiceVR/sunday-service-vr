@@ -4,9 +4,10 @@
     "private": true,
     "homepage": "https://sunday-service-vr.web.app",
     "scripts": {
-        "start": "npm-run-all --parallel start:webapp start:emulator",
+        "start": "npm-run-all --parallel --race start:webapp start:emulator",
+        "prestart": "npx kill-port 4000 8080 8085 2>nul || exit 0",
         "start:webapp": "vite",
-        "start:emulator": "firebase emulators:start --only functions,firestore --import ../firebase-emulator-data --export-on-exit --inspect-functions",
+        "start:emulator": "firebase emulators:start --only functions,firestore --import ../firebase-emulator-data --export-on-exit ../firebase-emulator-data --inspect-functions",
         "start:production": "cross-env NODE_ENV=production vite",
         "force-kill-emulators": "npx kill-port 4000 8080 8085",
         "build": "tsc && vite build",
