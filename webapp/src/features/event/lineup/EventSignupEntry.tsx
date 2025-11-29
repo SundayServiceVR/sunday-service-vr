@@ -243,7 +243,7 @@ const EventSignupEntry = ({
                 }
 
                 if (!dj) {
-                  return <p key={djRef.id}>No Dj Found</p>;
+                  return <p key={djRef.id}>No DJ Found</p>;
                 }
 
                 return (
