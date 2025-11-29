@@ -14,6 +14,7 @@ export type Dj = {
 
     public_name: string;
     avatar?: string;
+    discord_avatar_url?: string; // Added property for Discord avatar URL
     
     dj_name: string;
     twitch_username?: string;

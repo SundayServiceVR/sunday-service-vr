@@ -5,6 +5,8 @@ import { ArrowDown, ArrowUp, AlertTriangle, Clock } from "react-feather";
 import EventSlotDetails from "./EventSignupDetails";
 import { hasAvailabilityConflict } from "../util";
 import { getPrettyValueFromAvailability } from "../../eventSignup/utils";
+import DjDetails from "../../../components/DjDetails";
+import { useEventDjCache } from "../../../contexts/useEventDjCache";
 
 type Props = {
     index: number,
@@ -27,9 +29,11 @@ const EventLineupSlot = ({
     onSlotMoveLater,
     onRemoveSlot,
 }: Props) => {
+    const { djCache } = useEventDjCache();
+
     const hasConflict = hasAvailabilityConflict(slot, signup);
-    
-    return <Container className={`my-2 ${hasConflict ? 'border border-danger rounded p-2' : ''}`}>
+
+    return <Container className={`py-2 border ${hasConflict ? 'border-danger rounded p-2' : ''}`}>
         <Row>
             <Col xs={{ order: 1, span: 6 }} md={{ order: 1, span: "auto" }}>
                 <span style={{ "width": "30px" }}>
@@ -80,14 +84,35 @@ const EventLineupSlot = ({
             </Col>
             <Col xs={{ order: 2, span: 12 }} md={{ order: 2, span: true }} className="pt-3">
                 <EventSlotDetails signup={signup} onUpdateSignup={onUpdateSignup} />
-                < hr />
-                <ul>
-                    {
-                        slot.djs?.map(
-                            (dj) => <li key={dj?.dj_name ?? "unknown-dj"}>{dj?.dj_name ?? "unknown-dj"}</li>
-                        )
-                    }
-                </ul>
+                <hr />
+                {
+                    !signup.dj_refs ? (
+                        <p>No DJs available for this slot.</p>
+                    ) : (
+                        <>
+                            {signup.dj_refs.map((djRef) => {
+                                const dj = djRef && djCache.get(djRef.id);
+                                if (!dj) return null; // Ensure the DJ exists
+
+                                const avatarUrl = dj.avatar || `https://cdn.discordapp.com/embed/avatars/0.png`; // Use saved avatar or default
+
+                                return (
+                                    <DjDetails
+                                        key={djRef.id}
+                                        dj={{
+                                            dj_name: dj.dj_name || "Unknown DJ",
+                                            discord_id: dj.discord_id || "",
+                                            public_name: dj.dj_name || "Unknown DJ",
+                                            avatar: avatarUrl, // Pass the avatar URL
+                                        }}
+                                        djRef={djRef}
+                                        djEvents={[]} // No events available for `signup.dj_refs`
+                                    />
+                                );
+                            })}
+                        </>
+                    )
+                }
             </Col>
         </Row>
     </Container>;

@@ -1,14 +1,16 @@
-import { Card, Stack, Button, Modal, Form, Alert } from "react-bootstrap";
-import { useState } from "react"; // Import useState
+import { useState, useEffect } from "react"; // Import useState
+import { Card, Stack, Button, Modal, Form, Alert, Container, Spinner } from "react-bootstrap";
 import IssuePopoverIcon from "./components/IssuePopoverIcon";
 import { useGetSignupIssues } from "./hooks/useGetSignupIssues";
-import { EventSignup, Event } from "../../../util/types";
+import { EventSignup, Event, Dj } from "../../../util/types";
 import { ActionMenu } from "../../../components/actionMenu/ActionMenu";
-import EventSignupDjDetails from "./EventSignupDjDetails";
-import EventSlotDetails from "./EventSignupDetails";
 import { DocumentReference } from "firebase/firestore";
 import { Plus, Clock, ChevronDown, ChevronRight } from "react-feather"; // Import the Feather Plus icon and Clock icon
 import { getPrettyValueFromAvailability } from "../../eventSignup/utils";
+import { useEventDjCache } from "../../../contexts/useEventDjCache";
+import DjDetails from "../../../components/DjDetails";
+import EventSlotDetails from "./EventSignupDetails";
+import DjAvatarList from "./components/DjAvatarList"; // Import DjAvatarList component
 
 type Props = {
   signup: EventSignup;
@@ -19,6 +21,44 @@ type Props = {
   setShowModal: (show: boolean) => void;
   event: Event;
 };
+
+function useDjData(djRefs: DocumentReference[] | undefined) {
+  const { djCache, getEventsByDjId, reloadDj } = useEventDjCache();
+  const [djData, setDjData] = useState<{ djRef: DocumentReference; loading: boolean; dj: Dj | null; djEvents: Event[] }[]>(
+    djRefs?.map((djRef: DocumentReference) => ({ djRef, loading: true, dj: null, djEvents: [] })) || []
+  );
+
+  useEffect(() => {
+    const fetchDjData = async () => {
+      const updatedDjData = await Promise.all(
+        djRefs?.map(async (djRef) => {
+          const cached = djCache.get(djRef.id);
+          if (cached) {
+            return {
+              djRef,
+              dj: cached,
+              djEvents: getEventsByDjId(djRef.id),
+              loading: false,
+            };
+          }
+
+          const reloaded = await reloadDj(djRef.id);
+          return {
+            djRef,
+            dj: reloaded || null,
+            djEvents: reloaded ? getEventsByDjId(djRef.id) : [],
+            loading: false,
+          };
+        }) || []
+      );
+      setDjData(updatedDjData);
+    };
+
+    fetchDjData();
+  }, [djRefs, djCache, getEventsByDjId, reloadDj]);
+
+  return djData;
+}
 
 const EventSignupEntry = ({
   signup,
@@ -33,6 +73,8 @@ const EventSignupEntry = ({
 
   const [showSignupModal, setShowSignupModal] = useState(false); // State to manage modal visibility
 
+  const { djCache } = useEventDjCache();
+
   // Helper to combine setSelectedSignup and setShowModal
   const openB2BModal = (signup: EventSignup) => {
     setSelectedSignup(signup);
@@ -44,6 +86,8 @@ const EventSignupEntry = ({
     openB2BModal,
   });
   const issues = getSignupIssues(signup, event);
+
+  const djData = useDjData(signup.dj_refs);
 
   return (
     <>
@@ -57,8 +101,12 @@ const EventSignupEntry = ({
             >
               {isCollapsed ? <ChevronRight size={16} /> : <ChevronDown size={16} />}
             </div>
+            {/* Replace individual DJ avatar rendering with DjAvatarList */}
+            <DjAvatarList djRefs={signup.dj_refs || []} />
             <div className="d-flex flex-column">
-              <div className="lead">{signup.name}</div>
+              <div className="lead d-flex align-items-center gap-2">
+                <span>{signup.name}</span>
+              </div>
               <div className="d-flex align-items-center gap-2">
                 {issues.length > 0 && (
                   <IssuePopoverIcon idSuffix={signup.uuid} issues={issues} />
@@ -109,6 +157,31 @@ const EventSignupEntry = ({
                   label: "Add DJ to Slot (B2B)",
                   onClick: () => openB2BModal(signup),
                 },
+                "divider",
+                ...(signup.dj_refs?.flatMap((djRef: DocumentReference, index: number) => {
+                  const dj = djCache.get(djRef.id);
+                  const djName = dj?.dj_name || "DJ";
+                  return [
+                    ...(index > 0 ? ["divider" as const] : []),
+                    {
+                      label: `Edit ${djName} Info`,
+                      onClick: () => {
+                        const newWindow = window.open(`/djs/${djRef.id}`, '_blank');
+                        if (newWindow) newWindow.opener = null;
+                      },
+                    },
+                    {
+                      label: `Remove ${djName} from Signup`,
+                      onClick: () => {
+                        onUpdateSignup({
+                          ...signup,
+                          dj_refs: signup.dj_refs.filter((ref) => ref.id !== djRef.id),
+                        });
+                      },
+                    },
+                  ];
+                }) || []),
+                "divider",
                 {
                   label: "View Signup Info",
                   onClick: () => {
@@ -157,21 +230,31 @@ const EventSignupEntry = ({
                   </Alert>
                 </div>
               ))}
-              { issues.length > 0 ? <hr /> : null }
+              {issues.length > 0 ? <hr /> : null}
               <EventSlotDetails signup={signup} onUpdateSignup={onUpdateSignup} />
               <hr />
-              {signup.dj_refs?.map((djRef: DocumentReference) => (
-                <EventSignupDjDetails
-                  key={djRef.id}
-                  djRef={djRef}
-                  onRemoveDjRef={(dj_ref) =>
-                    onUpdateSignup({
-                      ...signup,
-                      dj_refs: signup.dj_refs.filter((ref) => ref.id !== dj_ref.id),
-                    })
-                  }
-                />
-              ))}
+              {djData.map(({ djRef, dj, djEvents, loading }) => {
+                if (loading) {
+                  return (
+                    <Container key={djRef.id} className="d-flex justify-content-around">
+                      <Spinner />
+                    </Container>
+                  );
+                }
+
+                if (!dj) {
+                  return <p key={djRef.id}>No DJ Found</p>;
+                }
+
+                return (
+                  <DjDetails
+                    key={djRef.id}
+                    dj={dj}
+                    djRef={djRef}
+                    djEvents={djEvents}
+                  />
+                );
+              })}
             </div>
           </Card.Body>
         )}
