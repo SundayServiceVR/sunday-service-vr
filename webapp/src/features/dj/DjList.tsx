@@ -1,87 +1,66 @@
 import { useEffect, useState } from "react";
-import { DocumentReference, collection, getDocs, orderBy, query } from "firebase/firestore";
-import { Dj, Event } from "../../util/types";
-import { db } from "../../util/firebase";
+import { DocumentReference } from "firebase/firestore";
+import { Dj, Event as AppEvent } from "../../util/types";
 import { Alert, AlertHeading, Button, Col, Container, Form, InputGroup, Row, Table } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
-import { docToRawType } from "../../store/util";
 
 import Spinner from "../../components/spinner/Spinner";
-import { getAllEvents } from "../../store/events";
 import toast from "react-hot-toast";
+import { useEventDjCache } from "../../contexts/useEventDjCache";
 
 type Props = {
     past?: boolean;
 }
 
-type DjMapEntry = { dj: Dj, reference: DocumentReference, events: Event[] }
+type DjMapEntry = { dj: Dj, reference: DocumentReference, events: AppEvent[] }
 
 type DjMap = Map<string, DjMapEntry>;
 
-async function fetchDjs() {
-    const q = query(collection(db, "djs"), orderBy("dj_name"));
-    const querySnapshot = await getDocs(q);
-
-    const djs: DjMap = new Map(querySnapshot.docs
-        .map((doc) => [
-            doc.ref.id,
-            {
-                dj: docToRawType<Dj>(doc),
-                reference: doc.ref,
-                events: []
-            }
-        ]));
-    return djs ?? [];
-}
-
-async function fetchData() {
-    const fetchDjsTask = fetchDjs();
-    const fetchEventsTask = getAllEvents("desc");
-
-    return {
-        djs: await fetchDjsTask,
-        events: await fetchEventsTask,
-    }
-}
-
 const DjList = ({ past = false }: Props) => {
+    const { djCache, eventCache, loading, getEventsByDjId } = useEventDjCache();
+
     const [djs, setDjs] = useState<DjMap>(new Map());
     const [searchTerm, setSearchTerm] = useState<string>("");
-    const [earliestEvent, setEarliestEvent] = useState<Event>();
-    const [loading, setLoading] = useState<boolean>(true);
+    const [earliestEvent, setEarliestEvent] = useState<AppEvent>();
     const navigate = useNavigate();
 
     useEffect(() => {
-        setLoading(true);
-        (async () => {
-            try {
-                const { djs: djMap, events } = await fetchData();
+        try {
+            // Build DjMap from cache
+            const djMap: DjMap = new Map();
 
-                events.forEach(event => {
-                    event.dj_plays.forEach(djRef => {
-                        djMap.get(djRef.id)?.events.push(event);
-                    });
+            djCache.forEach((dj, id) => {
+                djMap.set(id, {
+                    dj,
+                    reference: dj.events?.[0] as DocumentReference, // Best-effort reference
+                    events: getEventsByDjId(id),
                 });
-                setEarliestEvent(events[events.length - 1] ?? null);
-                setDjs(djMap);
+            });
 
-                setLoading(false);
-            } catch (error) {
-                setLoading(false);
-                toast.error("Problem loading djs.  Please yell at windy in the coordination channel.");
-                throw error; // Rethrow the error to allow it to bubble up to an error boundary
-            }
-        })()
-    }, [past]);
+            setDjs(djMap);
 
-    if (loading) {
-        return <Spinner type="logo" />
-    }
+            // Compute earliest event (by date) from eventCache, honoring `past` filter
+            const allEvents = Array.from(eventCache.values());
+            const filtered = past
+                ? allEvents.filter(e => e.start_datetime < new Date())
+                : allEvents.filter(e => e.start_datetime >= new Date());
+
+            const sorted = filtered.sort((a, b) => a.start_datetime.getTime() - b.start_datetime.getTime());
+            setEarliestEvent(sorted[0]);
+        } catch (error) {
+            toast.error("Problem loading djs.  Please yell at windy in the coordination channel.");
+            throw error; // Rethrow to surface to error boundary
+        }
+    }, [djCache, eventCache, getEventsByDjId, past]);
 
     const djSearchFilter = ((entry: DjMapEntry) => {
         return entry.dj.dj_name.toLowerCase().includes(searchTerm.toLowerCase()) 
             || entry.dj.public_name.toLowerCase().includes(searchTerm.toLowerCase())
-    })
+    });
+
+    if (loading) {
+        return <Spinner type="logo" />
+    }
 
     return <section>
         <h2 className="display-6">Dj Roster</h2>
@@ -127,8 +106,8 @@ const DjList = ({ past = false }: Props) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {Array.from(djs.values()).filter(dj => djSearchFilter(dj)).map((entry) => <tr key={entry.reference.id}>
-                        <td><Link to={`/djs/${entry.reference.id}`}>{entry.dj.dj_name ?? "(No Dj Name)"}</Link></td>
+                    {Array.from(djs.values()).filter(dj => djSearchFilter(dj)).map((entry) => <tr key={entry.reference?.id ?? entry.dj.discord_id}>
+                        <td><Link to={`/djs/${entry.reference?.id ?? ""}`}>{entry.dj.dj_name ?? "(No Dj Name)"}</Link></td>
                         <td>{entry.dj.public_name}</td>
                         <td>{entry.dj.discord_id}</td>
                         <td>{entry.events.length}</td>

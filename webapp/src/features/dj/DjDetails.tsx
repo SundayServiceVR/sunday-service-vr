@@ -1,85 +1,61 @@
 import { FormEvent, useEffect, useState } from "react";
 import { Alert, Button, Col, Container, Form, ListGroup, ListGroupItem, Row, Stack } from "react-bootstrap";
 import { useParams } from "react-router";
-import { collection, doc, getDoc, getDocs, orderBy, query, where } from "firebase/firestore";
-import { db } from "../../util/firebase";
-import { Dj, Event } from "../../util/types";
+import { Dj } from "../../util/types";
 import DjForm from "./DjForm";
 import { Link } from "react-router-dom";
-import { docToRawType } from "../../store/util";
 
 import Spinner from "../../components/spinner/Spinner";
-import { docToEvent } from "../../store/converters";
 import { updateDj } from "../../store/dj";
 import toast from "react-hot-toast";
+import { useDjWithEvents } from "../../contexts/useEventDjCache/useDjWithEvents";
 
 const DjDetails = () => {
-    
     const { djId } = useParams();
+    const { dj, events: playedEvents, loading } = useDjWithEvents(djId);
+
     const [ busy, setBusy ] = useState<boolean>(false);
     const [ isEditing, setIsEditing ] = useState<boolean>(false);
+    const [ djScratchpad, setDjScratchpad ] = useState<Dj | null>(null);
 
-    const [ dj, setDj ] = useState<Dj>({
-        discord_id: "",
-        public_name: "",
-        dj_name: "",
-        events: [],
-        notes: [],
-     });
-
-    const [ playedEvents, setPlayedEvents ] = useState<Event[]>([]);
-     
-    const [ djScratchpad, setDjScratchpad ] = useState<Dj>({...dj});
-
-    useEffect(()=>{
-        setBusy(true);
-        (async () => {
-            if(!djId) {
-                setBusy(false);
-                return;
-            }
-            const djReference = doc(db, "djs", djId);
-            const result = await getDoc(djReference);
-            setDj(docToRawType<Dj>(result));
-            const playsQuery = query(collection(db, "events"), where("dj_plays", "array-contains", djReference), orderBy("start_datetime", "desc"));
-            const playsQuerySnapshot = await getDocs(playsQuery);
-            const playedEvents = playsQuerySnapshot.docs.map(doc => docToEvent(doc)).filter(event => event !== null) as Event[];
-            setPlayedEvents(playedEvents)
-            setBusy(false);
-        })();
-    }, [djId]);
+    useEffect(() => {
+        if (dj) {
+            setDjScratchpad(dj);
+        }
+    }, [dj]);
 
     const onSubmitDj = (event: FormEvent) => {
         event.preventDefault();
         setBusy(true);
         (async () => {
             try {
-                if(!djId) {
-                    throw(new Error("Attempted to update a dj with no id"))
+                if(!djId || !djScratchpad) {
+                    throw(new Error("Attempted to update a dj with no id or data"));
                 }
                 await updateDj(djId, djScratchpad);
-                setDj(djScratchpad);
                 setIsEditing(false);
             } catch (error) {
                 console.error(error);
                 if (error instanceof Error) {
-                    toast(`Error: ${error.message}`); // Replace with toast implementation if available
+                    toast(`Error: ${error.message}`);
                 } else {
-                    toast(`Error: ${String(error)}`); // Replace with toast implementation if available
+                    toast(`Error: ${String(error)}`);
                 }
             } finally {
                 setBusy(false);
             }
         })();
-    }
+    };
 
     const onCancelUpdate = () => {
-        setDjScratchpad({...dj});
+        if (dj) {
+            setDjScratchpad({ ...dj });
+        }
         setIsEditing(false);
-    }
+    };
 
-    if(busy) {
-        return <Spinner type="logo" />
+    if(loading || busy || !dj || !djScratchpad) {
+        return <Spinner type="logo" />;
     }
 
     return <div>
@@ -94,7 +70,7 @@ const DjDetails = () => {
                                     To edit event information as well, edit the dj information from the event
                                 </Alert>
                                 <Form onSubmit={onSubmitDj}>
-                                    <DjForm dj={djScratchpad} setDj={setDjScratchpad} busy={busy}/>
+                                    <DjForm dj={djScratchpad} setDj={setDjScratchpad as React.Dispatch<React.SetStateAction<Dj>>} busy={busy}/>
                                     <Stack direction="horizontal" gap={3}>
                                         <Button variant="primary" type="submit" className="mt-3">
                                             Submit
@@ -128,13 +104,13 @@ const DjDetails = () => {
                 <Col md={4}>
                 <h3 className="display-6">Plays ({playedEvents.length})</h3>
                     <ListGroup>
-                        { playedEvents.map(event => <ListGroupItem><Link to={`/events/${event.id}`}>{event.name} - {event.start_datetime.toLocaleDateString()}</Link></ListGroupItem>) }
+                        { playedEvents.map(event => <ListGroupItem key={event.id}><Link to={`/events/${event.id}`}>{event.name} - {event.start_datetime.toLocaleDateString()}</Link></ListGroupItem>) }
                     </ListGroup>
                 </Col>
             </Row>
         </Container>
 
-    </div>
-}
+    </div>;
+};
 
 export default DjDetails;

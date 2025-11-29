@@ -1,10 +1,10 @@
 import { useContext } from "react";
-import { EventDjPlayMapperContext } from "./eventDjCacheContext";
+import { EventDjDataContext } from "./eventDjDataContext";
 
 export const useEventDjCache = () => {
-  const context = useContext(EventDjPlayMapperContext);
+  const context = useContext(EventDjDataContext);
   if (context === undefined) {
-    throw new Error('useEventDjCache must be used within an EventDjCacheProvider');
+    throw new Error('useEventDjCache must be used within an EventDjDataProvider');
   }
   return context;
 };

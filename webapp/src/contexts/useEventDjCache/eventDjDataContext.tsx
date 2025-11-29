@@ -2,7 +2,7 @@ import { createContext } from "react"
 import { Dj, Event } from '../../util/types';
 import { DjCache, EventCache } from "./types";
 
-type EventDjCacheContextType = {
+type EventDjDataContextType = {
   eventCache: EventCache;
   djCache: DjCache;
   loading: boolean;
@@ -15,5 +15,5 @@ type EventDjCacheContextType = {
   getPlayedDjsForEvent: (event: Event) => Dj[];
 };
 
-export const EventDjPlayMapperContext = createContext<EventDjCacheContextType | undefined>(undefined);
+export const EventDjDataContext = createContext<EventDjDataContextType | undefined>(undefined);
 
