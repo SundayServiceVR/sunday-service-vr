@@ -105,7 +105,7 @@ const EventLineupSlot = ({
 
                                 return (
                                     <DjDetails
-                                        key={index}
+                                        key={djRef.id}
                                         dj={{
                                             dj_name: dj.dj_name || "Unknown DJ",
                                             discord_id: dj.discord_id || "",
