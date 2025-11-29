@@ -46,7 +46,6 @@ const DjAvatarList: React.FC<Props> = ({ djRefs }) => {
     </OverlayTrigger>
   );
 
-  console.log("DjAvatarList djRefs:", djRefs);
 
   if (!djRefs || djRefs.length === 0) {
     console.error("djRefs is undefined or empty", djRefs);
