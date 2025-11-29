@@ -1,15 +1,16 @@
 import { Card, Stack, Button, Modal, Form, Alert } from "react-bootstrap";
-import { useState } from "react"; // Import useState
+import { useState, useEffect } from "react"; // Import useState
 import IssuePopoverIcon from "./components/IssuePopoverIcon";
 import { useGetSignupIssues } from "./hooks/useGetSignupIssues";
-import { EventSignup, Event } from "../../../util/types";
+import { EventSignup, Event, Dj } from "../../../util/types";
 import { ActionMenu } from "../../../components/actionMenu/ActionMenu";
-import EventSignupDjDetails from "./EventSignupDjDetails";
-import EventSlotDetails from "./EventSignupDetails";
 import { DocumentReference } from "firebase/firestore";
 import { Plus, Clock, ChevronDown, ChevronRight } from "react-feather"; // Import the Feather Plus icon and Clock icon
 import { getPrettyValueFromAvailability } from "../../eventSignup/utils";
 import { useEventDjCache } from "../../../contexts/useEventDjCache";
+import DjDetails from "../../../components/DjDetails";
+import { Container, Spinner } from "react-bootstrap";
+import EventSlotDetails from "./EventSignupDetails";
 
 type Props = {
   signup: EventSignup;
@@ -20,6 +21,44 @@ type Props = {
   setShowModal: (show: boolean) => void;
   event: Event;
 };
+
+function useDjData(djRefs: DocumentReference[] | undefined) {
+  const { djCache, getEventsByDjId, reloadDj } = useEventDjCache();
+  const [djData, setDjData] = useState<{ djRef: DocumentReference; loading: boolean; dj: Dj | null; djEvents: Event[] }[]>(
+    djRefs?.map((djRef: DocumentReference) => ({ djRef, loading: true, dj: null, djEvents: [] })) || []
+  );
+
+  useEffect(() => {
+    const fetchDjData = async () => {
+      const updatedDjData = await Promise.all(
+        djRefs?.map(async (djRef) => {
+          const cached = djCache.get(djRef.id);
+          if (cached) {
+            return {
+              djRef,
+              dj: cached,
+              djEvents: getEventsByDjId(djRef.id),
+              loading: false,
+            };
+          }
+
+          const reloaded = await reloadDj(djRef.id);
+          return {
+            djRef,
+            dj: reloaded || null,
+            djEvents: reloaded ? getEventsByDjId(djRef.id) : [],
+            loading: false,
+          };
+        }) || []
+      );
+      setDjData(updatedDjData);
+    };
+
+    fetchDjData();
+  }, [djRefs, djCache, getEventsByDjId, reloadDj]);
+
+  return djData;
+}
 
 const EventSignupEntry = ({
   signup,
@@ -47,6 +86,8 @@ const EventSignupEntry = ({
     openB2BModal,
   });
   const issues = getSignupIssues(signup, event);
+
+  const djData = useDjData(signup.dj_refs);
 
   return (
     <>
@@ -208,12 +249,28 @@ const EventSignupEntry = ({
               { issues.length > 0 ? <hr /> : null }
               <EventSlotDetails signup={signup} onUpdateSignup={onUpdateSignup} />
               <hr />
-              {signup.dj_refs?.map((djRef: DocumentReference) => (
-                <EventSignupDjDetails
-                  key={djRef.id}
-                  djRef={djRef}
-                />
-              ))}
+              {djData.map(({ djRef, dj, djEvents, loading }) => {
+                if (loading) {
+                  return (
+                    <Container key={djRef.id} className="d-flex justify-content-around">
+                      <Spinner />
+                    </Container>
+                  );
+                }
+
+                if (!dj) {
+                  return <p key={djRef.id}>No Dj Found</p>;
+                }
+
+                return (
+                  <DjDetails
+                    key={djRef.id}
+                    dj={dj}
+                    djRef={djRef}
+                    djEvents={djEvents}
+                  />
+                );
+              })}
             </div>
           </Card.Body>
         )}

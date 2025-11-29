@@ -33,7 +33,7 @@ const EventLineupSlot = ({
 
     const hasConflict = hasAvailabilityConflict(slot, signup);
 
-    return <Container className={`my-2 ${hasConflict ? 'border border-danger rounded p-2' : ''}`}>
+    return <Container className={`py-2 border ${hasConflict ? 'border-danger rounded p-2' : ''}`}>
         <Row>
             <Col xs={{ order: 1, span: 6 }} md={{ order: 1, span: "auto" }}>
                 <span style={{ "width": "30px" }}>

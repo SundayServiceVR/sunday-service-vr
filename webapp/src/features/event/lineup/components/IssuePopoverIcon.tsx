@@ -1,4 +1,4 @@
-import { OverlayTrigger, Popover, Button } from "react-bootstrap";
+import { OverlayTrigger, Popover } from "react-bootstrap";
 import { AlertTriangle } from "react-feather";
 
 type SignupIssue = {
@@ -23,13 +23,6 @@ const IssuePopoverIcon = ({ idSuffix, issues }: Props) => {
           <div key={issue.id} className="mb-2">
             <strong>{issue.title}</strong>
             <div>{issue.message}</div>
-            {issue.action && issue.actionLabel && (
-              <div className="mt-1">
-                <Button size="sm" variant="primary" onClick={issue.action}>
-                  {issue.actionLabel}
-                </Button>
-              </div>
-            )}
           </div>
         ))}
       </Popover.Body>
