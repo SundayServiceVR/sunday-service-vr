@@ -1,5 +1,5 @@
-import { Card, Stack, Button, Modal, Form, Alert } from "react-bootstrap";
 import { useState, useEffect } from "react"; // Import useState
+import { Card, Stack, Button, Modal, Form, Alert, Container, Spinner } from "react-bootstrap";
 import IssuePopoverIcon from "./components/IssuePopoverIcon";
 import { useGetSignupIssues } from "./hooks/useGetSignupIssues";
 import { EventSignup, Event, Dj } from "../../../util/types";
@@ -9,7 +9,6 @@ import { Plus, Clock, ChevronDown, ChevronRight } from "react-feather"; // Impor
 import { getPrettyValueFromAvailability } from "../../eventSignup/utils";
 import { useEventDjCache } from "../../../contexts/useEventDjCache";
 import DjDetails from "../../../components/DjDetails";
-import { Container, Spinner } from "react-bootstrap";
 import EventSlotDetails from "./EventSignupDetails";
 import DjAvatarList from "./components/DjAvatarList"; // Import DjAvatarList component
 

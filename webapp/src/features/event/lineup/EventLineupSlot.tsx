@@ -94,9 +94,7 @@ const EventLineupSlot = ({
                                 const dj = djRef && djCache.get(djRef.id);
                                 if (!dj) return null; // Ensure the DJ exists
 
-                                const avatarUrl = dj.discord_id
-                                    ? `https://cdn.discordapp.com/avatars/${dj.discord_id}/0.png`
-                                    : `https://cdn.discordapp.com/embed/avatars/0.png`; // Default avatar
+                                const avatarUrl = dj.avatar || `https://cdn.discordapp.com/embed/avatars/0.png`; // Use saved avatar or default
 
                                 return (
                                     <DjDetails
