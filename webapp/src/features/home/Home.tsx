@@ -47,11 +47,11 @@ const Home = () => {
 
     return <section>
         {/* Hero Section */}
-        <div className="hero-section text-center py-5 bg-light">
-            <h1 className="display-4">Welcome to Sunday Service VR</h1>
-            <p className="lead">Your one-stop platform for hosting and participating in virtual events.</p>
-            <div className="mt-4">
-                <CurrentOrNextEvent />
+        <div className="hero-section">
+            <div>
+                <h1 className="display-4">Welcome to Sunday Service</h1>
+                <p className="lead">Ft. Bingo</p>
+             <CurrentOrNextEvent />
             </div>
         </div>
 
