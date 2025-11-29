@@ -5,9 +5,9 @@ import { JWT } from "google-auth-library";
 import { GoogleSpreadsheet } from "google-spreadsheet";
 import { getFirestore, QuerySnapshot, Timestamp, DocumentReference } from "firebase-admin/firestore";
 import { defineString } from "firebase-functions/params";
-import { Dj } from "../../webapp/src/util/types";
+import { Dj } from "../../../webapp/src/util/types";
 import { logger } from "firebase-functions/v2";
-import { docToEvent } from "../../webapp/src/store/converters";
+import { docToEvent } from "../../../webapp/src/store/converters";
 
 const backupSheetId = process.env.FUNCTIONS_EMULATOR === "true" ?
     "11jLcYOy1YryYb8PIFpwAMzcO928nFYskKKmigMQcvj0": // Nonoprod

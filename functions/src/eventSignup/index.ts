@@ -4,7 +4,7 @@ import * as admin from "firebase-admin";
 import { v4 as uuidv4 } from "uuid";
 import { Dj, EventSignup, EventSignupFormData } from "../../../webapp/src/util/types";
 import { DocumentReference } from "firebase-admin/firestore";
-import { authenticate } from "../lib/authenticate";
+import { authenticate } from "../discordAuth/authenticate";
 import corsOptions from "./corsOptions";
 
 
