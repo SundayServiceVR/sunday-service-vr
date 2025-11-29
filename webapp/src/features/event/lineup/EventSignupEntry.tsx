@@ -166,7 +166,8 @@ const EventSignupEntry = ({
                     {
                       label: `Edit ${djName} Info`,
                       onClick: () => {
-                        window.open(`/djs/${djRef.id}`, '_blank', 'noreferrer');
+                        const newWindow = window.open(`/djs/${djRef.id}`, '_blank');
+                        if (newWindow) newWindow.opener = null;
                       },
                     },
                     {
