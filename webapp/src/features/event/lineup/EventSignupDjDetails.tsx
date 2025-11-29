@@ -4,6 +4,7 @@ import { Dj, Event } from "../../../util/types";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { DocumentReference } from "firebase/firestore";
+import DjAvatarList from "../../../components/DjAvatarList";
 
 type Props = {
   djRef: DocumentReference;
@@ -38,7 +39,10 @@ const EventSignupDjDetails = ({ djRef }: Props) => {
     <Container className="mt-3 mb-3">
       <Row className="mb-2">
         <Col>
-          <h5 className="mb-0 pb-2 border-bottom">{dj.dj_name}</h5>
+          <h5 className="mb-0 pb-2 border-bottom d-flex align-items-center">
+            <DjAvatarList djRefs={[djRef]} />
+            <span className="px-2">{dj.dj_name}</span>
+          </h5>
         </Col>
       </Row>
       <Row>
@@ -74,7 +78,6 @@ const EventSignupDjDetails = ({ djRef }: Props) => {
               </Link>
             </div>
           )}
-          
         </Col>
       </Row>
     </Container>
