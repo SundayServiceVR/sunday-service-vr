@@ -1,8 +1,6 @@
 import { Container, Spinner } from "react-bootstrap";
-import { useEventDjCache } from "../../../contexts/useEventDjCache";
-import { Dj, Event } from "../../../util/types";
-import { useEffect, useState } from "react";
 import { DocumentReference } from "firebase/firestore";
+import { useDjWithEvents } from "../../../contexts/useEventDjCache/useDjWithEvents";
 import DjDetails from "../../../components/DjDetails";
 
 type Props = {
@@ -10,17 +8,7 @@ type Props = {
 };
 
 const EventSignupDjDetails = ({ djRef }: Props) => {
-  const { loading, getEventsByDjId, djCache } = useEventDjCache();
-  const [djEvents, setDjEvents] = useState<Event[]>([]);
-  const [dj, setDj] = useState<Dj>();
-
-  useEffect(() => {
-    const dj = djCache.get(djRef.id);
-    setDj(dj);
-
-    const events = getEventsByDjId(djRef.id);
-    setDjEvents(events);
-  }, [djCache, djRef, getEventsByDjId]);
+  const { dj, events: djEvents, loading } = useDjWithEvents(djRef.id);
 
   if (loading) {
     return (

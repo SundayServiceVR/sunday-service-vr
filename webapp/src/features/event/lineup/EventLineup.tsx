@@ -9,13 +9,21 @@ import { v4 as uuidv4 } from 'uuid';
 import { useEventDjCache } from "../../../contexts/useEventDjCache";
 import { AddOrCreateDjModal } from "./components/AddOrCreateDjModal";
 import { updateSignupForEvent } from "../util";
+import { useReconciledEvent } from "../../../hooks/useEventStore/useReconciledEvent";
 
 const EventLineup = () => {
 
     const [eventScratchpad, proposeEventChange] = useEventOperations();
     const [createDjModalShow, setCreateDjModalShow] = useState<boolean>(false);
 
-    const { reloadDj } = useEventDjCache();
+    const { reloadDj, djCache } = useEventDjCache();
+
+    const reconciledEvent = useReconciledEvent(eventScratchpad, djCache);
+
+    const updateSignup = (event: Event, new_signup: EventSignup) => {
+        const new_event = updateSignupForEvent(event, new_signup);
+        proposeEventChange(new_event);
+    };
 
     const addSlotToLineup = (signup: EventSignup) => {
         const slot: Slot = {
@@ -27,14 +35,14 @@ const EventLineup = () => {
             reconciled: {
                 signup
             }
-        }
+        };
         setCreateDjModalShow(false);
         const slots_copy = [...eventScratchpad.slots, slot];
         proposeEventChange({ ...eventScratchpad, slots: slots_copy });
-    }
+    };
 
     const addSignup = async (_: Dj, djRef: DocumentReference) => {
-        const dj = await reloadDj(djRef.id); // Need to reload so other components have access to any created djs.
+        const dj = await reloadDj(djRef.id);
         setCreateDjModalShow(false);
         const isDebut = false;
         const signups_copy = [...eventScratchpad.signups, {
@@ -46,50 +54,52 @@ const EventLineup = () => {
             type: SlotType.LIVE,
         } as EventSignup];
         proposeEventChange({ ...eventScratchpad, signups: signups_copy });
-    }
+    };
 
-    const removeSignup = (signup: EventSignup) => {
-        const signups_copy = eventScratchpad.signups.filter(dj_signup => dj_signup.uuid !== signup.uuid);
-        proposeEventChange({ ...eventScratchpad, signups: signups_copy });
-    }
-
-    const updateSignup = (event: Event, signup: EventSignup) => {
-        proposeEventChange(updateSignupForEvent(event, signup));
-    }
-
-    return <Container>
-        <Container>
-            <Row className="mb-3">
-                <Col className="d-flex flex-column align-items-center">
-                    <Stack direction="horizontal" gap={2}>
-                        <div className="ms-auto" />
-                        <Button variant="primary" onClick={() => setCreateDjModalShow(true)}>Add DJ to Signups</Button>
-                    </Stack>
-                </Col>
-            </Row>
-            <Row>
-                <Col md={{ span: 6 }}>
-                    <h3 className="display-6">Signups</h3>
-                    <Container>
-                        <Row>
-                            <EventDjSignups
-                                event={eventScratchpad}
-                                onUpdateSignup={(newSignup) => updateSignup(eventScratchpad, newSignup)}
-                                onAddSlotToLineup={addSlotToLineup}
-                                onRemoveSignup={removeSignup}
-                            />
-                        </Row>
-                    </Container>
-                </Col>
-                <Col md={{ order: 1, span: 6 }}>
-                    <h3 className="display-6">Lineup (Local Times)</h3>
-                    <EventLineupSortableList
-                        onUpdateSignup={(newSignup) => updateSignup(eventScratchpad, newSignup)}
-                    />
-                </Col>
-            </Row>
-        </Container>
-        <AddOrCreateDjModal show={createDjModalShow} handleClose={() => setCreateDjModalShow(false)} onDjSelected={addSignup} />
+    return <Container className="mt-3">
+        <Row>
+            <Col>
+                <h1 className="display-6">Event Lineup</h1>
+            </Col>
+        </Row>
+        <Row>
+            <Col md={{ span: 6 }}>
+                <Stack direction="horizontal" gap={3}>
+                    <div className="me-auto" />
+                    <Button variant="outline-primary" onClick={() => setCreateDjModalShow(true)}>Add DJ to Signups</Button>
+                </Stack>
+            </Col>
+        </Row>
+        <Row>
+            <Col md={{ span: 6 }}>
+                <h3 className="display-6">Signups</h3>
+                <Container>
+                    <Row>
+                        <EventDjSignups
+                            event={reconciledEvent}
+                            onUpdateSignup={(newSignup: EventSignup) => updateSignup(eventScratchpad, newSignup)}
+                            onAddSlotToLineup={addSlotToLineup}
+                            onRemoveSignup={(signup) => {
+                                const signups = eventScratchpad.signups.filter(s => s.uuid !== signup.uuid);
+                                proposeEventChange({ ...eventScratchpad, signups });
+                            }}
+                        />
+                    </Row>
+                </Container>
+            </Col>
+            <Col md={{ order: 1, span: 6 }}>
+                <h3 className="display-6">Lineup (Local Times)</h3>
+                <EventLineupSortableList
+                    event={reconciledEvent}
+                    onUpdateSignup={(newSignup: EventSignup) => updateSignup(eventScratchpad, newSignup)}
+                />
+            </Col>
+        </Row>
+        <AddOrCreateDjModal
+            show={createDjModalShow}
+            handleClose={() => setCreateDjModalShow(false)}
+            onDjSelected={addSignup}
+        />
     </Container>;
 };
 
