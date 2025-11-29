@@ -1,6 +1,6 @@
 import React from "react";
 import { DocumentReference } from "firebase/firestore";
-import { useEventDjCache } from "../contexts/useEventDjCache";
+import { useEventDjCache } from "../../../../contexts/useEventDjCache";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
 

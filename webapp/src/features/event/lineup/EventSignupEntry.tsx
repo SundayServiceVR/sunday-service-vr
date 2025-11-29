@@ -11,7 +11,7 @@ import { useEventDjCache } from "../../../contexts/useEventDjCache";
 import DjDetails from "../../../components/DjDetails";
 import { Container, Spinner } from "react-bootstrap";
 import EventSlotDetails from "./EventSignupDetails";
-import DjAvatarList from "../../../components/DjAvatarList"; // Import DjAvatarList component
+import DjAvatarList from "./components/DjAvatarList"; // Import DjAvatarList component
 
 type Props = {
   signup: EventSignup;

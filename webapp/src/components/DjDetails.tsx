@@ -1,6 +1,6 @@
 import { Col, Container, ListGroup, Row, Stack } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import DjAvatarList from "./DjAvatarList";
+import DjAvatarList from "../features/event/lineup/components/DjAvatarList";
 import { Dj, Event } from "../util/types";
 import { DocumentReference } from "firebase/firestore";
 
