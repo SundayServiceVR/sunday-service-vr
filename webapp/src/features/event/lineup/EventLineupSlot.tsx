@@ -84,7 +84,7 @@ const EventLineupSlot = ({
             </Col>
             <Col xs={{ order: 2, span: 12 }} md={{ order: 2, span: true }} className="pt-3">
                 <EventSlotDetails signup={signup} onUpdateSignup={onUpdateSignup} />
-                < hr />
+                <hr />
                 {
                     !signup.dj_refs ? (
                         <p>No DJs available for this slot.</p>
