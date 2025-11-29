@@ -9,6 +9,7 @@ import EventSlotDetails from "./EventSignupDetails";
 import { DocumentReference } from "firebase/firestore";
 import { Plus, Clock, ChevronDown, ChevronRight } from "react-feather"; // Import the Feather Plus icon and Clock icon
 import { getPrettyValueFromAvailability } from "../../eventSignup/utils";
+import { useEventDjCache } from "../../../contexts/useEventDjCache";
 
 type Props = {
   signup: EventSignup;
@@ -32,6 +33,8 @@ const EventSignupEntry = ({
   const [isCollapsed, setIsCollapsed] = useState(true); // Default to hidden/collapsed
 
   const [showSignupModal, setShowSignupModal] = useState(false); // State to manage modal visibility
+  
+  const { djCache } = useEventDjCache();
 
   // Helper to combine setSelectedSignup and setShowModal
   const openB2BModal = (signup: EventSignup) => {
@@ -58,7 +61,28 @@ const EventSignupEntry = ({
               {isCollapsed ? <ChevronRight size={16} /> : <ChevronDown size={16} />}
             </div>
             <div className="d-flex flex-column">
-              <div className="lead">{signup.name}</div>
+              <div className="lead d-flex align-items-center gap-2">
+                <span>{signup.name}</span>
+                {signup.dj_refs?.map((djRef: DocumentReference) => {
+                  const dj = djCache.get(djRef.id);
+                  if (!dj) return null;
+                  const avatarUrl = dj.avatar || `https://cdn.discordapp.com/embed/avatars/0.png`;
+                  return (
+                    <img
+                      key={djRef.id}
+                      src={avatarUrl}
+                      alt={dj.dj_name}
+                      title={dj.dj_name}
+                      style={{
+                        width: '24px',
+                        height: '24px',
+                        borderRadius: '50%',
+                        objectFit: 'cover'
+                      }}
+                    />
+                  );
+                })}
+              </div>
               <div className="d-flex align-items-center gap-2">
                 {issues.length > 0 && (
                   <IssuePopoverIcon idSuffix={signup.uuid} issues={issues} />
@@ -109,6 +133,30 @@ const EventSignupEntry = ({
                   label: "Add DJ to Slot (B2B)",
                   onClick: () => openB2BModal(signup),
                 },
+                "divider",
+                ...(signup.dj_refs?.flatMap((djRef: DocumentReference, index: number) => {
+                  const dj = djCache.get(djRef.id);
+                  const djName = dj?.dj_name || "DJ";
+                  return [
+                    ...(index > 0 ? ["divider" as const] : []),
+                    {
+                      label: `Edit ${djName} Info`,
+                      onClick: () => {
+                        window.open(`/djs/${djRef.id}`, '_blank', 'noreferrer');
+                      },
+                    },
+                    {
+                      label: `Remove ${djName} from Signup`,
+                      onClick: () => {
+                        onUpdateSignup({
+                          ...signup,
+                          dj_refs: signup.dj_refs.filter((ref) => ref.id !== djRef.id),
+                        });
+                      },
+                    },
+                  ];
+                }) || []),
+                "divider",
                 {
                   label: "View Signup Info",
                   onClick: () => {
@@ -164,12 +212,6 @@ const EventSignupEntry = ({
                 <EventSignupDjDetails
                   key={djRef.id}
                   djRef={djRef}
-                  onRemoveDjRef={(dj_ref) =>
-                    onUpdateSignup({
-                      ...signup,
-                      dj_refs: signup.dj_refs.filter((ref) => ref.id !== dj_ref.id),
-                    })
-                  }
                 />
               ))}
             </div>

@@ -1,17 +1,15 @@
-import { Col, Container, Dropdown, ListGroup, Row, Spinner, Stack } from "react-bootstrap";
+import { Col, Container, ListGroup, Row, Spinner, Stack } from "react-bootstrap";
 import { useEventDjCache } from "../../../contexts/useEventDjCache";
 import { Dj, Event } from "../../../util/types";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { DocumentReference } from "firebase/firestore";
-import { Disc } from "react-feather"; // Import the Settings icon from react-feather
 
 type Props = {
   djRef: DocumentReference;
-  onRemoveDjRef: (djRef: DocumentReference) => void;
 };
 
-const EventSignupDjDetails = ({ djRef, onRemoveDjRef}: Props) => {
+const EventSignupDjDetails = ({ djRef }: Props) => {
   const { loading, getEventsByDjId, djCache } = useEventDjCache();
   const [djEvents, setDjEvents] = useState<Event[]>([]);
   const [dj, setDj] = useState<Dj>();
@@ -37,25 +35,10 @@ const EventSignupDjDetails = ({ djRef, onRemoveDjRef}: Props) => {
   }
 
   return (
-    <Container className="mt-3">
-      <Row>
+    <Container className="mt-3 mb-3">
+      <Row className="mb-2">
         <Col>
-          <h5>{dj.dj_name}</h5>
-        </Col>
-        <Col className="text-end">
-          <Dropdown>
-            <Dropdown.Toggle variant="white" id="dropdown-basic" size="sm">
-              <Disc size={16} />
-            </Dropdown.Toggle>
-            <Dropdown.Menu>
-              <Dropdown.Item as={Link} to={`/djs/${djRef.id}`} target="_blank">
-                Edit {dj.dj_name} DJ Info
-              </Dropdown.Item>
-              <Dropdown.Item onClick={() => onRemoveDjRef(djRef)}>
-                Remove { dj.dj_name } from signup slot
-              </Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
+          <h5 className="mb-0 pb-2 border-bottom">{dj.dj_name}</h5>
         </Col>
       </Row>
       <Row>
