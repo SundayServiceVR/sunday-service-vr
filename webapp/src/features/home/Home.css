@@ -9,3 +9,31 @@
 .linksList > div {
     flex-grow: 1;
 }
+
+/* Hero Section Styling */
+.hero-section {
+    text-align: center;
+    padding: 5rem 0;
+    background-color: #333;
+    background-image: url('/assets/hero_bg.png');
+    background-size: cover;
+    background-position: center;
+    color: #fff;
+}
+
+.hero-section > div {
+    background-color: rgba(57, 49, 49, 1);
+    border: solid 3px #000;
+    padding: 20px;
+    border-radius: 10px;
+    display: inline-block;
+}
+
+.hero-section h1 {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+/* 
+.hero-section p {
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.6);
+} */
