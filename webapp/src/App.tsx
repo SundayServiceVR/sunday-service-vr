@@ -18,7 +18,7 @@ import { DiscordIdInfo } from './features/dj/discordIdInfo/DiscordIdInfo';
 import { eventRoutes } from './features/event/routes';
 import { UserInfo } from './features/user/UserInfo';
 
-import { EventDjPlayMapperProvider } from './contexts/useEventDjCache/eventDjCacheProvider';
+import { EventDjDataProvider } from './contexts/useEventDjCache/eventDjDataProvider';
 
 import LoginPage from './features/auth/LoginPage';
 import { DiscordRedirect } from './features/auth/DiscordRedirect';
@@ -43,9 +43,9 @@ function App() {
       path: "/",
       element: <FirebaseAuthProvider>
         <RoleGuard requireAnyRole={['dj', 'host', 'admin', 'bingo']}>
-          <EventDjPlayMapperProvider>
+          <EventDjDataProvider>
             <Layout />
-          </EventDjPlayMapperProvider>
+          </EventDjDataProvider>
         </RoleGuard>
       </FirebaseAuthProvider>,
       children: [
@@ -100,9 +100,9 @@ function App() {
       path: "/bingo",
       element: <FirebaseAuthProvider>
         <RoleGuard requireAnyRole={['bingo', 'dj', 'host', 'admin']}>
-          <EventDjPlayMapperProvider>
+          <EventDjDataProvider>
             <Layout />
-          </EventDjPlayMapperProvider>
+          </EventDjDataProvider>
         </RoleGuard>
       </FirebaseAuthProvider>,
       children: [

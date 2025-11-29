@@ -1,10 +1,8 @@
 import { Col, Container, Dropdown, ListGroup, Row, Spinner, Stack } from "react-bootstrap";
-import { useEventDjCache } from "../../../contexts/useEventDjCache";
-import { Dj, Event } from "../../../util/types";
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
 import { DocumentReference } from "firebase/firestore";
 import { Disc } from "react-feather"; // Import the Settings icon from react-feather
+import { useDjWithEvents } from "../../../contexts/useEventDjCache/useDjWithEvents";
 
 type Props = {
   djRef: DocumentReference;
@@ -12,17 +10,7 @@ type Props = {
 };
 
 const EventSignupDjDetails = ({ djRef, onRemoveDjRef}: Props) => {
-  const { loading, getEventsByDjId, djCache } = useEventDjCache();
-  const [djEvents, setDjEvents] = useState<Event[]>([]);
-  const [dj, setDj] = useState<Dj>();
-
-  useEffect(() => {
-    const dj = djCache.get(djRef.id);
-    setDj(dj);
-
-    const events = getEventsByDjId(djRef.id);
-    setDjEvents(events);
-  }, [djCache, djRef, getEventsByDjId]);
+  const { dj, events: djEvents, loading } = useDjWithEvents(djRef.id);
 
   if (loading) {
     return (
