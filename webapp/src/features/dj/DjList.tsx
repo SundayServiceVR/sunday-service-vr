@@ -62,6 +62,7 @@ const DjList = ({ past = false }: Props) => {
         return <Spinner type="logo" />
     }
 
+
     return <section>
         <h2 className="display-6">Dj Roster</h2>
 
@@ -83,7 +84,7 @@ const DjList = ({ past = false }: Props) => {
                         <Button variant="primary" onClick={() => navigate("/djs/create")}>Create Dj</Button>
                     </Col>
                     <Col md={{span: 6, order: 0}} className="py-1">
-                        <Form>
+                        <Form onSubmit={e => e.preventDefault()}>
                             <InputGroup>
                                 <Form.Control aria-label="Search DJ" placeholder="Search DJ" onChange={event => setSearchTerm(event.target.value)} />
                             </InputGroup>
@@ -97,6 +98,7 @@ const DjList = ({ past = false }: Props) => {
                 <thead>
                     <tr>
                         <th>Dj Name</th>
+                        <th>Dj Name</th>
                         <th>Alt Name</th>
                         <th>Discord ID</th>
                         <th>Total Plays</th>
@@ -106,8 +108,8 @@ const DjList = ({ past = false }: Props) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {Array.from(djs.values()).filter(dj => djSearchFilter(dj)).map((entry) => <tr key={entry.reference?.id ?? entry.dj.discord_id}>
-                        <td><Link to={`/djs/${entry.reference?.id ?? ""}`}>{entry.dj.dj_name ?? "(No Dj Name)"}</Link></td>
+                    {Array.from(djs).filter(([, entry]) => djSearchFilter(entry)).map(([djId, entry]) => <tr key={djId}>
+                        <td><Link to={`/djs/${djId}`}>{entry.dj.dj_name ?? "(No Dj Name)"}</Link></td>
                         <td>{entry.dj.public_name}</td>
                         <td>{entry.dj.discord_id}</td>
                         <td>{entry.events.length}</td>
