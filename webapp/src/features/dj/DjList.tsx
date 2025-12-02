@@ -98,7 +98,6 @@ const DjList = ({ past = false }: Props) => {
                 <thead>
                     <tr>
                         <th>Dj Name</th>
-                        <th>Dj Name</th>
                         <th>Alt Name</th>
                         <th>Discord ID</th>
                         <th>Total Plays</th>
