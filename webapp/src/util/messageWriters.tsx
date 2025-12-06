@@ -134,17 +134,3 @@ const getAusSlotText = (slot : Slot): string => {
     const slotText = `${slot.start_time ? dateToLineupTime(slot.start_time, "Australia/Sydney") : ""} ${slot.reconciled.signup.name}${debuttText}`;
     return slotText;
 }
-
-const corsConfig = [
-  {
-    "origin": [
-      "http://localhost:3000",
-      "https://sunday-service-vr.web.app",
-      "https://sunday-service-vr.firebaseapp.com",
-      "https://s4tan.s4vr.net"
-    ],
-    "method": ["GET", "HEAD", "PUT", "POST", "DELETE", "OPTIONS"],
-    "responseHeader": ["Content-Type", "Authorization", "x-goog-meta-*"],
-    "maxAgeSeconds": 3600
-  }
-];
