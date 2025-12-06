@@ -1,4 +1,3 @@
-
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
@@ -10,7 +9,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyDLiHWGv608qbGNVOoGpWog9hljNpCFsNw", // This is not a secret
   authDomain: "sunday-service-vr.firebaseapp.com",
   projectId: "sunday-service-vr",
-  storageBucket: "sunday-service-vr.appspot.com",
+  storageBucket: "sunday-service-vr.firebasestorage.app",
   messagingSenderId: "610955197411",
   appId: "1:610955197411:web:176a1ec89d1be7d9417ed6",
   measurementId: "G-ESYWL7W398",
