@@ -2,15 +2,16 @@ import { useEffect, useState } from "react";
 import { Button, Container, Nav, Stack } from 'react-bootstrap';
 import { default_event } from "../../store/events";
 import { docToEvent } from "../../store/converters";
-import { onSnapshot, doc } from "firebase/firestore";
+import { onSnapshot, doc, updateDoc } from "firebase/firestore";
 import { Event } from "../../util/types";
-import { db } from "../../util/firebase";
+import { db, storage } from "../../util/firebase";
 import FloatingActionBar from "../../components/FloatingActionBar";
 import { Outlet, useLocation, useParams } from "react-router";
 import { Link } from "react-router-dom";
 import { EventPublishedStatusBadge } from "./EventPublishedStatusBadge";
 import toast from "react-hot-toast";
 import { useEventStore } from "../../hooks/useEventStore/useEventStore";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 
 const EventRoot = () => {
@@ -20,6 +21,10 @@ const EventRoot = () => {
     const [event, setEvent] = useState<Event>(default_event);
     const [eventScratchpad, setEventScratchpad] = useState<Event>(event ?? default_event);
     const [hasChanges, setHasChanges] = useState<boolean>(false);
+    // Tracks the last known Firestore update timestamp we saw for this event
+    // so we can tell if a new snapshot represents a truly external change.
+    const [lastSeenUpdatedAt, setLastSeenUpdatedAt] = useState<number | null>(null);
+    const [lineupPosterFile, setLineupPosterFile] = useState<File | null>(null);
     const { eventId } = useParams();
 
     const { saveEvent, getReconcicledEvent} = useEventStore();
@@ -40,29 +45,96 @@ const EventRoot = () => {
         });
     }, [eventId]);
 
-    // When a new event comes in, we need to set our scratchpad.  If there are active changes, it's time to yell.
+    // When a new event comes in, we need to set our scratchpad. If there are
+    // active local changes and the Firestore update timestamp moves forward
+    // from what we last saw, it's time to yell.
     useEffect(() => {
         if (!event) return;
-        if (hasChanges) {
+        const updatedAt = event.lastUpdated?.getTime() ?? null;
+
+        if (hasChanges && lastSeenUpdatedAt !== null && updatedAt !== null && updatedAt > lastSeenUpdatedAt) {
             toast("Changes were made outside of this window.");
-        } else {
-            setEventScratchpad(event);
         }
+
+        // Treat the latest event from Firestore as the new baseline for the
+        // scratchpad and remember its update timestamp.
+        setEventScratchpad(event);
+        setHasChanges(false);
+        setLastSeenUpdatedAt(updatedAt);
         // We do not want a change in "hasChanges" to trigger this useEffect.
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [event]);
 
     const proposeEventChange = (event: Event) => {
-        let newEvent = {...event}
+        let newEvent = { ...event };
         newEvent = getReconcicledEvent(newEvent);
         setHasChanges(true);
         setEventScratchpad(newEvent);
-    }
+    };
+
+    // Called by children when a new lineup poster file is selected on the setup page.
+    const onLineupPosterFileSelected = (file: File | null) => {
+        setLineupPosterFile(file);
+
+        if (!file) {
+            // Clear any pending poster changes
+            setHasChanges(true);
+            setEventScratchpad({
+                ...eventScratchpad,
+                lineup_poster_path: undefined,
+                lineup_poster_url: undefined,
+            });
+            return;
+        }
+
+        // Mark eventScratchpad as changed so the existing save flow sees a difference.
+        // Use a temporary marker URL; onSaveEvent will replace this with the real Storage URL.
+        setHasChanges(true);
+        setEventScratchpad({
+            ...eventScratchpad,
+            lineup_poster_url: "__pending_upload__",
+        });
+    };
 
     const onSaveEvent = async () => {
         try {
-            await saveEvent(eventScratchpad, event);
+            let eventToSave: Event = { ...eventScratchpad };
+
+            // If a new lineup poster file has been selected, upload it and patch the event
+            let storagePath: string | undefined;
+            let downloadUrl: string | undefined;
+
+            if (lineupPosterFile && eventId) {
+                const safeFileName = lineupPosterFile.name.replace(/[^a-zA-Z0-9.\-_]/g, "_");
+                storagePath = `lineup-posters/${eventId}/${Date.now()}_${safeFileName}`;
+                const storageRef = ref(storage, storagePath);
+                await uploadBytes(storageRef, lineupPosterFile);
+                downloadUrl = await getDownloadURL(storageRef);
+
+                eventToSave = {
+                    ...eventToSave,
+                    lineup_poster_path: storagePath,
+                    lineup_poster_url: downloadUrl,
+                };
+            }
+
+            // Ensure the event (including lineup poster fields) is fully reconciled
+            // before saving so that image-only changes are also persisted.
+            eventToSave = getReconcicledEvent(eventToSave);
+
+            await saveEvent(eventToSave, event);
+
+            // Explicitly patch the Firestore document with lineup poster fields in case
+            // the internal saveEvent logic does not preserve unknown properties.
+            if (storagePath && downloadUrl && eventId) {
+                const eventRef = doc(db, "events", eventId);
+                await updateDoc(eventRef, {
+                    lineup_poster_path: storagePath,
+                    lineup_poster_url: downloadUrl,
+                });
+            }
             setHasChanges(false);
+            setLineupPosterFile(null);
         } catch (error) {
             toast.error(`Error saving event: ${(error as Error).message}`);
         }
@@ -104,7 +176,7 @@ const EventRoot = () => {
         </Nav>
 
         <Container className="mt-3">
-            <Outlet context={[eventScratchpad, proposeEventChange]} />
+            <Outlet context={[eventScratchpad, proposeEventChange, onLineupPosterFileSelected]} />
         </Container>
 
         <FloatingActionBar hidden={!hasChanges}>

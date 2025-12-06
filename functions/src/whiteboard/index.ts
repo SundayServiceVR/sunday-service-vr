@@ -55,3 +55,18 @@ export const nextEvent = onRequest(async (request, response) => {
     logger.info(`Request from ${request.ip}`, { structuredData: true });
     response.send(JSON.stringify(await getNextEvent(true)));
 });
+
+/**
+ * Returns just the lineup poster URL for the next event.
+ * Useful for in-world whiteboards or OBS overlays that only need the image.
+ */
+export const nextEventLineupPoster = onRequest(async (request, response) => {
+    logger.info(`Request from ${request.ip}`, { structuredData: true });
+
+    const event = await getNextEvent(true);
+
+    response.send(JSON.stringify({
+        event_id: event?.id ?? null,
+        lineup_poster_url: event?.lineup_poster_url ?? null,
+    }));
+});

@@ -38,6 +38,16 @@ export type Event = {
     signups: EventSignup[]
 
     dj_plays: DocumentReference[],
+
+    // When this event document was last updated in Firestore (derived from
+    // snapshot metadata, not written explicitly by clients).
+    lastUpdated?: Date;
+
+    // Optional lineup poster image stored in Firebase Storage
+    // lineup_poster_path is the storage path (e.g. lineup-posters/{eventId}/filename.png)
+    // lineup_poster_url is a resolved, shareable URL for clients (e.g. whiteboard, OBS tools)
+    lineup_poster_path?: string;
+    lineup_poster_url?: string;
     
     // Configuration for signup behavior and restrictions
     signup_configuration?: {

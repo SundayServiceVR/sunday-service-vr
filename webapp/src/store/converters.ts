@@ -8,7 +8,8 @@ import { Slot, Event, EventSignup } from "../util/types";
 // Issue #59
 
 /**
- * Converts a firebase doc to an event and populates its id
+ * Converts a firebase doc to an event and populates its id and a
+ * lastUpdated timestamp derived from Firestore snapshot metadata.
  * 
  * @param doc 
  * @returns 
@@ -18,6 +19,12 @@ export const docToEvent = (doc: DocumentData) => {
     return {
       ...docToEventRaw(data),
       id: doc.ref.id,
+      // updateTime is provided by Firestore on the snapshot; use it to
+      // detect whether an incoming change is newer than what the user
+      // currently has in their scratchpad.
+      lastUpdated: (doc as unknown as { updateTime?: Timestamp })?.updateTime
+        ? (doc as unknown as { updateTime: Timestamp }).updateTime.toDate()
+        : undefined,
     } as Event;
   }
   

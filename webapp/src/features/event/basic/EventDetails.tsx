@@ -10,7 +10,7 @@ import "react-datepicker/dist/react-datepicker.css";
 const EventDetails = () => {
 
     const { eventId } = useParams();
-    const [eventScratchpad, proposeEventChange] = useEventOperations();
+    const [eventScratchpad, proposeEventChange, onLineupPosterFileSelected] = useEventOperations();
     const message = getSignupsPostedMessage(eventScratchpad, `${window.location.origin}/eventSignup/${eventId}`);
 
 
@@ -18,7 +18,13 @@ const EventDetails = () => {
         <Card>
             <CardBody>
                 <h2 className="display-6">Init Event</h2>
-                <EventBasicDetailsForm event={eventScratchpad} onEventChange={proposeEventChange} />
+                <EventBasicDetailsForm
+                    event={eventScratchpad}
+                    onEventChange={proposeEventChange}
+                    onLineupPosterFileChange={(file) => {
+                        onLineupPosterFileSelected(file);
+                    }}
+                />
             </CardBody>
         </Card>
         {eventScratchpad.signupsAreOpen &&
