@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Button, Container, Nav, Stack } from 'react-bootstrap';
 import { default_event } from "../../store/events";
 import { docToEvent } from "../../store/converters";
-import { onSnapshot, doc, updateDoc } from "firebase/firestore";
+import { onSnapshot, doc } from "firebase/firestore";
 import { Event } from "../../util/types";
 import { db, storage } from "../../util/firebase";
 import FloatingActionBar from "../../components/FloatingActionBar";
