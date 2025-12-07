@@ -145,15 +145,7 @@ const EventRoot = () => {
 
             await saveEvent(eventToSave, event);
 
-            // Explicitly patch the Firestore document with lineup poster fields in case
-            // the internal saveEvent logic does not preserve unknown properties.
-            if (storagePath && downloadUrl && eventId) {
-                const eventRef = doc(db, "events", eventId);
-                await updateDoc(eventRef, {
-                    lineup_poster_path: storagePath,
-                    lineup_poster_url: downloadUrl,
-                });
-            }
+            // The event (including lineup poster fields) is now fully persisted via saveEvent.
             setHasChanges(false);
             setLineupPosterFile(null);
             
