@@ -1,6 +1,7 @@
 import { Form } from "react-bootstrap";
 import { Event } from "../../../util/types";
 import "react-datepicker/dist/react-datepicker.css";
+import { toast } from "react-hot-toast";
 
 type Props = {
     event: Event,
@@ -61,13 +62,21 @@ const EventBasicDetailsForm = ({ event: eventScratchpad, onEventChange: proposeE
                 onChange={(e) => {
                     const input = e.target as HTMLInputElement;
                     const file = input.files?.[0] ?? null;
+                    
+                    // Validate file size (10MB limit)
+                    if (file && file.size > 10 * 1024 * 1024) {
+                        toast.error(`Image file is too large. Maximum file size is 10MB. Your file is ${(file.size / (1024 * 1024)).toFixed(2)}MB.`);
+                        input.value = ''; // Clear the file input
+                        return;
+                    }
+                    
                     if (onLineupPosterFileChange) {
                         onLineupPosterFileChange(file);
                     }
                 }}
             />
             <Form.Text className="text-muted d-block mb-2">
-                Optional. Upload an image for the lineup whiteboard/OBS overlays.
+                Optional. Upload an image for the lineup whiteboard/OBS overlays. Maximum file size: 10MB.
             </Form.Text>
             {eventScratchpad.lineup_poster_url && (
                 <div className="mt-2">
