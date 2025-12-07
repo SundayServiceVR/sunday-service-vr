@@ -25,6 +25,7 @@ const EventRoot = () => {
     // so we can tell if a new snapshot represents a truly external change.
     const [lastSeenUpdatedAt, setLastSeenUpdatedAt] = useState<number | null>(null);
     const [lineupPosterFile, setLineupPosterFile] = useState<File | null>(null);
+    const [lineupPosterPreviewUrl, setLineupPosterPreviewUrl] = useState<string | null>(null);
     const { eventId } = useParams();
 
     const { saveEvent, getReconcicledEvent} = useEventStore();
@@ -65,6 +66,15 @@ const EventRoot = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [event]);
 
+    // Cleanup: revoke object URL when component unmounts
+    useEffect(() => {
+        return () => {
+            if (lineupPosterPreviewUrl) {
+                URL.revokeObjectURL(lineupPosterPreviewUrl);
+            }
+        };
+    }, [lineupPosterPreviewUrl]);
+
     const proposeEventChange = (event: Event) => {
         let newEvent = { ...event };
         newEvent = getReconcicledEvent(newEvent);
@@ -74,6 +84,12 @@ const EventRoot = () => {
 
     // Called by children when a new lineup poster file is selected on the setup page.
     const onLineupPosterFileSelected = (file: File | null) => {
+        // Clean up any existing preview URL to prevent memory leaks
+        if (lineupPosterPreviewUrl) {
+            URL.revokeObjectURL(lineupPosterPreviewUrl);
+            setLineupPosterPreviewUrl(null);
+        }
+
         setLineupPosterFile(file);
 
         if (!file) {
@@ -87,12 +103,16 @@ const EventRoot = () => {
             return;
         }
 
+        // Create a local object URL for preview purposes
+        const previewUrl = URL.createObjectURL(file);
+        setLineupPosterPreviewUrl(previewUrl);
+
         // Mark eventScratchpad as changed so the existing save flow sees a difference.
-        // Use a temporary marker URL; onSaveEvent will replace this with the real Storage URL.
+        // Use the local preview URL instead of the marker.
         setHasChanges(true);
         setEventScratchpad({
             ...eventScratchpad,
-            lineup_poster_url: "__pending_upload__",
+            lineup_poster_url: previewUrl,
         });
     };
 
@@ -135,6 +155,12 @@ const EventRoot = () => {
             }
             setHasChanges(false);
             setLineupPosterFile(null);
+            
+            // Clean up the preview URL after successful save
+            if (lineupPosterPreviewUrl) {
+                URL.revokeObjectURL(lineupPosterPreviewUrl);
+                setLineupPosterPreviewUrl(null);
+            }
         } catch (error) {
             toast.error(`Error saving event: ${(error as Error).message}`);
         }
@@ -142,6 +168,14 @@ const EventRoot = () => {
 
     const onCancelChanges = () => {
         setHasChanges(false);
+        setLineupPosterFile(null);
+        
+        // Clean up the preview URL when canceling changes
+        if (lineupPosterPreviewUrl) {
+            URL.revokeObjectURL(lineupPosterPreviewUrl);
+            setLineupPosterPreviewUrl(null);
+        }
+        
         if (!event) return;
         setEventScratchpad(event);
     }
