@@ -2,11 +2,9 @@ import { Form } from "react-bootstrap";
 import { Event } from "../../../util/types";
 import "react-datepicker/dist/react-datepicker.css";
 import { toast } from "react-hot-toast";
+import { LINEUP_POSTER_MAX_FILE_SIZE_MB, validateLineupPosterFile } from "../../../util/util";
 
-// Maximum file size for lineup poster images (10MB)
-const MAX_FILE_SIZE_MB = 10;
-const BYTES_PER_MB = 1024 * 1024;
-const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * BYTES_PER_MB;
+
 
 type Props = {
     event: Event,
@@ -67,22 +65,23 @@ const EventBasicDetailsForm = ({ event: eventScratchpad, onEventChange: proposeE
                 onChange={(e) => {
                     const input = e.target as HTMLInputElement;
                     const file = input.files?.[0] ?? null;
-                    
-                    // Validate file size
-                    if (file && file.size > MAX_FILE_SIZE_BYTES) {
-                        const fileSizeMB = (file.size / BYTES_PER_MB).toFixed(2);
-                        toast.error(`Image file is too large. Maximum file size is ${MAX_FILE_SIZE_MB}MB. Your file is ${fileSizeMB}MB.`);
-                        input.value = ''; // Clear the file input
+
+                    const { valid, errorMessage } = validateLineupPosterFile(file);
+                    if (!valid) {
+                        if (errorMessage) {
+                            toast.error(errorMessage);
+                        }
+                        input.value = ""; // Clear the file input
                         return;
                     }
-                    
+
                     if (onLineupPosterFileChange) {
                         onLineupPosterFileChange(file);
                     }
                 }}
             />
             <Form.Text className="text-muted d-block mb-2">
-                Optional. Upload an image for the lineup whiteboard/OBS overlays. Maximum file size: {MAX_FILE_SIZE_MB}MB.
+                Optional. Upload an image for the lineup whiteboard/OBS overlays. Maximum file size: {LINEUP_POSTER_MAX_FILE_SIZE_MB}MB.
             </Form.Text>
             {eventScratchpad.lineup_poster_url && (
                 <div className="mt-2">
