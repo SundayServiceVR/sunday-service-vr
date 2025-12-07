@@ -8,13 +8,16 @@ import { toast } from "react-hot-toast";
 
 import Spinner from "../../../components/spinner/Spinner";
 import { useEventStore } from "../../../hooks/useEventStore/useEventStore";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { storage } from "../../../util/firebase";
 
 const EventCreate = () => {
     const [ event, setEvent ] = useState<Event>({ ...default_event });
+    const [ lineupPosterFile, setLineupPosterFile ] = useState<File | null>(null);
     const [ busy, setBusy ] = useState<boolean>(false);
     const navigate = useNavigate();
 
-    const { createEvent } = useEventStore();
+    const { createEvent, saveEvent } = useEventStore();
 
     const onCreateEvent = (formEvent: FormEvent) => {
         formEvent.preventDefault();
@@ -22,7 +25,30 @@ const EventCreate = () => {
             setBusy(true);
             try {
                 event.end_datetime = event.start_datetime;
-                const result = await createEvent(event);
+
+                // First create the event without the lineup poster so we get an ID
+                const createdRef = await createEvent(event);
+
+                // If a lineup poster has been selected, upload it and patch the event
+                if (lineupPosterFile && createdRef.id) {
+                    const safeFileName = lineupPosterFile.name.replace(/[^a-zA-Z0-9.\-_]/g, "_");
+                    const storagePath = `lineup-posters/${createdRef.id}/${Date.now()}_${safeFileName}`;
+                    const storageRef = ref(storage, storagePath);
+                    await uploadBytes(storageRef, lineupPosterFile);
+                    const downloadUrl = await getDownloadURL(storageRef);
+
+                    const eventWithPoster: Event = {
+                        ...event,
+                        id: createdRef.id,
+                        lineup_poster_path: storagePath,
+                        lineup_poster_url: downloadUrl,
+                    };
+
+                    await saveEvent(eventWithPoster, undefined);
+
+                }
+
+                const result = { id: createdRef.id };
                 navigate(`/events/${result.id}`);
             } catch (error) {
                 const errorMessage = error instanceof Error ? error.message : "Failed to create event";
@@ -44,7 +70,11 @@ const EventCreate = () => {
         </Breadcrumb>
         <h2 className="display-5">Create Event</h2>
         <Form onSubmit={(evt) => onCreateEvent(evt)}>
-            <EventBasicDetailsForm event={event} onEventChange={setEvent} />
+            <EventBasicDetailsForm
+                event={event}
+                onEventChange={setEvent}
+                onLineupPosterFileChange={setLineupPosterFile}
+            />
             <Stack direction="horizontal" gap={3} className="p-3">
                 <span className="me-auto" />
                 <Button type="submit" variant="primary">Create Event</Button>

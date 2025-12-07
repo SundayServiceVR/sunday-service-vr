@@ -1,8 +1,12 @@
 import { useOutletContext } from "react-router";
 import { Event } from "../../util/types";
 
-export type EventRouterOutletMemebers = [Event, (event: Event) => void];
+export type EventRouterOutletMembers = [
+    Event,
+    (event: Event) => void,
+    (file: File | null) => void,
+];
 
 export function useEventOperations() {
-    return useOutletContext<EventRouterOutletMemebers>();
+    return useOutletContext<EventRouterOutletMembers>();
 }

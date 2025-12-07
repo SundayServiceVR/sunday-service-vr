@@ -1,13 +1,18 @@
 import { Form } from "react-bootstrap";
 import { Event } from "../../../util/types";
 import "react-datepicker/dist/react-datepicker.css";
+import { toast } from "react-hot-toast";
+import { LINEUP_POSTER_MAX_FILE_SIZE_MB, validateLineupPosterFile } from "../../../util/util";
+
+
 
 type Props = {
     event: Event,
     onEventChange: (event: Event) => void,
+    onLineupPosterFileChange?: (file: File | null) => void,
 }
 
-const EventBasicDetailsForm = ({ event: eventScratchpad, onEventChange: proposeEventChange }: Props) => {
+const EventBasicDetailsForm = ({ event: eventScratchpad, onEventChange: proposeEventChange, onLineupPosterFileChange }: Props) => {
     return <>
         <Form>
         <Form.Group>
@@ -49,6 +54,47 @@ const EventBasicDetailsForm = ({ event: eventScratchpad, onEventChange: proposeE
                 required
                 onChange={(formEvent) => { proposeEventChange({ ...eventScratchpad, host: formEvent.target.value }); }}
             />
+        </Form.Group>
+        <Form.Group className="mt-3">
+            <Form.Label>
+                Lineup Poster Image
+            </Form.Label>
+            <Form.Control
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                    const input = e.target as HTMLInputElement;
+                    const file = input.files?.[0] ?? null;
+
+                    const { valid, errorMessage } = validateLineupPosterFile(file);
+                    if (!valid) {
+                        if (errorMessage) {
+                            toast.error(errorMessage);
+                        }
+                        input.value = ""; // Clear the file input
+                        return;
+                    }
+
+                    if (onLineupPosterFileChange) {
+                        onLineupPosterFileChange(file);
+                    }
+                }}
+            />
+            <Form.Text className="text-muted d-block mb-2">
+                Optional. Upload an image for the lineup whiteboard/OBS overlays. Maximum file size: {LINEUP_POSTER_MAX_FILE_SIZE_MB}MB.
+            </Form.Text>
+            {eventScratchpad.lineup_poster_url && (
+                <div className="mt-2">
+                    <Form.Label>Current Lineup Poster Preview</Form.Label>
+                    <div>
+                        <img
+                            src={eventScratchpad.lineup_poster_url}
+                            alt="Lineup poster preview"
+                            style={{ maxHeight: 200 }}
+                        />
+                    </div>
+                </div>
+            )}
         </Form.Group>
                <Form.Group className="mt-2">
             <Form.Label>

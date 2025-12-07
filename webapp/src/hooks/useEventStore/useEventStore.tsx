@@ -42,7 +42,11 @@ export const useEventStore = () => {
   }, [getReconcicledEvent]);
 
   const createEvent = useCallback(async (event: Event) => {
-    const result = await addDoc(collection(db, "events"), event);
+    // lastUpdated is derived from Firestore snapshot metadata and should not
+    // be written back as part of the document data.
+    const eventToPersist = { ...event } as Partial<Event>;
+    delete (eventToPersist as { lastUpdated?: Date }).lastUpdated;
+    const result = await addDoc(collection(db, "events"), eventToPersist as Event);
     return result;
   }, []);
 
@@ -59,8 +63,11 @@ export const useEventStore = () => {
     const djsRemoved = previousEvent?.dj_plays.filter(dj => !event?.dj_plays.includes(dj)) ?? [];
 
     await runTransaction(db, async (transaction) => {
+      // Strip transient/derived fields before persisting.
+      const eventToPersist = { ...event } as Partial<Event>;
+      delete (eventToPersist as { lastUpdated?: Date }).lastUpdated;
       const eventRef = doc(db, "events", eventId);
-      transaction.set(eventRef, event);
+      transaction.set(eventRef, eventToPersist as Event);
 
       for (const dj of djsAdded) {
         const djRef = doc(db, "djs", dj.id);

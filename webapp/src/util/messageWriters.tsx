@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import { Event, Slot } from "./types";
 import { attendeeRoleId, performerRoleId } from "./constants";
 
-export const getDiscordMessage = (event: Event): string => 
+export const getDiscordMessage = (event: Event): string =>
 `**${event.name}**
 
 ${event.message}
@@ -14,7 +14,7 @@ Host: ${event.host || "TBA"}
 DJs:
 ${event.slots.map(s => getDiscordSlotText(s, event)).join("\n")}
 
-https://discord.s4vr.net/
+${event.lineup_poster_url ? `${event.lineup_poster_url}\n\n` : ""}https://discord.s4vr.net/
 https://twitch.s4vr.net/
 
 <@&${attendeeRoleId}>`;

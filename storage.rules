@@ -1,0 +1,24 @@
+rules_version = '2';
+
+// Craft rules based on data in your Firestore database
+// allow write: if firestore.get(
+//    /databases/(default)/documents/users/$(request.auth.uid)).data.isAdmin;
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Default: deny everything
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+
+    // Allow hosts and admins to manage lineup poster images under
+    // lineup-posters/{eventId}/{filename}
+    match /lineup-posters/{eventId}/{fileName} {
+      // Anyone can read lineup posters (e.g. OBS, in-world whiteboards, public pages)
+      allow read: if true;
+
+      // Only admins/hosts can upload or modify lineup posters
+      allow write: if request.auth != null &&
+        (("admin" in request.auth.token.roles) || ("host" in request.auth.token.roles));
+    }
+  }
+}
