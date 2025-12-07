@@ -73,7 +73,8 @@ const EventRoot = () => {
                 URL.revokeObjectURL(lineupPosterPreviewUrl);
             }
         };
-    }, [lineupPosterPreviewUrl]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const proposeEventChange = (event: Event) => {
         let newEvent = { ...event };
