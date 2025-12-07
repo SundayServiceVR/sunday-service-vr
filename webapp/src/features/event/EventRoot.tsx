@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 import { EventPublishedStatusBadge } from "./EventPublishedStatusBadge";
 import toast from "react-hot-toast";
 import { useEventStore } from "../../hooks/useEventStore/useEventStore";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { deleteObject, getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 
 const EventRoot = () => {
@@ -118,6 +118,8 @@ const EventRoot = () => {
     };
 
     const onSaveEvent = async () => {
+        let uploadedStorageRef: ReturnType<typeof ref> | null = null;
+        
         try {
             let eventToSave: Event = { ...eventScratchpad };
 
@@ -129,7 +131,9 @@ const EventRoot = () => {
                 const safeFileName = lineupPosterFile.name.replace(/[^a-zA-Z0-9.\-_]/g, "_");
                 storagePath = `lineup-posters/${eventId}/${Date.now()}_${safeFileName}`;
                 const storageRef = ref(storage, storagePath);
+                
                 await uploadBytes(storageRef, lineupPosterFile);
+                uploadedStorageRef = storageRef;
                 downloadUrl = await getDownloadURL(storageRef);
 
                 eventToSave = {
@@ -155,6 +159,16 @@ const EventRoot = () => {
                 setLineupPosterPreviewUrl(null);
             }
         } catch (error) {
+            // If we uploaded a file but failed to save the event, clean up the orphaned file
+            if (uploadedStorageRef) {
+                try {
+                    await deleteObject(uploadedStorageRef);
+                    console.log('Cleaned up orphaned file after save failure');
+                } catch (deleteError) {
+                    console.error('Failed to clean up orphaned file:', deleteError);
+                }
+            }
+            
             toast.error(`Error saving event: ${(error as Error).message}`);
         }
     }
