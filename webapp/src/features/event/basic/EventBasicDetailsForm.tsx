@@ -5,7 +5,8 @@ import { toast } from "react-hot-toast";
 
 // Maximum file size for lineup poster images (10MB)
 const MAX_FILE_SIZE_MB = 10;
-const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
+const BYTES_PER_MB = 1024 * 1024;
+const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * BYTES_PER_MB;
 
 type Props = {
     event: Event,
@@ -69,7 +70,7 @@ const EventBasicDetailsForm = ({ event: eventScratchpad, onEventChange: proposeE
                     
                     // Validate file size
                     if (file && file.size > MAX_FILE_SIZE_BYTES) {
-                        const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
+                        const fileSizeMB = (file.size / BYTES_PER_MB).toFixed(2);
                         toast.error(`Image file is too large. Maximum file size is ${MAX_FILE_SIZE_MB}MB. Your file is ${fileSizeMB}MB.`);
                         input.value = ''; // Clear the file input
                         return;
