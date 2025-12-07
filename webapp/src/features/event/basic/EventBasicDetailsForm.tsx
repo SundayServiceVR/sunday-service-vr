@@ -3,6 +3,10 @@ import { Event } from "../../../util/types";
 import "react-datepicker/dist/react-datepicker.css";
 import { toast } from "react-hot-toast";
 
+// Maximum file size for lineup poster images (10MB)
+const MAX_FILE_SIZE_MB = 10;
+const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
+
 type Props = {
     event: Event,
     onEventChange: (event: Event) => void,
@@ -63,9 +67,10 @@ const EventBasicDetailsForm = ({ event: eventScratchpad, onEventChange: proposeE
                     const input = e.target as HTMLInputElement;
                     const file = input.files?.[0] ?? null;
                     
-                    // Validate file size (10MB limit)
-                    if (file && file.size > 10 * 1024 * 1024) {
-                        toast.error(`Image file is too large. Maximum file size is 10MB. Your file is ${(file.size / (1024 * 1024)).toFixed(2)}MB.`);
+                    // Validate file size
+                    if (file && file.size > MAX_FILE_SIZE_BYTES) {
+                        const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
+                        toast.error(`Image file is too large. Maximum file size is ${MAX_FILE_SIZE_MB}MB. Your file is ${fileSizeMB}MB.`);
                         input.value = ''; // Clear the file input
                         return;
                     }
@@ -76,7 +81,7 @@ const EventBasicDetailsForm = ({ event: eventScratchpad, onEventChange: proposeE
                 }}
             />
             <Form.Text className="text-muted d-block mb-2">
-                Optional. Upload an image for the lineup whiteboard/OBS overlays. Maximum file size: 10MB.
+                Optional. Upload an image for the lineup whiteboard/OBS overlays. Maximum file size: {MAX_FILE_SIZE_MB}MB.
             </Form.Text>
             {eventScratchpad.lineup_poster_url && (
                 <div className="mt-2">
