@@ -1,4 +1,6 @@
-import { Col, Container, Form, InputGroup, Row, ToggleButton } from "react-bootstrap"
+import React from "react";
+import { Col, Container, Form, InputGroup, Row, ToggleButton, Button } from "react-bootstrap"
+import toast from "react-hot-toast";
 import { SlotType, SlotDuration, EventSignup, EventSignupFormData } from "../../../util/types"
 
 /**
@@ -36,6 +38,32 @@ type Props = {
 }
 
 const EventSlotDetails = ({ signup, onUpdateSignup }: Props) => {
+  const rawStreamLink = signup.event_signup_form_data?.stream_link;
+  const { normalized, isReadOnly } = normalizeStreamLink(rawStreamLink);
+
+  const handleStreamLinkChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = event.target.value;
+    onUpdateSignup({
+      ...signup,
+      event_signup_form_data: {
+        ...(signup.event_signup_form_data || {}),
+        stream_link: newValue,
+      } as EventSignupFormData,
+    });
+  };
+
+  const handleCopyStreamLink = async () => {
+    if (!normalized) return;
+
+    try {
+      await navigator.clipboard.writeText(normalized);
+      toast("Stream link copied to clipboard.");
+    } catch (error) {
+      console.error("Failed to copy stream link", error);
+      toast("Failed to copy stream link.");
+    }
+  };
+
   return <Container>
     <Form.Group as={Row} className="mb-1">
       <Form.Label column="sm" sm={3} className="text-md-end">
@@ -136,35 +164,49 @@ const EventSlotDetails = ({ signup, onUpdateSignup }: Props) => {
       </Form.Group>
     }
 
-    {signup.type !== SlotType.PRERECORD && (() => {
-      const { normalized, isReadOnly } = normalizeStreamLink(signup.event_signup_form_data?.stream_link);
-      return (
+    {signup.type !== SlotType.PRERECORD && (
+      <>
+        {isReadOnly && (
+          <Form.Group as={Row} className="mb-1">
+            <Form.Label column="sm" xs={12} md={3} className="text-md-end">
+              <strong>Stream Link</strong>
+            </Form.Label>
+            <Col>
+              <InputGroup size="sm">
+                <Form.Control
+                  size="sm"
+                  value={normalized}
+                  readOnly
+                  style={{ fontFamily: 'monospace' }}
+                />
+                <Button
+                  variant="outline-secondary"
+                  size="sm"
+                  onClick={handleCopyStreamLink}
+                  disabled={!normalized}
+                >
+                  Copy
+                </Button>
+              </InputGroup>
+            </Col>
+          </Form.Group>
+        )}
+
         <Form.Group as={Row}>
           <Form.Label column="sm" xs={12} md={3} className="text-md-end">
-            <strong>Stream Link</strong>
+            <strong>{isReadOnly ? 'Raw Link' : 'Stream Link'}</strong>
           </Form.Label>
           <Col>
             <Form.Control
               size="sm"
-              value={normalized}
+              value={rawStreamLink ?? ''}
               placeholder="Enter stream link"
-              readOnly={isReadOnly}
-              onChange={(event) => {
-                if (!isReadOnly) {
-                  onUpdateSignup({
-                    ...signup,
-                    event_signup_form_data: {
-                      ...(signup.event_signup_form_data || {}),
-                      stream_link: event.target.value
-                    } as EventSignupFormData
-                  })
-                }
-              }}
+              onChange={handleStreamLinkChange}
             />
           </Col>
         </Form.Group>
-      );
-    })()}
+      </>
+    )}
 
     {
       signup.event_signup_form_data?.is_b2b &&
