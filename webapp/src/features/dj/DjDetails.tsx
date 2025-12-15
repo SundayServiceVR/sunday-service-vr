@@ -9,6 +9,7 @@ import Spinner from "../../components/spinner/Spinner";
 import { updateDj } from "../../store/dj";
 import toast from "react-hot-toast";
 import { useDjWithEvents } from "../../contexts/useEventDjCache/useDjWithEvents";
+import { getDjStreamLinks } from "../../store/djViewModel";
 
 const DjDetails = () => {
     const { djId } = useParams();
@@ -58,6 +59,8 @@ const DjDetails = () => {
         return <Spinner type="logo" />;
     }
 
+    const streamLinks = getDjStreamLinks(dj, playedEvents);
+
     return <div>
         <Container>
             <Row className="justify-content-md-center">
@@ -102,10 +105,22 @@ const DjDetails = () => {
                     }
                 </Col>
                 <Col md={4}>
-                <h3 className="display-6">Plays ({playedEvents.length})</h3>
+                    <h3 className="display-6">Plays ({playedEvents.length})</h3>
                     <ListGroup>
                         { playedEvents.map(event => <ListGroupItem key={event.id}><Link to={`/events/${event.id}`}>{event.name} - {event.start_datetime.toLocaleDateString()}</Link></ListGroupItem>) }
                     </ListGroup>
+
+                    <h3 className="display-6 mt-4">Stream Links Used</h3>
+                    { streamLinks.length === 0 && <p className="text-muted">No stream links recorded from signups.</p> }
+                    { streamLinks.length > 0 && (
+                        <ListGroup className="mt-2">
+                            { streamLinks.map((link, index) => (
+                                <ListGroupItem key={index}>
+                                    <a href={link} target="_blank" rel="noreferrer">{link}</a>
+                                </ListGroupItem>
+                            )) }
+                        </ListGroup>
+                    )}
                 </Col>
             </Row>
         </Container>

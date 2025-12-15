@@ -119,7 +119,11 @@ function App() {
     {
       path: "eventSignup",
       element: <FirebaseAuthProvider>
-            <RoleGuard requireAnyRole={['dj', 'host', 'admin']}><Layout /></RoleGuard>
+        <RoleGuard requireAnyRole={['dj', 'host', 'admin']}>
+          <EventDjDataProvider>
+            <Layout />
+          </EventDjDataProvider>
+        </RoleGuard>
       </FirebaseAuthProvider>,
       children: [
         {
