@@ -7,9 +7,10 @@ interface Step3Props {
   formData: EventSignupFormData;
   onChange: (e: React.ChangeEvent<HTMLElement>) => void;
   event?: Event;
+  priorStreamLinks?: string[];
 }
 
-const EventSignupStep3: React.FC<Step3Props> = ({ formData, onChange, event }) => {
+const EventSignupStep3: React.FC<Step3Props> = ({ formData, onChange, event, priorStreamLinks = [] }) => {
   const isLiveJive = event?.signup_configuration?.isLiveJive || false;
   
   // If this is a livejive event and the user previously selected PRERECORD, 
@@ -57,6 +58,32 @@ const EventSignupStep3: React.FC<Step3Props> = ({ formData, onChange, event }) =
               onChange={onChange}
               required
           />
+          {priorStreamLinks.length > 0 && (
+            <div className="mt-2">
+              <div className="mb-1 fw-semibold">Previously used links</div>
+              <div className="d-flex flex-wrap gap-2">
+                {priorStreamLinks.map((link) => (
+                  <button
+                    key={link}
+                    type="button"
+                    className="btn btn-outline-secondary btn-sm"
+                    onClick={() => {
+                      const syntheticEvent = {
+                        target: {
+                          name: "stream_link",
+                          value: link,
+                          type: "text",
+                        },
+                      } as unknown as React.ChangeEvent<HTMLInputElement>;
+                      onChange(syntheticEvent);
+                    }}
+                  >
+                    {link}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </Form.Group>
       )}
       </Container>

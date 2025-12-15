@@ -10,7 +10,7 @@ import StepConfirmation from "./wizardSteps/StepConfirmation.tsx";
 import { useEventSignupOutletMembers } from "./outletContext.ts";
 import { Timestamp } from "firebase/firestore";
 import { EventSignupFormData } from "../../util/types.ts";
-import { getLatestDjStreamLink } from "../../store/djViewModel";
+import { getDjStreamLinks } from "../../store/djViewModel";
 import { useEventDjCache } from "../../contexts/useEventDjCache";
 
 export const EventSignupWizard = () => {
@@ -30,7 +30,8 @@ export const EventSignupWizard = () => {
     );
 
     const allDjEvents  = auth.currentUser?.uid ? getEventsByDjId(auth.currentUser?.uid) : [];
-    const lastStreamLink = dj ? getLatestDjStreamLink(dj, allDjEvents) : undefined;
+    const priorStreamLinks = dj ? getDjStreamLinks(dj, allDjEvents) : [];
+    const lastStreamLink = priorStreamLinks.length > 0 ? priorStreamLinks[priorStreamLinks.length - 1] : undefined;
 
     const defaultFormData = {
         event_id: event_id ?? "",
@@ -48,7 +49,8 @@ export const EventSignupWizard = () => {
         ...existingSignup?.event_signup_form_data,
         available_from: existingSignup?.event_signup_form_data?.available_from ?? "any",
         available_to: existingSignup?.event_signup_form_data?.available_to ?? "any",
-    });const [validated, setValidated] = React.useState(false);
+    });
+    const [validated, setValidated] = React.useState(false);
     const [submitting, setSubmitting] = React.useState(false); // <-- Add submitting state
 
     const steps = [
@@ -178,7 +180,12 @@ export const EventSignupWizard = () => {
                 style={submitting ? { pointerEvents: "none", opacity: 0.6 } : {}} // <-- Block input
             >
                 <input type="hidden" name="event_id" value={event_id} />
-                <CurrentStep formData={formData} onChange={handleChange} event={event} />
+                <CurrentStep
+                    formData={formData}
+                    onChange={handleChange}
+                    event={event}
+                    priorStreamLinks={priorStreamLinks}
+                />
                 <div className="d-flex justify-content-between mt-4">
                     <Button variant="secondary" onClick={handleBack} type="button" disabled={step === 0 || submitting}>
                         Back
