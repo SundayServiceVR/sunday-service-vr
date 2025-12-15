@@ -11,7 +11,7 @@ type Props = {
   onUpdateSignup: (signup: EventSignup) => void;
   onRemoveSignup: (signup: EventSignup) => void;
   onAddSlotToLineup: (signup: EventSignup) => void;
-  hideLineupSignups?: boolean; // Whether to hide signups already added to lineup (default: true for backwards compatibility)
+  hideLineupSignups?: boolean; // Whether to hide signups already added to lineup (defaults to true for backwards compatibility)
   onAddDjToSignups?: () => void; // Optional handler for adding DJ to signups
 };
 
