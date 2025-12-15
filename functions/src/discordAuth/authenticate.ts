@@ -2,6 +2,7 @@ import * as admin from "firebase-admin";
 import { DecodedIdToken } from "firebase-admin/auth";
 import { Request, Response } from "@google-cloud/functions-framework";
 
+
 export const authenticate = async (req: Request, res: Response) => {
     const auth = req.headers.authorization;
     if (!auth || !auth.startsWith("Bearer ")) {
