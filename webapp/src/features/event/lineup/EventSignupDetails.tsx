@@ -1,5 +1,36 @@
-import { Col, Container, Form, InputGroup, Row, ToggleButton } from "react-bootstrap"
+import React from "react";
+import { Col, Container, Form, InputGroup, Row, ToggleButton, Button } from "react-bootstrap"
+import toast from "react-hot-toast";
 import { SlotType, SlotDuration, EventSignup, EventSignupFormData } from "../../../util/types"
+
+/**
+ * Normalizes stream links for display in the lineup.
+ * Converts shorthand formats to full URLs.
+ */
+const normalizeStreamLink = (link: string | undefined): { normalized: string; isReadOnly: boolean } => {
+  if (!link) return { normalized: '', isReadOnly: false };
+
+  // Check for vrcdn: prefix
+  if (link.startsWith('vrcdn:')) {
+    const username = link.substring(6); // Remove 'vrcdn:' prefix
+    return {
+      normalized: `rtmp://stream.vrcdn.live/live/${username}`,
+      isReadOnly: true
+    };
+  }
+
+  // Check for twitch: prefix
+  if (link.startsWith('twitch:')) {
+    const username = link.substring(7); // Remove 'twitch:' prefix
+    return {
+      normalized: `https://www.twitch.tv/${username}/embed?frameborder="0"`,
+      isReadOnly: true
+    };
+  }
+
+  // Return as-is if no special prefix
+  return { normalized: link, isReadOnly: false };
+};
 
 type Props = {
   signup: EventSignup,
@@ -7,6 +38,32 @@ type Props = {
 }
 
 const EventSlotDetails = ({ signup, onUpdateSignup }: Props) => {
+  const rawStreamLink = signup.event_signup_form_data?.stream_link;
+  const { normalized, isReadOnly } = normalizeStreamLink(rawStreamLink);
+
+  const handleStreamLinkChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = event.target.value;
+    onUpdateSignup({
+      ...signup,
+      event_signup_form_data: {
+        ...(signup.event_signup_form_data || {}),
+        stream_link: newValue,
+      } as EventSignupFormData,
+    });
+  };
+
+  const handleCopyStreamLink = async () => {
+    if (!normalized) return;
+
+    try {
+      await navigator.clipboard.writeText(normalized);
+      toast("Stream link copied to clipboard.");
+    } catch (error) {
+      console.error("Failed to copy stream link", error);
+      toast("Failed to copy stream link.");
+    }
+  };
+
   return <Container>
     <Form.Group as={Row} className="mb-1">
       <Form.Label column="sm" sm={3} className="text-md-end">
@@ -108,27 +165,47 @@ const EventSlotDetails = ({ signup, onUpdateSignup }: Props) => {
     }
 
     {signup.type !== SlotType.PRERECORD && (
-      <Form.Group as={Row}>
-        <Form.Label column="sm" xs={12} md={3} className="text-md-end">
-          <strong>Stream Link</strong>
-        </Form.Label>
-        <Col>
-          <Form.Control
-            size="sm"
-            value={signup.event_signup_form_data?.stream_link || ''}
-            placeholder="Enter stream link"
-            onChange={(event) => {
-              onUpdateSignup({
-                ...signup,
-                event_signup_form_data: {
-                  ...(signup.event_signup_form_data || {}),
-                  stream_link: event.target.value
-                } as EventSignupFormData
-              })
-            }}
-          />
-        </Col>
-      </Form.Group>
+      <>
+        {isReadOnly && (
+          <Form.Group as={Row} className="mb-1">
+            <Form.Label column="sm" xs={12} md={3} className="text-md-end">
+              <strong>Stream Link</strong>
+            </Form.Label>
+            <Col>
+              <InputGroup size="sm">
+                <Form.Control
+                  size="sm"
+                  value={normalized}
+                  readOnly
+                  style={{ fontFamily: 'monospace' }}
+                />
+                <Button
+                  variant="outline-secondary"
+                  size="sm"
+                  onClick={handleCopyStreamLink}
+                  disabled={!normalized}
+                >
+                  Copy
+                </Button>
+              </InputGroup>
+            </Col>
+          </Form.Group>
+        )}
+
+        <Form.Group as={Row}>
+          <Form.Label column="sm" xs={12} md={3} className="text-md-end">
+            <strong>{isReadOnly ? 'Raw Link' : 'Stream Link'}</strong>
+          </Form.Label>
+          <Col>
+            <Form.Control
+              size="sm"
+              value={rawStreamLink ?? ''}
+              placeholder="Enter stream link"
+              onChange={handleStreamLinkChange}
+            />
+          </Col>
+        </Form.Group>
+      </>
     )}
 
     {
