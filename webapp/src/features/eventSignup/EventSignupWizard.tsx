@@ -6,16 +6,18 @@ import StepPerformerInfo from "./wizardSteps/StepPerformerInfo.tsx";
 import StepAvailability from "./wizardSteps/StepAvailability.tsx";
 import StepStreamDetails from "./wizardSteps/StepStreamDetails.tsx";
 import StepConfirmation from "./wizardSteps/StepConfirmation.tsx";
-
 import { useEventSignupOutletMembers } from "./outletContext.ts";
 import { Timestamp } from "firebase/firestore";
 import { EventSignupFormData } from "../../util/types.ts";
+import { getDjStreamLinks } from "../../store/djViewModel";
+import { useEventDjCache } from "../../contexts/useEventDjCache";
 
 export const EventSignupWizard = () => {
     const { eventId: event_id } = useParams();
     const [toastMsg, setToastMsg] = React.useState<string | null>(null);
     const [step, setStep] = React.useState(0);
     const { dj, event, loadEvent } = useEventSignupOutletMembers();
+    const { getEventsByDjId } = useEventDjCache();
 
     const navigate = useNavigate();
 
@@ -26,6 +28,10 @@ export const EventSignupWizard = () => {
         })
     );
 
+    const allDjEvents  = auth.currentUser?.uid ? getEventsByDjId(auth.currentUser?.uid) : [];
+    const priorStreamLinks = dj ? getDjStreamLinks(dj, allDjEvents) : [];
+    const lastStreamLink = priorStreamLinks.length > 0 ? priorStreamLinks[0] : undefined;
+
     const defaultFormData = {
         event_id: event_id ?? "",
         name: dj.dj_name,
@@ -34,6 +40,7 @@ export const EventSignupWizard = () => {
         is_b2b: false,
         available_from: "any",
         available_to: "any",
+        stream_link: lastStreamLink ?? "",
     };
 
     const [formData, setFormData] = React.useState<EventSignupFormData>({
@@ -172,7 +179,12 @@ export const EventSignupWizard = () => {
                 style={submitting ? { pointerEvents: "none", opacity: 0.6 } : {}} // <-- Block input
             >
                 <input type="hidden" name="event_id" value={event_id} />
-                <CurrentStep formData={formData} onChange={handleChange} event={event} />
+                <CurrentStep
+                    formData={formData}
+                    onChange={handleChange}
+                    event={event}
+                    priorStreamLinks={priorStreamLinks}
+                />
                 <div className="d-flex justify-content-between mt-4">
                     <Button variant="secondary" onClick={handleBack} type="button" disabled={step === 0 || submitting}>
                         Back
