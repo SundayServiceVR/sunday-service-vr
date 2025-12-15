@@ -12,7 +12,15 @@ export const getDjStreamLinks = (dj: Dj, events: Event[]): string[] => {
         return [];
     }
 
-    const links = events
+    // Sort events reverse-chronologically (newest to oldest)
+    const sortedEvents = [...events].sort((a, b) => {
+        const aDate = new Date(a.start_datetime).getTime();
+        const bDate = new Date(b.start_datetime).getTime();
+        return bDate - aDate;
+    });
+
+    // Collect links in order, keep the first occurrence of each unique link (most recent usage)
+    const links = sortedEvents
         .flatMap(event => event.slots ?? [])
         .filter(slot =>
             slot.reconciled?.signup?.event_signup_form_data?.stream_link &&
@@ -21,7 +29,15 @@ export const getDjStreamLinks = (dj: Dj, events: Event[]): string[] => {
         .map(slot => slot.reconciled.signup.event_signup_form_data!.stream_link!)
         .filter((link): link is string => typeof link === "string" && link.trim().length > 0);
 
-    return Array.from(new Set(links));
+    const seen = new Set<string>();
+    const result: string[] = [];
+    for (const link of links) {
+        if (!seen.has(link)) {
+            seen.add(link);
+            result.push(link);
+        }
+    }
+    return result;
 };
 
 /**
@@ -34,9 +50,7 @@ export const getLatestDjStreamLink = (dj: Dj, events: Event[]): string | undefin
     if (links.length === 0) {
         return undefined;
     }
-
-    // Convention: getDjStreamLinks returns links in ascending chronological order
-    // when given events in ascending order. The "most recent" is therefore the last.
-    return links[links.length - 1];
+    // getDjStreamLinks now returns most recent first
+    return links[0];
 };
 

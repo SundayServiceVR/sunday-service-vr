@@ -193,6 +193,7 @@ const EventSignupStep3: React.FC<Step3Props> = ({ formData, onChange, event, pri
                     key={link}
                     type="button"
                     className="btn btn-outline-secondary btn-sm"
+                    aria-label={`Use previously used link ${link}`}
                     onClick={() => {
                       const normalized = normalizeStreamLink(link) || link;
                       const syntheticEvent = {

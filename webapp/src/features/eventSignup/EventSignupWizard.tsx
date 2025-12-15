@@ -30,7 +30,7 @@ export const EventSignupWizard = () => {
 
     const allDjEvents  = auth.currentUser?.uid ? getEventsByDjId(auth.currentUser?.uid) : [];
     const priorStreamLinks = dj ? getDjStreamLinks(dj, allDjEvents) : [];
-    const lastStreamLink = priorStreamLinks.length > 0 ? priorStreamLinks[priorStreamLinks.length - 1] : undefined;
+    const lastStreamLink = priorStreamLinks.length > 0 ? priorStreamLinks[0] : undefined;
 
     const defaultFormData = {
         event_id: event_id ?? "",

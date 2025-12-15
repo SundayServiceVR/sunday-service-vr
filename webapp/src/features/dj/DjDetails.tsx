@@ -116,7 +116,7 @@ const DjDetails = () => {
                         <ListGroup className="mt-2">
                             { streamLinks.map((link) => (
                                 <ListGroupItem key={link}>
-                                    <a href={link} target="_blank" rel="noreferrer">{link}</a>
+                                    {link}
                                 </ListGroupItem>
                             )) }
                         </ListGroup>
