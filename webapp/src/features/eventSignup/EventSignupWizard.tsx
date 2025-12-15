@@ -6,7 +6,6 @@ import StepPerformerInfo from "./wizardSteps/StepPerformerInfo.tsx";
 import StepAvailability from "./wizardSteps/StepAvailability.tsx";
 import StepStreamDetails from "./wizardSteps/StepStreamDetails.tsx";
 import StepConfirmation from "./wizardSteps/StepConfirmation.tsx";
-
 import { useEventSignupOutletMembers } from "./outletContext.ts";
 import { Timestamp } from "firebase/firestore";
 import { EventSignupFormData } from "../../util/types.ts";
