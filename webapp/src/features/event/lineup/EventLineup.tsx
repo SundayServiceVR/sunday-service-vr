@@ -121,7 +121,7 @@ const EventLineup = () => {
                             type="datetime-local"
                             value={(() => {
                                 const date = new Date(eventScratchpad.start_datetime);
-                                const offset = date.getTimezoneOffset() * 60000;
+                                const offset = date.getTimezoneOffset() * 60 * 1000;
                                 const localDate = new Date(date.getTime() - offset);
                                 return localDate.toISOString().slice(0, 16);
                             })()}
