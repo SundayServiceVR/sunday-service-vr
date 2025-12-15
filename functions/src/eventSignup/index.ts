@@ -38,8 +38,6 @@ export const eventSignupIntake = functions.https.onRequest( {
         return;
     }
 
-    // Check debut
-    const is_debut = !(djData.events && djData.events.length > 0);
     const djRef: DocumentReference = djDoc.ref;
 
     // Fetch event
@@ -85,7 +83,6 @@ export const eventSignupIntake = functions.https.onRequest( {
             uuid: uuidv4(),
             // @ts-expect-error - Conflict between admin and client DocumentReference types
             dj_refs: [djRef],
-            is_debut: is_debut,
         };
 
 
