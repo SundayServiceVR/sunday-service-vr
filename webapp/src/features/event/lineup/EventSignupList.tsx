@@ -122,25 +122,25 @@ const EventSignupList = ({
           />
         ))}
         {onAddDjToSignups && (
-          <div
-            className="border border-2 border-primary rounded-0 p-2"
+          <button
+            type="button"
+            className="border border-2 border-primary rounded-0 p-2 w-100"
             style={{
-              cursor: 'pointer',
               borderStyle: 'dashed',
               transition: 'all 0.2s',
             }}
             onClick={onAddDjToSignups}
             onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = 'rgba(13, 110, 253, 0.05)';
+              (e.currentTarget as HTMLButtonElement).style.backgroundColor = 'rgba(13, 110, 253, 0.05)';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = 'transparent';
+              (e.currentTarget as HTMLButtonElement).style.backgroundColor = 'transparent';
             }}
           >
             <div className="d-flex align-items-center justify-content-center" style={{ minHeight: '48px' }}>
               <span className="text-primary fw-semibold">+ Add DJ to Signups</span>
             </div>
-          </div>
+          </button>
         )}
       </Stack>
 
