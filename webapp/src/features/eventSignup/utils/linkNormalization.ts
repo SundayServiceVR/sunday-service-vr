@@ -1,4 +1,4 @@
-// Utility helpers for working with VRCDN-style stream links
+// Utility helpers for working with stream links (VRCDN, Twitch, etc.)
 
 /**
  * Normalize various VRCDN URL formats into a canonical `vrcdn:{username}` form.
@@ -56,4 +56,60 @@ export const normalizeVrcdnLink = (raw: string | undefined | null): string | nul
   } catch {
     return null;
   }
+};
+
+/**
+ * Normalize Twitch URLs/usernames into a canonical `twitch:{username}` form.
+ *
+ * Examples:
+ * - https://www.twitch.tv/makuuselona1 -> twitch:makuuselona1
+ * - twitch.tv/makuuselona1            -> twitch:makuuselona1
+ * - makuuselona1                      -> twitch:makuuselona1 (if it looks like a bare username)
+ * - twitch:makuuselona1               -> twitch:makuuselona1 (idempotent)
+ */
+export const normalizeTwitchLink = (raw: string | undefined | null): string | null => {
+  if (!raw) return null;
+
+  const value = raw.trim();
+  if (!value) return null;
+
+  // Already canonical
+  const existingMatch = value.match(/^twitch:([a-zA-Z0-9_]+)$/);
+  if (existingMatch) {
+    return `twitch:${existingMatch[1]}`;
+  }
+
+  // If it looks like a Twitch URL or domain
+  if (/twitch\.tv/i.test(value)) {
+    try {
+      const withProtocol = /^(https?:)/i.test(value) ? value : `https://${value}`;
+      const url = new URL(withProtocol);
+
+      if (!/twitch\.tv$/i.test(url.hostname) && !/\.twitch\.tv$/i.test(url.hostname)) {
+        return null;
+      }
+
+      const parts = url.pathname.split("/").filter(Boolean);
+      const username = parts[0];
+      if (!username) return null;
+
+      return `twitch:${username.toLowerCase()}`;
+    } catch {
+      return null;
+    }
+  }
+
+  // Fallback: if they just typed something without spaces and typical username chars, treat as Twitch username
+  if (/^[a-zA-Z0-9_]+$/.test(value)) {
+    return `twitch:${value.toLowerCase()}`;
+  }
+
+  return null;
+};
+
+/**
+ * Try all known normalizers and return the first canonical form, otherwise null.
+ */
+export const normalizeStreamLink = (raw: string | undefined | null): string | null => {
+  return normalizeVrcdnLink(raw) || normalizeTwitchLink(raw);
 };

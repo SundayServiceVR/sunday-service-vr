@@ -1,7 +1,7 @@
 import React from "react";
 import { Container, Form, InputGroup, Button } from "react-bootstrap";
 import { EventSignupFormData, Event } from "../../../util/types";
-import { normalizeVrcdnLink } from "../utils/linkNormalization";
+import { normalizeVrcdnLink, normalizeStreamLink } from "../utils/linkNormalization";
 
 
 interface Step3Props {
@@ -104,6 +104,44 @@ const EventSignupStep3: React.FC<Step3Props> = ({ formData, onChange, event, pri
                   Clear
                 </Button>
               </InputGroup>
+            ) : typeof formData.stream_link === "string" && formData.stream_link.startsWith("twitch:") ? (
+              <InputGroup>
+                <InputGroup.Text id="twitch-prefix">twitch.tv/</InputGroup.Text>
+                <Form.Control
+                  type="text"
+                  aria-label="Twitch username"
+                  aria-describedby="twitch-prefix"
+                  value={formData.stream_link.replace(/^twitch:/, "")}
+                  onChange={(e) => {
+                    const username = e.target.value;
+                    const syntheticEvent = {
+                      target: {
+                        name: "stream_link",
+                        value: username ? `twitch:${username}` : "",
+                        type: "text",
+                      },
+                    } as unknown as React.ChangeEvent<HTMLInputElement>;
+                    onChange(syntheticEvent);
+                  }}
+                  required
+                  style={{ fontFamily: '"Courier New", Courier, monospace', fontSize: "0.95rem" }}
+                />
+                <Button
+                  variant="outline-secondary"
+                  onClick={() => {
+                    const syntheticEvent = {
+                      target: {
+                        name: "stream_link",
+                        value: "",
+                        type: "text",
+                      },
+                    } as unknown as React.ChangeEvent<HTMLInputElement>;
+                    onChange(syntheticEvent);
+                  }}
+                >
+                  Clear
+                </Button>
+              </InputGroup>
             ) : (
               <Form.Control
                 type="url"
@@ -112,7 +150,7 @@ const EventSignupStep3: React.FC<Step3Props> = ({ formData, onChange, event, pri
                 value={formData.stream_link || ""}
                 onChange={onChange}
                 onBlur={(e) => {
-                  const normalized = normalizeVrcdnLink(e.target.value);
+                  const normalized = normalizeStreamLink(e.target.value);
                   if (normalized && normalized !== e.target.value) {
                     const syntheticEvent = {
                       target: {
@@ -134,7 +172,16 @@ const EventSignupStep3: React.FC<Step3Props> = ({ formData, onChange, event, pri
                 {" "}
                 <code>{formData.stream_link}</code>
                 {" "}
-                so hosts can make sure they are getting the correct VRCDN url formats in our backend.
+                so hosts can make sure they are getting the correct url formats in our backend.
+              </Form.Text>
+            )}
+            {typeof formData.stream_link === "string" && formData.stream_link.startsWith("twitch:") && (
+              <Form.Text className="text-muted d-block mt-1">
+                We detected you are using Twitch. Your stream link is set to
+                {" "}
+                <code>{formData.stream_link}</code>
+                {" "}
+                so hosts can make sure they are getting the correct url formats in our backend.
               </Form.Text>
             )}
           {priorStreamLinks.length > 0 && (
@@ -147,7 +194,7 @@ const EventSignupStep3: React.FC<Step3Props> = ({ formData, onChange, event, pri
                     type="button"
                     className="btn btn-outline-secondary btn-sm"
                     onClick={() => {
-                      const normalized = normalizeVrcdnLink(link) || link;
+                      const normalized = normalizeStreamLink(link) || link;
                       const syntheticEvent = {
                         target: {
                           name: "stream_link",
