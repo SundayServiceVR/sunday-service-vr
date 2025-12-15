@@ -89,7 +89,7 @@ describe('EventLineup View Modes', () => {
     it('renders view mode toggle buttons', () => {
         renderWithRouter();
         const buttons = screen.getAllByRole('button');
-        const signupsButton = buttons.find(btn => btn.textContent === 'Signups');
+        const signupsButton = buttons.find(btn => btn.textContent === 'All Signups');
         const buildButton = buttons.find(btn => btn.textContent === 'Build Lineup');
         const lineupButton = buttons.find(btn => btn.textContent === 'Lineup');
         
@@ -118,7 +118,7 @@ describe('EventLineup View Modes', () => {
     it('switches to Signups view when Signups button is clicked', () => {
         renderWithRouter();
         const buttons = screen.getAllByRole('button');
-        const signupsButton = buttons.find(btn => btn.textContent === 'Signups');
+        const signupsButton = buttons.find(btn => btn.textContent === 'All Signups');
         
         if (signupsButton) fireEvent.click(signupsButton);
         
@@ -149,20 +149,20 @@ describe('EventLineup View Modes', () => {
         expect(lineupHeading).toBeInTheDocument();
     });
 
-    it('shows Add DJ button in Signups and Build modes but not in Lineup mode', () => {
+    it('shows Add DJ placeholder in Signups and Build modes but not in Lineup mode', () => {
         renderWithRouter();
         
-        // Build mode (default) - should show button
-        expect(screen.getByRole('button', { name: /Add DJ to Signups/i })).toBeInTheDocument();
+        // Build mode (default) - should show placeholder
+        expect(screen.getByText(/\+ Add DJ to Signups/i)).toBeInTheDocument();
         
         // Switch to Lineup mode
         const lineupButton = screen.getByRole('button', { name: /^Lineup$/i });
         fireEvent.click(lineupButton);
-        expect(screen.queryByRole('button', { name: /Add DJ to Signups/i })).not.toBeInTheDocument();
+        expect(screen.queryByText(/\+ Add DJ to Signups/i)).not.toBeInTheDocument();
         
         // Switch to Signups mode
-        const signupsButton = screen.getByRole('button', { name: /^Signups$/i });
+        const signupsButton = screen.getByRole('button', { name: /^All Signups$/i });
         fireEvent.click(signupsButton);
-        expect(screen.getByRole('button', { name: /Add DJ to Signups/i })).toBeInTheDocument();
+        expect(screen.getByText(/\+ Add DJ to Signups/i)).toBeInTheDocument();
     });
 });
