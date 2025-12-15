@@ -7,30 +7,47 @@ import { Event, EventSignup, Slot } from "../../util/types";
  * @returns true if there's a conflict (slot time is outside availability), false otherwise
  */
 export const hasAvailabilityConflict = (slot: Slot, signup: EventSignup): boolean => {
-    // If no availability data, assume no conflict
-    if (!signup.event_signup_form_data?.available_from || !signup.event_signup_form_data?.available_to) {
-        return false;
-    }
+  const formData = signup.event_signup_form_data;
 
-    const { available_from, available_to } = signup.event_signup_form_data;
-    
-    // If availability is "any", no conflict
-    if (available_from === "any" || available_to === "any") {
-        return false;
-    }
+  // If no availability data, assume no conflict
+  if (!formData?.available_from || !formData?.available_to) {
+    return false;
+  }
 
-    // If slot has no start time, we can't determine conflict
-    if (!slot.start_time) {
-        return false;
-    }
+  const { available_from, available_to } = formData;
 
-    // Convert dates to time only for comparison (same day)
-    const slotTime = slot.start_time.getTime();
-    const availableFromTime = available_from.getTime();
-    const availableToTime = available_to.getTime();
+  // If availability is "any", no conflict
+  if (available_from === "any" || available_to === "any") {
+    return false;
+  }
 
-    // Check if slot time is outside the availability window
-    return slotTime < availableFromTime || slotTime > availableToTime;
+  // If slot has no start time, we can't determine conflict
+  if (!slot.start_time) {
+    return false;
+  }
+
+  // Defensive: ensure we actually have Dates (in case data is deserialized oddly)
+  if (!(available_from instanceof Date) || !(available_to instanceof Date)) {
+    return false;
+  }
+
+  const slotStart = slot.start_time.getTime();
+
+  // If you have a duration on the slot, use it; otherwise fall back to
+  // treating it as an instant (same as current behavior).
+  const durationHours = slot.duration ?? formData.requested_duration ?? 0;
+  const slotEnd = new Date(slot.start_time.getTime() + durationHours * 60 * 60 * 1000).getTime();
+
+  const availableFrom = available_from.getTime();
+  const availableTo = available_to.getTime();
+
+  // Treat the availability as inclusive:
+  // OK if [slotStart, slotEnd] is within [availableFrom, availableTo].
+  // Conflict otherwise.
+  const startsBeforeAvailable = slotStart < availableFrom;
+  const endsAfterAvailable = slotEnd > availableTo;
+
+  return startsBeforeAvailable || endsAfterAvailable;
 };
 
 export const setEventSlotByIndex = (event : Event, slot_index: number, newSlot: Slot) => {
