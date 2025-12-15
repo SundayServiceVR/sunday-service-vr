@@ -11,7 +11,7 @@ type Props = {
   onUpdateSignup: (signup: EventSignup) => void;
   onRemoveSignup: (signup: EventSignup) => void;
   onAddSlotToLineup: (signup: EventSignup) => void;
-  hideLineupSignups?: boolean; // Whether to hide signups already added to lineup (default: true for backwards compatibility)
+  hideLineupSignups?: boolean; // Whether to hide signups already added to lineup (defaults to true for backwards compatibility)
   onAddDjToSignups?: () => void; // Optional handler for adding DJ to signups
 };
 
@@ -122,25 +122,25 @@ const EventSignupList = ({
           />
         ))}
         {onAddDjToSignups && (
-          <div
-            className="border border-2 border-primary rounded-0 p-2"
+          <button
+            type="button"
+            className="border border-2 border-primary rounded-0 p-2 w-100"
             style={{
-              cursor: 'pointer',
               borderStyle: 'dashed',
               transition: 'all 0.2s',
             }}
             onClick={onAddDjToSignups}
             onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = 'rgba(13, 110, 253, 0.05)';
+              (e.currentTarget as HTMLButtonElement).style.backgroundColor = 'rgba(13, 110, 253, 0.05)';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = 'transparent';
+              (e.currentTarget as HTMLButtonElement).style.backgroundColor = 'transparent';
             }}
           >
             <div className="d-flex align-items-center justify-content-center" style={{ minHeight: '48px' }}>
               <span className="text-primary fw-semibold">+ Add DJ to Signups</span>
             </div>
-          </div>
+          </button>
         )}
       </Stack>
 
