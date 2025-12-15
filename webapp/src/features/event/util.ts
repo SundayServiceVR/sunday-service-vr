@@ -16,10 +16,6 @@ export const hasAvailabilityConflict = (slot: Slot, signup: EventSignup): boolea
 
   const { available_from, available_to } = formData;
 
-  // If availability is "any", no conflict
-  if (available_from === "any" || available_to === "any") {
-    return false;
-  }
 
   // If slot has no start time, we can't determine conflict
   if (!slot.start_time) {
@@ -38,16 +34,19 @@ export const hasAvailabilityConflict = (slot: Slot, signup: EventSignup): boolea
   const durationHours = slot.duration ?? formData.requested_duration ?? 0;
   const slotEnd = new Date(slot.start_time.getTime() + durationHours * 60 * 60 * 1000).getTime();
 
-  const availableFrom = available_from.getTime();
-  const availableTo = available_to.getTime();
+    // Compute bounds, allowing each side to be "any" or missing. If a bound is
+    // not a Date (including "any"), treat that side as unconstrained.
+    const availableFrom = available_from instanceof Date ? available_from.getTime() : undefined;
+    const availableTo = available_to instanceof Date ? available_to.getTime() : undefined;
 
-  // Treat the availability as inclusive:
-  // OK if [slotStart, slotEnd] is within [availableFrom, availableTo].
-  // Conflict otherwise.
-  const startsBeforeAvailable = slotStart < availableFrom;
-  const endsAfterAvailable = slotEnd > availableTo;
+    // Treat availability as inclusive: the full slot [start,end] must fit within
+    // any concrete bounds we have.
+    const startsBeforeAvailable =
+      typeof availableFrom === 'number' ? slotStart < availableFrom : false;
+    const endsAfterAvailable =
+      typeof availableTo === 'number' ? slotEnd > availableTo : false;
 
-  return startsBeforeAvailable || endsAfterAvailable;
+    return startsBeforeAvailable || endsAfterAvailable;
 };
 
 export const setEventSlotByIndex = (event : Event, slot_index: number, newSlot: Slot) => {

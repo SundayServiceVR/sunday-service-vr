@@ -44,7 +44,8 @@ describe('hasAvailabilityConflict', () => {
     expect(hasAvailabilityConflict(slot, signup)).toBe(false);
   });
 
-  it('returns false when availability is "any" on either bound', () => {
+  it('treats "any" as only relaxing that specific side of the window', () => {
+    // "any" on from: only upper bound (22:00) should matter
     const signupAnyFrom = baseSignup({
       event_signup_form_data: {
         ...(baseSignup().event_signup_form_data!),
@@ -52,6 +53,15 @@ describe('hasAvailabilityConflict', () => {
       },
     });
 
+    // Slot ending after 22:00 should still conflict
+    const lateSlot = baseSlot({ start_time: makeTime(21, 30), duration: 1 as SlotDuration }); // 21:30-22:30
+    expect(hasAvailabilityConflict(lateSlot, signupAnyFrom)).toBe(true);
+
+    // Slot entirely before 22:00 should not conflict
+    const earlySlot = baseSlot({ start_time: makeTime(20, 0), duration: 1 as SlotDuration }); // 20:00-21:00
+    expect(hasAvailabilityConflict(earlySlot, signupAnyFrom)).toBe(false);
+
+    // "any" on to: only lower bound (20:00) should matter
     const signupAnyTo = baseSignup({
       event_signup_form_data: {
         ...(baseSignup().event_signup_form_data!),
@@ -59,10 +69,13 @@ describe('hasAvailabilityConflict', () => {
       },
     });
 
-    const slot = baseSlot();
+    // Slot starting before 20:00 should still conflict
+    const beforeSlot = baseSlot({ start_time: makeTime(19, 0), duration: 1 as SlotDuration }); // 19:00-20:00
+    expect(hasAvailabilityConflict(beforeSlot, signupAnyTo)).toBe(true);
 
-    expect(hasAvailabilityConflict(slot, signupAnyFrom)).toBe(false);
-    expect(hasAvailabilityConflict(slot, signupAnyTo)).toBe(false);
+    // Slot starting at or after 20:00 should not conflict
+    const atOrAfterSlot = baseSlot({ start_time: makeTime(20, 0), duration: 1 as SlotDuration }); // 20:00-21:00
+    expect(hasAvailabilityConflict(atOrAfterSlot, signupAnyTo)).toBe(false);
   });
 
   it('returns false when slot is fully inside availability window (start and end inclusive)', () => {
