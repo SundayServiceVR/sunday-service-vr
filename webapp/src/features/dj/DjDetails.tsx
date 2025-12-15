@@ -114,8 +114,8 @@ const DjDetails = () => {
                     { streamLinks.length === 0 && <p className="text-muted">No stream links recorded from signups.</p> }
                     { streamLinks.length > 0 && (
                         <ListGroup className="mt-2">
-                            { streamLinks.map((link, index) => (
-                                <ListGroupItem key={index}>
+                            { streamLinks.map((link) => (
+                                <ListGroupItem key={link}>
                                     <a href={link} target="_blank" rel="noreferrer">{link}</a>
                                 </ListGroupItem>
                             )) }
