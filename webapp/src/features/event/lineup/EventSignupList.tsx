@@ -11,6 +11,8 @@ type Props = {
   onUpdateSignup: (signup: EventSignup) => void;
   onRemoveSignup: (signup: EventSignup) => void;
   onAddSlotToLineup: (signup: EventSignup) => void;
+  hideLineupSignups?: boolean; // Whether to hide signups already added to lineup (default: true for backwards compatibility)
+  onAddDjToSignups?: () => void; // Optional handler for adding DJ to signups
 };
 
 const EventSignupList = ({
@@ -18,6 +20,8 @@ const EventSignupList = ({
   onUpdateSignup,
   onAddSlotToLineup,
   onRemoveSignup,
+  hideLineupSignups = true,
+  onAddDjToSignups,
 }: Props) => {
   const { reloadDj, getEventsByDjId } = useEventDjCache();
 
@@ -38,15 +42,7 @@ const EventSignupList = ({
       return new Date(0); // Very old date for DJs with no refs
     }
 
-    // Get all events for all DJs in this signup
-    const allDjEvents = signup.dj_refs.flatMap(djRef => {
-      const djEvents = getEventsByDjId(djRef.id);
-      return djEvents || [];
-    });
-
-    if (allDjEvents.length === 0) {
-      return new Date(0); // Very old date for DJs with no plays
-    }
+    const currentEventStartTime = new Date(event.start_datetime).getTime();
 
     // Find the most recent play (earliest date among the "most recent" for each DJ)
     const mostRecentDates = signup.dj_refs.map(djRef => {
@@ -54,8 +50,12 @@ const EventSignupList = ({
       if (!djEvents || djEvents.length === 0) {
         return new Date(0);
       }
-      // Get the most recent event for this DJ
-      return djEvents
+      // Filter out events that occur on or after the current event, then get the most recent
+      const pastEvents = djEvents.filter(e => new Date(e.start_datetime).getTime() < currentEventStartTime);
+      if (pastEvents.length === 0) {
+        return new Date(0);
+      }
+      return pastEvents
         .sort((a, b) => new Date(b.start_datetime).getTime() - new Date(a.start_datetime).getTime())[0]
         .start_datetime;
     });
@@ -66,7 +66,7 @@ const EventSignupList = ({
 
   // Sort signups based on selected sorting method
   const sortedSignups = [...event.signups]
-    .filter((signup) => !isHiddenSubmission(signup))
+    .filter((signup) => !hideLineupSignups || !isHiddenSubmission(signup))
     .sort((a, b) => {
       if (sortBy === "recent") {
         const dateA = getMostRecentPlayDate(a);
@@ -121,6 +121,27 @@ const EventSignupList = ({
             event={event}
           />
         ))}
+        {onAddDjToSignups && (
+          <div
+            className="border border-2 border-primary rounded-0 p-2"
+            style={{
+              cursor: 'pointer',
+              borderStyle: 'dashed',
+              transition: 'all 0.2s',
+            }}
+            onClick={onAddDjToSignups}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = 'rgba(13, 110, 253, 0.05)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = 'transparent';
+            }}
+          >
+            <div className="d-flex align-items-center justify-content-center" style={{ minHeight: '48px' }}>
+              <span className="text-primary fw-semibold">+ Add DJ to Signups</span>
+            </div>
+          </div>
+        )}
       </Stack>
 
       {/* AddOrCreateDjModal */}

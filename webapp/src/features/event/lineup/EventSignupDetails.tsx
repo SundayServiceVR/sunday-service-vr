@@ -1,6 +1,35 @@
 import { Col, Container, Form, InputGroup, Row, ToggleButton } from "react-bootstrap"
 import { SlotType, SlotDuration, EventSignup, EventSignupFormData } from "../../../util/types"
 
+/**
+ * Normalizes stream links for display in the lineup.
+ * Converts shorthand formats to full URLs.
+ */
+const normalizeStreamLink = (link: string | undefined): { normalized: string; isReadOnly: boolean } => {
+  if (!link) return { normalized: '', isReadOnly: false };
+
+  // Check for vrcdn: prefix
+  if (link.startsWith('vrcdn:')) {
+    const username = link.substring(6); // Remove 'vrcdn:' prefix
+    return {
+      normalized: `rtmp://stream.vrcdn.live/live/${username}`,
+      isReadOnly: true
+    };
+  }
+
+  // Check for twitch: prefix
+  if (link.startsWith('twitch:')) {
+    const username = link.substring(7); // Remove 'twitch:' prefix
+    return {
+      normalized: `https://www.twitch.tv/${username}/embed?frameborder="0"`,
+      isReadOnly: true
+    };
+  }
+
+  // Return as-is if no special prefix
+  return { normalized: link, isReadOnly: false };
+};
+
 type Props = {
   signup: EventSignup,
   onUpdateSignup: (signup: EventSignup) => void,
@@ -107,29 +136,35 @@ const EventSlotDetails = ({ signup, onUpdateSignup }: Props) => {
       </Form.Group>
     }
 
-    {signup.type !== SlotType.PRERECORD && (
-      <Form.Group as={Row}>
-        <Form.Label column="sm" xs={12} md={3} className="text-md-end">
-          <strong>Stream Link</strong>
-        </Form.Label>
-        <Col>
-          <Form.Control
-            size="sm"
-            value={signup.event_signup_form_data?.stream_link || ''}
-            placeholder="Enter stream link"
-            onChange={(event) => {
-              onUpdateSignup({
-                ...signup,
-                event_signup_form_data: {
-                  ...(signup.event_signup_form_data || {}),
-                  stream_link: event.target.value
-                } as EventSignupFormData
-              })
-            }}
-          />
-        </Col>
-      </Form.Group>
-    )}
+    {signup.type !== SlotType.PRERECORD && (() => {
+      const { normalized, isReadOnly } = normalizeStreamLink(signup.event_signup_form_data?.stream_link);
+      return (
+        <Form.Group as={Row}>
+          <Form.Label column="sm" xs={12} md={3} className="text-md-end">
+            <strong>Stream Link</strong>
+          </Form.Label>
+          <Col>
+            <Form.Control
+              size="sm"
+              value={normalized}
+              placeholder="Enter stream link"
+              readOnly={isReadOnly}
+              onChange={(event) => {
+                if (!isReadOnly) {
+                  onUpdateSignup({
+                    ...signup,
+                    event_signup_form_data: {
+                      ...(signup.event_signup_form_data || {}),
+                      stream_link: event.target.value
+                    } as EventSignupFormData
+                  })
+                }
+              }}
+            />
+          </Col>
+        </Form.Group>
+      );
+    })()}
 
     {
       signup.event_signup_form_data?.is_b2b &&

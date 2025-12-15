@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, Col, Container, Row, Stack } from "react-bootstrap";
+import { Button, ButtonGroup, Col, Container, Row, Stack, Form } from "react-bootstrap";
 import { Dj, Event, EventSignup, Slot, SlotDuration, SlotType } from "../../../util/types";
 import { useEventOperations } from "../outletContext";
 import EventLineupSortableList from "./EventLineupSortableList";
@@ -11,10 +11,13 @@ import { AddOrCreateDjModal } from "./components/AddOrCreateDjModal";
 import { updateSignupForEvent } from "../util";
 import { useReconciledEvent } from "../../../hooks/useEventStore/useReconciledEvent";
 
+type ViewMode = "signups" | "build" | "lineup";
+
 const EventLineup = () => {
 
     const [eventScratchpad, proposeEventChange] = useEventOperations();
     const [createDjModalShow, setCreateDjModalShow] = useState<boolean>(false);
+    const [viewMode, setViewMode] = useState<ViewMode>("build");
 
     const { reloadDj, djCache } = useEventDjCache();
 
@@ -59,41 +62,81 @@ const EventLineup = () => {
     return <Container className="mt-3">
         <Row>
             <Col>
-                <h1 className="display-6">Event Lineup</h1>
-            </Col>
-        </Row>
-        <Row>
-            <Col md={{ span: 6 }}>
                 <Stack direction="horizontal" gap={3}>
-                    <div className="me-auto" />
-                    <Button variant="outline-primary" onClick={() => setCreateDjModalShow(true)}>Add DJ to Signups</Button>
+                    <div className="ms-auto">
+                        <ButtonGroup>
+                            <Button
+                                variant={viewMode === "signups" ? "primary" : "outline-primary"}
+                                onClick={() => setViewMode("signups")}
+                            >
+                                All Signups
+                            </Button>
+                            <Button
+                                variant={viewMode === "build" ? "primary" : "outline-primary"}
+                                onClick={() => setViewMode("build")}
+                            >
+                                Build Lineup
+                            </Button>
+                            <Button
+                                variant={viewMode === "lineup" ? "primary" : "outline-primary"}
+                                onClick={() => setViewMode("lineup")}
+                            >
+                                Lineup
+                            </Button>
+                        </ButtonGroup>
+                    </div>
                 </Stack>
             </Col>
         </Row>
-        <Row>
-            <Col md={{ span: 6 }}>
-                <h3 className="display-6">Signups</h3>
-                <Container>
-                    <Row>
-                        <EventDjSignups
-                            event={reconciledEvent}
-                            onUpdateSignup={(newSignup: EventSignup) => updateSignup(eventScratchpad, newSignup)}
-                            onAddSlotToLineup={addSlotToLineup}
-                            onRemoveSignup={(signup) => {
-                                const signups = eventScratchpad.signups.filter(s => s.uuid !== signup.uuid);
-                                proposeEventChange({ ...eventScratchpad, signups });
+        
+        <Row className="mt-3">
+            {(viewMode === "signups" || viewMode === "build") && (
+                <Col md={{ span: viewMode === "build" ? 6 : 12 }}>
+                    <h3 className="display-6">Signups</h3>
+                    <Container>
+                        <Row>
+                            <EventDjSignups
+                                event={reconciledEvent}
+                                onUpdateSignup={(newSignup: EventSignup) => updateSignup(eventScratchpad, newSignup)}
+                                onAddSlotToLineup={addSlotToLineup}
+                                onRemoveSignup={(signup) => {
+                                    const signups = eventScratchpad.signups.filter(s => s.uuid !== signup.uuid);
+                                    proposeEventChange({ ...eventScratchpad, signups });
+                                }}
+                                hideLineupSignups={viewMode === "build"}
+                                onAddDjToSignups={() => setCreateDjModalShow(true)}
+                            />
+                        </Row>
+                    </Container>
+                </Col>
+            )}
+            {(viewMode === "lineup" || viewMode === "build") && (
+                <Col md={{ order: 1, span: viewMode === "build" ? 6 : 12 }}>
+                    <h3 className="display-6">Lineup (Local Times)</h3>
+                    <Form.Group className="mb-3">
+                        <Form.Label className="fw-semibold">
+                            Event Start Time <small className="text-muted">(Your Local Time)</small>
+                        </Form.Label>
+                        <Form.Control
+                            type="datetime-local"
+                            value={(() => {
+                                const date = new Date(eventScratchpad.start_datetime);
+                                const offset = date.getTimezoneOffset() * 60000;
+                                const localDate = new Date(date.getTime() - offset);
+                                return localDate.toISOString().slice(0, 16);
+                            })()}
+                            onChange={(e) => {
+                                const newStartTime = new Date(e.target.value);
+                                proposeEventChange({ ...eventScratchpad, start_datetime: newStartTime });
                             }}
                         />
-                    </Row>
-                </Container>
-            </Col>
-            <Col md={{ order: 1, span: 6 }}>
-                <h3 className="display-6">Lineup (Local Times)</h3>
-                <EventLineupSortableList
-                    event={reconciledEvent}
-                    onUpdateSignup={(newSignup: EventSignup) => updateSignup(eventScratchpad, newSignup)}
-                />
-            </Col>
+                    </Form.Group>
+                    <EventLineupSortableList
+                        event={reconciledEvent}
+                        onUpdateSignup={(newSignup: EventSignup) => updateSignup(eventScratchpad, newSignup)}
+                    />
+                </Col>
+            )}
         </Row>
         <AddOrCreateDjModal
             show={createDjModalShow}
