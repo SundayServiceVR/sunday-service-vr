@@ -1,4 +1,4 @@
-import { Dj, Event } from "../util/types";
+import { Event } from "../util/types";
 
 /**
  * Computes a list of unique stream links used by the given DJ across the provided events.
@@ -7,11 +7,7 @@ import { Dj, Event } from "../util/types";
  * - The slot has a signup with event_signup_form_data.stream_link, and
  * - The slot's djs collection contains this DJ (matched by discord_id).
  */
-export const getDjStreamLinks = (dj: Dj, events: Event[]): string[] => {
-    if (!dj || !events || events.length === 0) {
-        return [];
-    }
-
+export const getDjStreamLinks = (djId: string, events: Event[]): string[] => {
     // Sort events reverse-chronologically (newest to oldest)
     const sortedEvents = [...events].sort((a, b) => {
         const aDate = new Date(a.start_datetime).getTime();
@@ -19,25 +15,15 @@ export const getDjStreamLinks = (dj: Dj, events: Event[]): string[] => {
         return bDate - aDate;
     });
 
-    // Collect links in order, keep the first occurrence of each unique link (most recent usage)
-    const links = sortedEvents
-        .flatMap(event => event.slots ?? [])
-        .filter(slot =>
-            slot.reconciled?.signup?.event_signup_form_data?.stream_link &&
-            slot.djs?.some(s => s.discord_id === dj.discord_id)
-        )
-        .map(slot => slot.reconciled.signup.event_signup_form_data!.stream_link!)
-        .filter((link): link is string => typeof link === "string" && link.trim().length > 0);
+    // Trying that again
+    const links: Set<string> = new Set(sortedEvents.reverse().flatMap(event => {
+        return  event.signups
+            .filter(signup => signup.dj_refs.map(djRef => djRef.id).includes(djId))
+            .map(signup => signup.event_signup_form_data?.stream_link)
+            .filter(link => link != undefined) as string[];
+    }));
 
-    const seen = new Set<string>();
-    const result: string[] = [];
-    for (const link of links) {
-        if (!seen.has(link)) {
-            seen.add(link);
-            result.push(link);
-        }
-    }
-    return result;
+    return Array.from(links).reverse();
 };
 
 /**
@@ -45,8 +31,8 @@ export const getDjStreamLinks = (dj: Dj, events: Event[]): string[] => {
  * If multiple events share the same link, the one with the latest date wins, but since links
  * are identical the specific choice doesn't matter.
  */
-export const getLatestDjStreamLink = (dj: Dj, events: Event[]): string | undefined => {
-    const links = getDjStreamLinks(dj, events);
+export const getLatestDjStreamLink = (djId: string, events: Event[]): string | undefined => {
+    const links = getDjStreamLinks(djId, events);
     if (links.length === 0) {
         return undefined;
     }

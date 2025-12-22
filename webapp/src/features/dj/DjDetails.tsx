@@ -25,6 +25,11 @@ const DjDetails = () => {
         }
     }, [dj]);
 
+
+    if(!djId) {
+        throw new Error("Attempted to view a dj, but no djId was provided")
+    }
+
     const onSubmitDj = (event: FormEvent) => {
         event.preventDefault();
         setBusy(true);
@@ -59,7 +64,7 @@ const DjDetails = () => {
         return <Spinner type="logo" />;
     }
 
-    const streamLinks = getDjStreamLinks(dj, playedEvents);
+    const streamLinks = getDjStreamLinks(djId, playedEvents);
 
     return <div>
         <Container>
