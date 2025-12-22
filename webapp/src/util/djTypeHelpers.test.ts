@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { getDjStreamLinks, getLatestDjStreamLink } from "../store/djViewModel";
-import { Event, EventSignup, SlotType, SlotDuration } from "../util/types";
+import { getDjStreamLinks, getLatestDjStreamLink } from "./djTypeHelpers";
+import { Event, EventSignup, SlotType, SlotDuration } from "./types";
 import { mockDocRef } from "../test/mockDocRef";
 import { DocumentReference } from "firebase/firestore";
 

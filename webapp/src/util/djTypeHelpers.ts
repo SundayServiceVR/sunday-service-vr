@@ -1,4 +1,4 @@
-import { Event } from "../util/types";
+import { Event } from "./types";
 
 /**
  * Computes a list of unique stream links used by the given DJ across the provided events.

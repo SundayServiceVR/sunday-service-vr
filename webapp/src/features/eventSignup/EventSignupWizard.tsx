@@ -9,7 +9,7 @@ import StepConfirmation from "./wizardSteps/StepConfirmation.tsx";
 import { useEventSignupOutletMembers } from "./outletContext.ts";
 import { Timestamp } from "firebase/firestore";
 import { EventSignupFormData } from "../../util/types.ts";
-import { getDjStreamLinks } from "../../store/djViewModel";
+import { getDjStreamLinks } from "../../util/djTypeHelpers.ts";
 import { useEventDjCache } from "../../contexts/useEventDjCache";
 
 export const EventSignupWizard = () => {

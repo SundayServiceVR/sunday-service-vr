@@ -9,7 +9,7 @@ import Spinner from "../../components/spinner/Spinner";
 import { updateDj } from "../../store/dj";
 import toast from "react-hot-toast";
 import { useDjWithEvents } from "../../contexts/useEventDjCache/useDjWithEvents";
-import { getDjStreamLinks } from "../../store/djViewModel";
+import { getDjStreamLinks } from "../../util/djTypeHelpers";
 
 const DjDetails = () => {
     const { djId } = useParams();
