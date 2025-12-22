@@ -9,7 +9,7 @@ import StepConfirmation from "./wizardSteps/StepConfirmation.tsx";
 import { useEventSignupOutletMembers } from "./outletContext.ts";
 import { Timestamp } from "firebase/firestore";
 import { EventSignupFormData } from "../../util/types.ts";
-import { getDjStreamLinks } from "../../store/djViewModel";
+import { getDjStreamLinks } from "../../util/djTypeHelpers.ts";
 import { useEventDjCache } from "../../contexts/useEventDjCache";
 
 export const EventSignupWizard = () => {
@@ -21,15 +21,20 @@ export const EventSignupWizard = () => {
 
     const navigate = useNavigate();
 
+    const djId = auth.currentUser?.uid;
+
+    if(!djId) {
+        throw new Error("Attempting to sing up without a current djId")
+    }
+
     const existingSignup = event.signups.find(
         (signup) => signup.dj_refs.some((ref) => {
-            //@ts-expect-error - Nasty, why is this not a real DocumentReference?
-            return ref._path.segments.join("/") === `djs/${auth.currentUser?.uid}`
+            return ref.path === `djs/${djId}`
         })
     );
 
-    const allDjEvents  = auth.currentUser?.uid ? getEventsByDjId(auth.currentUser?.uid) : [];
-    const priorStreamLinks = dj ? getDjStreamLinks(dj, allDjEvents) : [];
+    const allDjEvents  = djId ? getEventsByDjId(djId) : [];
+    const priorStreamLinks = dj ? getDjStreamLinks(djId, allDjEvents) : [];
     const lastStreamLink = priorStreamLinks.length > 0 ? priorStreamLinks[0] : undefined;
 
     const defaultFormData = {

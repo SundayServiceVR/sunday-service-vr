@@ -9,7 +9,7 @@ import Spinner from "../../components/spinner/Spinner";
 import { updateDj } from "../../store/dj";
 import toast from "react-hot-toast";
 import { useDjWithEvents } from "../../contexts/useEventDjCache/useDjWithEvents";
-import { getDjStreamLinks } from "../../store/djViewModel";
+import { getDjStreamLinks } from "../../util/djTypeHelpers";
 
 const DjDetails = () => {
     const { djId } = useParams();
@@ -24,6 +24,11 @@ const DjDetails = () => {
             setDjScratchpad(dj);
         }
     }, [dj]);
+
+
+    if(!djId) {
+        throw new Error("Attempted to view a dj, but no djId was provided")
+    }
 
     const onSubmitDj = (event: FormEvent) => {
         event.preventDefault();
@@ -59,7 +64,7 @@ const DjDetails = () => {
         return <Spinner type="logo" />;
     }
 
-    const streamLinks = getDjStreamLinks(dj, playedEvents);
+    const streamLinks = getDjStreamLinks(djId, playedEvents);
 
     return <div>
         <Container>
