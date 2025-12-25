@@ -8,6 +8,7 @@ export const EventSignupStart = () => {
   const { eventId } = useParams();
   const { event } = useEventSignupOutletMembers();
 
+
   const signup = event.signups.find((signup) => {
     // @ts-expect-error - Nasty, why is this not a real DocumentReference?
     return signup.dj_refs.some((ref) => ref._path.segments.join("/") === `djs/${auth.currentUser?.uid}`);
