@@ -1,9 +1,8 @@
 import { Link, RouteObject } from "react-router-dom";
 import EventDetails from "./basic/EventDetails";
-import EventAnnouncements from "./EventAnnouncements";
 import EventLineup from "./lineup/EventLineup";
 import DebuggingDetails from "./DebuggingDetails";
-import PreflightChecklist from "./PreflightChecklist";
+import PreflightChecklist from "./preflight/PreflightChecklist";
 
 export const eventRoutes: RouteObject[] = [
   {
@@ -27,15 +26,10 @@ export const eventRoutes: RouteObject[] = [
     element: <PreflightChecklist />,
     handle: { crumb: () => <Link to="preflight">Preflight</Link>}
   },
-  {
-    path: "announcements",
-    element: <EventAnnouncements />,
-    handle: { crumb: () => <Link to="announcements">Announcements</Link>},
-  },
 
   {
     path: "debug",
     element: <DebuggingDetails />,
-    handle: { crumb: () => <Link to="announcements">Debugging</Link>},
+    handle: { crumb: () => <Link to="debug">Debugging</Link>},
   },
 ];
