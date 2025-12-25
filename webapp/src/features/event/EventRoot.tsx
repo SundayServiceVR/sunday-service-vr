@@ -206,7 +206,7 @@ const EventRoot = () => {
                 <Link to={`/events/${event.id}/lineup`} className="nav-link">Lineup</Link>
             </Nav.Item>
             <Nav.Item as="li">
-                <Link to={`/events/${event.id}/verifyDJs`} className="nav-link">Verify DJs</Link>
+                {/* Verify DJs removed — verification is available via Verify Lineup modal */}
             </Nav.Item>
             <Nav.Item as="li">
                 <Link to={`/events/${event.id}/announcements`} className="nav-link">Messaging</Link>
