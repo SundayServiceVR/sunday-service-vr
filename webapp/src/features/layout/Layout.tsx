@@ -52,6 +52,11 @@ const Layout = () => {
                                     Bingo
                                 </Link>
                             </Nav.Link>
+                            <Nav.Link as="span">
+                                <Link to="/clubSettings" className="nav-link p-0">
+                                    Club Settings
+                                </Link>
+                            </Nav.Link>
                         </>
                     )}
                     

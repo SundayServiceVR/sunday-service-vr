@@ -1,8 +1,10 @@
 import { Form } from "react-bootstrap";
-import { Event } from "../../../util/types";
+import { Event, Host } from "../../../util/types";
 import "react-datepicker/dist/react-datepicker.css";
 import { toast } from "react-hot-toast";
 import { LINEUP_POSTER_MAX_FILE_SIZE_MB, validateLineupPosterFile } from "../../../util/util";
+import { HostSearchSelect } from "../../host/HostSearchSelect";
+import { DocumentReference } from "firebase/firestore";
 
 
 
@@ -13,6 +15,14 @@ type Props = {
 }
 
 const EventBasicDetailsForm = ({ event: eventScratchpad, onEventChange: proposeEventChange, onLineupPosterFileChange }: Props) => {
+    
+    const handleHostSelect = (_: Host | null, hostRef: DocumentReference | null) => {
+        proposeEventChange({ 
+            ...eventScratchpad, 
+            host_ref: hostRef ?? undefined 
+        });
+    };
+
     return <>
         <Form>
         <Form.Group>
@@ -55,6 +65,12 @@ const EventBasicDetailsForm = ({ event: eventScratchpad, onEventChange: proposeE
                 onChange={(formEvent) => { proposeEventChange({ ...eventScratchpad, host: formEvent.target.value }); }}
             />
         </Form.Group>
+        
+        <HostSearchSelect 
+            onHostSelect={handleHostSelect}
+            selectedHostRef={eventScratchpad.host_ref}
+        />
+
         <Form.Group className="mt-3">
             <Form.Label>
                 Lineup Poster Image
