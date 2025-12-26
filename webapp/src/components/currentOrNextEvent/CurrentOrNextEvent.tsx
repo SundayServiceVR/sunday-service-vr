@@ -78,7 +78,6 @@ export const CurrentOrNextEvent = () => {
                                     <ListGroup>
                                         <ListGroupItem><Link to={`/events/${event.id}/setup`}>Event Setup</Link></ListGroupItem>
                                         <ListGroupItem><Link to={`/events/${event.id}/lineup`}>Lineup</Link></ListGroupItem>
-                                        <ListGroupItem><Link to={`/events/${event.id}/verifyDJs`}>Verify DJs</Link></ListGroupItem>
                                         <ListGroupItem><Link to={`/events/${event.id}/announcements`}>Public Announcements</Link></ListGroupItem>
                                     </ListGroup>
                                 </Col>

@@ -2,7 +2,6 @@ import { Link, RouteObject } from "react-router-dom";
 import EventDetails from "./basic/EventDetails";
 import EventAnnouncements from "./EventAnnouncements";
 import EventLineup from "./lineup/EventLineup";
-import EventVerifyDJs from "./linupVerification/EventVerifyDJs";
 import DebuggingDetails from "./DebuggingDetails";
 import PreflightChecklist from "./PreflightChecklist";
 
@@ -22,11 +21,7 @@ export const eventRoutes: RouteObject[] = [
     element: <EventLineup />,
     handle: { crumb: () => <Link to="event">Lineup</Link>},
   },
-  {
-    path: "verifyDJs",
-    element: <EventVerifyDJs/>,
-    handle: { crumb: () => <Link to="verifyDJs">Verify DJs</Link>}
-  },
+  // "Verify DJs" route removed; functionality accessible from the Lineup UI modal.
   {
     path: "preflight",
     element: <PreflightChecklist />,
