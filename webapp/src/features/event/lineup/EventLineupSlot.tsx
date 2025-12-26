@@ -29,7 +29,7 @@ const EventLineupSlot = ({
     onSlotMoveLater,
     onRemoveSlot,
 }: Props) => {
-    const { djCache } = useEventDjCache();
+    const { djCache, getEventsByDjId } = useEventDjCache();
 
     const hasConflict = hasAvailabilityConflict(slot, signup);
 
@@ -106,7 +106,7 @@ const EventLineupSlot = ({
                                             avatar: avatarUrl, // Pass the avatar URL
                                         }}
                                         djRef={djRef}
-                                        djEvents={[]} // No events available for `signup.dj_refs`
+                                        djEvents={getEventsByDjId(djRef.id)} // Fetch DJ events
                                     />
                                 );
                             })}
