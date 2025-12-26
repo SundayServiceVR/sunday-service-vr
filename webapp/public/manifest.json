@@ -1,21 +1,32 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "s4vr",
+  "name": "Sunday Service Spinning Society",
   "icons": [
-    {
-      "src": "favicon/favicon.ico",
-      "sizes": "D32x32 D16x16",
-      "type": "image/x-icon"
-    },
     {
       "src": "favicon/android-chrome-192x192.png",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "favicon/android-chrome-152x512.png",
+      "src": "favicon/android-chrome-512x512.png",
       "type": "image/png",
-      "sizes": "512x512"
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "favicon/favicon-32x32.png",
+      "type": "image/png",
+      "sizes": "32x32"
+    },
+    {
+      "src": "favicon/favicon-16x16.png",
+      "type": "image/png",
+      "sizes": "16x16"
+    },
+    {
+      "src": "favicon/favicon.ico",
+      "type": "image/x-icon",
+      "sizes": "64x64"
     }
   ],
   "start_url": ".",
