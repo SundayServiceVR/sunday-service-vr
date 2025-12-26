@@ -18,7 +18,7 @@ service firebase.storage {
 
       // Only admins/hosts can upload or modify lineup posters
       allow write: if request.auth != null &&
-        (("admin" in request.auth.token.roles) || ("host" in request.auth.token.roles));
+        request.auth.token.roles.hasAny(['admin', 'host']);
     }
 
     // Allow hosts and admins to manage host poster images under
@@ -29,7 +29,7 @@ service firebase.storage {
 
       // Only admins/hosts can upload or modify host posters
       allow write: if request.auth != null &&
-        (("admin" in request.auth.token.roles) || ("host" in request.auth.token.roles));
+        request.auth.token.roles.hasAny(['admin', 'host']);
     }
 
     // Allow hosts and admins to manage the default poster image
@@ -39,7 +39,7 @@ service firebase.storage {
 
       // Only admins/hosts can upload or modify the default poster
       allow write: if request.auth != null &&
-        (("admin" in request.auth.token.roles) || ("host" in request.auth.token.roles));
+        request.auth.token.roles.hasAny(['admin', 'host']);
     }
   }
 }
