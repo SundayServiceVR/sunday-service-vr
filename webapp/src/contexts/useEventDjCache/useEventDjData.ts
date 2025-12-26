@@ -1,9 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Dj, Event } from '../../util/types';
+import { Dj, Event, Host } from '../../util/types';
 import { collection, doc, getDoc, getDocs, query } from 'firebase/firestore';
 import { db } from '../../util/firebase';
-import { docToEvent } from '../../store/converters';
-import { DjCache, EventCache } from './types';
+import { docToEvent, docToHost } from '../../store/converters';
+import { DjCache, EventCache, HostCache } from './types';
 import { getDjCache } from './util';
 
 export type EventDjStatus = 'idle' | 'loading' | 'ready' | 'error';
@@ -11,12 +11,25 @@ export type EventDjStatus = 'idle' | 'loading' | 'ready' | 'error';
 export function useEventDjData() {
   const [eventCache, setEventCache] = useState<EventCache>(new Map());
   const [djCache, setDjCache] = useState<DjCache>(new Map());
+  const [hostCache, setHostCache] = useState<HostCache>(new Map());
   const [status, setStatus] = useState<EventDjStatus>('idle');
   const [error, setError] = useState<unknown>(null);
 
   const reloadAllDjs = useCallback(async () => {
     const cache = await getDjCache();
     setDjCache(cache);
+  }, []);
+
+  const reloadAllHosts = useCallback(async () => {
+    const q = query(collection(db, 'hosts'));
+    const querySnapshot = await getDocs(q);
+    const map: HostCache = new Map();
+
+    querySnapshot.docs.forEach(docSnap => {
+      map.set(docSnap.id, docToHost(docSnap));
+    });
+
+    setHostCache(map);
   }, []);
 
   const reloadDj = useCallback(async (id: string): Promise<Dj | null> => {
@@ -32,6 +45,21 @@ export function useEventDjData() {
       return next;
     });
     return dj;
+  }, []);
+
+  const reloadHost = useCallback(async (id: string): Promise<Host | null> => {
+    const docRef = doc(db, 'hosts', id);
+    const docSnapshot = await getDoc(docRef);
+
+    if (!docSnapshot.exists()) return null;
+
+    const host = docToHost(docSnapshot);
+    setHostCache(prev => {
+      const next = new Map(prev);
+      next.set(id, host);
+      return next;
+    });
+    return host;
   }, []);
 
   const reloadAllEvents = useCallback(async () => {
@@ -53,7 +81,7 @@ export function useEventDjData() {
       setStatus('loading');
       setError(null);
       try {
-        await Promise.all([reloadAllDjs(), reloadAllEvents()]);
+        await Promise.all([reloadAllDjs(), reloadAllHosts(), reloadAllEvents()]);
         if (!cancelled) setStatus('ready');
       } catch (e) {
         if (!cancelled) {
@@ -68,7 +96,7 @@ export function useEventDjData() {
     return () => {
       cancelled = true;
     };
-  }, [reloadAllDjs, reloadAllEvents]);
+  }, [reloadAllDjs, reloadAllHosts, reloadAllEvents]);
 
   const getEventWithDjs = useCallback(
     (id: string) => {
@@ -126,13 +154,16 @@ export function useEventDjData() {
   return {
     eventCache,
     djCache,
+    hostCache,
     status,
     loading,
     ready,
     error,
     reloadAllDjs,
+    reloadAllHosts,
     reloadAllEvents,
     reloadDj,
+    reloadHost,
     getEventWithDjs,
     getEventsByDjId,
     getPlayedDjsForEvent,

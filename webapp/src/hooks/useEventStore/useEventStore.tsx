@@ -7,9 +7,9 @@ import { useEventDjCache } from "../../contexts/useEventDjCache";
 import { useCallback } from "react";
 
 export const useEventStore = () => {
-  const { djCache } = useEventDjCache();
+  const { djCache, hostCache } = useEventDjCache();
 
-  const getReconcicledEvent = useCallback((event: Event) => reconcileEventData(event, djCache), [djCache]);
+  const getReconcicledEvent = useCallback((event: Event) => reconcileEventData(event, djCache, hostCache), [djCache, hostCache]);
 
   const getNextEvent = useCallback(async () => {
     const q = query(collection(db, "events"), where("end_datetime", ">", Timestamp.now()), orderBy("start_datetime", "asc"));

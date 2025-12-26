@@ -1,17 +1,20 @@
-import { EventSignup, Slot, SlotType } from "../../util/types";
+import { EventSignup, Slot, SlotType, Host } from "../../util/types";
 import { DjCache } from "../../contexts/useEventDjCache/types";
 import { Event } from "../../util/types";
+import { HostCache } from "../../contexts/useEventDjCache/types";
 
 /**
- * Reconciles event data by calculating slots from signups, setting DJ plays, and calculating slot times.
+ * Reconciles event data by calculating slots from signups, setting DJ plays, calculating slot times, and resolving host information.
  * @param event - The event to reconcile.
  * @param djCache - A cache of DJ data.
+ * @param hostCache - A cache of Host data.
  * @returns The reconciled event.
  */
-export const reconcileEventData = (event: Event, djCache: DjCache): Event => {
+export const reconcileEventData = (event: Event, djCache: DjCache, hostCache?: HostCache): Event => {
   let newEvent = calcSlotsFromSignups(event, djCache);
   newEvent = setDjPlays(newEvent);
   newEvent = calcSlotTimes(newEvent);
+  newEvent = reconcileHost(newEvent, hostCache);
   return newEvent;
 };
 
@@ -134,5 +137,34 @@ const setDjPlays = (event: Event): Event => {
     ...event,
     dj_plays,
   } as Event;
+};
+
+/**
+ * Reconciles host information for the event from host_ref.
+ * @param event - The event containing host_ref.
+ * @param hostCache - Optional cache of Host data.
+ * @returns The event with reconciled host information.
+ */
+const reconcileHost = (event: Event, hostCache?: HostCache): Event => {
+  if (!event.host_ref) {
+    return event;
+  }
+
+  const hostId = event.host_ref.id;
+  const cachedHost = hostCache?.get(hostId);
+
+  if (cachedHost) {
+    return {
+      ...event,
+      reconciled: {
+        ...event.reconciled,
+        host: cachedHost,
+      },
+    };
+  }
+
+  // If not in cache, return event as-is. The host will need to be fetched separately.
+  // This maintains the same pattern as DJ reconciliation where cache is expected to be populated.
+  return event;
 };
 

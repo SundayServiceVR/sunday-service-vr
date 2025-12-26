@@ -48,6 +48,11 @@ export type Event = {
 
     dj_plays: DocumentReference[],
 
+    // Reconciled fields for ease of access and record keeping
+    reconciled?: {
+        host?: Host;
+    };
+
     // When this event document was last updated in Firestore (derived from
     // snapshot metadata, not written explicitly by clients).
     lastUpdated?: Date;
