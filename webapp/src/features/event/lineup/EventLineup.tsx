@@ -116,7 +116,7 @@ const EventLineup = () => {
                                 </Link>
                             )}
 
-                            {!eventScratchpad?.signupsAreOpen && (viewMode === "build" || viewMode === "lineup") && (
+                            {!eventScratchpad?.signupsAreOpen && (viewMode === "build") && (
                                 <Button variant="primary" size="sm" className="ms-2" onClick={() => setShowVerifyModal(true)}>
                                     Verify Lineup
                                 </Button>
