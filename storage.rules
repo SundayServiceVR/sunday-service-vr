@@ -18,7 +18,28 @@ service firebase.storage {
 
       // Only admins/hosts can upload or modify lineup posters
       allow write: if request.auth != null &&
-        (("admin" in request.auth.token.roles) || ("host" in request.auth.token.roles));
+        request.auth.token.roles.hasAny(['admin', 'host']);
+    }
+
+    // Allow hosts and admins to manage host poster images under
+    // host-posters/{hostId}/{filename}
+    match /host-posters/{hostId}/{fileName} {
+      // Anyone can read host posters
+      allow read: if true;
+
+      // Only admins/hosts can upload or modify host posters
+      allow write: if request.auth != null &&
+        request.auth.token.roles.hasAny(['admin', 'host']);
+    }
+
+    // Allow hosts and admins to manage the default poster image
+    match /default-poster/{fileName} {
+      // Anyone can read the default poster
+      allow read: if true;
+
+      // Only admins/hosts can upload or modify the default poster
+      allow write: if request.auth != null &&
+        request.auth.token.roles.hasAny(['admin', 'host']);
     }
   }
 }
