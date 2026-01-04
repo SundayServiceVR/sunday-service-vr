@@ -58,8 +58,7 @@ const DefaultPosterSettings = () => {
     const handleSave = async () => {
         setSaving(true);
         try {
-            // eslint-disable-next-line prefer-const
-            let updatedSettings = { ...settings };
+            const updatedSettings = { ...settings };
 
             // If a new poster was uploaded
             if (posterFile) {
