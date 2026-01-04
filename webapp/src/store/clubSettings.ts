@@ -11,6 +11,7 @@ export const getClubSettings = async (): Promise<Club> => {
     if (docSnap.exists()) {
         return docSnap.data() as Club;
     } else {
+        console.warn(`Club settings document at path "${CLUB_SETTINGS_PATH}" does not exist. Returning default empty settings.`);
         // Return default empty settings if document doesn't exist
         return {};
     }

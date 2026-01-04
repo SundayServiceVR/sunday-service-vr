@@ -1,4 +1,4 @@
-import { EventSignup, Slot, SlotType, Host } from "../../util/types";
+import { EventSignup, Slot, SlotType } from "../../util/types";
 import { DjCache } from "../../contexts/useEventDjCache/types";
 import { Event } from "../../util/types";
 import { HostCache } from "../../contexts/useEventDjCache/types";

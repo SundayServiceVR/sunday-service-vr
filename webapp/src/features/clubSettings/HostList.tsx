@@ -80,8 +80,7 @@ const HostList = () => {
 
         setSaving(true);
         try {
-            // eslint-disable-next-line prefer-const
-            let updatedHost = { ...editingHost };
+            const updatedHost = { ...editingHost };
 
             // If a new poster was uploaded, handle it
             if (hostPosterFile) {
