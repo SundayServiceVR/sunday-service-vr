@@ -71,7 +71,7 @@ export const HostSearchSelect = ({ onHostSelect, selectedHostRef }: Props) => {
     return (
         <>
             <Form.Group className="mb-3">
-                <Form.Label>Event Host</Form.Label>
+                <Form.Label>Host Poster</Form.Label>
                 <Stack direction="horizontal" gap={2}>
                     <Form.Select 
                         value={selectedHostId} 
