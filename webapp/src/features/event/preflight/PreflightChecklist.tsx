@@ -53,7 +53,6 @@ const PreflightChecklist = () => {
                             <PreflightChecklistStep
                                 key={index}
                                 item={item}
-                                index={index}
                                 eventScratchpad={eventScratchpad}
                                 onEditMessage={() => handlers.setShowMessageModal(true)}
                                 onUploadPoster={() => handlers.setShowPosterModal(true)}
@@ -63,7 +62,6 @@ const PreflightChecklist = () => {
                             <PreflightChecklistStep
                                 key={`opt-${index}`}
                                 item={item}
-                                index={index}
                                 eventScratchpad={eventScratchpad}
                                 onEditMessage={
                                     item.action.type === 'messaging' && item.action.platform === 'discord'
