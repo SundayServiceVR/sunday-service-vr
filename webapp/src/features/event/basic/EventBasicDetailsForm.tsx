@@ -16,6 +16,8 @@ type Props = {
 
 const EventBasicDetailsForm = ({ event: eventScratchpad, onEventChange: proposeEventChange, onLineupPosterFileChange }: Props) => {
     
+    // Note: The Host argument is intentionally unused here; it remains in the
+    // signature to stay compatible with the HostSearchSelect callback API.
     const handleHostSelect = (_: Host | null, hostRef: DocumentReference | null) => {
         proposeEventChange({ 
             ...eventScratchpad, 

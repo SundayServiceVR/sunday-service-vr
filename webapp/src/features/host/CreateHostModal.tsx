@@ -2,7 +2,7 @@ import { Modal, Button, Stack } from "react-bootstrap";
 import { useState } from "react";
 import { Host } from "../../util/types";
 import HostForm from "./HostForm";
-import { createHost } from "../../store/host";
+import { createHost, updateHost } from "../../store/host";
 import { toast } from "react-hot-toast";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "../../util/firebase";
@@ -42,6 +42,9 @@ const CreateHostModal = ({ show, onHide, onHostCreated }: Props) => {
 
                 host.host_poster_path = storagePath;
                 host.host_poster_url = downloadUrl;
+                
+                // Update the host document in Firestore with the poster information
+                await updateHost(hostRef.id, host);
             }
 
             const createdHost = { ...host, id: hostRef.id };
