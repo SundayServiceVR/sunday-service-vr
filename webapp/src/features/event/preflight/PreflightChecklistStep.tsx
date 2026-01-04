@@ -6,7 +6,6 @@ import { Event } from '../../../util/types';
 
 interface PreflightChecklistStepProps {
     item: ChecklistItem;
-    index: number;
     eventScratchpad: Event;
     onEditMessage: () => void;
     onUploadPoster?: () => void;
