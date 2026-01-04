@@ -96,8 +96,8 @@ function extractDateOrAny(date: Date | Timestamp | TimestampShell | string | und
 /**
  * Converts a firebase doc to a host
  * 
- * @param doc 
- * @returns 
+ * @param doc - The Firestore document containing host data
+ * @returns A Host object with the document data and ID
  */
 export const docToHost = (doc: DocumentData): Host => {
     const data = doc.data();
