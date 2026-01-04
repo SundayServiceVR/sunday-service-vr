@@ -23,6 +23,14 @@ export type Dj = {
     notes?: string[];
 }
 
+export type Host = {
+    id?: string;
+    host_name: string;
+    host_poster_path?: string;
+    host_poster_url?: string;
+    dj_ref?: DocumentReference;
+}
+
 export type Event = {
     id?: string;
     name: string;
@@ -32,6 +40,7 @@ export type Event = {
     start_datetime: Date;
     end_datetime?: Date;
     host: string;
+    host_ref?: DocumentReference;
     slots: Slot[];
     footer: string;
 
@@ -39,6 +48,11 @@ export type Event = {
     signups: EventSignup[]
 
     dj_plays: DocumentReference[],
+
+    // Reconciled fields for ease of access and record keeping
+    reconciled?: {
+        host?: Host;
+    };
 
     // When this event document was last updated in Firestore (derived from
     // snapshot metadata, not written explicitly by clients).
@@ -150,6 +164,11 @@ export type SlotDuration = (0.5 | 1 | 1.5 | 2 | 2.5 | 3 | 3.5 | 4);
 export type AppUserRole = {
     role: 'developer' | 'admin' | 'host' | 'dj' | 'bingo';
     club_id?: string;
+}
+
+export type Club = {
+    default_host_poster_path?: string;
+    default_host_poster_url?: string;
 }
 
 // Bingo Game Types

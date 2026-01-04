@@ -28,7 +28,7 @@ const EventRoot = () => {
     const [lineupPosterPreviewUrl, setLineupPosterPreviewUrl] = useState<string | null>(null);
     const { eventId } = useParams();
 
-    const { saveEvent, getReconcicledEvent} = useEventStore();
+    const { saveEvent, getReconciledEvent} = useEventStore();
 
     // Listen for changes to the event and reset our actual event when they change.
     useEffect(() => {
@@ -78,7 +78,7 @@ const EventRoot = () => {
 
     const proposeEventChange = (event: Event) => {
         let newEvent = { ...event };
-        newEvent = getReconcicledEvent(newEvent);
+        newEvent = getReconciledEvent(newEvent);
         setHasChanges(true);
         setEventScratchpad(newEvent);
     };
@@ -145,7 +145,7 @@ const EventRoot = () => {
 
             // Ensure the event (including lineup poster fields) is fully reconciled
             // before saving so that image-only changes are also persisted.
-            eventToSave = getReconcicledEvent(eventToSave);
+            eventToSave = getReconciledEvent(eventToSave);
 
             await saveEvent(eventToSave, event);
 

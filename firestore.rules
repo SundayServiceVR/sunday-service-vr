@@ -2,10 +2,25 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
+    // Hosts collection - admin and host roles can manage
+    match /hosts/{hostId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null &&
+                    request.auth.token.roles.hasAny(['admin', 'host']);
+    }
+
+    // Club settings - admin and host roles can manage
+    match /club/{clubId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null &&
+                    request.auth.token.roles.hasAny(['admin', 'host']);
+    }
+
+    // Default rule for all other documents
     match /{document=**} {
       allow read: if request.auth != null;
       allow write: if request.auth != null &&
-                    (('admin' in request.auth.token.roles) || ('host' in request.auth.token.roles));
+                    request.auth.token.roles.hasAny(['admin', 'host']);
     }
   }
 }

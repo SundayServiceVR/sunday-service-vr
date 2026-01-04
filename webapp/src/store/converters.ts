@@ -1,5 +1,5 @@
 import { DocumentData, Timestamp } from "firebase/firestore";
-import { Slot, Event, EventSignup } from "../util/types";
+import { Slot, Event, EventSignup, Host } from "../util/types";
 
 
 // Any is used here because we literally aren't sure of the shape that's stored in the db.
@@ -91,4 +91,18 @@ function extractDateOrAny(date: Date | Timestamp | TimestampShell | string | und
   } else {
     return extractDate(date);
   }
+}
+
+/**
+ * Converts a firebase doc to a host
+ * 
+ * @param doc - The Firestore document containing host data
+ * @returns A Host object with the document data and ID
+ */
+export const docToHost = (doc: DocumentData): Host => {
+    const data = doc.data();
+    return {
+        ...data,
+        id: doc.id,
+    } as Host;
 }
