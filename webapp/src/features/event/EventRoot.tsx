@@ -206,12 +206,6 @@ const EventRoot = () => {
                 <Link to={`/events/${event.id}/lineup`} className="nav-link">Lineup</Link>
             </Nav.Item>
             <Nav.Item as="li">
-                {/* Verify DJs removed — verification is available via Verify Lineup modal */}
-            </Nav.Item>
-            <Nav.Item as="li">
-                <Link to={`/events/${event.id}/announcements`} className="nav-link">Messaging</Link>
-            </Nav.Item>
-            <Nav.Item as="li">
                 <Link to={`/events/${event.id}/preflight`} className="nav-link">Preflight</Link>
             </Nav.Item>
         </Nav>

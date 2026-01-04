@@ -12,7 +12,7 @@ import { AddOrCreateDjModal } from "./components/AddOrCreateDjModal";
 import { updateSignupForEvent } from "../util";
 import { useReconciledEvent } from "../../../hooks/useEventStore/useReconciledEvent";
 import { getProposedLineupMessage } from "../../../util/messageWriters";
-import MessagePasteCard from "../messaging/MessagePasteCard";
+import MessagePasteCard from "../../../components/MessagePasteCard";
 
 type ViewMode = "signups" | "build" | "lineup";
 

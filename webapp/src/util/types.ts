@@ -36,6 +36,7 @@ export type Event = {
     name: string;
     published: boolean,
     message: string;
+    socialMediaMessage?: string;
     start_datetime: Date;
     end_datetime?: Date;
     host: string;

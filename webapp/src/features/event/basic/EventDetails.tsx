@@ -2,7 +2,7 @@ import { useEventOperations } from "../outletContext";
 import EventBasicDetailsForm from "./EventBasicDetailsForm";
 import { Card, CardBody } from "react-bootstrap";
 import { getSignupsPostedMessage } from "../../../util/messageWriters";
-import MessagePasteCard from "../messaging/MessagePasteCard";
+import MessagePasteCard from "../../../components/MessagePasteCard";
 import { useParams } from "react-router-dom";
 
 import "react-datepicker/dist/react-datepicker.css";
