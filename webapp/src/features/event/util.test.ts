@@ -28,7 +28,7 @@ const baseSignup = (overrides: Partial<EventSignup> = {}): EventSignup => ({
 });
 
 const baseSlot = (overrides: Partial<Slot> = {}): Slot => ({
-  dj_ref: { id: 'dj1' } as unknown as Slot['dj_ref'],
+  // dj_ref has been removed as it is no longer part of the Slot type
   signup_uuid: 'signup-1',
   duration: 1 as SlotDuration,
   start_time: makeTime(21, 0),

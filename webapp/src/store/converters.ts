@@ -1,5 +1,36 @@
-import { DocumentData, Timestamp } from "firebase/firestore";
+import { DocumentData, Timestamp, doc as docRef } from "firebase/firestore";
 import { Slot, Event, EventSignup, Host } from "../util/types";
+import { db } from "../util/firebase";
+
+type ReferenceLike = {
+  id?: string;
+  path?: string;
+  _path?: { segments?: unknown };
+};
+
+function getRefPath(ref: unknown): string | undefined {
+  if (!ref || typeof ref !== "object") return undefined;
+
+  const r = ref as ReferenceLike;
+  if (typeof r.path === "string" && r.path) return r.path;
+
+  const segments = r._path?.segments;
+  if (Array.isArray(segments) && segments.length >= 2) {
+    return segments.map(String).join("/");
+  }
+
+  // Also accept `{ id }` objects (legacy seeding) by assuming `djs/<id>`.
+  if (typeof r.id === "string" && r.id) return `djs/${r.id}`;
+
+  return undefined;
+}
+
+function normalizeDjRef(ref: unknown) {
+  const path = getRefPath(ref);
+  if (!path) return undefined;
+  // Important: this creates a client DocumentReference.
+  return docRef(db, path);
+}
 
 
 // Any is used here because we literally aren't sure of the shape that's stored in the db.
@@ -47,16 +78,30 @@ export const docToEventRaw = (data: any) => {
       end_datetime: extractDate(data.end_datetime),
       published: data.published ?? false,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      slots: data.slots.map((slot: any) => ({ ...slot, start_time: extractDate(slot.start_time) }) as Slot),
-      signups: data.signups.map((signup: EventSignup) => ({
-        ...signup,
-        event_signup_form_data : {
-          ...signup.event_signup_form_data,
-          available_from: extractDateOrAny(signup?.event_signup_form_data?.available_from),
-          available_to: extractDateOrAny(signup?.event_signup_form_data?.available_to),
-        },
-      }
-    )),
+      slots: data.slots.map(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (slot: any) =>
+          ({
+            ...slot,
+            start_time: extractDate(slot.start_time),
+          }) as Slot
+      ),
+      signups: data.signups.map((signup: EventSignup) => {
+        const maybeRefs: unknown = (signup as unknown as { dj_refs?: unknown })?.dj_refs;
+        const normalizedRefs = Array.isArray(maybeRefs)
+          ? (maybeRefs.map((r) => normalizeDjRef(r)).filter(Boolean) as unknown[])
+          : undefined;
+
+        return {
+          ...signup,
+          dj_refs: (normalizedRefs as unknown as EventSignup["dj_refs"]) ?? signup.dj_refs,
+          event_signup_form_data: {
+            ...signup.event_signup_form_data,
+            available_from: extractDateOrAny(signup?.event_signup_form_data?.available_from),
+            available_to: extractDateOrAny(signup?.event_signup_form_data?.available_to),
+          },
+        };
+      }),
   } as Event;
 }
 

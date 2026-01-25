@@ -32,15 +32,25 @@ const calcSlotsFromSignups = (event: Event, djCache: DjCache): Event => {
   }
 
   newEvent.slots = event.slots.map((slot: Slot) => {
-    const signup = event.signups.find(signup => signup.uuid === slot.signup_uuid) ?? {
-        // Legacy support
-        uuid: "",
-        name: slot.dj_name ?? "Unknown Name",
+    const signup = event.signups.find(signup => signup.uuid === slot.signup_uuid);
+
+    if (!signup) {
+      // At this point in the migration, signups are the source of truth.
+      // If a slot is missing its associated signup, keep it but mark it clearly.
+      const fallbackSignup: EventSignup = {
+        uuid: slot.signup_uuid ?? "",
+        name: "Unknown Name",
         dj_refs: [],
-        is_debut: slot.is_debut ?? false,
+        is_debut: false,
         requested_duration: 1,
-        type: slot.slot_type ?? SlotType.LIVE,
-    };
+        type: SlotType.LIVE,
+      };
+      return {
+        ...slot,
+        name: fallbackSignup.name,
+        reconciled: { signup: fallbackSignup, djs: [] },
+      };
+    }
 
     const getDjInfoFromSignups = (signup: EventSignup) => signup?.dj_refs?.map(
       (ref) => {
@@ -61,31 +71,18 @@ const calcSlotsFromSignups = (event: Event, djCache: DjCache): Event => {
     );
 
     const getDjInfoFromLegacySlot = () => {
-      const result: {
-        dj_name?: string,
-        discord_id?: string,
-      } = {};
-      
-      if(slot.dj_name) {
-        result.dj_name = slot.dj_name;
-      }
-      const discordId = djCache.get(slot.dj_ref.id)?.discord_id ?? undefined;
-
-      if(discordId) {
-        result.discord_id = discordId;
-      }
-      return [result];
+      return [];
     };
 
-    const djs = signup ? getDjInfoFromSignups(signup) : getDjInfoFromLegacySlot();
+  const djs = signup ? getDjInfoFromSignups(signup) : getDjInfoFromLegacySlot();
 
     return {
       ...slot,
-      name: signup?.name ?? slot.dj_name,
+      name: signup?.name,
       reconciled: {
         signup,
+        djs: djs ?? [],
       },
-      djs: djs ?? [],
     };
   });
 
@@ -127,11 +124,9 @@ const setDjPlays = (event: Event): Event => {
     } as Event;
   }
 
-  const legacyDjPlays = event.slots.map((slot: Slot) => slot.dj_ref) ?? [];
-
   const newDjPlays = event.slots.map(slot => slot.reconciled.signup.dj_refs).flat();
 
-  const dj_plays = newDjPlays.length > 0 ? newDjPlays : legacyDjPlays;
+  const dj_plays = newDjPlays;
 
   return {
     ...event,

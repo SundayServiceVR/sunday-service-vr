@@ -103,10 +103,17 @@ export function useEventDjData() {
       const event = eventCache.get(id);
       if (!event) return null;
 
-      const djs =
-        event.slots
-          ?.map(slot => slot.dj_ref)
-          .map(djRef => djCache.get(djRef.id) ?? 'PENDING') ?? [];
+      // Prefer the canonical shape: resolve DJs via the signup's dj_refs.
+      const refsFromSignups = event.slots
+        .map(slot => event.signups.find(signup => signup.uuid === slot.signup_uuid))
+        .filter((signup): signup is NonNullable<typeof signup> => signup != null)
+        .map(signup => signup.dj_refs)
+        .filter((refs): refs is NonNullable<typeof refs> => refs != null)
+        .flat();
+
+      const refs = refsFromSignups.filter(ref => ref != null);
+
+      const djs = refs.map(ref => djCache.get(ref.id) ?? 'PENDING');
 
       return { event, djs };
     },
@@ -115,9 +122,13 @@ export function useEventDjData() {
 
   const getEventsByDjId = useCallback(
     (djId: string) => {
-      return Array.from(eventCache.values()).filter(event =>
-        event.slots.some(slot => slot.dj_ref.id === djId)
-      );
+      return Array.from(eventCache.values()).filter(event => {
+        // Canonical shape: DJs live on the signup (dj_refs), so match slots -> signup -> dj_refs.
+        return event.slots.some(slot => {
+          const signup = event.signups.find(s => s.uuid === slot.signup_uuid);
+          return signup?.dj_refs?.some(ref => ref.id === djId) ?? false;
+        });
+      });
     },
     [eventCache]
   );
@@ -131,12 +142,7 @@ export function useEventDjData() {
         .filter(refs => refs != null)
         .flat();
 
-      // TODO : Legacy signup shape.  Remove after data cleanup
-      const djRefsFromLegacy = event.slots
-        .map(slot => slot.dj_ref)
-        .filter(ref => ref != null);
-
-      const allRefs = [...djRefsFromSignups, ...djRefsFromLegacy];
+      const allRefs = [...djRefsFromSignups];
 
       const djs = allRefs
         .filter(ref => ref != null)

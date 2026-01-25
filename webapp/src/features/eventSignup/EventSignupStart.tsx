@@ -10,8 +10,7 @@ export const EventSignupStart = () => {
 
 
   const signup = event.signups.find((signup) => {
-    // @ts-expect-error - Nasty, why is this not a real DocumentReference?
-    return signup.dj_refs.some((ref) => ref._path.segments.join("/") === `djs/${auth.currentUser?.uid}`);
+    return signup.dj_refs.some((ref) => ref.id === auth.currentUser?.uid);
   });
 
   // The event should be sanitized of all signups other than the current DJ via the google cloud function.

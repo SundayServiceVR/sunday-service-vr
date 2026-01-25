@@ -1,0 +1,27 @@
+{
+  "name": "ssvr-local-scripts",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "audit:events": "ts-node ./eventShapeAudit.ts",
+    "audit:events:emulator": "ts-node ./eventShapeAudit.ts --emulator",
+    "audit:events:prod": "ts-node ./eventShapeAudit.ts --prod",
+    "audit:events:emulator:summary": "ts-node ./eventShapeAudit.ts --emulator --summary-only",
+    "audit:events:prod:summary": "ts-node ./eventShapeAudit.ts --prod --summary-only",
+    "export:events:mapped:prod": "ts-node ./exportMappedEvents.ts --prod",
+    "export:all:prod": "ts-node ./exportAllCollectionsFromProd.ts --prod",
+    "import:events:mapped:emulator": "ts-node ./importMappedEventsToEmulator.ts",
+    "import:all:emulator": "ts-node ./importAllCollectionsToEmulator.ts --clear",
+    "seed:emulator:from-prod-mapped": "ts-node ./exportMappedEvents.ts --prod --out ./mapped-events.jsonl ; ts-node ./importMappedEventsToEmulator.ts --in ./mapped-events.jsonl --clear",
+    "seed:emulator:all": "ts-node ./exportAllCollectionsFromProd.ts --prod --out-dir ./seed-exports ; ts-node ./importAllCollectionsToEmulator.ts --in-dir ./seed-exports --clear"
+  },
+  "dependencies": {
+    "firebase": "^11.2.0",
+    "firebase-admin": "^13.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.12",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5"
+  }
+}
