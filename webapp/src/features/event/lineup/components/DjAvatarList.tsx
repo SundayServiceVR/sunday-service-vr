@@ -4,6 +4,29 @@ import { useEventDjCache } from "../../../../contexts/useEventDjCache";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
 
+type ReferenceLike = {
+  id?: string;
+  path?: string;
+  _path?: { segments?: unknown };
+};
+
+function getRefId(ref: unknown): string | undefined {
+  if (!ref || typeof ref !== "object") return undefined;
+  const r = ref as ReferenceLike;
+  if (typeof r.id === "string" && r.id) return r.id;
+
+  const segments = r._path?.segments;
+  if (Array.isArray(segments) && segments.length >= 2) {
+    // Firestore path segments: [collection, docId, collection, docId, ...]
+    return String(segments[segments.length - 1]);
+  }
+  if (typeof r.path === "string" && r.path) {
+    const parts = r.path.split("/").filter(Boolean);
+    return parts[parts.length - 1];
+  }
+  return undefined;
+}
+
 type Props = {
   djRefs: DocumentReference[]; // Require djRefs and remove djs
 };
@@ -48,20 +71,21 @@ const DjAvatarList: React.FC<Props> = ({ djRefs }) => {
 
 
   if (!djRefs || djRefs.length === 0) {
-    console.error("djRefs is undefined or empty", djRefs);
     return <span>-</span>;
   }
 
   return (
     <div className="d-flex align-items-center" style={{ position: "relative" }}>
       {djRefs.map((djRef, index) => {
-        const dj = djCache.get(djRef.id);
+        const djId = getRefId(djRef);
+        if (!djId) return null;
+
+        const dj = djCache.get(djId);
         if (!dj) return null;
         const avatarUrl = dj.avatar || `https://cdn.discordapp.com/embed/avatars/0.png`;
-        console.log("Rendering DJ from djRefs:", { discord_id: dj.discord_id, public_name: dj.public_name, avatarUrl });
         return (
           <div
-            key={djRef.id}
+            key={djId}
             style={{
               marginLeft: index === 0 ? "0" : "-15px", // Overlap effect
               zIndex: djRefs.length - index, // Ensure proper stacking order

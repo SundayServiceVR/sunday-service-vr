@@ -1,0 +1,27 @@
+{
+  "name": "ssvr-local-scripts",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "audit:events:emulator": "npx ts-node ./eventShapeAudit.ts --emulator",
+    "audit:events:prod": "npx ts-node ./eventShapeAudit.ts --prod",
+    "audit:events:emulator:summary": "npx ts-node ./eventShapeAudit.ts --emulator --summary-only",
+    "audit:events:prod:summary": "npx ts-node ./eventShapeAudit.ts --prod --summary-only",
+
+    "seed:emulator": "npm run -s _export:all:prod -- --out-dir ./seed-exports && npm run -s _import:all:emulator -- --in-dir ./seed-exports --clear",
+
+    "_export:events:mapped:prod": "npx ts-node ./exportMappedEvents.ts --prod",
+    "_export:all:prod": "npx ts-node ./exportAllCollectionsFromProd.ts --prod",
+    "_import:events:mapped:emulator": "npx ts-node ./importMappedEventsToEmulator.ts",
+    "_import:all:emulator": "npx ts-node ./importAllCollectionsToEmulator.ts --clear"
+  },
+  "dependencies": {
+    "firebase": "^11.2.0",
+    "firebase-admin": "^13.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.12",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5"
+  }
+}

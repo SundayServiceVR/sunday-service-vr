@@ -29,9 +29,7 @@ export const EventSignupWizard = () => {
 
     const existingSignup = event.signups.find(
         (signup) => signup.dj_refs.some((ref) => {
-            // @ts-expect-error - Nasty, why is this not a real DocumentReference?
-            // Yes, this is a hack.  No, the solution is not ref.path right now.
-            return ref._path.segments.join("/") === `djs/${djId}`
+            return ref.id === djId
         })
     );
 

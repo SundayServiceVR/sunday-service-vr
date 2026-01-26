@@ -34,7 +34,6 @@ const EventLineup = () => {
 
     const addSlotToLineup = (signup: EventSignup) => {
         const slot: Slot = {
-            dj_ref: signup.dj_refs[0],
             duration: signup.requested_duration,
             start_time: new Date(),
             signup_uuid: signup.uuid,

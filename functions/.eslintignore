@@ -1,0 +1,4 @@
+**/*.test.ts
+**/*.spec.ts
+src/scripts/eventShapeAudit.ts
+src/scripts/eventShapeAuditUtil.ts

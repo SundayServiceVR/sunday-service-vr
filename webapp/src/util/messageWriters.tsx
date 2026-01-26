@@ -104,11 +104,14 @@ const getDiscordSlotText = (slot: Slot, event: Event, pingDj: boolean = false): 
         return "Error : Unable to find signup for this slot"
     }
 
+    const name = slot.reconciled?.signup?.name;
+    const is_debutt = slot.reconciled?.signup?.is_debut;
+
     const text = [
         `${slot.start_time ? dateToDiscordTime(slot.start_time) : ""} : `,
-        pingDj ? slot.djs?.map(dj => `<@${dj?.discord_id}>`).join(", ") : null,
-        `${slot.reconciled.signup.name}`,
-        slot.reconciled.signup.is_debut ? "(DEBUTT!)" : null,
+    pingDj ? slot.reconciled.djs?.map(dj => `<@${dj?.discord_id}>`).join(", ") : null,
+        `${name}`,
+        is_debutt ? "(DEBUTT!)" : null,
     ].filter(seg => seg != null).join(" ")
 
     return text;
@@ -123,14 +126,14 @@ const getTwitterSlotText = (slot : Slot): string => {
 
 
 const getUkSlotText = (slot : Slot): string => {
-    const debuttText = `${slot.is_debut? " DEBUTT" : ""}`
+    const debuttText = `${slot.reconciled.signup.is_debut? " DEBUTT" : ""}`
     const slotText = `${slot.start_time ? dateToLineupTime(slot.start_time, "Europe/London") : ""} ${slot.reconciled.signup.name}${debuttText}`;
     return slotText;
 }
 
 
 const getAusSlotText = (slot : Slot): string => {
-    const debuttText = `${slot.is_debut? " DEBUTT" : ""}`
+    const debuttText = `${slot.reconciled.signup.is_debut? " DEBUTT" : ""}`
     const slotText = `${slot.start_time ? dateToLineupTime(slot.start_time, "Australia/Sydney") : ""} ${slot.reconciled.signup.name}${debuttText}`;
     return slotText;
 }

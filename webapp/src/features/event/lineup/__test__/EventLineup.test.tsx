@@ -37,7 +37,6 @@ const mockEvent: Event = {
     dj_plays: [],
     slots: [
         {
-            dj_ref: mockDjRef1,
             duration: 1 as SlotDuration,
             start_time: new Date(),
             signup_uuid: 'signup-1',

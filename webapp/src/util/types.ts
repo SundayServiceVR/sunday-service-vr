@@ -105,8 +105,6 @@ export interface EventSignupFormData {
 export type Slot = {
 
     signup_uuid?: string;
-    stream_source_type?: StreamSourceType;
-    stream_source_url?: string;
 
     // Reconciled Fields for ease of access and record keeping
     start_time: Date;
@@ -115,24 +113,18 @@ export type Slot = {
     // the sake of clarity and self-documentation.
     reconciled: {
         signup: EventSignup,
+
+        // Cached/derived DJ info for display and messaging.
+        // This is derived from `reconciled.signup.dj_refs` + DJ cache.
+        djs?: {
+            dj_name?: string,
+            discord_id?: string,
+        }[];
     }
 
-    djs?: {
-        dj_name?: string,
-        discord_id?: string,
-    }[];
-
-    //Depricated
+    // Canonical slot fields (source of truth is the associated signup)
     duration: SlotDuration;
-    is_live?: boolean;
-    dj_ref: DocumentReference;
-    prerecord_url?: string;
-    slot_type?: SlotType;
-    is_debut?: boolean;
-    discord_id?: string,
-    dj_name?: string,
-    rtmp_url?: string;
-    twitch_username?: string;
+    stream_source_url?: string;
 }
 
 export enum SlotType {
