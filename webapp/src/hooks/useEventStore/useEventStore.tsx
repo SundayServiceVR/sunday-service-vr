@@ -59,8 +59,11 @@ export const useEventStore = () => {
       throw (new Error("Attempted to save an event with no assigned id"));
     }
 
-    const djsAdded = event.dj_plays.filter(dj => !previousEvent?.dj_plays.includes(dj));
-    const djsRemoved = previousEvent?.dj_plays.filter(dj => !event?.dj_plays.includes(dj)) ?? [];
+  const prevDjPlays = previousEvent?.dj_plays ?? [];
+  const nextDjPlays = event.dj_plays ?? [];
+
+  const djsAdded = nextDjPlays.filter(dj => !prevDjPlays.includes(dj));
+  const djsRemoved = prevDjPlays.filter(dj => !nextDjPlays.includes(dj));
 
     await runTransaction(db, async (transaction) => {
       // Strip transient/derived fields before persisting.

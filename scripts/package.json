@@ -3,17 +3,17 @@
   "private": true,
   "type": "commonjs",
   "scripts": {
-    "audit:events": "ts-node ./eventShapeAudit.ts",
-    "audit:events:emulator": "ts-node ./eventShapeAudit.ts --emulator",
-    "audit:events:prod": "ts-node ./eventShapeAudit.ts --prod",
-    "audit:events:emulator:summary": "ts-node ./eventShapeAudit.ts --emulator --summary-only",
-    "audit:events:prod:summary": "ts-node ./eventShapeAudit.ts --prod --summary-only",
-    "export:events:mapped:prod": "ts-node ./exportMappedEvents.ts --prod",
-    "export:all:prod": "ts-node ./exportAllCollectionsFromProd.ts --prod",
-    "import:events:mapped:emulator": "ts-node ./importMappedEventsToEmulator.ts",
-    "import:all:emulator": "ts-node ./importAllCollectionsToEmulator.ts --clear",
-    "seed:emulator:from-prod-mapped": "ts-node ./exportMappedEvents.ts --prod --out ./mapped-events.jsonl ; ts-node ./importMappedEventsToEmulator.ts --in ./mapped-events.jsonl --clear",
-    "seed:emulator:all": "ts-node ./exportAllCollectionsFromProd.ts --prod --out-dir ./seed-exports ; ts-node ./importAllCollectionsToEmulator.ts --in-dir ./seed-exports --clear"
+    "audit:events": "npx ts-node ./eventShapeAudit.ts",
+    "audit:events:emulator": "npx ts-node ./eventShapeAudit.ts --emulator",
+    "audit:events:prod": "npx ts-node ./eventShapeAudit.ts --prod",
+    "audit:events:emulator:summary": "npx ts-node ./eventShapeAudit.ts --emulator --summary-only",
+    "audit:events:prod:summary": "npx ts-node ./eventShapeAudit.ts --prod --summary-only",
+    "export:events:mapped:prod": "npx ts-node ./exportMappedEvents.ts --prod",
+    "export:all:prod": "npx ts-node ./exportAllCollectionsFromProd.ts --prod",
+    "import:events:mapped:emulator": "npx ts-node ./importMappedEventsToEmulator.ts",
+    "import:all:emulator": "npx ts-node ./importAllCollectionsToEmulator.ts --clear",
+    "seed:emulator:from-prod-mapped": "npm run -s export:events:mapped:prod -- --out ./mapped-events.jsonl && npm run -s import:events:mapped:emulator -- --in ./mapped-events.jsonl --clear",
+    "seed:emulator:all": "npm run -s export:all:prod -- --out-dir ./seed-exports && npm run -s import:all:emulator -- --in-dir ./seed-exports --clear"
   },
   "dependencies": {
     "firebase": "^11.2.0",
