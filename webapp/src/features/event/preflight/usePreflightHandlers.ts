@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { Event } from '../../../util/types';
+import { updateWhiteboard } from '../../../util/whiteboard';
 
 export const usePreflightHandlers = (
     eventScratchpad: Event,
@@ -10,26 +11,34 @@ export const usePreflightHandlers = (
     const [showMessageModal, setShowMessageModal] = useState(false);
     const [showSocialMediaModal, setShowSocialMediaModal] = useState(false);
     const [showPosterModal, setShowPosterModal] = useState(false);
+    const [updatingBoard, setUpdatingBoard] = useState(false);
 
-    const handlePublish = async () => {
-        try {
-            const newEvent = { ...eventScratchpad, published: true };
-            await saveEvent(newEvent, eventScratchpad);
-            proposeEventChange(newEvent);
-            toast.success('Event published successfully!');
-        } catch (error) {
-            toast.error(`Error publishing event: ${(error as Error).message}`);
+    const handleUpdateBoard = async () => {
+        if (!eventScratchpad.id) {
+            toast.error('Save the event before updating the board.');
+            return;
         }
-    };
 
-    const handleUnpublish = async () => {
+        setUpdatingBoard(true);
         try {
-            const newEvent = { ...eventScratchpad, published: false };
-            await saveEvent(newEvent, eventScratchpad);
-            proposeEventChange(newEvent);
-            toast.success('Event unpublished successfully!');
+            // The board is built from the saved event, so persist the current state first.
+            await saveEvent(eventScratchpad, eventScratchpad);
+            const result = await updateWhiteboard(eventScratchpad.id);
+
+            if (result.status === 'dry-run') {
+                toast.success('Emulator: board update skipped (nothing was pushed).');
+            } else if (result.status === 'unchanged') {
+                toast.success('Board is already up to date.');
+            } else {
+                toast.success('Board updated!');
+            }
+            if (result.posterFallback) {
+                toast.error('A poster could not be loaded, so the default poster was used.');
+            }
         } catch (error) {
-            toast.error(`Error unpublishing event: ${(error as Error).message}`);
+            toast.error(`Error updating board: ${(error as Error).message}`);
+        } finally {
+            setUpdatingBoard(false);
         }
     };
 
@@ -62,8 +71,8 @@ export const usePreflightHandlers = (
         setShowSocialMediaModal,
         showPosterModal,
         setShowPosterModal,
-        handlePublish,
-        handleUnpublish,
+        updatingBoard,
+        handleUpdateBoard,
         handleSaveMessage,
         handleSaveSocialMediaMessage,
     };

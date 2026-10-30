@@ -45,7 +45,6 @@ export const docToEventRaw = (data: any) => {
       ...data,
       start_datetime: extractDate(data.start_datetime),
       end_datetime: extractDate(data.end_datetime),
-      published: data.published ?? false,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       slots: data.slots.map((slot: any) => ({ ...slot, start_time: extractDate(slot.start_time) }) as Slot),
       signups: data.signups.map((signup: EventSignup) => ({

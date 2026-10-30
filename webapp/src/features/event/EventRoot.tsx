@@ -8,7 +8,6 @@ import { db, storage } from "../../util/firebase";
 import FloatingActionBar from "../../components/FloatingActionBar";
 import { Outlet, useLocation, useParams } from "react-router";
 import { Link } from "react-router-dom";
-import { EventPublishedStatusBadge } from "./EventPublishedStatusBadge";
 import toast from "react-hot-toast";
 import { useEventStore } from "../../hooks/useEventStore/useEventStore";
 import { deleteObject, getDownloadURL, ref, uploadBytes } from "firebase/storage";
@@ -193,9 +192,6 @@ const EventRoot = () => {
             <h2 className="display-4">
                 {event.name} ({event.start_datetime.toLocaleDateString()})
             </h2>
-
-
-            <EventPublishedStatusBadge event={event} />
         </Stack>
 
         <Nav defaultActiveKey="/events/setup" variant="tabs" as="ul" activeKey={location.pathname}>

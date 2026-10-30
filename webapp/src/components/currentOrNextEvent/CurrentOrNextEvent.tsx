@@ -3,7 +3,6 @@ import { Event } from "../../util/types";
 import { Alert, AlertHeading, Button, Card, Col, Container, ListGroup, ListGroupItem, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
-import { EventPublishedStatusBadge } from "../../features/event/EventPublishedStatusBadge";
 import { useEventStore } from "../../hooks/useEventStore/useEventStore";
 import Spinner from "../spinner/Spinner";
 
@@ -65,7 +64,6 @@ export const CurrentOrNextEvent = () => {
                         <Card.Text>
                             <Row className="justify-content-md-center">
                                 <Col xs={12} sm={6}>
-                                    <EventPublishedStatusBadge event={event} />
                                     <dl className="mx-2 mt-2">
                                         <dt>Date</dt>
                                         <dd>{event.start_datetime.toDateString()}</dd>

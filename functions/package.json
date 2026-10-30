@@ -24,7 +24,8 @@
         "firebase-functions": "^7.0.1",
         "firebase-tools": "^15.1.0",
         "google-auth-library": "^9.14.1",
-        "google-spreadsheet": "^4.1.4"
+        "google-spreadsheet": "^4.1.4",
+        "sharp": "^0.35.5"
     },
     "devDependencies": {
         "@types/uuid": "^10.0.0",
