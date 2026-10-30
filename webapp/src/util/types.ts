@@ -34,7 +34,8 @@ export type Host = {
 export type Event = {
     id?: string;
     name: string;
-    published: boolean,
+    /** @deprecated No longer used.  The whiteboard is updated explicitly with the "Update board" button. */
+    published?: boolean,
     message: string;
     socialMediaMessage?: string;
     start_datetime: Date;

@@ -35,12 +35,11 @@ const PreflightChecklist = () => {
             <h1 className="display-6 mb-4">Preflight Checklist</h1>
             
             <EventStatusCard
-                event={eventScratchpad}
                 completedCount={completedCount}
                 totalCount={totalCount}
                 hasMinimumRequirements={hasMinimumRequirements()}
-                onPublish={handlers.handlePublish}
-                onUnpublish={handlers.handleUnpublish}
+                onUpdateBoard={handlers.handleUpdateBoard}
+                updatingBoard={handlers.updatingBoard}
             />
 
             <Card>

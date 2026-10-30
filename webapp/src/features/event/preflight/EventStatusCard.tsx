@@ -1,30 +1,25 @@
 import React from 'react';
-import { Card, ButtonGroup, Button, Alert, Stack, Badge } from 'react-bootstrap';
-import { EventPublishedStatusBadge } from '../EventPublishedStatusBadge';
-import { Event } from '../../../util/types';
+import { Card, Button, Alert, Stack, Badge } from 'react-bootstrap';
 
 interface EventStatusCardProps {
-    event: Event;
     completedCount: number;
     totalCount: number;
     hasMinimumRequirements: boolean;
-    onPublish: () => void;
-    onUnpublish: () => void;
+    onUpdateBoard: () => void;
+    updatingBoard: boolean;
 }
 
 export const EventStatusCard: React.FC<EventStatusCardProps> = ({
-    event,
     completedCount,
     totalCount,
     hasMinimumRequirements,
-    onPublish,
-    onUnpublish,
+    onUpdateBoard,
+    updatingBoard,
 }) => {
     return (
         <Card className="mb-4">
-            <Card.Header className="d-flex justify-content-between align-items-center">
+            <Card.Header>
                 <h5 className="mb-0">Event Status</h5>
-                <EventPublishedStatusBadge event={event} />
             </Card.Header>
             <Card.Body>
                 <Stack direction="horizontal" gap={3} className="mb-3">
@@ -52,35 +47,23 @@ export const EventStatusCard: React.FC<EventStatusCardProps> = ({
                     />
                 </div>
 
-                <h6>Publish/Unpublish Event</h6>
-                <ButtonGroup className="mb-3">
-                    <Button 
-                        variant={event.published ? 'success' : 'outline-success'}
-                        onClick={onPublish}
-                        disabled={!hasMinimumRequirements}
-                    >
-                        {event.published ? '✓ Published' : 'Publish Event'}
-                    </Button>
-                    <Button 
-                        variant={!event.published ? 'secondary' : 'outline-secondary'}
-                        onClick={onUnpublish}
-                        disabled={!event.published}
-                    >
-                        {!event.published ? '✓ Unpublished' : 'Unpublish Event'}
-                    </Button>
-                </ButtonGroup>
+                <h6>In-world Whiteboard</h6>
+                <p className="text-muted">
+                    Pushes this event's lineup and posters to the whiteboard. Saves the event first.
+                </p>
+                <Button
+                    className="mb-3"
+                    variant="primary"
+                    onClick={onUpdateBoard}
+                    disabled={!hasMinimumRequirements || updatingBoard}
+                >
+                    {updatingBoard ? 'Updating...' : 'Update board'}
+                </Button>
 
                 {!hasMinimumRequirements && (
-                    <Alert variant="warning" className="mb-3">
+                    <Alert variant="warning" className="mb-0">
                         <Alert.Heading>Requirements Not Met</Alert.Heading>
-                        Publishing requires: Event name, host, date/time, and at least one slot in the lineup.
-                    </Alert>
-                )}
-
-                {event.published && (
-                    <Alert variant="info" className="mb-0">
-                        <Alert.Heading>Event is Live!</Alert.Heading>
-                        This event is currently published and visible to the public.
+                        Updating the board requires: Event name, host, date/time, and at least one slot in the lineup.
                     </Alert>
                 )}
             </Card.Body>

@@ -39,6 +39,13 @@ export const timeFormats: {[key: string] : TimeFormat} = {
     },
 };
 
+export const PLACEHOLDER_TEXT = `Sunday Service
+
+Every Sunday
+
+Noon - 5pm-ish PST/PDT
+8pm - 1am-ish BST/BDT`;
+
 export const getLineupText = (event: Event, timeFormat: TimeFormat): string => {
     const eventStartDateFormatted = [
         event.start_datetime.getUTCFullYear(),
@@ -60,6 +67,6 @@ const getSlotText = (event: Event, slot: Slot, timeFormat: TimeFormat): string =
     slot?.start_time?.toLocaleTimeString(
         timeFormat.locale, { timeZone: timeFormat.timezone, timeStyle: "short" }
     )?? "",
-    slot.reconciled.signup?.name ?? slot.dj_name,
-    slot.reconciled.signup.is_debut ? " DEBUTT" : null,
+    slot.reconciled?.signup?.name ?? "",
+    slot.reconciled?.signup?.is_debut ? " DEBUTT" : null,
 ].join(" ").trim();

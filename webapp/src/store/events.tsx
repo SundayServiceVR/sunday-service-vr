@@ -8,7 +8,6 @@ export const default_event: Event = {
   name: "Sunday Service",
   start_datetime: nextSundayServiceDefaultDateTime(),
   end_datetime: nextSundayServiceDefaultDateTime(),
-  published: false,
   host: "",
   message: "Come by to chill and wiggle to some Sunday Service tunes!",
   slots: [],
