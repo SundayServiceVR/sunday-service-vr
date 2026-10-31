@@ -1,6 +1,6 @@
 import { expect } from "@playwright/test";
 import { Given, When, Then } from "../fixtures";
-import { createDj, createEvent, getEvent, SEED_USERS } from "../../helpers/fixtures";
+import { createDj, createEvent, createHost, findHostsByName, getEvent, SEED_USERS } from "../../helpers/fixtures";
 import { readBoardFile } from "../../helpers/mockGithub";
 import {
   closeSignupsAndBuildLineup,
@@ -30,6 +30,33 @@ Given("an event with signups open", async ({ world }) => {
   world.trackEvent((await createEvent({ signupsAreOpen: true })).id);
 });
 
+Given("an event with no host and no lineup", async ({ world }) => {
+  world.trackEvent((await createEvent({ signupsAreOpen: true, host: "" })).id);
+});
+
+When("I open the event preflight", async ({ page, world }) => {
+  await page.goto(`/events/${world.eventId}/preflight`);
+});
+
+Then("the board update is blocked because {string} and {string} are missing", async ({ page }, a: string, b: string) => {
+  await expect(page.getByRole("button", { name: "Update board" })).toBeDisabled();
+  const missing = page.getByTestId("missing-requirements");
+  await expect(missing.getByTestId(`missing-${a.toLowerCase()}`)).toBeVisible();
+  await expect(missing.getByTestId(`missing-${b.toLowerCase()}`)).toBeVisible();
+});
+
+When("I choose the host {string} in the preflight", async ({ page }, hostName: string) => {
+  await page.getByTestId("missing-requirements").getByTestId("event-host").selectOption({ label: hostName });
+});
+
+Then("{string} is no longer listed as missing", async ({ page }, field: string) => {
+  await expect(page.getByTestId(`missing-${field.toLowerCase()}`)).toHaveCount(0);
+});
+
+Then("{string} is still listed as missing", async ({ page }, field: string) => {
+  await expect(page.getByTestId(`missing-${field.toLowerCase()}`)).toBeVisible();
+});
+
 Given("an event with signups closed", async ({ world }) => {
   world.trackEvent((await createEvent({ signupsAreOpen: false })).id);
 });
@@ -42,8 +69,41 @@ Given("an event with signups open from {string} and {string}", async ({ world },
 
 When("I create an event with signups open", async ({ page, world }) => {
   const name = `E2E Event ${Date.now()}`;
+  const hostName = `E2E Host ${Date.now()}`;
   world.trackEventName(name);
-  world.eventId = await createEventViaUi(page, name);
+  world.trackHostName(hostName);
+  world.eventId = await createEventViaUi(page, name, { newName: hostName });
+});
+
+Given("a host named {string} exists", async ({ world }, name: string) => {
+  const host = await createHost(name);
+  world.trackHostName(host.name);
+});
+
+When("I create an event hosted by the existing host {string}", async ({ page, world }, hostName: string) => {
+  const name = `E2E Event ${Date.now()}`;
+  world.trackEventName(name);
+  world.eventId = await createEventViaUi(page, name, { existing: hostName });
+});
+
+When("I create an event with a new host {string} and no poster", async ({ page, world }, hostName: string) => {
+  const name = `E2E Event ${Date.now()}`;
+  world.trackEventName(name);
+  world.trackHostName(hostName);
+  world.eventId = await createEventViaUi(page, name, { newName: hostName });
+});
+
+Then("the event is hosted by {string}", async ({ world }, hostName: string) => {
+  const event = await getEvent(world.eventId!);
+  expect(event?.host).toBe(hostName);
+  const hosts = await findHostsByName(hostName);
+  expect(hosts).toHaveLength(1);
+  expect(event?.host_ref?.id).toBe(hosts[0].id);
+});
+
+Then("the host {string} has no poster", async ({}, hostName: string) => {
+  const [host] = await findHostsByName(hostName);
+  expect(host.host_poster_url).toBeUndefined();
 });
 
 Then("the event exists with signups open", async ({ world }) => {

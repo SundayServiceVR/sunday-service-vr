@@ -1,11 +1,12 @@
 import { test as base, createBdd } from "playwright-bdd";
-import { deleteDj, deleteEvent, deleteEventsByName, TestUser } from "../helpers/fixtures";
+import { deleteDj, deleteEvent, deleteEventsByName, deleteHostsByName, TestUser } from "../helpers/fixtures";
 import { resetMockGithub } from "../helpers/mockGithub";
 
 /** State shared between the steps of one scenario, plus cleanup of everything the scenario created. */
 export class World {
   eventId?: string;
   eventName?: string;
+  hostName?: string;
   /** The DJ the browser is signed in as. */
   dj?: TestUser;
   /** DJs created for the scenario, by DJ name. */
@@ -22,6 +23,10 @@ export class World {
   trackEventName(name: string) {
     this.eventName = name;
     this.onCleanup(() => deleteEventsByName(name));
+  }
+  trackHostName(name: string) {
+    this.hostName = name;
+    this.onCleanup(() => deleteHostsByName(name));
   }
   trackDj(dj: TestUser) {
     this.djs.push(dj);

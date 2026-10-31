@@ -39,6 +39,7 @@ const HostForm = ({ host, onHostChange, onHostPosterFileChange, showDjSelector =
                 </Form.Label>
                 <Form.Control
                     placeholder="Host Name"
+                    data-testid="new-host-name"
                     type="text"
                     value={host.host_name}
                     required

@@ -3,6 +3,7 @@ import { useEventOperations } from '../outletContext';
 import { useEventStore } from '../../../hooks/useEventStore/useEventStore';
 import UnifiedMessageEditModal from './messaging/UnifiedMessageEditModal';
 import { EventStatusCard } from './EventStatusCard';
+import { getMissingRequirements } from './MissingRequirements';
 import { PreflightChecklistStep } from './PreflightChecklistStep';
 import { OutdatedStepsAccordion } from './OutdatedStepsAccordion';
 import { usePreflightHandlers } from './usePreflightHandlers';
@@ -19,12 +20,7 @@ const PreflightChecklist = () => {
     const handlers = usePreflightHandlers(eventScratchpad, proposeEventChange, saveEvent);
     const checklistItems = useChecklistItems(eventScratchpad);
 
-    const hasMinimumRequirements = () => {
-        return eventScratchpad.name != "" && 
-               eventScratchpad.host != "" && 
-               eventScratchpad.start_datetime && 
-               eventScratchpad.slots.length > 0;
-    };
+    const hasMinimumRequirements = () => getMissingRequirements(eventScratchpad).length === 0;
 
     const requiredItems = checklistItems.filter(item => !item.optional);
     const optionalItems = checklistItems.filter(item => item.optional);
@@ -36,6 +32,8 @@ const PreflightChecklist = () => {
             <h1 className="display-6 mb-4">Preflight Checklist</h1>
             
             <EventStatusCard
+                event={eventScratchpad}
+                onEventChange={proposeEventChange}
                 completedCount={completedCount}
                 totalCount={totalCount}
                 hasMinimumRequirements={hasMinimumRequirements()}

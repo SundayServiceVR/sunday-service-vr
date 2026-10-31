@@ -16,11 +16,10 @@ type Props = {
 
 const EventBasicDetailsForm = ({ event: eventScratchpad, onEventChange: proposeEventChange, onLineupPosterFileChange }: Props) => {
     
-    // Note: The Host argument is intentionally unused here; it remains in the
-    // signature to stay compatible with the HostSearchSelect callback API.
-    const handleHostSelect = (_: Host | null, hostRef: DocumentReference | null) => {
+    const handleHostSelect = (host: Host | null, hostRef: DocumentReference | null) => {
         proposeEventChange({ 
             ...eventScratchpad, 
+            host: host?.host_name ?? "",
             host_ref: hostRef ?? undefined 
         });
     };
@@ -57,20 +56,6 @@ const EventBasicDetailsForm = ({ event: eventScratchpad, onEventChange: proposeE
                 }}
                 className="input" />
         </Form.Group>
-        <Form.Group className="mt-2">
-            <Form.Label>
-                Host
-            </Form.Label>
-            <Form.Control
-                placeholder="TBD"
-                data-testid="event-host"
-                type="text"
-                value={eventScratchpad.host}
-                required
-                onChange={(formEvent) => { proposeEventChange({ ...eventScratchpad, host: formEvent.target.value }); }}
-            />
-        </Form.Group>
-        
         <HostSearchSelect 
             onHostSelect={handleHostSelect}
             selectedHostRef={eventScratchpad.host_ref}

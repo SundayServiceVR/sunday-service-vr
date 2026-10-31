@@ -21,8 +21,9 @@ describe('EventCreate', () => {
         ).toBeInTheDocument()
     })
 
-    it('has more than one text field', async () => {
+    it('has an event name field and a single host field', async () => {
         renderWithRouter()
-        expect((await screen.findAllByRole('textbox')).length).toBeGreaterThan(1)
+        expect(await screen.findByTestId('event-name')).toBeInTheDocument()
+        expect(await screen.findByTestId('event-host')).toBeInTheDocument()
     })
 })
