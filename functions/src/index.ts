@@ -9,19 +9,20 @@
 
 import * as admin from "firebase-admin";
 import { initializeApp } from "firebase-admin/app";
-import { readFileSync } from "fs";
+import { existsSync, readFileSync } from "fs";
+
+const LOCAL_ADMIN_KEY_PATH = "./local_admin_key.json";
 
 
-const credential =
-    admin.credential.cert(
-        // TODO: This works now because we are manually deploying the functions, which also
-        // uploads our local admin key.  I think there's a different way to specify the
-        // service account/ credentials when deploying to the emulator, but I don't know what it is.
-        getLocalAdminKey()
-    );
+// TODO: This works in production because we manually deploy the functions, which also
+// uploads our local admin key.  The key is gitignored, so when it's absent (CI, fresh
+// clones) fall back to default credentials, which is fine for the emulators.
+const credential = existsSync(LOCAL_ADMIN_KEY_PATH) ?
+    admin.credential.cert(getLocalAdminKey()) :
+    undefined;
 
 initializeApp({
-    credential,
+    ...(credential ? { credential } : {}),
     projectId: process.env.GCLOUD_PROJECT ?? "sunday-service-vr",
 });
 
@@ -32,7 +33,7 @@ initializeApp({
  * @return {object} The parsed local admin key.
  */
 function getLocalAdminKey() {
-    const result = JSON.parse(readFileSync("./local_admin_key.json", "utf-8"));
+    const result = JSON.parse(readFileSync(LOCAL_ADMIN_KEY_PATH, "utf-8"));
     return result;
 }
 
