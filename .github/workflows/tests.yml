@@ -54,18 +54,23 @@ jobs:
       - name: Start local stack (emulators, seed, mock GitHub, webapp)
         run: |
           nohup npm run dev > dev.log 2>&1 &
+          fn_status() {
+            curl -s -o /dev/null -w "%{http_code}" "http://127.0.0.1:5001/sunday-service-vr/us-central1/$1" || true
+          }
           for i in $(seq 1 120); do
-            if grep -q "Seeded" dev.log \
-              && grep -q "us-central1-eventSignupIntake\]: http function initialized" dev.log \
-              && grep -q "us-central1-updateWhiteboard\]: http function initialized" dev.log \
-              && curl -sf -o /dev/null http://localhost:3000 \
-              && curl -sf -o /dev/null http://127.0.0.1:4600/__state \
-              && grep -q "All emulators ready" dev.log; then
+            seeded=no; web=no; mock=no; intake=$(fn_status eventSignupIntake); board=$(fn_status updateWhiteboard)
+            grep -qF "Seeded" dev.log && seeded=yes
+            curl -sf -o /dev/null http://localhost:3000 && web=yes
+            curl -sf -o /dev/null http://127.0.0.1:4600/__state && mock=yes
+            # A loaded function answers GET with 405; an unloaded one gives 404 (or 000 before the emulator is up).
+            if [ "$seeded" = yes ] && [ "$web" = yes ] && [ "$mock" = yes ] \
+              && [ "$intake" != 404 ] && [ "$intake" != 000 ] \
+              && [ "$board" != 404 ] && [ "$board" != 000 ]; then
               echo "Stack is up"; exit 0
             fi
             sleep 3
           done
-          echo "Stack did not start in time"; cat dev.log; exit 1
+          echo "Stack did not start in time (seeded=$seeded web=$web mock=$mock intake=$intake board=$board)"; cat dev.log; exit 1
         working-directory: webapp
 
       - name: Function API and rules tests
