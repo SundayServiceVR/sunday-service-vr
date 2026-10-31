@@ -1,3 +1,13 @@
 #root {
   min-height: 100vh;
 }
+
+/* Top navbar: ~25% less vertical padding than the Lux default (1.5rem) */
+#root .navbar {
+  --bs-navbar-padding-y: 1.125rem;
+}
+
+/* Gap between adjacent buttons so they don't read as a button group */
+:not(.btn-group):not(.btn-group-vertical):not(.input-group) > .btn + .btn {
+  margin-left: 0.5rem;
+}
