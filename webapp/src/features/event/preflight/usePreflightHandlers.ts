@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { Event } from '../../../util/types';
-import { updateWhiteboard } from '../../../util/whiteboard';
+import { clearWhiteboard, updateWhiteboard } from '../../../util/whiteboard';
 
 export const usePreflightHandlers = (
     eventScratchpad: Event,
@@ -12,6 +12,25 @@ export const usePreflightHandlers = (
     const [showSocialMediaModal, setShowSocialMediaModal] = useState(false);
     const [showPosterModal, setShowPosterModal] = useState(false);
     const [updatingBoard, setUpdatingBoard] = useState(false);
+    const [showBoardPreview, setShowBoardPreview] = useState(false);
+
+    const handleClearBoard = async () => {
+        if (!window.confirm('Reset the whiteboard to the placeholder text and default posters?')) {
+            return;
+        }
+
+        setUpdatingBoard(true);
+        try {
+            const result = await clearWhiteboard();
+            toast.success(result.status === 'dry-run'
+                ? 'Emulator: board clear skipped (nothing was pushed).'
+                : result.status === 'unchanged' ? 'Board is already cleared.' : 'Board cleared!');
+        } catch (error) {
+            toast.error(`Error clearing board: ${(error as Error).message}`);
+        } finally {
+            setUpdatingBoard(false);
+        }
+    };
 
     const handleUpdateBoard = async () => {
         if (!eventScratchpad.id) {
@@ -73,6 +92,9 @@ export const usePreflightHandlers = (
         setShowPosterModal,
         updatingBoard,
         handleUpdateBoard,
+        handleClearBoard,
+        showBoardPreview,
+        setShowBoardPreview,
         handleSaveMessage,
         handleSaveSocialMediaMessage,
     };

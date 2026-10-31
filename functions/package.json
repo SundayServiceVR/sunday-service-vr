@@ -8,6 +8,7 @@
         "serve:inspect": "npm run build && firebase emulators:start --inspect-functions --only functions,firestore,storage",
         "shell": "npm run build && firebase functions:shell",
         "start": "npm run shell",
+        "predeploy": "npm run build",
         "deploy": "firebase deploy --only functions",
         "logs": "firebase functions:log"
     },

@@ -6,6 +6,8 @@ interface EventStatusCardProps {
     totalCount: number;
     hasMinimumRequirements: boolean;
     onUpdateBoard: () => void;
+    onClearBoard: () => void;
+    onViewBoard: () => void;
     updatingBoard: boolean;
 }
 
@@ -14,6 +16,8 @@ export const EventStatusCard: React.FC<EventStatusCardProps> = ({
     totalCount,
     hasMinimumRequirements,
     onUpdateBoard,
+    onClearBoard,
+    onViewBoard,
     updatingBoard,
 }) => {
     return (
@@ -51,14 +55,21 @@ export const EventStatusCard: React.FC<EventStatusCardProps> = ({
                 <p className="text-muted">
                     Pushes this event's lineup and posters to the whiteboard. Saves the event first.
                 </p>
-                <Button
-                    className="mb-3"
-                    variant="primary"
-                    onClick={onUpdateBoard}
-                    disabled={!hasMinimumRequirements || updatingBoard}
-                >
-                    {updatingBoard ? 'Updating...' : 'Update board'}
-                </Button>
+                <Stack direction="horizontal" gap={2} className="mb-3">
+                    <Button
+                        variant="primary"
+                        onClick={onUpdateBoard}
+                        disabled={!hasMinimumRequirements || updatingBoard}
+                    >
+                        {updatingBoard ? 'Working...' : 'Update board'}
+                    </Button>
+                    <Button variant="outline-danger" onClick={onClearBoard} disabled={updatingBoard}>
+                        Clear board
+                    </Button>
+                    <Button variant="outline-secondary" onClick={onViewBoard}>
+                        View current board
+                    </Button>
+                </Stack>
 
                 {!hasMinimumRequirements && (
                     <Alert variant="warning" className="mb-0">
