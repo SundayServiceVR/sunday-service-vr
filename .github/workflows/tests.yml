@@ -1,0 +1,96 @@
+name: Tests
+'on': pull_request
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      BROWSER: none
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: |
+            functions/package-lock.json
+            webapp/package-lock.json
+            tests/package-lock.json
+
+      # The Firestore/Storage emulators need a JVM.
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Install dependencies
+        run: |
+          npm ci --prefix functions
+          npm ci --prefix webapp
+          npm ci --prefix tests
+
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
+        working-directory: tests
+
+      # Dummy values: the tests never call the real GitHub or Google Sheets, and Discord login is bypassed.
+      - name: Create dummy function secrets
+        run: |
+          cat > functions/.secret.local <<'EOF'
+          GITHUB_WHITEBOARD_TOKEN=dummy-github-whiteboard-token
+          BACKUPS_SERVICE_ACCOUNT_KEY=dummy-backups-service-account-key
+          DISCORD_CLIENT_SECRET=dummy-discord-client-secret
+          EOF
+
+      - name: Start local stack (emulators, seed, mock GitHub, webapp)
+        run: |
+          nohup npm run dev > dev.log 2>&1 &
+          fn_status() {
+            curl -s -o /dev/null -w "%{http_code}" "http://127.0.0.1:5001/sunday-service-vr/us-central1/$1" || true
+          }
+          for i in $(seq 1 120); do
+            seeded=no; web=no; mock=no; intake=$(fn_status eventSignupIntake); board=$(fn_status updateWhiteboard)
+            grep -qF "Seeded" dev.log && seeded=yes
+            curl -sf -o /dev/null http://localhost:3000 && web=yes
+            curl -sf -o /dev/null http://127.0.0.1:4600/__state && mock=yes
+            # A loaded function answers GET with 405; an unloaded one gives 404 (or 000 before the emulator is up).
+            if [ "$seeded" = yes ] && [ "$web" = yes ] && [ "$mock" = yes ] \
+              && [ "$intake" != 404 ] && [ "$intake" != 000 ] \
+              && [ "$board" != 404 ] && [ "$board" != 000 ]; then
+              echo "Stack is up"; exit 0
+            fi
+            sleep 3
+          done
+          echo "Stack did not start in time (seeded=$seeded web=$web mock=$mock intake=$intake board=$board)"; cat dev.log; exit 1
+        working-directory: webapp
+
+      - name: Function API and rules tests
+        run: npm test
+        working-directory: functions
+
+      - name: End-to-end tests
+        run: npm run test:e2e
+        working-directory: tests
+
+      - name: Show stack log
+        if: failure()
+        run: tail -n 200 webapp/dev.log
+
+      - name: Upload test artifacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-artifacts
+          path: |
+            tests/test-results/
+            webapp/dev.log
+          if-no-files-found: ignore

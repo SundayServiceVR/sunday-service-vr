@@ -85,11 +85,6 @@ function defaultPosterLoader(repo: GithubRepo): () => Promise<Buffer> {
  * @return {WhiteboardUpdateResult} What happened
  */
 export async function clearWhiteboard(githubToken: string): Promise<WhiteboardUpdateResult> {
-    if (process.env.FUNCTIONS_EMULATOR === "true") {
-        logger.info("Emulator detected, skipping clear of GitHub whiteboard.");
-        return { status: "dry-run", posterFallback: false };
-    }
-
     const repo = new GithubRepo(REPO_OWNER, REPO_NAME, REPO_BRANCH, githubToken);
     const poster = await defaultPosterLoader(repo)();
     const placeholder = Buffer.from(PLACEHOLDER_TEXT.trim());
@@ -112,11 +107,6 @@ export async function clearWhiteboard(githubToken: string): Promise<WhiteboardUp
  * @return {WhiteboardUpdateResult} What happened
  */
 export async function pushEventToWhiteboard(event: Event, githubToken: string): Promise<WhiteboardUpdateResult> {
-    if (process.env.FUNCTIONS_EMULATOR === "true") {
-        logger.info("Emulator detected, skipping push to GitHub.", { eventId: event.id });
-        return { status: "dry-run", posterFallback: false };
-    }
-
     const repo = new GithubRepo(REPO_OWNER, REPO_NAME, REPO_BRANCH, githubToken);
     const getDefault = defaultPosterLoader(repo);
 

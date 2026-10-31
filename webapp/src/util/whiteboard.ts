@@ -1,13 +1,13 @@
 import { auth } from "./firebase";
+import { functionUrl as buildFunctionUrl, projectId } from "./config";
 
 export type WhiteboardUpdateResult = {
     status: "updated" | "unchanged" | "dry-run";
     posterFallback: boolean;
 };
 
-const functionUrl = (name: string) => process.env.NODE_ENV === "development"
-    ? `http://localhost:5001/sunday-service-vr/us-central1/${name}`
-    : `https://us-central1-sunday-service-vr.cloudfunctions.net/${name}`;
+const functionUrl = (name: string) =>
+    buildFunctionUrl(name, `https://us-central1-${projectId}.cloudfunctions.net/${name}`);
 
 const postAuthed = async (name: string, body: object): Promise<WhiteboardUpdateResult> => {
     const idToken = await auth.currentUser?.getIdToken();

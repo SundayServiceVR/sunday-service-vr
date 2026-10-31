@@ -8,7 +8,6 @@ import AnonymousLayout from './features/layout/AnonymousLayout';
 import Home from './features/home/Home';
 import EventList from './features/event/EventList';
 import EventCreate from './features/event/basic/EventCreate';
-import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 
 import CreateDj from './features/dj/CreateDj';
 import DjDetails from './features/dj/DjDetails';
@@ -34,11 +33,6 @@ import ClubSettings from './features/clubSettings/ClubSettings';
 
 
 function App() {
-  if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
-    const db = getFirestore();
-    connectFirestoreEmulator(db, '127.0.0.1', 8080)
-  }
-
   const router = createBrowserRouter([
     {
       path: "/",
