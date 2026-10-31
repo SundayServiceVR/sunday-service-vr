@@ -3,7 +3,7 @@ import { useEventOperations } from '../outletContext';
 import { useEventStore } from '../../../hooks/useEventStore/useEventStore';
 import UnifiedMessageEditModal from './messaging/UnifiedMessageEditModal';
 import { EventStatusCard } from './EventStatusCard';
-import { getMissingRequirements } from './MissingRequirements';
+import { getMissingRequirements } from './getMissingRequirements';
 import { PreflightChecklistStep } from './PreflightChecklistStep';
 import { OutdatedStepsAccordion } from './OutdatedStepsAccordion';
 import { usePreflightHandlers } from './usePreflightHandlers';

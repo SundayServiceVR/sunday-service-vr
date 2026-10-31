@@ -3,6 +3,7 @@ import { Alert, Form } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { Event } from '../../../util/types';
 import { HostSearchSelect } from '../../host/HostSearchSelect';
+import { getMissingRequirements } from './getMissingRequirements';
 
 interface Props {
     event: Event;
@@ -11,15 +12,6 @@ interface Props {
 
 const toLocalInput = (d: Date) =>
     new Date(d.getTime() - d.getTimezoneOffset() * 60 * 1000).toISOString().slice(0, 16);
-
-export const getMissingRequirements = (event: Event) => {
-    const missing: ('Name' | 'Host' | 'Date' | 'Lineup')[] = [];
-    if (!event.name?.trim()) missing.push('Name');
-    if (!event.host?.trim()) missing.push('Host');
-    if (!event.start_datetime || isNaN(event.start_datetime.getTime())) missing.push('Date');
-    if (!event.slots || event.slots.length === 0) missing.push('Lineup');
-    return missing;
-};
 
 export const MissingRequirements: React.FC<Props> = ({ event, onEventChange }) => {
     const missing = getMissingRequirements(event);
