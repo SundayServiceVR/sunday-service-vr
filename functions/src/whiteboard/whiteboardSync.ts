@@ -1,8 +1,11 @@
 import { logger } from "firebase-functions/v2";
-import sharp from "sharp";
+import * as sharpModule from "sharp";
+
+// Without esModuleInterop, the CommonJS module itself is the callable function.
+const sharp = sharpModule as unknown as typeof sharpModule.default;
 import { Event } from "../../../webapp/src/util/types";
 import { GithubRepo, RepoFile } from "./githubRepo";
-import { getLineupText, timeFormats } from "./messageWriters";
+import { getLineupText, timeFormats, PLACEHOLDER_TEXT } from "./messageWriters";
 
 const REPO_OWNER = "SundayServiceVR";
 const REPO_NAME = "whiteboard";
@@ -66,6 +69,42 @@ async function resolvePoster(url: string | undefined, getDefault: () => Promise<
 }
 
 /**
+ * @param {GithubRepo} repo The whiteboard repo
+ * @return {Function} Loads (once) the default poster from the repo as PNG
+ */
+function defaultPosterLoader(repo: GithubRepo): () => Promise<Buffer> {
+    let defaultPoster: Promise<Buffer> | undefined;
+    return () => defaultPoster ??= repo.getFile(DEFAULT_POSTER_PATH)
+        .then((bytes) => sharp(bytes).png().toBuffer());
+}
+
+/**
+ * Resets the whiteboard to the placeholder text and default posters.
+ *
+ * @param {string} githubToken PAT with contents write access to the whiteboard repo
+ * @return {WhiteboardUpdateResult} What happened
+ */
+export async function clearWhiteboard(githubToken: string): Promise<WhiteboardUpdateResult> {
+    if (process.env.FUNCTIONS_EMULATOR === "true") {
+        logger.info("Emulator detected, skipping clear of GitHub whiteboard.");
+        return { status: "dry-run", posterFallback: false };
+    }
+
+    const repo = new GithubRepo(REPO_OWNER, REPO_NAME, REPO_BRANCH, githubToken);
+    const poster = await defaultPosterLoader(repo)();
+    const placeholder = Buffer.from(PLACEHOLDER_TEXT.trim());
+
+    const committed = await repo.commitFiles([
+        { path: FILE_GMT, content: placeholder },
+        { path: FILE_AU, content: placeholder },
+        { path: FILE_LINEUP_POSTER, content: poster },
+        { path: FILE_HOST_POSTER, content: poster },
+    ], "chore: clear board");
+
+    return { status: committed ? "updated" : "unchanged", posterFallback: false };
+}
+
+/**
  * Pushes the given event's lineup text and posters to the whiteboard repo.
  *
  * @param {Event} event The event to show on the board
@@ -79,10 +118,7 @@ export async function pushEventToWhiteboard(event: Event, githubToken: string): 
     }
 
     const repo = new GithubRepo(REPO_OWNER, REPO_NAME, REPO_BRANCH, githubToken);
-
-    let defaultPoster: Promise<Buffer> | undefined;
-    const getDefault = () => defaultPoster ??= repo.getFile(DEFAULT_POSTER_PATH)
-        .then((bytes) => sharp(bytes).png().toBuffer());
+    const getDefault = defaultPosterLoader(repo);
 
     const [lineupPoster, hostPoster] = await Promise.all([
         resolvePoster(event.lineup_poster_url, getDefault),

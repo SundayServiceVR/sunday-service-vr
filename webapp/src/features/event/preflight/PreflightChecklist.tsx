@@ -10,6 +10,7 @@ import { useChecklistItems } from './useChecklistItems';
 import { getDiscordMessage, getTwitterMessage } from '../../../util/messageWriters';
 import { Event } from '../../../util/types';
 import { LineupPosterModal } from './LineupPosterModal';
+import { WhiteboardPreviewModal } from './WhiteboardPreviewModal';
 
 const PreflightChecklist = () => {
     const [eventScratchpad, proposeEventChange, onLineupPosterFileSelected] = useEventOperations();
@@ -39,7 +40,14 @@ const PreflightChecklist = () => {
                 totalCount={totalCount}
                 hasMinimumRequirements={hasMinimumRequirements()}
                 onUpdateBoard={handlers.handleUpdateBoard}
+                onClearBoard={handlers.handleClearBoard}
+                onViewBoard={() => handlers.setShowBoardPreview(true)}
                 updatingBoard={handlers.updatingBoard}
+            />
+
+            <WhiteboardPreviewModal
+                show={handlers.showBoardPreview}
+                onHide={() => handlers.setShowBoardPreview(false)}
             />
 
             <Card>

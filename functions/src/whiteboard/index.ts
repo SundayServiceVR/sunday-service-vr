@@ -8,7 +8,7 @@ import { Response } from "express";
 import { docToEventRaw } from "../../../webapp/src/store/converters";
 import corsOptions from "../eventSignup/corsOptions";
 import { timeFormats, getLineupText, PLACEHOLDER_TEXT } from "./messageWriters";
-import { pushEventToWhiteboard } from "./whiteboardSync";
+import { pushEventToWhiteboard, clearWhiteboard as clearWhiteboardRepo } from "./whiteboardSync";
 
 // Fine-grained GitHub PAT with "Contents: read and write" on SundayServiceVR/whiteboard.
 // Set with: firebase functions:secrets:set GITHUB_WHITEBOARD_TOKEN
@@ -82,6 +82,33 @@ export const updateWhiteboard = onRequest({
     } catch (error) {
         logger.error("Failed to update whiteboard", error);
         response.status(500).send("Failed to update whiteboard");
+    }
+});
+
+/**
+ * Resets the whiteboard to placeholder text and default posters.
+ * Called by the "Clear board" button in the event preflight checklist.
+ */
+export const clearWhiteboard = onRequest({
+    ...corsOptions,
+    secrets: [githubWhiteboardToken],
+    memory: "1GiB", // Image conversion
+    timeoutSeconds: 120,
+}, async (request, response) => {
+    if (request.method !== "POST") {
+        response.status(405).send("Method Not Allowed");
+        return;
+    }
+
+    if (!(await requireBoardEditor(request, response))) {
+        return;
+    }
+
+    try {
+        response.send(await clearWhiteboardRepo(githubWhiteboardToken.value()));
+    } catch (error) {
+        logger.error("Failed to clear whiteboard", error);
+        response.status(500).send("Failed to clear whiteboard");
     }
 });
 
