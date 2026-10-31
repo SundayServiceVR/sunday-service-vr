@@ -71,9 +71,10 @@ export const HostSearchSelect = ({ onHostSelect, selectedHostRef }: Props) => {
     return (
         <>
             <Form.Group className="mb-3">
-                <Form.Label>Host Poster</Form.Label>
+                <Form.Label>Host</Form.Label>
                 <Stack direction="horizontal" gap={2}>
                     <Form.Select 
+                        data-testid="event-host"
                         value={selectedHostId} 
                         onChange={handleChange}
                         className="flex-grow-1"
@@ -100,7 +101,7 @@ export const HostSearchSelect = ({ onHostSelect, selectedHostRef }: Props) => {
                     )}
                 </Stack>
                 <Form.Text className="text-muted">
-                    Select a host for this event, or create a new one.
+                    Select a host, or create a new one (a poster is optional).
                 </Form.Text>
             </Form.Group>
 

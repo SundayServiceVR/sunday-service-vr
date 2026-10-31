@@ -83,6 +83,7 @@ export async function createEvent(opts: {
   signupsAreOpen?: boolean;
   signups?: SignupInput[];
   start?: Date;
+  host?: string;
 } = {}): Promise<{ id: string; name: string }> {
   const name = opts.name ?? `Test Event ${uniq()}`;
   const start = opts.start ?? new Date(Date.now() + 7 * 24 * 3600 * 1000);
@@ -90,13 +91,28 @@ export async function createEvent(opts: {
     name,
     start_datetime: Timestamp.fromDate(start),
     end_datetime: Timestamp.fromDate(new Date(start.getTime() + 4 * 3600 * 1000)),
-    host: "Test Host",
+    host: opts.host ?? "Test Host",
     signupsAreOpen: opts.signupsAreOpen ?? true,
     signups: (opts.signups ?? []).map(signupFor),
     slots: [],
     dj_plays: [],
   });
   return { id: ref.id, name };
+}
+
+export async function createHost(name = `Test Host ${uniq()}`): Promise<{ id: string; name: string }> {
+  const ref = await db.collection("hosts").add({ host_name: name });
+  return { id: ref.id, name };
+}
+
+export async function findHostsByName(name: string) {
+  const snap = await db.collection("hosts").where("host_name", "==", name).get();
+  return snap.docs.map((d) => ({ id: d.id, ...d.data() })) as { id: string; host_poster_url?: string }[];
+}
+
+export async function deleteHostsByName(name: string) {
+  const snap = await db.collection("hosts").where("host_name", "==", name).get();
+  await Promise.all(snap.docs.map((d) => d.ref.delete()));
 }
 
 export async function getEvent(id: string) {

@@ -2,7 +2,7 @@ import { FormEvent, useState } from "react";
 import { default_event } from "../../../store/events";
 import { Event } from "../../../util/types";
 import EventBasicDetailsForm from "./EventBasicDetailsForm";
-import { Breadcrumb, Button, Form, Stack } from "react-bootstrap";
+import { Button, Form, Stack } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 
@@ -64,10 +64,6 @@ const EventCreate = () => {
     }
 
     return <section>
-        <Breadcrumb className="px-2">
-            <Breadcrumb.Item href="/events" className="nav-link">Events</Breadcrumb.Item>
-            <Breadcrumb.Item href={`/events/${event.id}`} className="nav-link">{event.id}</Breadcrumb.Item>
-        </Breadcrumb>
         <h2 className="display-5">Create Event</h2>
         <Form onSubmit={(evt) => onCreateEvent(evt)}>
             <EventBasicDetailsForm

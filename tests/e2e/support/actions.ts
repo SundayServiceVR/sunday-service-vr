@@ -11,10 +11,22 @@ export async function loginAs(page: Page, user: TestUser) {
 }
 
 /** Host fills in the create-event form with signups open and submits it. Returns the new event id. */
-export async function createEventViaUi(page: Page, name: string): Promise<string> {
+export async function createEventViaUi(
+  page: Page,
+  name: string,
+  host?: { existing?: string; newName?: string },
+): Promise<string> {
   await page.goto("/events/create");
   await page.getByTestId("event-name").fill(name);
-  await page.getByTestId("event-host").fill("Test Host");
+  if (host?.existing) {
+    await page.getByTestId("event-host").selectOption({ label: host.existing });
+  } else if (host?.newName) {
+    await page.getByTestId("event-host").selectOption({ label: "+ Create New Host" });
+    await page.getByTestId("new-host-name").fill(host.newName);
+    await page.getByRole("button", { name: "Create Host" }).click();
+    await expect(page.getByTestId("new-host-name")).toBeHidden();
+    await expect(page.getByTestId("event-host").locator("option:checked")).toHaveText(host.newName);
+  }
   await page.getByTestId("event-signups-open").check();
   await page.getByRole("button", { name: "Create Event" }).click();
   await page.waitForURL(/\/events\/(?!create(\/|$))[^/]+/, { timeout: 15_000 });

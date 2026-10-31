@@ -59,6 +59,10 @@ export type Event = {
     // snapshot metadata, not written explicitly by clients).
     lastUpdated?: Date;
 
+    // Random id of the browser tab that last saved this event; lets that tab
+    // recognise its own writes echoing back from Firestore.
+    lastSavedBy?: string;
+
     // Optional lineup poster image stored in Firebase Storage
     // lineup_poster_path is the storage path (e.g. lineup-posters/{eventId}/filename.png)
     // lineup_poster_url is a resolved, shareable URL for clients (e.g. whiteboard, OBS tools)

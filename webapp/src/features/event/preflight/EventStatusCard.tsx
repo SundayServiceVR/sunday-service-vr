@@ -1,7 +1,11 @@
 import React from 'react';
-import { Card, Button, Alert, Stack, Badge } from 'react-bootstrap';
+import { Card, Button, Stack, Badge } from 'react-bootstrap';
+import { Event } from '../../../util/types';
+import { MissingRequirements } from './MissingRequirements';
 
 interface EventStatusCardProps {
+    event: Event;
+    onEventChange: (event: Event) => void;
     completedCount: number;
     totalCount: number;
     hasMinimumRequirements: boolean;
@@ -12,6 +16,8 @@ interface EventStatusCardProps {
 }
 
 export const EventStatusCard: React.FC<EventStatusCardProps> = ({
+    event,
+    onEventChange,
     completedCount,
     totalCount,
     hasMinimumRequirements,
@@ -71,12 +77,7 @@ export const EventStatusCard: React.FC<EventStatusCardProps> = ({
                     </Button>
                 </Stack>
 
-                {!hasMinimumRequirements && (
-                    <Alert variant="warning" className="mb-0">
-                        <Alert.Heading>Requirements Not Met</Alert.Heading>
-                        Updating the board requires: Event name, host, date/time, and at least one slot in the lineup.
-                    </Alert>
-                )}
+                <MissingRequirements event={event} onEventChange={onEventChange} />
             </Card.Body>
         </Card>
     );
