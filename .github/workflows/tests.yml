@@ -56,9 +56,10 @@ jobs:
           nohup npm run dev > dev.log 2>&1 &
           for i in $(seq 1 120); do
             if grep -q "Seeded" dev.log \
+              && grep -q "us-central1-eventSignupIntake\]: http function initialized" dev.log \
+              && grep -q "us-central1-updateWhiteboard\]: http function initialized" dev.log \
               && curl -sf -o /dev/null http://localhost:3000 \
               && curl -sf -o /dev/null http://127.0.0.1:4600/__state \
-              && curl -s -o /dev/null http://127.0.0.1:5001 \
               && grep -q "All emulators ready" dev.log; then
               echo "Stack is up"; exit 0
             fi
@@ -74,6 +75,10 @@ jobs:
       - name: End-to-end tests
         run: npm run test:e2e
         working-directory: tests
+
+      - name: Show stack log
+        if: failure()
+        run: tail -n 200 webapp/dev.log
 
       - name: Upload test artifacts
         if: failure()
