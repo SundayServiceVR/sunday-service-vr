@@ -2,6 +2,7 @@ import React from "react";
 import { Container, Form, Button, ProgressBar } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router";
 import { auth } from "../../util/firebase";
+import { functionUrl } from "../../util/config";
 import StepPerformerInfo from "./wizardSteps/StepPerformerInfo.tsx";
 import StepAvailability from "./wizardSteps/StepAvailability.tsx";
 import StepStreamDetails from "./wizardSteps/StepStreamDetails.tsx";
@@ -145,10 +146,7 @@ export const EventSignupWizard = () => {
             return;
         }
         setSubmitting(true); // <-- Set submitting true
-        let endpoint = "https://eventsignupintake-diczrrhb6a-uc.a.run.app/eventSignupIntake";
-        if (process.env.NODE_ENV === "development") {
-            endpoint = "http://localhost:5001/sunday-service-vr/us-central1/eventSignupIntake";
-        }
+        const endpoint = functionUrl("eventSignupIntake", "https://eventsignupintake-diczrrhb6a-uc.a.run.app/eventSignupIntake");
         const idToken = await auth.currentUser?.getIdToken();
         try {
             const response = await fetch(endpoint, {

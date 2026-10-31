@@ -1,23 +1,25 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Spinner from '../../components/spinner/Spinner';
 import { Alert } from 'react-bootstrap';
 import { getAuth, signInWithCustomToken, updateProfile } from "firebase/auth";
 import { Dj } from '../../util/types';
+import { functionUrl } from '../../util/config';
 
 const DiscordRedirect = () => {
     const [authRequest, setAuthRequest] = useState<Promise<void>>();
     const [error, setError] = useState<string | null>(null);
+    // The Discord code is single-use; a ref guards against double effects (e.g. StrictMode).
+    const requestStarted = useRef(false);
 
     useEffect(() => {
-        if (authRequest != undefined) {
+        if (authRequest != undefined || requestStarted.current) {
             return;
         }
+        requestStarted.current = true;
 
         const authenticateWithDiscord = async () => {
             try {
-                const response = await fetch(process.env.NODE_ENV === 'production' 
-                    ? 'https://us-central1-sunday-service-vr.cloudfunctions.net/discordAuth' 
-                    : 'http://127.0.0.1:5001/sunday-service-vr/us-central1/discordAuth', {
+                const response = await fetch(functionUrl('discordAuth', 'https://us-central1-sunday-service-vr.cloudfunctions.net/discordAuth'), {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

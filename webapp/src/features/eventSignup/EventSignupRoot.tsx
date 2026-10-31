@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Dj, Event } from "../../util/types";
 import Spinner from "../../components/spinner/Spinner";
 import { docToEventRaw } from "../../store/converters";
+import { functionUrl } from "../../util/config";
 
 export const EventSignupRoot = () => {
 
@@ -21,13 +22,9 @@ export const EventSignupRoot = () => {
       return;
     }
     setLoading(true);
-    const origin = process.env.NODE_ENV === "development"
-      ? "http://localhost:5001"
-      : "https://eventsignupgeteventanddj-diczrrhb6a-uc.a.run.app/";
-      // : window.location.origin;
-
-    const endpoint = "/sunday-service-vr/us-central1/eventSignupGetEventAndDj"
-    const url = new URL(endpoint, origin);
+    const url = new URL(functionUrl(
+      "eventSignupGetEventAndDj",
+      "https://eventsignupgeteventanddj-diczrrhb6a-uc.a.run.app/sunday-service-vr/us-central1/eventSignupGetEventAndDj"));
     url.searchParams.set("event_id", eventId);
 
     const idToken = await auth.currentUser?.getIdToken();

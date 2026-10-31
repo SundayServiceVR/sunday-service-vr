@@ -22,7 +22,7 @@ const credential =
 
 initializeApp({
     credential,
-    projectId: "sunday-service-vr",
+    projectId: process.env.GCLOUD_PROJECT ?? "sunday-service-vr",
 });
 
 /**
