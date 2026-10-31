@@ -1,8 +1,8 @@
 import { useEventOperations } from "../outletContext";
 import EventBasicDetailsForm from "./EventBasicDetailsForm";
 import { Card, CardBody } from "react-bootstrap";
-import { getSignupsPostedMessage } from "../../../util/messageWriters";
-import MessagePasteCard from "../../../components/MessagePasteCard";
+import MessageSendButton from "../messaging/MessageSendButton";
+import { lineupOpeningConfig } from "../messaging/messageConfigs";
 import { useParams } from "react-router-dom";
 
 import "react-datepicker/dist/react-datepicker.css";
@@ -11,7 +11,7 @@ const EventDetails = () => {
 
     const { eventId } = useParams();
     const [eventScratchpad, proposeEventChange, onLineupPosterFileSelected] = useEventOperations();
-    const message = getSignupsPostedMessage(eventScratchpad, `${window.location.origin}/eventSignup/${eventId}`);
+    const openingConfig = lineupOpeningConfig(`${window.location.origin}/eventSignup/${eventId}`);
 
 
     return <>
@@ -40,7 +40,7 @@ const EventDetails = () => {
                         <p>
                             Here's a sample message to get you started.
                         </p>
-                        <MessagePasteCard message={message}></MessagePasteCard>
+                        <MessageSendButton config={openingConfig} variant="primary" />
                     </div>
                 </CardBody>
             </Card>

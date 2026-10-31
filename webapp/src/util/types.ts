@@ -38,6 +38,10 @@ export type Event = {
     published?: boolean,
     message: string;
     socialMediaMessage?: string;
+    /** Edited text for the "signups are open" Discord post; the generated default is used when unset. */
+    lineupOpeningMessage?: string;
+    /** Edited text for the lineup verification Discord post; the generated default is used when unset. */
+    lineupVerificationMessage?: string;
     start_datetime: Date;
     end_datetime?: Date;
     host: string;

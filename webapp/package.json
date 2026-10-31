@@ -22,6 +22,7 @@
         "predev": "npm run prestart"
     },
     "dependencies": {
+        "bootswatch": "^5.3.8",
         "cross-env": "^7.0.3",
         "dayjs": "^1.11.10",
         "discord-api-types": "^0.37.120",

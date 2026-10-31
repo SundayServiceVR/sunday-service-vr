@@ -1,13 +1,7 @@
 import React from 'react';
-import { Accordion, ButtonGroup, Button } from 'react-bootstrap';
+import { Accordion } from 'react-bootstrap';
 
-interface OutdatedStepsAccordionProps {
-    onShowSocialMediaModal: () => void;
-}
-
-export const OutdatedStepsAccordion: React.FC<OutdatedStepsAccordionProps> = ({
-    onShowSocialMediaModal,
-}) => {
+export const OutdatedStepsAccordion: React.FC = () => {
     const outdatedItems = [
         {
             label: 'Add event to vrc.tl',
@@ -57,34 +51,14 @@ export const OutdatedStepsAccordion: React.FC<OutdatedStepsAccordionProps> = ({
                                     <small className="text-muted">{item.description}</small>
                                 </div>
                                 <div className="ms-auto">
-                                    {item.isMessaging ? (
-                                        <ButtonGroup>
-                                            <Button
-                                                variant="outline-secondary"
-                                                size="sm"
-                                                onClick={onShowSocialMediaModal}
-                                            >
-                                                Preview
-                                            </Button>
-                                            <a
-                                                href={item.link}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="btn btn-outline-secondary btn-sm"
-                                            >
-                                                {item.buttonLabel}
-                                            </a>
-                                        </ButtonGroup>
-                                    ) : (
-                                        <a
-                                            href={item.link}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="btn btn-outline-secondary btn-sm"
-                                        >
-                                            {item.buttonLabel}
-                                        </a>
-                                    )}
+                                    <a
+                                        href={item.link}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="btn btn-outline-secondary btn-sm"
+                                    >
+                                        {item.buttonLabel}
+                                    </a>
                                 </div>
                             </div>
                         ))}
