@@ -1,15 +1,12 @@
 import { Container, Card } from 'react-bootstrap';
 import { useEventOperations } from '../outletContext';
 import { useEventStore } from '../../../hooks/useEventStore/useEventStore';
-import UnifiedMessageEditModal from './messaging/UnifiedMessageEditModal';
 import { EventStatusCard } from './EventStatusCard';
 import { getMissingRequirements } from './getMissingRequirements';
 import { PreflightChecklistStep } from './PreflightChecklistStep';
 import { OutdatedStepsAccordion } from './OutdatedStepsAccordion';
 import { usePreflightHandlers } from './usePreflightHandlers';
 import { useChecklistItems } from './useChecklistItems';
-import { getDiscordMessage, getTwitterMessage } from '../../../util/messageWriters';
-import { Event } from '../../../util/types';
 import { LineupPosterModal } from './LineupPosterModal';
 import { WhiteboardPreviewModal } from './WhiteboardPreviewModal';
 
@@ -17,7 +14,7 @@ const PreflightChecklist = () => {
     const [eventScratchpad, proposeEventChange, onLineupPosterFileSelected] = useEventOperations();
     const { saveEvent } = useEventStore();
     
-    const handlers = usePreflightHandlers(eventScratchpad, proposeEventChange, saveEvent);
+    const handlers = usePreflightHandlers(eventScratchpad, saveEvent);
     const checklistItems = useChecklistItems(eventScratchpad);
 
     const hasMinimumRequirements = () => getMissingRequirements(eventScratchpad).length === 0;
@@ -59,7 +56,6 @@ const PreflightChecklist = () => {
                                 key={index}
                                 item={item}
                                 eventScratchpad={eventScratchpad}
-                                onEditMessage={() => handlers.setShowMessageModal(true)}
                                 onUploadPoster={() => handlers.setShowPosterModal(true)}
                             />
                         ))}
@@ -68,11 +64,6 @@ const PreflightChecklist = () => {
                                 key={`opt-${index}`}
                                 item={item}
                                 eventScratchpad={eventScratchpad}
-                                onEditMessage={
-                                    item.action.type === 'messaging' && item.action.platform === 'discord'
-                                        ? () => handlers.setShowMessageModal(true)
-                                        : () => handlers.setShowSocialMediaModal(true)
-                                }
                                 onUploadPoster={() => handlers.setShowPosterModal(true)}
                             />
                         ))}
@@ -80,36 +71,7 @@ const PreflightChecklist = () => {
                 </Card.Body>
             </Card>
 
-            <OutdatedStepsAccordion
-                onShowSocialMediaModal={() => handlers.setShowSocialMediaModal(true)}
-            />
-            
-            <UnifiedMessageEditModal
-                show={handlers.showMessageModal}
-                onHide={() => handlers.setShowMessageModal(false)}
-                event={eventScratchpad}
-                onSave={handlers.handleSaveMessage}
-                messageType="discord"
-                getMessageFromEvent={(event: Event) => event.message}
-                generatePreview={(event: Event) => getDiscordMessage(event)}
-                title="Edit Discord Announcement Message"
-                label="Discord Announcement Message"
-                helpText="This message will be included in your Discord announcement."
-                previewLabel="Discord Announcement Preview"
-                previewHelpText="This is how your Discord announcement will look."
-            />
-            
-            <UnifiedMessageEditModal
-                show={handlers.showSocialMediaModal}
-                onHide={() => handlers.setShowSocialMediaModal(false)}
-                event={eventScratchpad}
-                onSave={handlers.handleSaveSocialMediaMessage}
-                messageType="social"
-                getMessageFromEvent={(event: Event) => event.socialMediaMessage || getTwitterMessage(event)}
-                title="Social Media / VRChat Message"
-                label="Social Media & VRChat Message"
-                helpText="Customize your message for VRChat and social media platforms. The default message is generated from your event details."
-            />
+            <OutdatedStepsAccordion />
             
             <LineupPosterModal
                 show={handlers.showPosterModal}

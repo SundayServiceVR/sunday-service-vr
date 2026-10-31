@@ -1,20 +1,20 @@
 import React from 'react';
-import { ButtonGroup, Button } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { ChecklistItem } from './types';
 import { Event } from '../../../util/types';
+import MessageSendButton from '../messaging/MessageSendButton';
+import { discordAnnouncementConfig, vrchatMessageConfig } from '../messaging/messageConfigs';
 
 interface PreflightChecklistStepProps {
     item: ChecklistItem;
     eventScratchpad: Event;
-    onEditMessage: () => void;
     onUploadPoster?: () => void;
 }
 
 export const PreflightChecklistStep: React.FC<PreflightChecklistStepProps> = ({
     item,
     eventScratchpad,
-    onEditMessage,
     onUploadPoster,
 }) => {
     const renderActions = () => {
@@ -32,23 +32,10 @@ export const PreflightChecklistStep: React.FC<PreflightChecklistStepProps> = ({
         if (item.action.type === 'messaging') {
             const isDiscord = item.action.platform === 'discord';
             return (
-                <ButtonGroup>
-                    <Button
-                        variant={(isDiscord && (!eventScratchpad.message || eventScratchpad.message.trim() === '')) ? 'success' : 'outline-primary'}
-                        size="sm"
-                        onClick={onEditMessage}
-                    >
-                        Copy/Edit
-                    </Button>
-                    <a
-                        href={item.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="btn btn-outline-primary btn-sm"
-                    >
-                        Open Page
-                    </a>
-                </ButtonGroup>
+                <MessageSendButton
+                    config={isDiscord ? discordAnnouncementConfig : vrchatMessageConfig}
+                    variant={(isDiscord && (!eventScratchpad.message || eventScratchpad.message.trim() === '')) ? 'success' : 'outline-primary'}
+                />
             );
         }
 

@@ -1,4 +1,4 @@
-#root {
+﻿#root {
   min-height: 100vh;
 }
 
@@ -11,3 +11,35 @@
 :not(.btn-group):not(.btn-group-vertical):not(.input-group) > .btn + .btn {
   margin-left: 0.5rem;
 }
+/*
+ * Lux theme fixes. Lux defines "secondary" as white and headings as near-black,
+ * which makes bg-secondary/text-white cards invisible and hero text unreadable.
+ */
+:root {
+  --bs-secondary: #6c757d;
+  --bs-secondary-rgb: 108, 117, 125;
+}
+
+/* Visible card outlines everywhere */
+.card {
+  --bs-card-border-color: #adb5bd;
+}
+
+/* Text on dark surfaces must not inherit Lux's dark heading colour */
+.hero-section > div > h1,
+.hero-section > div > p {
+  --bs-heading-color: #fff;
+  color: #fff;
+}
+
+/* Headers with an explicit light-on-dark colour must pass it to their titles */
+.card-header.text-white,
+.card-header.text-white .card-title {
+  color: #fff;
+}
+
+/* Dark navbar menus (e.g. the Autosave toggle) */
+.navbar .dropdown-menu .form-check-label {
+  color: var(--bs-dropdown-link-color);
+}
+

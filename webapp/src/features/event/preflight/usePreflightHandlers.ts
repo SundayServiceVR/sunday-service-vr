@@ -1,24 +1,18 @@
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { Event } from '../../../util/types';
+import { confirm } from '../../../components/confirm';
 import { clearWhiteboard, updateWhiteboard } from '../../../util/whiteboard';
 
 export const usePreflightHandlers = (
     eventScratchpad: Event,
-    proposeEventChange: (event: Event) => void,
     saveEvent: (newEvent: Event, oldEvent: Event) => Promise<void>
 ) => {
-    const [showMessageModal, setShowMessageModal] = useState(false);
-    const [showSocialMediaModal, setShowSocialMediaModal] = useState(false);
     const [showPosterModal, setShowPosterModal] = useState(false);
     const [updatingBoard, setUpdatingBoard] = useState(false);
     const [showBoardPreview, setShowBoardPreview] = useState(false);
 
-    const handleClearBoard = async () => {
-        if (!window.confirm('Reset the whiteboard to the placeholder text and default posters?')) {
-            return;
-        }
-
+    const clearBoard = async () => {
         setUpdatingBoard(true);
         try {
             const result = await clearWhiteboard();
@@ -30,6 +24,15 @@ export const usePreflightHandlers = (
         } finally {
             setUpdatingBoard(false);
         }
+    };
+
+    const handleClearBoard = () => {
+        confirm({
+            title: 'Are you sure?',
+            message: 'Reset the whiteboard to the placeholder text and default posters?',
+            confirmButton: { text: 'Yes', action: clearBoard },
+            cancelButton: { text: 'Cancel' },
+        });
     };
 
     const handleUpdateBoard = async () => {
@@ -61,33 +64,7 @@ export const usePreflightHandlers = (
         }
     };
 
-    const handleSaveMessage = async (updatedMessage: string) => {
-        try {
-            const newEvent = { ...eventScratchpad, message: updatedMessage };
-            await saveEvent(newEvent, eventScratchpad);
-            proposeEventChange(newEvent);
-            toast.success('Message updated successfully!');
-        } catch (error) {
-            toast.error(`Error saving message: ${(error as Error).message}`);
-        }
-    };
-
-    const handleSaveSocialMediaMessage = async (updatedMessage: string) => {
-        try {
-            const newEvent = { ...eventScratchpad, socialMediaMessage: updatedMessage };
-            await saveEvent(newEvent, eventScratchpad);
-            proposeEventChange(newEvent);
-            toast.success('Social media message updated successfully!');
-        } catch (error) {
-            toast.error(`Error saving social media message: ${(error as Error).message}`);
-        }
-    };
-
     return {
-        showMessageModal,
-        setShowMessageModal,
-        showSocialMediaModal,
-        setShowSocialMediaModal,
         showPosterModal,
         setShowPosterModal,
         updatingBoard,
@@ -95,7 +72,5 @@ export const usePreflightHandlers = (
         handleClearBoard,
         showBoardPreview,
         setShowBoardPreview,
-        handleSaveMessage,
-        handleSaveSocialMediaMessage,
     };
 };
