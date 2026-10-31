@@ -10,7 +10,10 @@
         "start": "npm run shell",
         "predeploy": "npm run build",
         "deploy": "firebase deploy --only functions",
-        "logs": "firebase functions:log"
+        "logs": "firebase functions:log",
+        "test": "vitest run",
+        "test:rules": "vitest run test/rules",
+        "test:api": "vitest run test/api"
     },
     "engines": {
         "node": "22"
@@ -36,8 +39,10 @@
         "eslint-config-google": "^0.14.0",
         "eslint-plugin-import": "^2.25.4",
         "firebase-functions-test": "^3.1.0",
+        "@firebase/rules-unit-testing": "^4.0.1",
         "typescript": "^5.8.2",
-        "uuid": "^11.1.0"
+        "uuid": "^11.1.0",
+        "vitest": "^2.1.0"
     },
     "private": true
 }

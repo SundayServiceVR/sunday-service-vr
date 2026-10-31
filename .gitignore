@@ -71,3 +71,6 @@ firebase-emulator-data
 #Intellij
 .idea
 *.iml
+tests/test-results/
+tests/playwright-report/
+tests/.features-gen/

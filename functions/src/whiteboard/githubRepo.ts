@@ -3,7 +3,7 @@
  * to a branch in a single commit.
  */
 
-const API_ROOT = "https://api.github.com";
+const API_ROOT = process.env.GITHUB_API_ROOT ?? "https://api.github.com";
 const MAX_COMMIT_ATTEMPTS = 3;
 
 export type RepoFile = {

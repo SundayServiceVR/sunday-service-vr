@@ -33,6 +33,7 @@ const EventBasicDetailsForm = ({ event: eventScratchpad, onEventChange: proposeE
             </Form.Label>
             <Form.Control
                 placeholder="Sunday Service"
+                data-testid="event-name"
                 type="text"
                 value={eventScratchpad.name}
                 required
@@ -45,6 +46,7 @@ const EventBasicDetailsForm = ({ event: eventScratchpad, onEventChange: proposeE
             </Form.Label>
             <Form.Control
                 type="datetime-local"
+                data-testid="event-start"
                 value={new Date(eventScratchpad.start_datetime.getTime() - eventScratchpad.start_datetime.getTimezoneOffset() * 60 * 1000).toISOString().slice(0, 16)}
                 required
                 onChange={(formEvent) => {
@@ -61,6 +63,7 @@ const EventBasicDetailsForm = ({ event: eventScratchpad, onEventChange: proposeE
             </Form.Label>
             <Form.Control
                 placeholder="TBD"
+                data-testid="event-host"
                 type="text"
                 value={eventScratchpad.host}
                 required
@@ -120,6 +123,7 @@ const EventBasicDetailsForm = ({ event: eventScratchpad, onEventChange: proposeE
             </Form.Label>
             <Form.Check
                 type="switch"
+                data-testid="event-signups-open"
                 checked={eventScratchpad.signupsAreOpen}
                 required
                 onChange={(formEvent) => { 

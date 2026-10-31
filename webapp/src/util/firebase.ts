@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { connectAuthEmulator, getAuth } from "firebase/auth";
+import { connectAuthEmulator, getAuth, signInWithCustomToken } from "firebase/auth";
 import { connectFirestoreEmulator, getFirestore } from "firebase/firestore";
 import { connectStorageEmulator, getStorage } from "firebase/storage";
 import { emulatorHost, emulatorPorts, isEmulator, projectId } from "./config";
@@ -30,4 +30,8 @@ if (isEmulator) {
   connectFirestoreEmulator(db, emulatorHost, emulatorPorts.firestore);
   connectStorageEmulator(storage, emulatorHost, emulatorPorts.storage);
   connectAuthEmulator(auth, `http://${emulatorHost}:${emulatorPorts.auth}`, { disableWarnings: true });
+
+  // Test hook (emulator only): lets automated tests sign in with a custom token minted by the Admin SDK.
+  (window as unknown as { __signInWithCustomToken: (token: string) => Promise<unknown> }).__signInWithCustomToken =
+    (token: string) => signInWithCustomToken(auth, token);
 }
