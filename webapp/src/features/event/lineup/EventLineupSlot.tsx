@@ -73,8 +73,9 @@ const EventLineupSlot = ({
                         {
                             label: "Edit DJ",
                             onClick: () => {
-                                window.open(`/djs/${slot.dj_ref.id}`, '_blank', 'noreferrer')?.focus();
-                                // navigate(`/djs/${slot.dj_ref.id}`);
+                                const djId = signup.dj_refs?.[0]?.id ?? slot.dj_ref?.id;
+                                if (!djId) return;
+                                window.open(`/djs/${djId}`, '_blank', 'noreferrer')?.focus();
                             }
                         },
                         {
