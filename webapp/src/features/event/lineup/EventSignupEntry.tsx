@@ -25,13 +25,13 @@ type Props = {
 function useDjData(djRefs: DocumentReference[] | undefined) {
   const { djCache, getEventsByDjId, reloadDj } = useEventDjCache();
   const [djData, setDjData] = useState<{ djRef: DocumentReference; loading: boolean; dj: Dj | null; djEvents: Event[] }[]>(
-    djRefs?.map((djRef: DocumentReference) => ({ djRef, loading: true, dj: null, djEvents: [] })) || []
+    djRefs?.filter(Boolean).map((djRef: DocumentReference) => ({ djRef, loading: true, dj: null, djEvents: [] })) || []
   );
 
   useEffect(() => {
     const fetchDjData = async () => {
       const updatedDjData = await Promise.all(
-        djRefs?.map(async (djRef) => {
+        djRefs?.filter(Boolean).map(async (djRef) => {
           const cached = djCache.get(djRef.id);
           if (cached) {
             return {
@@ -158,7 +158,7 @@ const EventSignupEntry = ({
                   onClick: () => openB2BModal(signup),
                 },
                 "divider",
-                ...(signup.dj_refs?.flatMap((djRef: DocumentReference, index: number) => {
+                ...(signup.dj_refs?.filter(Boolean).flatMap((djRef: DocumentReference, index: number) => {
                   const dj = djCache.get(djRef.id);
                   const djName = dj?.dj_name || "DJ";
                   return [
@@ -175,7 +175,7 @@ const EventSignupEntry = ({
                       onClick: () => {
                         onUpdateSignup({
                           ...signup,
-                          dj_refs: signup.dj_refs.filter((ref) => ref.id !== djRef.id),
+                          dj_refs: signup.dj_refs.filter((ref) => ref && ref.id !== djRef.id),
                         });
                       },
                     },
