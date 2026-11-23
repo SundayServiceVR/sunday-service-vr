@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, ButtonGroup, Col, Container, Row, Stack, Form, Modal, Card } from "react-bootstrap";
+import { Button, ButtonGroup, Col, Container, Row, Stack, Form, Card } from "react-bootstrap";
 import { Dj, Event, EventSignup, Slot, SlotDuration, SlotType } from "../../../util/types";
 import { useEventOperations } from "../outletContext";
 import { Link } from "react-router-dom";
@@ -11,8 +11,8 @@ import { useEventDjCache } from "../../../contexts/useEventDjCache";
 import { AddOrCreateDjModal } from "./components/AddOrCreateDjModal";
 import { updateSignupForEvent } from "../util";
 import { useReconciledEvent } from "../../../hooks/useEventStore/useReconciledEvent";
-import { getProposedLineupMessage } from "../../../util/messageWriters";
-import MessagePasteCard from "../../../components/MessagePasteCard";
+import MessageSendButton from "../messaging/MessageSendButton";
+import { lineupVerificationConfig } from "../messaging/messageConfigs";
 
 type ViewMode = "signups" | "build" | "lineup";
 
@@ -25,7 +25,6 @@ const EventLineup = () => {
     const { reloadDj, djCache } = useEventDjCache();
 
     const reconciledEvent = useReconciledEvent(eventScratchpad, djCache);
-    const [showVerifyModal, setShowVerifyModal] = useState<boolean>(false);
 
     const updateSignup = (event: Event, new_signup: EventSignup) => {
         const new_event = updateSignupForEvent(event, new_signup);
@@ -117,9 +116,9 @@ const EventLineup = () => {
                             )}
 
                             {!eventScratchpad?.signupsAreOpen && (viewMode === "build") && (
-                                <Button variant="primary" size="sm" className="ms-2" onClick={() => setShowVerifyModal(true)}>
-                                    Verify Lineup
-                                </Button>
+                                <div className="ms-2">
+                                    <MessageSendButton config={lineupVerificationConfig} variant="primary" />
+                                </div>
                             )}
                         </div>
                     </Card>
@@ -173,23 +172,6 @@ const EventLineup = () => {
             handleClose={() => setCreateDjModalShow(false)}
             onDjSelected={addSignup}
         />
-        <Modal show={showVerifyModal} onHide={() => setShowVerifyModal(false)} size="lg">
-            <Modal.Header closeButton>
-                <Modal.Title>Verify Lineup</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <p>Copy the message below and paste it into the scheduling channel in Discord to verify DJs' availability.</p>
-                <MessagePasteCard message={getProposedLineupMessage(eventScratchpad)} footerInstructions={
-                    <>
-                        <p className="mb-0">Paste this message to <a target="_blank" rel="noopener noreferrer" href="https://discord.com/channels/1004489038159413248/1204320477732929566">#scheduling</a> in Discord, then react to your message so DJs can confirm.</p>
-                        <p className="mt-2 mb-0">You can also open the full Verify DJs page for more options.</p>
-                    </>
-                } />
-            </Modal.Body>
-            <Modal.Footer>
-                <Button variant="secondary" onClick={() => setShowVerifyModal(false)}>Close</Button>
-            </Modal.Footer>
-        </Modal>
     </Container>;
 };
 

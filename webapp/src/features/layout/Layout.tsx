@@ -47,11 +47,12 @@ const Layout = () => {
                                     Dj Roster
                                 </Link>
                             </Nav.Link>
-                            <Nav.Link as="span">
+                            {/* Manually hide Bingo for now */}
+                            {/* <Nav.Link as="span">
                                 <Link to="/bingo" className="nav-link p-0">
                                     Bingo
                                 </Link>
-                            </Nav.Link>
+                            </Nav.Link> */}
                             <Nav.Link as="span">
                                 <Link to="/clubSettings" className="nav-link p-0">
                                     Club Settings

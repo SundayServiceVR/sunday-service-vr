@@ -15,6 +15,7 @@ import { useAutosave } from "../../hooks/useAutosave/useAutosave";
 import { useAutosavePreference } from "../../hooks/useAutosave/useAutosavePreference";
 import { decideIncomingEvent } from "./eventSync";
 import SaveStatus from "./SaveStatus";
+import { EventSaveControls } from "./outletContext";
 
 const AUTOSAVE_DELAY_MS = 200;
 
@@ -147,12 +148,12 @@ const EventRoot = () => {
     };
 
     /** Persists the scratchpad. Throws on failure; callers decide how to report it. */
-    const persistEvent = async () => {
+    const persistEvent = async (override?: Event) => {
         let uploadedStorageRef: ReturnType<typeof ref> | null = null;
         const versionAtStart = editVersionRef.current;
         
         try {
-            let eventToSave: Event = { ...eventScratchpad, lastSavedBy: sessionId };
+            let eventToSave: Event = { ...(override ?? eventScratchpad), lastSavedBy: sessionId };
 
             // If a new lineup poster file has been selected, upload it and patch the event
             let storagePath: string | undefined;
@@ -220,9 +221,20 @@ const EventRoot = () => {
         isDirty: hasChanges,
         canSave: !!eventScratchpad.name?.trim(),
         version: editVersion,
-        save: persistEvent,
+        save: () => persistEvent(),
         delayMs: AUTOSAVE_DELAY_MS,
     });
+
+    const saveControls: EventSaveControls = {
+        hasChanges,
+        save: () => persistEvent(),
+        saveWith: async (newEvent: Event) => {
+            const reconciled = getReconciledEvent({ ...newEvent });
+            markEdited();
+            setEventScratchpad(reconciled);
+            await persistEvent(reconciled);
+        },
+    };
 
     // Don't let a tab close silently drop edits that haven't been saved yet.
     useEffect(() => {
@@ -267,7 +279,7 @@ const EventRoot = () => {
         </Nav>
 
         <Container className="mt-3" onBlurCapture={flushAutosave}>
-            <Outlet context={[eventScratchpad, proposeEventChange, onLineupPosterFileSelected]} />
+            <Outlet context={[eventScratchpad, proposeEventChange, onLineupPosterFileSelected, saveControls]} />
         </Container>
 
         <FloatingActionBar hidden={autosaveEnabled ? autosaveStatus === "idle" : !hasChanges}>
