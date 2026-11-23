@@ -69,7 +69,7 @@ const calcSlotsFromSignups = (event: Event, djCache: DjCache): Event => {
       if(slot.dj_name) {
         result.dj_name = slot.dj_name;
       }
-      const discordId = djCache.get(slot.dj_ref.id)?.discord_id ?? undefined;
+      const discordId = (slot.dj_ref ? djCache.get(slot.dj_ref.id) : undefined)?.discord_id ?? undefined;
 
       if(discordId) {
         result.discord_id = discordId;
@@ -127,7 +127,7 @@ const setDjPlays = (event: Event): Event => {
     } as Event;
   }
 
-  const legacyDjPlays = event.slots.map((slot: Slot) => slot.dj_ref) ?? [];
+  const legacyDjPlays = event.slots.map((slot: Slot) => slot.dj_ref).filter(ref => ref != null) ?? [];
 
   const newDjPlays = event.slots.map(slot => slot.reconciled.signup.dj_refs).flat();
 

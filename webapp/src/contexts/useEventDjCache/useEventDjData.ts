@@ -106,7 +106,7 @@ export function useEventDjData() {
       const djs =
         event.slots
           ?.map(slot => slot.dj_ref)
-          .map(djRef => djCache.get(djRef.id) ?? 'PENDING') ?? [];
+          .map(djRef => (djRef && djCache.get(djRef.id)) ?? 'PENDING') ?? [];
 
       return { event, djs };
     },
@@ -116,7 +116,12 @@ export function useEventDjData() {
   const getEventsByDjId = useCallback(
     (djId: string) => {
       return Array.from(eventCache.values()).filter(event =>
-        event.slots.some(slot => slot.dj_ref.id === djId)
+        (event.slots ?? []).some(slot =>
+          slot.dj_ref?.id === djId ||
+          (event.signups ?? [])
+            .find(signup => signup.uuid === slot.signup_uuid)
+            ?.dj_refs?.some(ref => ref?.id === djId)
+        )
       );
     },
     [eventCache]
